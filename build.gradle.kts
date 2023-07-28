@@ -1,77 +1,90 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version: String by project
-val koin_version: String by project
-val exposed_version: String by project
-
 plugins {
     kotlin("jvm") version "1.8.22"
-    id("com.google.devtools.ksp") version "1.8.22-1.0.11"
     `java-library`
     `maven-publish`
+    signing
+    id("io.codearte.nexus-staging") version ("0.30.0")
 }
 
-group = "com.dehucka"
-version = "0.1-SNAPSHOT"
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://jitpack.io")
+allprojects {
+    group = "io.github.dehuckakpyt.telegrambot"
+    version = "0.1"
 }
 
-dependencies {
-    api("io.ktor:ktor-server-core-jvm:$ktor_version")
-    api("com.github.elbekD:kt-telegram-bot:2.2.0")
-    api("org.freemarker:freemarker:2.3.32")
+subprojects {
+    apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+    apply(plugin = "signing")
 
-    //region koin
-    compileOnly("io.insert-koin:koin-core-coroutines:$koin_version")
-    implementation("io.insert-koin:koin-ktor:$koin_version")
-    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
-    compileOnly("io.insert-koin:koin-annotations:1.2.2")
-    ksp("io.insert-koin:koin-ksp-compiler:1.2.2")
-    //endregion koin
+    publishing {
+        publications {
+            create<MavenPublication>(project.name) {
+                groupId = project.group as String
+                artifactId = project.name
+                version = project.version as String
 
-    //region database
-    api("org.jetbrains.exposed:exposed-core:$exposed_version")
-    api("org.jetbrains.exposed:exposed-dao:$exposed_version")
-    api("org.jetbrains.exposed:exposed-java-time:$exposed_version")
-    //endregion database
+                from(components["java"])
 
-    // region local
-    implementation("com.dehucka:micro-service-core:0.1-SNAPSHOT")
-    implementation("com.dehucka:exposed-extensions:0.1-SNAPSHOT")
-    // endregion local
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-sourceSets.main {
-    java.srcDirs("build/generated/ksp/main/kotlin")
-}
-
-publishing {
-    publications {
-        create<MavenPublication>(project.name) {
-            groupId = project.group as String
-            artifactId = project.name
-            version = project.version as String
-
-            from(components["java"])
+                pom {
+                    packaging = "jar"
+                    name.set(project.name)
+                    description.set("library for using telegram bot api")
+                    url.set("https://github.com/DEHuckaKpyT/telegram-bot")
+                    scm {
+                        connection.set("scm:https://github.com/DEHuckaKpyT/telegram-bot.git")
+                        developerConnection.set("scm:git@github.com:DEHuckaKpyT/telegram-bot.git")
+                        url.set("https://github.com/DEHuckaKpyT/telegram-bot")
+                    }
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("DEHuckaKpyT")
+                            name.set("Denis Matytsin")
+                            email.set("den-matytsin@mail.com")
+                        }
+                    }
+                }
+                repositories {
+                    maven {
+                        val releasesUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                        val snapshotsUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                        url = if (version.toString().endsWith("SNAPSHOT")) snapshotsUrl else releasesUrl
+                        credentials {
+                            username = project.properties["ossrh-username"].toString()
+                            password = project.properties["ossrh-password"].toString()
+                        }
+                    }
+                }
+            }
         }
     }
-}
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    signing {
+        sign(publishing.publications[project.name])
+    }
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    tasks.test {
+        useJUnitPlatform()
+    }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    sourceSets.main {
+        java.srcDirs("build/generated/ksp/main/kotlin")
+    }
 }
