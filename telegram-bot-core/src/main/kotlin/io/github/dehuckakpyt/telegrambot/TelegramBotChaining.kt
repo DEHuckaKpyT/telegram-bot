@@ -71,6 +71,12 @@ open class TelegramBotChaining(
         chainSource.save(chatId, handler)
     }
 
+    suspend fun nextStep(chatId: Long, handler: String, instance: Any) {
+        shortMapper.writeValueAsString(instance).let {
+            chainSource.save(chatId, handler, it)
+        }
+    }
+
     suspend fun finalizeChain(chatId: Long) {
         chainSource.save(chatId, null)
     }
