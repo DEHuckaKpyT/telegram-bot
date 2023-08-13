@@ -9,7 +9,10 @@ import com.elbekd.bot.types.ParseMode.MarkdownV2
 import com.elbekd.bot.types.Update
 import com.elbekd.bot.types.UpdateMessage
 import freemarker.template.Configuration
-import io.github.dehuckakpyt.telegrambot.data.CommandInput
+import io.github.dehuckakpyt.telegrambot.data.container.CallbackMassageContainer
+import io.github.dehuckakpyt.telegrambot.data.container.CommandMassageContainer
+import io.github.dehuckakpyt.telegrambot.data.container.MassageContainer
+import io.github.dehuckakpyt.telegrambot.data.container.TextMassageContainer
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.ext.fetchCommand
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
@@ -34,9 +37,9 @@ open class TelegramBotChaining(
     templateConfiguration: Configuration
 ) : TelegramBot(application, bot, messageSource, templateConfiguration) {
 
-    val actionByCommand: MutableMap<String, suspend Message.(Pair<String?, String?>) -> Unit> = hashMapOf()
-    val actionByStep: MutableMap<String, suspend Message.(String?) -> Unit> = hashMapOf()
-    val actionByCallback: MutableMap<String, suspend CallbackQuery.(String) -> Unit> = hashMapOf()
+    val actionByCommand: MutableMap<String, suspend CommandMassageContainer.() -> Unit> = hashMapOf()
+    val actionByStep: MutableMap<String, suspend MassageContainer.() -> Unit> = hashMapOf()
+    val actionByCallback: MutableMap<String, suspend CallbackMassageContainer.() -> Unit> = hashMapOf()
 
     val callbackDataDelimiter: Char = '|'
 
@@ -103,18 +106,16 @@ open class TelegramBotChaining(
         }
     }
 
-    private suspend fun processCommand(input: CommandInput, message: Message) = with(input) {
+    private suspend fun processCommand(command: String, message: Message) = with(message) {
         actionByCommand[command]
-            ?.invoke(message, pathParam to lineParam)
-            ?: whenCommandNotFound(message.chatId, command)
+            ?.invoke(CommandMassageContainer(chatId, message))
+            ?: whenCommandNotFound(chatId, command)
     }
 
     private suspend fun processMessage(message: Message) = with(message) {
         val chainLink = chainSource.get(chatId)
         chainLink.step?.let { step ->
-            actionByStep[step]
-        }?.run {
-            this(chainLink.content)
+            actionByStep[step]?.invoke(TextMassageContainer(chatId, message, chainLink.content))
         } ?: whenStepNotFound(chatId)
     }
 
@@ -125,10 +126,10 @@ open class TelegramBotChaining(
         if (indexOfDelimiter == -1) return
 
         val callbackName = data.substring(0, indexOfDelimiter)
-        val callbackContent = data.substring(indexOfDelimiter + 1)
+        val callbackContent = data.substring(indexOfDelimiter + 1).takeIf { it.isNotBlank() }
 
         tryExecute(chatId) {
-            actionByCallback[callbackName]?.invoke(callback, callbackContent)
+            actionByCallback[callbackName]?.invoke(CallbackMassageContainer(chatId, callback, callbackContent))
         }
     }
 

@@ -1,14 +1,12 @@
 package io.github.dehuckakpyt.telegrambot
 
-import com.dehucka.microservice.ext.shortMapper
-import com.dehucka.microservice.ext.toUUID
 import com.elbekd.bot.Bot
-import com.elbekd.bot.types.CallbackQuery
-import com.elbekd.bot.types.Message
-import com.fasterxml.jackson.module.kotlin.readValue
 import freemarker.template.Configuration
 import freemarker.template.Version
-import io.github.dehuckakpyt.telegrambot.ext.chatId
+import io.github.dehuckakpyt.telegrambot.data.container.CallbackMassageContainer
+import io.github.dehuckakpyt.telegrambot.data.container.CommandMassageContainer
+import io.github.dehuckakpyt.telegrambot.data.container.MassageContainer
+import io.github.dehuckakpyt.telegrambot.data.container.TextMassageContainer
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSourceImpl
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -16,6 +14,7 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSourceImpl
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSourceImpl
 import io.ktor.server.application.*
+import kotlin.reflect.KClass
 
 
 /**
@@ -42,87 +41,53 @@ open class BotHandling(
     templateConfiguration
 ) {
 
-    inline fun command(
-        command: String, nextStep: String? = null,
-        enableCustomSteps: Boolean = false,
-        crossinline action: suspend Message.(Pair<String?, String?>) -> Unit
+    fun command(
+        command: String,
+        next: String? = null,
+        action: suspend CommandMassageContainer.() -> Unit
     ) {
         actionByCommand[command] = {
-            this.action(it)
-            if (!enableCustomSteps) {
-                chainSource.save(chatId, nextStep)
-            }
+            next(next)
+            action()
+            finalize()
         }
     }
 
-    inline fun step(
+    fun step(
         step: String,
-        nextStep: String? = null,
-        enableCustomSteps: Boolean = false,
-        crossinline action: suspend Message.() -> Unit
+        next: String? = null,
+        action: suspend TextMassageContainer.() -> Unit
     ) {
         actionByStep[step] = {
-            this.action()
-
-            if (!enableCustomSteps) {
-                chainSource.save(chatId, nextStep)
-            }
+            next(next)
+            (this as TextMassageContainer).action()
+            finalize()
         }
     }
 
-    inline fun <reified T> step(
+    @Suppress("UNCHECKED_CAST")
+    fun <T : MassageContainer> step(
         step: String,
-        nextStep: String? = null,
-        enableCustomSteps: Boolean = false,
-        crossinline action: suspend Message.(T) -> Unit
+        type: KClass<out T>,
+        next: String? = null,
+        action: suspend T.() -> Unit
     ) {
-        actionByStep[step] = { content ->
-            content
-                ?: throw RuntimeException("Ожидается экземпляр класса ${T::class.simpleName}, но в chainSource.content ничего не сохранено.")
-
-            val instance = shortMapper.readValue<T>(content)
-            this.action(instance)
-
-            if (!enableCustomSteps) {
-                chainSource.save(chatId, nextStep)
-            }
+        actionByStep[step] = {
+            next(next)
+            (action as suspend MassageContainer.() -> Unit)(this)
+            finalize()
         }
     }
 
-    inline fun callback(
+    fun callback(
         callback: String,
-        nextStep: String? = null,
-        enableCustomSteps: Boolean = false,
-        crossinline action: suspend CallbackQuery.() -> Unit
+        next: String? = null,
+        action: suspend CallbackMassageContainer.() -> Unit
     ) {
         actionByCallback[callback] = {
-            this.action()
-            if (!enableCustomSteps) {
-                chainSource.save(chatId, nextStep)
-            }
-        }
-    }
-
-    inline fun <reified T> callback(
-        callback: String,
-        nextStep: String? = null,
-        enableCustomSteps: Boolean = false,
-        crossinline action: suspend CallbackQuery.(T) -> Unit
-    ) {
-        actionByCallback[callback] = { content ->
-            val instance = if (content.startsWith('{') || content.startsWith('[')) {
-                shortMapper.readValue<T>(content)
-            } else {
-                callbackContentSource.get(content.toUUID()).let {
-                    shortMapper.readValue<T>(it.content)
-                }
-            }
-
-            this.action(instance)
-
-            if (!enableCustomSteps) {
-                chainSource.save(chatId, nextStep)
-            }
+            next(next)
+            action()
+            finalize()
         }
     }
 }
