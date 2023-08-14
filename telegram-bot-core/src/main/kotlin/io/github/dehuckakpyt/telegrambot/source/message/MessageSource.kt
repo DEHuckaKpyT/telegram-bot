@@ -11,5 +11,5 @@ import io.github.dehuckakpyt.telegrambot.model.TelegramMessage
  */
 interface MessageSource {
 
-    suspend fun save(chatId: Long, fromId: Long?, messageId: Long, text: String?): TelegramMessage
+    suspend fun save(chatId: Long, fromId: Long?, messageId: Long, text: String? = null): TelegramMessage
 }

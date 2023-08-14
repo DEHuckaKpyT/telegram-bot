@@ -1,4 +1,3 @@
-
 val ktor_version: String by project
 val koin_version: String by project
 

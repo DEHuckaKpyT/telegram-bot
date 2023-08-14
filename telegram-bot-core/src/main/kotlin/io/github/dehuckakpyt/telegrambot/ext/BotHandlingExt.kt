@@ -1,13 +1,10 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
-import com.elbekd.bot.types.CallbackQuery
-import com.elbekd.bot.types.Message
+import com.dehucka.microservice.ext.shortMapper
+import com.elbekd.bot.types.InlineKeyboardButton
+import com.elbekd.bot.types.InlineKeyboardMarkup
+import io.github.dehuckakpyt.telegrambot.BotChaining
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambot.TelegramBot
-import org.koin.core.Koin
-import org.koin.core.context.GlobalContext
-import org.koin.core.parameter.ParametersDefinition
-import org.koin.core.qualifier.Qualifier
 
 
 /**
@@ -16,55 +13,37 @@ import org.koin.core.qualifier.Qualifier
  *
  * @author Denis Matytsin
  */
+fun BotChaining.template(path: String): String = templateConfig.property(path).getString()
+suspend fun BotHandling.callbackData(nextStep: String, content: Any): String {
+    return shortMapper.writeValueAsString(content).let { value ->
+        if (value.length + nextStep.length + 1 <= 64) {
+            "$nextStep$callbackDataDelimiter$value"
+        } else {
+            if (nextStep.length > 27) throw RuntimeException("Название шага должно быть не больше 27 символов, чтобы в callback поместилось название шага и uuid")
 
-/**
- * Help work on ModuleDefinition
- */
-fun BotHandling.getKoin(): Koin = GlobalContext.get()
+            val sourceId = callbackContentSource.save(value).id.value
+            "$nextStep$callbackDataDelimiter$sourceId"
+        }
+    }
+}
 
-/**
- * inject lazily given dependency
- * @param qualifier - bean name / optional
- * @param parameters
- */
-inline fun <reified T : Any> BotHandling.inject(
-    qualifier: Qualifier? = null,
-    noinline parameters: ParametersDefinition? = null
-) = lazy { get<T>(qualifier, parameters) }
+suspend fun BotHandling.callbackButton(text: String, nextStep: String, content: Any): InlineKeyboardButton {
+    return InlineKeyboardButton(text, callbackData = callbackData(nextStep, content))
+}
 
-/**
- * Retrieve given dependency for KoinComponent
- * @param qualifier - bean name / optional
- * @param scope
- * @param parameters
- */
-inline fun <reified T : Any> BotHandling.get(
-    qualifier: Qualifier? = null,
-    noinline parameters: ParametersDefinition? = null
-) = getKoin().get<T>(qualifier, parameters)
+suspend fun BotHandling.callbackButton(text: String, nextStep: String): InlineKeyboardButton {
+    return InlineKeyboardButton(text, callbackData = "$nextStep$callbackDataDelimiter")
+}
 
-/**
- * Retrieve given property for KoinComponent
- * @param key - key property
- */
-fun <T : Any> BotHandling.getProperty(key: String) =
-    getKoin().getProperty<T>(key)
+suspend fun BotHandling.inlineKeyboard(button: InlineKeyboardButton): InlineKeyboardMarkup {
+    return InlineKeyboardMarkup(listOf(listOf(button)))
+}
 
-/**
- * Retrieve given property for KoinComponent
- * give a default value if property is missing
- *
- * @param key - key property
- * @param defaultValue - default value if property is missing
- *
- */
-fun BotHandling.getProperty(key: String, defaultValue: String) =
-    getKoin().getProperty(key) ?: defaultValue
-
-fun TelegramBot.template(path: String): String = templateConfig.property(path).getString()
-
-val Message.chatId: Long
-    get() = chat.id
-val CallbackQuery.chatId: Long
-    get() = message?.chat?.id ?: from.id
+suspend fun BotHandling.inlineKeyboard(vararg buttons: InlineKeyboardButton): InlineKeyboardMarkup {
+    return buttons.map {
+        listOf(it)
+    }.let {
+        InlineKeyboardMarkup(it)
+    }
+}
 

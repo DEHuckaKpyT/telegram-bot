@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "io.github.dehuckakpyt.telegrambot"
-    version = "0.1.3-SNAPSHOT"
+    version = "0.2.0-SNAPSHOT"
 }
 
 nexusPublishing {

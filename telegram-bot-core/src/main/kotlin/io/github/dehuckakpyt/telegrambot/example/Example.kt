@@ -1,9 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.example
 
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambot.data.container.MassageContainer.Companion.AUDIO
-import io.github.dehuckakpyt.telegrambot.data.container.MassageContainer.Companion.PHOTO
-import io.github.dehuckakpyt.telegrambot.data.container.MassageContainer.Companion.TEXT
+import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.AUDIO
+import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.PHOTO
+import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.TEXT
 
 
 /**
@@ -26,9 +26,10 @@ fun BotHandling.example() {
         // например, в TEXT нет photo и audio
         // к тому же здесь text not null, например
         sendMessage("отправка сообщения без указания чата")
+        sendMessage(chatId, "можно и указать чат")
     }
+    // по умолчанию будет использоваться TEXT
     step("next1") {
-        // по умолчанию будет использоваться TextMessage
         println(text)
         println(from)
         // можно получить объект, переданный на предыдущем шаге

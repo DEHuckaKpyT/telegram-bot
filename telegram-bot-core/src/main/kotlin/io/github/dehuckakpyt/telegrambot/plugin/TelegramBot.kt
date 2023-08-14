@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
 import org.koin.core.context.loadKoinModules
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -22,23 +23,29 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
 
     val token = pluginConfig.token ?: throw RuntimeException("Telegram-bot TOKEN must not be empty!")
     val username = pluginConfig.username ?: throw RuntimeException("Telegram-bot USERNAME must not be empty!")
-    val bot = Bot.createPolling(token, username)
-    val botHandling = BotHandling(application, bot, username)
+    val externalBot = Bot.createPolling(token, username)
+    val telegramBot = TelegramBot(externalBot)
 
-    pluginConfig.configureBot(bot)
+    val botHandling = BotHandling(application, telegramBot, username)
+
+    pluginConfig.configureBot(externalBot)
     pluginConfig.handling(botHandling)
 
-    loadKoinModules(module { single<TelegramBot> { botHandling } bind TelegramBot::class })
+
+    loadKoinModules(module {
+        single<TelegramBot> { telegramBot } bind io.github.dehuckakpyt.telegrambot.TelegramBot::class
+        single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
+    })
 
     fun startTelegramBot() {
         application.log.info("Starting telegram-bot '$username'..")
-        bot.start()
+        externalBot.start()
         application.log.info("Telegram-bot '$username' started.")
     }
 
     fun stopTelegramBot() {
         application.log.info("Stopping telegram-bot '$username'..")
-        bot.stop()
+        externalBot.stop()
         application.log.info("Telegram-bot '$username' stopped.")
     }
 

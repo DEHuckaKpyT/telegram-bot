@@ -1,12 +1,11 @@
 package io.github.dehuckakpyt.telegrambot
 
-import com.elbekd.bot.Bot
 import freemarker.template.Configuration
 import freemarker.template.Version
-import io.github.dehuckakpyt.telegrambot.data.container.CallbackMassageContainer
-import io.github.dehuckakpyt.telegrambot.data.container.CommandMassageContainer
-import io.github.dehuckakpyt.telegrambot.data.container.MassageContainer
-import io.github.dehuckakpyt.telegrambot.data.container.TextMassageContainer
+import io.github.dehuckakpyt.telegrambot.container.CallbackMassageContainer
+import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer
+import io.github.dehuckakpyt.telegrambot.container.MassageContainer
+import io.github.dehuckakpyt.telegrambot.container.TextMassageContainer
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSourceImpl
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -14,6 +13,7 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSourceImpl
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSourceImpl
 import io.ktor.server.application.*
+import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
 
 
@@ -25,13 +25,13 @@ import kotlin.reflect.KClass
  */
 open class BotHandling(
     application: Application,
-    bot: Bot,
+    bot: TelegramBot,
     username: String,
     messageSource: MessageSource = MessageSourceImpl(),
     chainSource: ChainSource = ChainSourceImpl(),
     callbackContentSource: CallbackContentSource = CallbackContentSourceImpl(),
     templateConfiguration: Configuration = Configuration(Version("2.3.32"))
-) : TelegramBotChaining(
+) : BotChaining(
     application,
     bot,
     username,
@@ -39,7 +39,7 @@ open class BotHandling(
     chainSource,
     callbackContentSource,
     templateConfiguration
-) {
+), KoinComponent {
 
     fun command(
         command: String,
@@ -65,7 +65,7 @@ open class BotHandling(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
     fun <T : MassageContainer> step(
         step: String,
         type: KClass<out T>,
