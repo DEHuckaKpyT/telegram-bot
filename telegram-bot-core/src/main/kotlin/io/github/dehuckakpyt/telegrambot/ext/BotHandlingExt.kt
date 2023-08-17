@@ -3,7 +3,6 @@ package io.github.dehuckakpyt.telegrambot.ext
 import com.dehucka.microservice.ext.shortMapper
 import com.elbekd.bot.types.InlineKeyboardButton
 import com.elbekd.bot.types.InlineKeyboardMarkup
-import io.github.dehuckakpyt.telegrambot.BotChaining
 import io.github.dehuckakpyt.telegrambot.BotHandling
 
 
@@ -13,7 +12,6 @@ import io.github.dehuckakpyt.telegrambot.BotHandling
  *
  * @author Denis Matytsin
  */
-fun BotChaining.template(path: String): String = templateConfig.property(path).getString()
 suspend fun BotHandling.callbackData(nextStep: String, content: Any): String {
     return shortMapper.writeValueAsString(content).let { value ->
         if (value.length + nextStep.length + 1 <= 64) {

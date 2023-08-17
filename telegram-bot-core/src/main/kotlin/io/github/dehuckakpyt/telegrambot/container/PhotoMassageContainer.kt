@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.container
 
 import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
 
@@ -21,4 +22,21 @@ class PhotoMassageContainer(
 
     val caption get() = message.caption
     val photos get() = message.photo
+
+    companion object : MessageContainerFactory {
+        override fun condition(message: Message): Boolean = with(message) {
+            return photo.isNotEmpty()
+        }
+
+        override fun create(
+            chatId: Long,
+            message: Message,
+            content: String?,
+            chainSource: ChainSource,
+            bot: TelegramBot
+        ): MassageContainer = PhotoMassageContainer(chatId, message, content, chainSource, bot)
+
+        override val type get() = PHOTO
+        override val typeName get() = "Фотография"
+    }
 }

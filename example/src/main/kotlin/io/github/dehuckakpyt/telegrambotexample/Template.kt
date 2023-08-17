@@ -1,4 +1,7 @@
-package io.github.dehuckakpyt.telegrambot
+package io.github.dehuckakpyt.telegrambotexample
+
+import io.github.dehuckakpyt.telegrambot.BotHandling
+import io.github.dehuckakpyt.telegrambot.template
 
 val BotHandling.start by template()
 val BotHandling.chain by template()

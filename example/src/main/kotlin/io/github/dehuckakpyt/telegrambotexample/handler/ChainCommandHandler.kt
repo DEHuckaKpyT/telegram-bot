@@ -1,7 +1,11 @@
-package io.github.dehuckakpyt.telegrambot.handler
+package io.github.dehuckakpyt.telegrambotexample.handler
 
 import com.dehucka.microservice.exception.CustomBadRequestException
-import io.github.dehuckakpyt.telegrambot.*
+import io.github.dehuckakpyt.telegrambot.BotHandling
+import io.github.dehuckakpyt.telegrambotexample.chain
+import io.github.dehuckakpyt.telegrambotexample.chainEnd
+import io.github.dehuckakpyt.telegrambotexample.chainOneMore
+import io.github.dehuckakpyt.telegrambotexample.chainStartSum
 
 fun BotHandling.chainCommand() {
     // next - указание следующего шага

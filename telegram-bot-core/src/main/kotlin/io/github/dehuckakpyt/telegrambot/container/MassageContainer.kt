@@ -27,5 +27,8 @@ abstract class MassageContainer(
         val TEXT = TextMassageContainer::class
         val PHOTO = PhotoMassageContainer::class
         val AUDIO = AudioMassageContainer::class
+        val VOICE = VoiceMessageContainer::class
+        val CONTACT = ContactMessageContainer::class
+        val DOCUMENT = DocumentMessageContainer::class
     }
 }

@@ -1,8 +1,8 @@
-package io.github.dehuckakpyt.telegrambot
+package io.github.dehuckakpyt.telegrambotexample
 
-import io.github.dehuckakpyt.telegrambot.plugin.configureDatabase
-import io.github.dehuckakpyt.telegrambot.plugin.configureDependencyInjection
-import io.github.dehuckakpyt.telegrambot.plugin.configureTelegramBot
+import io.github.dehuckakpyt.telegrambotexample.plugin.configureDatabase
+import io.github.dehuckakpyt.telegrambotexample.plugin.configureDependencyInjection
+import io.github.dehuckakpyt.telegrambotexample.plugin.configureTelegramBot
 import io.ktor.server.application.*
 
 /**

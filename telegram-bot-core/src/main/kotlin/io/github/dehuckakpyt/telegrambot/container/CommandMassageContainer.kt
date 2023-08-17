@@ -24,5 +24,20 @@ class CommandMassageContainer(
     companion object {
         private val commandPathParamRegex = Regex("^/[a-zA-Z]+(?:_[a-zA-Z]+)*(?:__([a-zA-Z0-9-_]+))?")
         private val commandArgumentRegex = Regex("^/[a-zA-Z0-9_]+(?:@([a-zA-Z0-9_]+))?(?: (.+))?")
+
+        private val commandRegex = Regex("^(/[a-zA-Z]+(?:_[a-zA-Z]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")
+        fun fetchCommand(input: String?, usernameExpected: String): String? {
+            input ?: return null
+
+            val find = commandRegex.find(input) ?: return null
+            val groups = find.groups
+
+            val command = groups[1]?.value ?: return null
+
+            val usernameActual = groups[2]?.value
+            if (usernameActual != null && usernameActual != usernameExpected) return null
+
+            return command
+        }
     }
 }

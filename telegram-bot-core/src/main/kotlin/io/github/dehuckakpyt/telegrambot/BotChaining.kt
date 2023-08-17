@@ -8,16 +8,17 @@ import com.elbekd.bot.types.Update
 import com.elbekd.bot.types.UpdateMessage
 import freemarker.template.Configuration
 import freemarker.template.Template
-import io.github.dehuckakpyt.telegrambot.container.CallbackMassageContainer
-import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer
-import io.github.dehuckakpyt.telegrambot.container.MassageContainer
-import io.github.dehuckakpyt.telegrambot.container.TextMassageContainer
+import io.github.dehuckakpyt.telegrambot.container.*
+import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer.Companion.fetchCommand
+import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.server.application.*
 import java.io.StringWriter
+import kotlin.reflect.KClass
+import kotlin.reflect.full.companionObjectInstance
 
 
 /**
@@ -29,21 +30,19 @@ import java.io.StringWriter
 abstract class BotChaining(
     private val application: Application,
     private val bot: TelegramBot,
-    val username: String,
+    private val username: String,
     private val messageSource: MessageSource,
     private val chainSource: ChainSource,
     val callbackContentSource: CallbackContentSource,
     private val templateConfiguration: Configuration
 ) {
 
-    val templateConfig = application.environment.config.config("telegram-bot.template")
     val callbackDataDelimiter: Char = '|'
 
     protected val actionByCommand: MutableMap<String, suspend CommandMassageContainer.() -> Unit> = hashMapOf()
-    protected val actionByStep: MutableMap<String, suspend MassageContainer.() -> Unit> = hashMapOf()
+    protected val actionByStep: MutableMap<String, MutableMap<KClass<out MassageContainer>, suspend MassageContainer.() -> Unit>> =
+        hashMapOf()
     protected val actionByCallback: MutableMap<String, suspend CallbackMassageContainer.() -> Unit> = hashMapOf()
-
-    private val commandRegex = Regex("^(/[a-zA-Z]+(?:_[a-zA-Z]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")
 
     private val whenCommandNotFound: suspend (Long, String) -> Unit = { chatId, command ->
         bot.sendMessage(
@@ -58,6 +57,16 @@ abstract class BotChaining(
     private val whenUnknownError: suspend (Long) -> Unit = { chatId ->
         bot.sendMessage(chatId, "Произошла непредвиденная ошибка. Обратитесь к разработчику.")
     }
+    private val whenUnexpectedMessageType: suspend (Long, Set<KClass<out MassageContainer>>) -> Unit =
+        { chatId, expectedMessageTypes ->
+            val expectedMessageNames = expectedMessageTypes.joinToString(", ") {
+                (it.companionObjectInstance as MessageContainerFactory).typeName
+            }
+            bot.sendMessage(
+                chatId,
+                "Неподходящий тип сообщения.\nОжидаемые типы: $expectedMessageNames"
+            )
+        }
     private val whenStepNotFound: suspend (Long) -> Unit = { chatId ->
         bot.sendMessage(
             chatId,
@@ -79,13 +88,13 @@ abstract class BotChaining(
         if (update !is UpdateMessage) return
 
         val message = update.message
-        val text = message.text ?: return
+        val text = message.text
         val chatId = message.chatId
 
         tryExecute(chatId) {
             messageSource.save(chatId, message.from?.id, message.messageId, text)
 
-            fetchCommand(text)?.let {
+            fetchCommand(text, username)?.let {
                 processCommand(it, message)
             } ?: processMessage(message)
         }
@@ -99,9 +108,23 @@ abstract class BotChaining(
 
     private suspend fun processMessage(message: Message) = with(message) {
         val chainLink = chainSource.get(chatId)
-        chainLink.step?.let { step ->
-            actionByStep[step]?.invoke(TextMassageContainer(chatId, message, chainLink.content, chainSource, bot))
-        } ?: whenStepNotFound(chatId)
+        val step = chainLink.step ?: whenStepNotFound(chatId)
+
+        val actionByMessageType = actionByStep[step] ?: let {
+            whenStepNotFound(chatId)
+            return
+        }
+
+        val factory = message.containerFactory
+        actionByMessageType[factory.type]?.invoke(
+            factory.create(
+                chatId,
+                message,
+                chainLink.content,
+                chainSource,
+                bot
+            )
+        ) ?: whenUnexpectedMessageType(chatId, actionByMessageType.keys)
     }
 
     private suspend fun processCallback(callback: CallbackQuery) = with(callback) {
@@ -150,15 +173,14 @@ abstract class BotChaining(
         }
     }
 
-    private fun fetchCommand(input: String): String? {
-        val find = commandRegex.find(input) ?: return null
-        val groups = find.groups
-
-        val command = groups[1]?.value ?: return null
-
-        val username = groups[2]?.value
-        if (username != null && username != this.username) return null
-
-        return command
-    }
+    private val Message.containerFactory: MessageContainerFactory
+        get() = when {
+            TextMassageContainer.condition(this) -> TextMassageContainer.Companion
+            AudioMassageContainer.condition(this) -> AudioMassageContainer.Companion
+            VoiceMessageContainer.condition(this) -> VoiceMessageContainer.Companion
+            ContactMessageContainer.condition(this) -> ContactMessageContainer.Companion
+            DocumentMessageContainer.condition(this) -> DocumentMessageContainer.Companion
+            PhotoMassageContainer.condition(this) -> PhotoMassageContainer.Companion
+            else -> throw CustomException("Такой тип сообщения ещё не поддерживается.")
+        }
 }
