@@ -108,7 +108,10 @@ abstract class BotChaining(
 
     private suspend fun processMessage(message: Message) = with(message) {
         val chainLink = chainSource.get(chatId)
-        val step = chainLink.step ?: whenStepNotFound(chatId)
+        val step = chainLink.step ?: let {
+            whenStepNotFound(chatId)
+            return
+        }
 
         val actionByMessageType = actionByStep[step] ?: let {
             whenStepNotFound(chatId)

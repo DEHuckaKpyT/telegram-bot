@@ -1,8 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
 import com.dehucka.microservice.ext.shortMapper
-import com.elbekd.bot.types.InlineKeyboardButton
-import com.elbekd.bot.types.InlineKeyboardMarkup
+import com.elbekd.bot.types.*
 import io.github.dehuckakpyt.telegrambot.BotHandling
 
 
@@ -33,15 +32,23 @@ suspend fun BotHandling.callbackButton(text: String, nextStep: String): InlineKe
     return InlineKeyboardButton(text, callbackData = "$nextStep$callbackDataDelimiter")
 }
 
-suspend fun BotHandling.inlineKeyboard(button: InlineKeyboardButton): InlineKeyboardMarkup {
+suspend fun BotHandling.inlineKeyboard(button: InlineKeyboardButton): ReplyKeyboard {
     return InlineKeyboardMarkup(listOf(listOf(button)))
 }
 
-suspend fun BotHandling.inlineKeyboard(vararg buttons: InlineKeyboardButton): InlineKeyboardMarkup {
+suspend fun BotHandling.inlineKeyboard(vararg buttons: InlineKeyboardButton): ReplyKeyboard {
     return buttons.map {
         listOf(it)
     }.let {
         InlineKeyboardMarkup(it)
     }
+}
+
+suspend fun BotHandling.contactButton(text: String): ReplyKeyboard {
+    return ReplyKeyboardMarkup(listOf(listOf(KeyboardButton(text, requestContact = true))))
+}
+
+suspend fun BotHandling.removeKeyboard(): ReplyKeyboard {
+    return ReplyKeyboardRemove(true)
 }
 

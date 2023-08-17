@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambotexample.start
+import io.github.dehuckakpyt.telegrambotexample.template.start
 
 fun BotHandling.startCommand() {
     command("/start") {

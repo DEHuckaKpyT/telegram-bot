@@ -2,10 +2,10 @@ package io.github.dehuckakpyt.telegrambotexample.handler
 
 import com.dehucka.microservice.exception.CustomBadRequestException
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambotexample.chain
-import io.github.dehuckakpyt.telegrambotexample.chainEnd
-import io.github.dehuckakpyt.telegrambotexample.chainOneMore
-import io.github.dehuckakpyt.telegrambotexample.chainStartSum
+import io.github.dehuckakpyt.telegrambotexample.template.chain
+import io.github.dehuckakpyt.telegrambotexample.template.chainEnd
+import io.github.dehuckakpyt.telegrambotexample.template.chainOneMore
+import io.github.dehuckakpyt.telegrambotexample.template.chainStartSum
 
 fun BotHandling.chainCommand() {
     // next - указание следующего шага
