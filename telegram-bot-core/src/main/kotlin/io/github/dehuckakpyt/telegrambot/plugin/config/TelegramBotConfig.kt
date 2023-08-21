@@ -5,10 +5,11 @@ import freemarker.template.Configuration
 import freemarker.template.Version
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.ext.empty
-import io.github.dehuckakpyt.telegrambot.ext.inMemory
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
+import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
+import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.server.config.*
 
@@ -27,9 +28,9 @@ data class TelegramBotConfig(private val config: ApplicationConfig) {
     var configureBot: TelegramBot.() -> Unit = {}
     var handling: BotHandling.() -> Unit = {}
     var templateConfig = Configuration(Version("2.3.32"))
-    var callbackContentSource: CallbackContentSource = CallbackContentSource.inMemory
-    var chainSource: ChainSource = ChainSource.inMemory
-    var messageSource: MessageSource = MessageSource.empty
+    var callbackContentSource: CallbackContentSource = InMemoryCallbackContentSource()
+    var chainSource: ChainSource = InMemoryChainSource()
+    var messageSource: MessageSource = EmptyMessageSource()
 
     fun pollingOptions(block: PollingOptions.() -> Unit) {
         pollingOptions = block

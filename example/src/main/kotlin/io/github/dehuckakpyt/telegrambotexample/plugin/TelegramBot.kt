@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambotexample.plugin
 
+import io.github.dehuckakpyt.telegrambot.ext.databaseSources
 import io.github.dehuckakpyt.telegrambot.plugin.TelegramBot
 import io.github.dehuckakpyt.telegrambotexample.handler.chainCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.registerCommand
@@ -18,6 +19,8 @@ fun Application.configureTelegramBot() {
         configureTemplating {
             defaultEncoding = "UTF-8"
         }
+
+        databaseSources()
 
         handling {
             startCommand()

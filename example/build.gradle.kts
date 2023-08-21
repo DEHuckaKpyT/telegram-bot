@@ -2,6 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val ktor_version: String by project
 val koin_version: String by project
+val exposed_version = "0.41.1"
+val hikaricp_version = "5.0.1"
+val postgresql_version = "42.5.4"
 
 plugins {
     application
@@ -19,10 +22,17 @@ dependencies {
     //endregion ktor
 
     //region dehuckakpyt
+    implementation(project(":telegram-bot-database-source"))
     implementation(project(":telegram-bot-core"))
     //endregion dehuckakpyt
 
     //region other
+    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
+    implementation("com.zaxxer:HikariCP:$hikaricp_version")
+    implementation("org.postgresql:postgresql:$postgresql_version")
     ksp("io.insert-koin:koin-ksp-compiler:1.2.2")
     //endregion other
 }

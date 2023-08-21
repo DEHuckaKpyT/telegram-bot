@@ -20,11 +20,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
  *
  * @author Denis Matytsin
  */
-fun TelegramBotConfig.databaseSources() {
-    callbackContentSource = CallbackContentSource.inDatabase
-    chainSource = ChainSource.inDatabase
-    messageSource = MessageSource.inDatabase
-}
+val CallbackContentSource.Companion.inDatabase: CallbackContentSource
+    get() {
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(CallbackContents)
+        }
+
+        return DatabaseCallbackContentSource()
+    }
 
 val ChainSource.Companion.inDatabase: ChainSource
     get() {
@@ -35,15 +38,6 @@ val ChainSource.Companion.inDatabase: ChainSource
         return DatabaseChainSource()
     }
 
-val CallbackContentSource.Companion.inDatabase: CallbackContentSource
-    get() {
-        transaction {
-            SchemaUtils.createMissingTablesAndColumns(CallbackContents)
-        }
-
-        return DatabaseCallbackContentSource()
-    }
-
 val MessageSource.Companion.inDatabase: MessageSource
     get() {
         transaction {
@@ -52,3 +46,17 @@ val MessageSource.Companion.inDatabase: MessageSource
 
         return DatabaseMessageSource()
     }
+
+fun TelegramBotConfig.databaseSources() {
+    callbackContentSource = DatabaseCallbackContentSource()
+    chainSource = DatabaseChainSource()
+    messageSource = DatabaseMessageSource()
+
+    transaction {
+        SchemaUtils.createMissingTablesAndColumns(
+            CallbackContents,
+            Chains,
+            TelegramMessages
+        )
+    }
+}
