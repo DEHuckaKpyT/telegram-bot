@@ -34,7 +34,7 @@ class VoiceMessageContainer(
             bot: TelegramBot
         ): MassageContainer = VoiceMessageContainer(chatId, message, content, chainSource, bot)
 
-        override val type get() = VOICE
-        override val typeName get() = "Голосовое сообщение"
+        override val type = VOICE
+        override val typeName = "Голосовое сообщение"
     }
 }

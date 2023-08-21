@@ -36,7 +36,7 @@ class DocumentMessageContainer(
             bot: TelegramBot
         ): MassageContainer = DocumentMessageContainer(chatId, message, content, chainSource, bot)
 
-        override val type get() = DOCUMENT
-        override val typeName get() = "Файл"
+        override val type = DOCUMENT
+        override val typeName = "Файл"
     }
 }

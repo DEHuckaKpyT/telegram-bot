@@ -36,7 +36,7 @@ class PhotoMassageContainer(
             bot: TelegramBot
         ): MassageContainer = PhotoMassageContainer(chatId, message, content, chainSource, bot)
 
-        override val type get() = PHOTO
-        override val typeName get() = "Фотография"
+        override val type = PHOTO
+        override val typeName = "Фотография"
     }
 }

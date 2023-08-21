@@ -36,7 +36,7 @@ class AudioMassageContainer(
             bot: TelegramBot
         ): MassageContainer = AudioMassageContainer(chatId, message, content, chainSource, bot)
 
-        override val type get() = AUDIO
-        override val typeName get() = "Аудио сообщение"
+        override val type = AUDIO
+        override val typeName = "Аудио сообщение"
     }
 }

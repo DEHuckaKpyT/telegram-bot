@@ -34,7 +34,7 @@ open class TextMassageContainer(
             bot: TelegramBot
         ): MassageContainer = TextMassageContainer(chatId, message, content, chainSource, bot)
 
-        override val type get() = TEXT
-        override val typeName get() = "Текстовое сообщение"
+        override val type = TEXT
+        override val typeName = "Текстовое сообщение"
     }
 }

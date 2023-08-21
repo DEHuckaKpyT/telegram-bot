@@ -23,55 +23,55 @@ class TelegramBot(
     private val messageService: MessageSource = MessageSourceImpl(),
 ) {
     //region Telegram events
-    internal fun onMessage(action: (suspend (Message) -> Unit)?) {
+    fun onMessage(action: (suspend (Message) -> Unit)?) {
         bot.onMessage(action)
     }
 
-    internal fun onEditedMessage(action: (suspend (Message) -> Unit)?) {
+    fun onEditedMessage(action: (suspend (Message) -> Unit)?) {
         bot.onEditedMessage(action)
     }
 
-    internal fun onChannelPost(action: (suspend (Message) -> Unit)?) {
+    fun onChannelPost(action: (suspend (Message) -> Unit)?) {
         bot.onChannelPost(action)
     }
 
-    internal fun onEditedChannelPost(action: (suspend (Message) -> Unit)?) {
+    fun onEditedChannelPost(action: (suspend (Message) -> Unit)?) {
         bot.onEditedChannelPost(action)
     }
 
-    internal fun onInlineQuery(action: (suspend (InlineQuery) -> Unit)?) {
+    fun onInlineQuery(action: (suspend (InlineQuery) -> Unit)?) {
         bot.onInlineQuery(action)
     }
 
-    internal fun onChosenInlineQuery(action: (suspend (ChosenInlineResult) -> Unit)?) {
+    fun onChosenInlineQuery(action: (suspend (ChosenInlineResult) -> Unit)?) {
         bot.onChosenInlineQuery(action)
     }
 
-    internal fun onCallbackQuery(action: (suspend (CallbackQuery) -> Unit)?) {
+    fun onCallbackQuery(action: (suspend (CallbackQuery) -> Unit)?) {
         bot.onCallbackQuery(action)
     }
 
-    internal fun onShippingQuery(action: (suspend (ShippingQuery) -> Unit)?) {
+    fun onShippingQuery(action: (suspend (ShippingQuery) -> Unit)?) {
         bot.onShippingQuery(action)
     }
 
-    internal fun onPreCheckoutQuery(action: (suspend (PreCheckoutQuery) -> Unit)?) {
+    fun onPreCheckoutQuery(action: (suspend (PreCheckoutQuery) -> Unit)?) {
         bot.onPreCheckoutQuery(action)
     }
 
-    internal fun onCommand(command: String, action: (suspend (Pair<Message, String?>) -> Unit)?) {
+    fun onCommand(command: String, action: (suspend (Pair<Message, String?>) -> Unit)?) {
         bot.onCommand(command, action)
     }
 
-    internal fun onCallbackQuery(data: String, action: (suspend (CallbackQuery) -> Unit)?) {
+    fun onCallbackQuery(data: String, action: (suspend (CallbackQuery) -> Unit)?) {
         bot.onCallbackQuery(data, action)
     }
 
-    internal fun onInlineQuery(query: String, action: (suspend (InlineQuery) -> Unit)?) {
+    fun onInlineQuery(query: String, action: (suspend (InlineQuery) -> Unit)?) {
         bot.onInlineQuery(query, action)
     }
 
-    internal fun onAnyUpdate(action: (suspend (Update) -> Unit)?) {
+    fun onAnyUpdate(action: (suspend (Update) -> Unit)?) {
         bot.onAnyUpdate(action)
     }
     //endregion
