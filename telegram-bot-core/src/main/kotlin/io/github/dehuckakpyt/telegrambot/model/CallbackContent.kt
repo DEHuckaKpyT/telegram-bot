@@ -1,5 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model
 
+import java.util.*
+
 
 /**
  * Created on 21.08.2023.
@@ -7,9 +9,7 @@ package io.github.dehuckakpyt.telegrambot.model
  *
  * @author Denis Matytsin
  */
-interface Chain {
-    val chatId: Long
-    val fromId: Long
-    val step: String?
-    val content: String?
+interface CallbackContent {
+    val identifier: UUID
+    val content: String
 }

@@ -8,7 +8,8 @@ import com.elbekd.bot.util.Action
 import com.elbekd.bot.util.AllowedUpdate
 import com.elbekd.bot.util.SendingDocument
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSourceImpl
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import java.io.File
 
 
@@ -19,9 +20,11 @@ import java.io.File
  * @author Denis Matytsin
  */
 class TelegramBot(
-    private val bot: Bot,
-    private val messageService: MessageSource = MessageSourceImpl(),
-) {
+    private val bot: Bot
+) : KoinComponent {
+
+    private val messageSource = get<MessageSource>()
+
     //region Telegram events
     fun onMessage(action: (suspend (Message) -> Unit)?) {
         bot.onMessage(action)
@@ -152,7 +155,7 @@ class TelegramBot(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         ).also {
-            messageService.save(chatId, it.from?.id, it.messageId, text)
+            messageSource.save(chatId, it.from?.id, it.messageId, text)
         }
     }
 
@@ -171,7 +174,7 @@ class TelegramBot(
         disableNotification = disableNotification,
         protectContent = protectContent,
     ).also {
-        messageService.save(chatId, it.from?.id, it.messageId)
+        messageSource.save(chatId, it.from?.id, it.messageId)
     }
 
     suspend fun copyMessage(
@@ -201,7 +204,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageService.save(chatId, fromChatId, messageId, caption)
+        messageSource.save(chatId, fromChatId, messageId, caption)
     }
 
     suspend fun sendPhoto(
@@ -231,7 +234,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageService.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from?.id, it.messageId, caption)
     }
 
     suspend fun sendAudio(
@@ -267,7 +270,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageService.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from?.id, it.messageId, caption)
     }
 
     suspend fun sendDocument(
@@ -299,7 +302,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageService.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from?.id, it.messageId, caption)
     }
 
     suspend fun sendVideo(
@@ -339,7 +342,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageService.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from?.id, it.messageId, caption)
     }
 
     suspend fun sendAnimation(
@@ -377,7 +380,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageService.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from?.id, it.messageId, caption)
     }
 
     suspend fun sendVoice(
@@ -407,7 +410,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageService.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from?.id, it.messageId, caption)
     }
 
     suspend fun sendVideoNote(

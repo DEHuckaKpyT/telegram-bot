@@ -1,18 +1,10 @@
 package io.github.dehuckakpyt.telegrambot
 
-import freemarker.template.Configuration
-import freemarker.template.Version
 import io.github.dehuckakpyt.telegrambot.container.CallbackMassageContainer
 import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.TEXT
 import io.github.dehuckakpyt.telegrambot.container.TextMassageContainer
-import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
-import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSourceImpl
-import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
-import io.github.dehuckakpyt.telegrambot.source.chain.ChainSourceImpl
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSourceImpl
 import io.ktor.server.application.*
 import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
@@ -24,23 +16,8 @@ import kotlin.reflect.KClass
  *
  * @author Denis Matytsin
  */
-open class BotHandling(
-    application: Application,
-    bot: TelegramBot,
-    username: String,
-    messageSource: MessageSource = MessageSourceImpl(),
-    chainSource: ChainSource = ChainSourceImpl(),
-    callbackContentSource: CallbackContentSource = CallbackContentSourceImpl(),
-    templateConfiguration: Configuration = Configuration(Version("2.3.32"))
-) : BotChaining(
-    application,
-    bot,
-    username,
-    messageSource,
-    chainSource,
-    callbackContentSource,
-    templateConfiguration
-), KoinComponent {
+open class BotHandling(application: Application, bot: TelegramBot, username: String) :
+    BotChaining(application, bot, username), KoinComponent {
 
     fun command(command: String, next: String? = null, action: suspend CommandMassageContainer.() -> Unit) {
         actionByCommand[command] = {

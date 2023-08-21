@@ -18,7 +18,7 @@ suspend fun BotHandling.callbackData(nextStep: String, content: Any): String {
         } else {
             if (nextStep.length > 27) throw RuntimeException("Название шага должно быть не больше 27 символов, чтобы в callback поместилось название шага и uuid")
 
-            val sourceId = callbackContentSource.save(value).id.value
+            val sourceId = callbackContentSource.save(value).identifier
             "$nextStep$callbackDataDelimiter$sourceId"
         }
     }

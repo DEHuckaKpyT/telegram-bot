@@ -2,9 +2,6 @@ package io.github.dehuckakpyt.telegrambotexample.plugin
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.github.dehuckakpyt.telegrambot.model.CallbackContents
-import io.github.dehuckakpyt.telegrambot.model.Chains
-import io.github.dehuckakpyt.telegrambot.model.TelegramMessages
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -39,9 +36,6 @@ fun Application.configureDatabase() {
     fun createTables() {
         transaction {
             SchemaUtils.createMissingTablesAndColumns(
-                TelegramMessages,
-                Chains,
-                CallbackContents,
             )
         }
     }

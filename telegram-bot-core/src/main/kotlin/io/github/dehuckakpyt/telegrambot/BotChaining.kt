@@ -7,8 +7,6 @@ import com.elbekd.bot.types.Message
 import com.elbekd.bot.types.ParseMode.MarkdownV2
 import com.elbekd.bot.types.Update
 import com.elbekd.bot.types.UpdateMessage
-import freemarker.template.Configuration
-import freemarker.template.Template
 import io.github.dehuckakpyt.telegrambot.container.*
 import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer.Companion.fetchCommand
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
@@ -18,7 +16,8 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.*
 import io.ktor.server.application.*
-import java.io.StringWriter
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 
@@ -30,14 +29,14 @@ import kotlin.reflect.full.companionObjectInstance
  * @author Denis Matytsin
  */
 abstract class BotChaining(
-    private val application: Application,
+    val application: Application,
     private val bot: TelegramBot,
-    private val username: String,
-    private val messageSource: MessageSource,
-    private val chainSource: ChainSource,
-    val callbackContentSource: CallbackContentSource,
-    private val templateConfiguration: Configuration
-) : Logging {
+    private val username: String
+) : KoinComponent, Templating, Logging {
+
+    val callbackContentSource = get<CallbackContentSource>()
+    val chainSource = get<ChainSource>()
+    val messageSource = get<MessageSource>()
 
     val callbackDataDelimiter: Char = '|'
 
@@ -47,10 +46,10 @@ abstract class BotChaining(
     protected val actionByCallback: MutableMap<String, suspend CallbackMassageContainer.() -> Unit> = hashMapOf()
 
     private val whenCommandNotFound: suspend (Long, String) -> Unit = { chatId, command ->
-        bot.sendMessage(chatId, whenCommandNotFoundTemplate with mapOf("command" to command), parseMode = MarkdownV2)
+        bot.sendMessage(chatId, whenCommandNotFoundTemplate with ("command" to command), parseMode = MarkdownV2)
     }
     private val whenKnownError: suspend (Long, String) -> Unit = { chatId, message ->
-        bot.sendMessage(chatId, whenKnownErrorTemplate with mapOf("message" to message))
+        bot.sendMessage(chatId, whenKnownErrorTemplate with ("message" to message))
     }
     private val whenUnknownError: suspend (Long) -> Unit = { chatId ->
         if (chatId > 0) {// если это личный чат
@@ -64,7 +63,7 @@ abstract class BotChaining(
             }
             bot.sendMessage(
                 chatId,
-                whenUnexpectedMessageTypeTemplate with mapOf("expectedMessageNames" to expectedMessageNames)
+                whenUnexpectedMessageTypeTemplate with ("expectedMessageNames" to expectedMessageNames)
             )
         }
     private val whenStepNotFound: suspend (Long) -> Unit = { chatId ->
@@ -139,19 +138,6 @@ abstract class BotChaining(
                 CallbackMassageContainer(chatId, callback, callbackContent, chainSource, bot)
             )
         }
-    }
-
-    infix fun String.with(instance: Any): String {
-        val writer = StringWriter()
-
-        try {
-            val markerTemplate = Template("template", this, templateConfiguration)
-            markerTemplate.process(instance, writer)
-        } catch (exc: Exception) {
-            throw RuntimeException(exc)
-        }
-
-        return writer.toString()
     }
 
     private suspend fun tryExecute(chatId: Long, block: suspend () -> Unit) {

@@ -21,7 +21,7 @@ fun BotHandling.chainCommand() {
         if (target < 1) throw CustomBadRequestException("Ожидается положительное число")
 
         // метод with подставляет в шаблон chainStartSum значение переменной target (с помощью FreeMarker)
-        sendMessage(chainStartSum with mapOf("target" to target))
+        sendMessage(chainStartSum with ("target" to target))
         // метод transferToNext передаёт переменную в следующий шаг
         transferToNext(target to 0)
     }

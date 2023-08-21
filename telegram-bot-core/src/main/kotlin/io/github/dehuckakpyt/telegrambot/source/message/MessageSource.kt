@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.source.message
 
-import io.github.dehuckakpyt.telegrambot.model.TelegramMessage
+import com.dehucka.microservice.logger.Logging
 
 
 /**
@@ -9,7 +9,16 @@ import io.github.dehuckakpyt.telegrambot.model.TelegramMessage
  *
  * @author Denis Matytsin
  */
-interface MessageSource {
+interface MessageSource : Logging {
 
-    suspend fun save(chatId: Long, fromId: Long?, messageId: Long, text: String? = null): TelegramMessage
+    suspend fun save(chatId: Long, fromId: Long?, messageId: Long, text: String? = null) {
+        fromId ?: let {
+            logger.warn("Don't expect message without fromId.\nchatId = '$chatId'")
+            return
+        }
+    }
+
+    suspend fun save(chatId: Long, fromId: Long, messageId: Long, text: String? = null)
+
+    companion object
 }
