@@ -16,6 +16,8 @@ import org.koin.core.component.get
  */
 @Single
 class NotifyWhenStartedRunner : Runner, TemplatingExtended {
+    // всегда доступен TelegramBot для отправки сообщений
+    // достаточно просто воспользоваться Koin
     private val bot = get<TelegramBot>()
     private val chatIdToNotify = 1165327523L
 
