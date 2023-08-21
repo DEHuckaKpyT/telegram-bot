@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.template.BotTemplate
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
 import org.koin.core.context.loadKoinModules
@@ -33,10 +34,11 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
         single<MessageSource> { pluginConfig.messageSource }
         single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
         single { pluginConfig.templateConfig }
+        single { BotTemplate() }
     })
 
     val externalBot = Bot.createPolling(token, username, pluginConfig.pollingOptions)
-    val telegramBot = TelegramBot(externalBot)
+    val telegramBot = TelegramBot(username, externalBot, pluginConfig.messageSource)
 
     val botHandling = BotHandling(application, telegramBot, username)
 

@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambotexample
 import io.github.dehuckakpyt.telegrambotexample.plugin.configureDatabase
 import io.github.dehuckakpyt.telegrambotexample.plugin.configureDependencyInjection
 import io.github.dehuckakpyt.telegrambotexample.plugin.configureTelegramBot
+import io.github.dehuckakpyt.telegrambotexample.plugin.startRunners
 import io.ktor.server.application.*
 
 /**
@@ -18,4 +19,6 @@ fun Application.module() {
     configureDependencyInjection()
     configureDatabase()
     configureTelegramBot()
+
+    startRunners()
 }

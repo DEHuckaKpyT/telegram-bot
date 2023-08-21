@@ -13,6 +13,15 @@ allprojects {
     version = "0.2.0-SNAPSHOT"
 }
 
+subprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven("https://jitpack.io")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+    }
+}
+
 nexusPublishing {
     packageGroup.set(project.group as String)
 
@@ -27,7 +36,7 @@ nexusPublishing {
     }
 }
 
-subprojects {
+configure(subprojects - project(":example")) {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
@@ -87,15 +96,16 @@ subprojects {
     java {
         withJavadocJar()
         withSourcesJar()
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     tasks.test {
         useJUnitPlatform()
     }
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     sourceSets.main {

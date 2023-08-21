@@ -8,8 +8,6 @@ import com.elbekd.bot.util.Action
 import com.elbekd.bot.util.AllowedUpdate
 import com.elbekd.bot.util.SendingDocument
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import java.io.File
 
 
@@ -20,10 +18,10 @@ import java.io.File
  * @author Denis Matytsin
  */
 class TelegramBot(
-    private val bot: Bot
-) : KoinComponent {
-
-    private val messageSource = get<MessageSource>()
+    val username: String,
+    private val bot: Bot,
+    private val messageSource: MessageSource,
+) {
 
     //region Telegram events
     fun onMessage(action: (suspend (Message) -> Unit)?) {
