@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.container
 
 import com.dehucka.microservice.ext.shortMapper
+import com.elbekd.bot.types.User
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -18,6 +19,8 @@ abstract class Container(
     private val chainSource: ChainSource,
     bot: TelegramBot,
 ) : TelegramApiContainer(chatId, bot) {
+
+    abstract val from: User?
 
     private var nextStep: String? = null
     private var nextStepInstance: Any? = null
@@ -45,7 +48,7 @@ abstract class Container(
     }
 
     internal suspend fun finalize() {
-        chainSource.save(chatId, nextStep, nextStepInstance.toContent())
+        chainSource.save(chatId, from?.id, nextStep, nextStepInstance.toContent())
     }
 
     private fun Any?.toContent(): String? {

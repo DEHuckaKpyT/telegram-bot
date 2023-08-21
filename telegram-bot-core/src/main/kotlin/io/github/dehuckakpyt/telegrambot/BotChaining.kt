@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot
 
 import com.dehucka.microservice.exception.CustomException
+import com.dehucka.microservice.logger.Logging
 import com.elbekd.bot.types.CallbackQuery
 import com.elbekd.bot.types.Message
 import com.elbekd.bot.types.ParseMode.MarkdownV2
@@ -15,6 +16,7 @@ import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.template.*
 import io.ktor.server.application.*
 import java.io.StringWriter
 import kotlin.reflect.KClass
@@ -35,7 +37,7 @@ abstract class BotChaining(
     private val chainSource: ChainSource,
     val callbackContentSource: CallbackContentSource,
     private val templateConfiguration: Configuration
-) {
+) : Logging {
 
     val callbackDataDelimiter: Char = '|'
 
@@ -45,17 +47,15 @@ abstract class BotChaining(
     protected val actionByCallback: MutableMap<String, suspend CallbackMassageContainer.() -> Unit> = hashMapOf()
 
     private val whenCommandNotFound: suspend (Long, String) -> Unit = { chatId, command ->
-        bot.sendMessage(
-            chatId = chatId,
-            text = "Введена неизвестная команда `$command`\\. Посмотреть возможные действия можно, вызвав команду /help\\.",
-            parseMode = MarkdownV2
-        )
+        bot.sendMessage(chatId, whenCommandNotFoundTemplate with mapOf("command" to command), parseMode = MarkdownV2)
     }
     private val whenKnownError: suspend (Long, String) -> Unit = { chatId, message ->
-        bot.sendMessage(chatId, text = message)
+        bot.sendMessage(chatId, whenKnownErrorTemplate with mapOf("message" to message))
     }
     private val whenUnknownError: suspend (Long) -> Unit = { chatId ->
-        bot.sendMessage(chatId, "Произошла непредвиденная ошибка. Обратитесь к разработчику.")
+        if (chatId > 0) {// если это личный чат
+            bot.sendMessage(chatId, whenUnknownErrorTemplate)
+        }
     }
     private val whenUnexpectedMessageType: suspend (Long, Set<KClass<out MassageContainer>>) -> Unit =
         { chatId, expectedMessageTypes ->
@@ -64,14 +64,13 @@ abstract class BotChaining(
             }
             bot.sendMessage(
                 chatId,
-                "Неподходящий тип сообщения.\nОжидаемые типы: $expectedMessageNames"
+                whenUnexpectedMessageTypeTemplate with mapOf("expectedMessageNames" to expectedMessageNames)
             )
         }
     private val whenStepNotFound: suspend (Long) -> Unit = { chatId ->
-        bot.sendMessage(
-            chatId,
-            "Неожидаемое сообщение. Посмотреть возможные действия можно, вызвав команду /help."
-        )
+        if (chatId > 0) {// если это личный чат
+            bot.sendMessage(chatId, whenStepNotFoundTemplate)
+        }
     }
 
     init {
@@ -107,8 +106,9 @@ abstract class BotChaining(
     }
 
     private suspend fun processMessage(message: Message) = with(message) {
-        val chainLink = chainSource.get(chatId)
-        val step = chainLink.step ?: let {
+        val chainLink = chainSource.get(chatId, from?.id)
+
+        val step = chainLink?.step ?: let {
             whenStepNotFound(chatId)
             return
         }
@@ -119,14 +119,9 @@ abstract class BotChaining(
         }
 
         val factory = message.containerFactory
+
         actionByMessageType[factory.type]?.invoke(
-            factory.create(
-                chatId,
-                message,
-                chainLink.content,
-                chainSource,
-                bot
-            )
+            factory.create(chatId, message, chainLink.content, chainSource, bot)
         ) ?: whenUnexpectedMessageType(chatId, actionByMessageType.keys)
     }
 
@@ -141,13 +136,7 @@ abstract class BotChaining(
 
         tryExecute(chatId) {
             actionByCallback[callbackName]?.invoke(
-                CallbackMassageContainer(
-                    chatId,
-                    callback,
-                    callbackContent,
-                    chainSource,
-                    bot
-                )
+                CallbackMassageContainer(chatId, callback, callbackContent, chainSource, bot)
             )
         }
     }
@@ -171,7 +160,7 @@ abstract class BotChaining(
         } catch (exc: CustomException) {
             whenKnownError(chatId, exc.localizedMessage)
         } catch (throwable: Throwable) {
-            application.log.error("Unexpected error while handling message in chat $chatId", throwable)
+            logger.error("Unexpected error while handling message in chat $chatId", throwable)
             whenUnknownError(chatId)
         }
     }

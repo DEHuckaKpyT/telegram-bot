@@ -10,8 +10,6 @@ import io.github.dehuckakpyt.telegrambot.model.Chain
  * @author Denis Matytsin
  */
 interface ChainSource {
-    suspend fun save(chatId: Long, step: String? = null): Chain
-    suspend fun save(chatId: Long, step: String? = null, content: String?): Chain
-    suspend fun get(chatId: Long): Chain
-    suspend fun saveContent(chatId: Long, content: String?): Chain
+    suspend fun save(chatId: Long, fromId: Long?, step: String?, content: String?)
+    suspend fun get(chatId: Long, fromId: Long?): Chain?
 }

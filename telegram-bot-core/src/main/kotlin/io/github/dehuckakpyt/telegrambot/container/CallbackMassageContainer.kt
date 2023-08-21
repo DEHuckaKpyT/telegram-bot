@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.container
 
 import com.elbekd.bot.types.CallbackQuery
+import com.elbekd.bot.types.User
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
@@ -19,7 +20,7 @@ class CallbackMassageContainer(
     bot: TelegramBot,
 ) : Container(chatId, content, chainSource, bot) {
 
-    val from get() = query.from
+    override val from: User = query.from
     val message get() = query.message
     val inlineMessageId get() = query.inlineMessageId
 }

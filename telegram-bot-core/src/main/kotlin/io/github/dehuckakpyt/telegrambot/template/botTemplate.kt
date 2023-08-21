@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot
+package io.github.dehuckakpyt.telegrambot.template
 
 import io.github.dehuckakpyt.telegrambot.ext.toKebabCase
 import io.ktor.server.config.*
@@ -10,7 +10,8 @@ import kotlin.reflect.KProperty
 
 class BotTemplate
 
-val telegramBotTemplate = KoinPlatformTools.defaultContext().get().get<ApplicationConfig>(named("telegramBotTemplate"))
+private val telegramBotTemplate =
+    KoinPlatformTools.defaultContext().get().get<ApplicationConfig>(named("telegramBotTemplate"))
 
 fun template(): ReadOnlyProperty<Any, String> = BotTemplateProperty()
 
@@ -20,7 +21,7 @@ fun template(name: String, defaultTemplate: String): Lazy<String> = lazy {
     getTemplateOrNull(name) ?: defaultTemplate
 }
 
-class BotTemplateProperty : ReadOnlyProperty<Any, String> {
+internal class BotTemplateProperty : ReadOnlyProperty<Any, String> {
 
     private var template: String? = null
 
