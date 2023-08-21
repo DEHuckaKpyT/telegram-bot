@@ -12,7 +12,7 @@ class BotTemplate
 private val telegramBotTemplate =
     KoinPlatformTools.defaultContext().get().get<ApplicationConfig>(named("telegramBotTemplate"))
 
-fun template(): PropertyDelegateProvider<Nothing?, Lazy<String>> = PropertyDelegateProvider { _, property ->
+fun template(): PropertyDelegateProvider<Any?, Lazy<String>> = PropertyDelegateProvider { _, property ->
     lazy { getTemplate(property.name.toKebabCase()) }
 }
 
