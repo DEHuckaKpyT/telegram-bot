@@ -151,8 +151,8 @@ fun BotHandling.startCommand() {
 
 Последний шаг null, поэтому на ещё сообщение пользователя будет человекочитаемая ошибка. Подробнее об ошибках ниже.
 
-    Note:
-    Наименования аргументов (`next`, `type`) указывать необязательно, но рекомендуется для повышения читаемости кода.
+> **Note**
+> Наименования аргументов (`next`, `type`) указывать необязательно, но рекомендуется для повышения читаемости кода.
 
 ### Динамические цепочки
 
@@ -306,9 +306,9 @@ fun BotHandling.callbackCommand() {
 }
 ```
 
-    Note: 
-    Если строка callback'а не больше допустимых 64 символов, то она передаётся в callback'е. 
-    Иначе объект кладётся в БД, а в callback кладётся id на сохранённый объект.
+> **Note**
+> Если строка callback'а не больше допустимых 64 символов, то она передаётся в callback'е.
+Иначе объект кладётся в БД, а в callback кладётся id на сохранённый объект.
 
 ## Шаблоны
 
@@ -336,28 +336,60 @@ fun BotHandling.startCommand() {
     val insideMethods by template()
     
     command("/start") {
+        val insideMethodsInMethods by template()
+        
         sendMessage(insideMethods)
+        sendMessage(insideMethodsInMethods)
     }
 }
 ```
 
 ### Подстановка значений в шаблоны
 
-Внутри класса `BotHandling` доступна подстановка с помощью короткого метода `with()` с перегрузками:
+С помощью наследования от интерфейса `Templating` доступна подстановка с помощью короткого метода `with()` с перегрузками:
 ```kotlin
-val fileWithoutClass by template()
+class PresentationTestClass : Templating {
+    private val testTemplate by template()
+    private val instance = PresentationTestModel("some name")
+    private val simpleValue = 1
 
-val BotHandling.extendedField by template()
+    val example1 = testTemplate with instance
+    val example2 = testTemplate with mapOf("value" to simpleValue)
+    val example3 = testTemplate with ("value" to simpleValue)
 
-class SomeClass {
-    val inAnyClass by template()
+    val example4 = testTemplate.with(instance)
 }
+data class PresentationTestModel(
+    val value: String
+)
+```
 
-fun BotHandling.startCommand() {
-    val insideMethods by template()
-    
-    command("/start") {
-        sendMessage(insideMethods)
+Но можно пойти ещё дальше и не использовать даже метод `with()`, а просто скобочки:
+```kotlin
+class PresentationTestClassExtended : TemplatingExtended {
+    private val testTemplate by template()
+    private val instance = PresentationTestModel("some name")
+    private val simpleValue = 1
+
+    val example1 = testTemplate(instance)
+    val example2 = testTemplate(mapOf("value" to simpleValue))
+    val example3 = testTemplate("value" to simpleValue)
+}
+```
+
+> **Note**
+> Внутри BotHandling доступно использование только интерфейса `Templating`.
+
+## Использование вне BotHandling
+
+Самым обычным образом можно получить бота и вызывать его методы:
+```kotlin
+class NotifyWhenStartedRunner : TemplatingExtended {
+    private val bot = get<TelegramBot>()
+    private val chatIdToNotify = 1165327523L
+
+    suspend fun execute() {
+        bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted("botUsername" to bot.username), parseMode = Html)
     }
 }
 ```
