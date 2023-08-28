@@ -37,7 +37,7 @@ fun BotHandling.registerCommand() {
         phonePattern.find(text) ?: throw CustomException(registerWrongPhoneFormat)
 
         sendMessage(registerGetFirstname, replyMarkup = removeKeyboard())
-        transferToNext(text)
+        transfer(text)
     }
 
     step("get firstname") {

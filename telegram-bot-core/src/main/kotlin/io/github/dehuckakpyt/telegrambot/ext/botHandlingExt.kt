@@ -24,12 +24,12 @@ suspend fun BotHandling.callbackData(nextStep: String, content: Any): String {
     }
 }
 
-suspend fun BotHandling.callbackButton(text: String, nextStep: String, content: Any): InlineKeyboardButton {
-    return InlineKeyboardButton(text, callbackData = callbackData(nextStep, content))
+suspend fun BotHandling.callbackButton(text: String, next: String, content: Any): InlineKeyboardButton {
+    return InlineKeyboardButton(text, callbackData = callbackData(next, content))
 }
 
-suspend fun BotHandling.callbackButton(text: String, nextStep: String): InlineKeyboardButton {
-    return InlineKeyboardButton(text, callbackData = "$nextStep$callbackDataDelimiter")
+suspend fun BotHandling.callbackButton(text: String, next: String): InlineKeyboardButton {
+    return InlineKeyboardButton(text, callbackData = "$next$callbackDataDelimiter")
 }
 
 suspend fun BotHandling.inlineKeyboard(button: InlineKeyboardButton): ReplyKeyboard {

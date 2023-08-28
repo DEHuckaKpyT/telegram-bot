@@ -20,6 +20,7 @@ abstract class Container(
     bot: TelegramBot,
 ) : TelegramApiContainer(chatId, bot) {
 
+    val username = bot.username
     abstract val from: User?
 
     private var nextStep: String? = null
@@ -34,12 +35,14 @@ abstract class Container(
         nextStepInstance = instance
     }
 
-    fun transferToNext(instance: Any) {
+    fun finalizeChain() = next(null)
+
+    fun transfer(instance: Any) {
         nextStepInstance = instance
     }
 
     inline fun <reified T> transferred(): T {
-        return content?.let { shortMapper.readValue(it) }
+        return transferredOrNull()
             ?: throw RuntimeException("Ожидается экземпляр класса ${T::class.simpleName}, но в chainSource.content ничего не сохранено.")
     }
 
