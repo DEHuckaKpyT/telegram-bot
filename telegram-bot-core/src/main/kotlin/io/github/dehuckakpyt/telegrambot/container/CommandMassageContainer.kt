@@ -22,10 +22,10 @@ class CommandMassageContainer(
     val commandArgument get() = commandArgumentRegex.find(text)?.groupValues?.get(1)
 
     companion object {
-        private val commandPathParamRegex = Regex("^/[a-zA-Z]+(?:_[a-zA-Z]+)*(?:__([a-zA-Z0-9-_]+))?")
+        private val commandPathParamRegex = Regex("^/[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*(?:__([a-zA-Z0-9-_]+))?")
         private val commandArgumentRegex = Regex("^/[a-zA-Z0-9_]+(?:@([a-zA-Z0-9_]+))?(?: (.+))?")
 
-        private val commandRegex = Regex("^(/[a-zA-Z]+(?:_[a-zA-Z]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")
+        private val commandRegex = Regex("^(/[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")
         fun fetchCommand(input: String?, usernameExpected: String): String? {
             input ?: return null
 
