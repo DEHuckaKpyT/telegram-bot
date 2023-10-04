@@ -10,6 +10,7 @@ import com.elbekd.bot.types.UpdateMessage
 import io.github.dehuckakpyt.telegrambot.container.*
 import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer.Companion.fetchCommand
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.ext.callbackContent
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -131,7 +132,7 @@ abstract class BotChaining(
         if (indexOfDelimiter == -1) return
 
         val callbackName = data.substring(0, indexOfDelimiter)
-        val callbackContent = data.substring(indexOfDelimiter + 1).takeIf { it.isNotBlank() }
+        val callbackContent = callbackContent(data.substring(indexOfDelimiter + 1))
 
         tryExecute(chatId) {
             actionByCallback[callbackName]?.invoke(

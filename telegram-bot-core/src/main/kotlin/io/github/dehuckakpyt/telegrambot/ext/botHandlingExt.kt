@@ -1,8 +1,12 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
 import com.dehucka.microservice.ext.shortMapper
+import com.dehucka.microservice.ext.toUUID
 import com.elbekd.bot.types.*
+import io.github.dehuckakpyt.telegrambot.BotChaining
 import io.github.dehuckakpyt.telegrambot.BotHandling
+import io.github.dehuckakpyt.telegrambot.ext.CallbackDataType.ID
+import io.github.dehuckakpyt.telegrambot.ext.CallbackDataType.STRING
 
 
 /**
@@ -11,16 +15,36 @@ import io.github.dehuckakpyt.telegrambot.BotHandling
  *
  * @author Denis Matytsin
  */
-suspend fun BotHandling.callbackData(nextStep: String, content: Any): String {
-    return shortMapper.writeValueAsString(content).let { value ->
-        if (value.length + nextStep.length + 1 <= 64) {
-            "$nextStep$callbackDataDelimiter$value"
-        } else {
-            if (nextStep.length > 27) throw RuntimeException("Название шага должно быть не больше 27 символов, чтобы в callback поместилось название шага и uuid")
+object CallbackDataType {
+    const val STRING = 's'
+    const val ID = 'i'
+}
 
-            val sourceId = callbackContentSource.save(value).identifier
-            "$nextStep$callbackDataDelimiter$sourceId"
-        }
+suspend fun BotHandling.callbackData(nextStep: String, content: Any): String {
+    if (nextStep.contains(callbackDataDelimiter)) throw RuntimeException("Char \"$callbackDataDelimiter\" was used for split callback data. Please, change symbol in TelegramBotConfig.callbackDataDelimiter or rename callback step.")
+
+    val callbackValue = shortMapper.writeValueAsString(content)
+
+    return if (callbackValue.length + nextStep.length <= 62) {
+        //will be string stepName|scallbackData (string)
+        "$nextStep$callbackDataDelimiter$STRING$callbackValue"
+    } else {
+        if (nextStep.length > 26) throw RuntimeException("Callback step name should be less or equal than 26 symbols to put max 64 symbols. Because callback data will contain special markers (2 symbols) + UUID id (36 symbols) + callback name.")
+
+        val sourceId = callbackContentSource.save(callbackValue).identifier
+        //will be string stepName|icallbackData (id)
+        "$nextStep$callbackDataDelimiter$ID$sourceId"
+    }
+}
+
+suspend fun BotChaining.callbackContent(callbackData: String): String? {
+    if (callbackData.isEmpty()) return null
+    val callbackContentType = callbackData[0]
+
+    return when (callbackContentType) {
+        STRING -> callbackData.substring(1, callbackData.length)
+        ID -> callbackContentSource.get(callbackData.substring(1, callbackData.length).toUUID()).content
+        else -> throw RuntimeException("Callback data can not be parsed.")
     }
 }
 
@@ -37,11 +61,7 @@ suspend fun BotHandling.inlineKeyboard(button: InlineKeyboardButton): ReplyKeybo
 }
 
 suspend fun BotHandling.inlineKeyboard(vararg buttons: InlineKeyboardButton): ReplyKeyboard {
-    return buttons.map {
-        listOf(it)
-    }.let {
-        InlineKeyboardMarkup(it)
-    }
+    return buttons.map(::listOf).let(::InlineKeyboardMarkup)
 }
 
 suspend fun BotHandling.contactButton(text: String): ReplyKeyboard {
