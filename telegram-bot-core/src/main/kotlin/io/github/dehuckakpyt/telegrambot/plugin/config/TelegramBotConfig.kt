@@ -5,6 +5,10 @@ import freemarker.template.Configuration
 import freemarker.template.Version
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
+import io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
+import io.github.dehuckakpyt.telegrambot.converter.SimpleCallbackSerializer
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -31,6 +35,10 @@ data class TelegramBotConfig(private val config: ApplicationConfig) {
     var callbackContentSource: CallbackContentSource = InMemoryCallbackContentSource()
     var chainSource: ChainSource = InMemoryChainSource()
     var messageSource: MessageSource = EmptyMessageSource()
+    var callbackDataDelimiter: Char = '|'
+    var contentConverter: ContentConverter = JsonContentConverter()
+    var callbackSerializer: CallbackSerializer =
+        SimpleCallbackSerializer(callbackContentSource, contentConverter, callbackDataDelimiter)
 
     fun pollingOptions(block: PollingOptions.() -> Unit) {
         pollingOptions = block

@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambot.ext.callbackButton
-import io.github.dehuckakpyt.telegrambot.ext.inlineKeyboard
+import io.github.dehuckakpyt.telegrambot.factory.callbackButton
+import io.github.dehuckakpyt.telegrambot.factory.inlineKeyboard
 
 
 /**
@@ -17,7 +17,8 @@ fun BotHandling.buttonCommand() {
         val value: Int
     )
 
-    val longString = "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"
+    val longString =
+        "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"
 
     command("/buttons") {
         sendMessage(
@@ -29,12 +30,15 @@ fun BotHandling.buttonCommand() {
         )
     }
     callback("empty callback") {
+        // will send callback is null
         sendMessage("callback is ${transferredOrNull<TransferringTest>()}")
     }
     callback("short callback") {
+        // will send callback is TransferringTest(key=1, value=1)
         sendMessage("callback is ${transferred<TransferringTest>()}")
     }
     callback("long callback") {
+        // will send TransferringTest(key=lo...ong, value=1)
         sendMessage("callback is ${transferred<TransferringTest>()}")
     }
 }

@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.plugin
 import com.elbekd.bot.Bot
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -32,6 +33,7 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
         single<CallbackContentSource> { pluginConfig.callbackContentSource }
         single<ChainSource> { pluginConfig.chainSource }
         single<MessageSource> { pluginConfig.messageSource }
+        single<CallbackSerializer> { pluginConfig.callbackSerializer }
         single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
         single { pluginConfig.templateConfig }
         single { BotTemplate() }
@@ -40,7 +42,7 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     val externalBot = Bot.createPolling(token, username, pluginConfig.pollingOptions)
     val telegramBot = TelegramBot(username, externalBot, pluginConfig.messageSource)
 
-    val botHandling = BotHandling(application, telegramBot, username)
+    val botHandling = BotHandling(application, pluginConfig.contentConverter, telegramBot, username)
 
     pluginConfig.configureBot(telegramBot)
     pluginConfig.handling(botHandling)

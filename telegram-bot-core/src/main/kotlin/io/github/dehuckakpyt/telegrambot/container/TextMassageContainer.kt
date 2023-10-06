@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.container
 import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
 
@@ -17,8 +18,9 @@ open class TextMassageContainer(
     private val message: Message,
     content: String?,
     chainSource: ChainSource,
+    contentConverter: ContentConverter,
     bot: TelegramBot,
-) : MassageContainer(chatId, message, content, chainSource, bot) {
+) : MassageContainer(chatId, message, content, chainSource, contentConverter, bot) {
     val text get() = message.text!!
 
     companion object : MessageContainerFactory {
@@ -31,8 +33,9 @@ open class TextMassageContainer(
             message: Message,
             content: String?,
             chainSource: ChainSource,
+            contentConverter: ContentConverter,
             bot: TelegramBot
-        ): MassageContainer = TextMassageContainer(chatId, message, content, chainSource, bot)
+        ): MassageContainer = TextMassageContainer(chatId, message, content, chainSource, contentConverter, bot)
 
         override val type = TEXT
         override val typeName = "Текстовое сообщение"

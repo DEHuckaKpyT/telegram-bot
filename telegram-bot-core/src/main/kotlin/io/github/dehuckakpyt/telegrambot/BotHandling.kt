@@ -5,6 +5,7 @@ import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.TEXT
 import io.github.dehuckakpyt.telegrambot.container.TextMassageContainer
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.ktor.server.application.*
 import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
@@ -16,8 +17,12 @@ import kotlin.reflect.KClass
  *
  * @author Denis Matytsin
  */
-open class BotHandling(application: Application, bot: TelegramBot, username: String) :
-    BotChaining(application, bot, username), KoinComponent {
+open class BotHandling(
+    application: Application,
+    contentConverter: ContentConverter,
+    bot: TelegramBot,
+    username: String
+) : BotChaining(application, contentConverter, bot, username), KoinComponent {
 
     fun command(command: String, next: String? = null, action: suspend CommandMassageContainer.() -> Unit) {
         actionByCommand[command] = {
@@ -54,6 +59,8 @@ open class BotHandling(application: Application, bot: TelegramBot, username: Str
     }
 
     fun callback(callback: String, next: String? = null, action: suspend CallbackMassageContainer.() -> Unit) {
+        callbackSerializer.validateCallbackName(callback)
+
         actionByCallback[callback] = {
             next(next)
             action()

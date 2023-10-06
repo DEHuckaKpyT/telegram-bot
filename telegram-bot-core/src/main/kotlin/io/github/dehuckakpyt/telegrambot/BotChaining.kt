@@ -10,9 +10,9 @@ import com.elbekd.bot.types.UpdateMessage
 import io.github.dehuckakpyt.telegrambot.container.*
 import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer.Companion.fetchCommand
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
-import io.github.dehuckakpyt.telegrambot.ext.callbackContent
+import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.ext.chatId
-import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.*
@@ -31,15 +31,14 @@ import kotlin.reflect.full.companionObjectInstance
  */
 abstract class BotChaining(
     val application: Application,
+    private val contentConverter: ContentConverter,
     private val bot: TelegramBot,
     private val username: String
 ) : KoinComponent, Templating, Logging {
 
-    val callbackContentSource = get<CallbackContentSource>()
+    protected val callbackSerializer = get<CallbackSerializer>()
     val chainSource = get<ChainSource>()
-    val messageSource = get<MessageSource>()
-
-    val callbackDataDelimiter: Char = '|'
+    private val messageSource = get<MessageSource>()
 
     protected val actionByCommand: MutableMap<String, suspend CommandMassageContainer.() -> Unit> = hashMapOf()
     protected val actionByStep: MutableMap<String, MutableMap<KClass<out MassageContainer>, suspend MassageContainer.() -> Unit>> =
@@ -101,7 +100,7 @@ abstract class BotChaining(
 
     private suspend fun processCommand(command: String, message: Message) = with(message) {
         actionByCommand[command]
-            ?.invoke(CommandMassageContainer(chatId, message, chainSource, bot))
+            ?.invoke(CommandMassageContainer(chatId, message, chainSource, contentConverter, bot))
             ?: whenCommandNotFound(chatId, command)
     }
 
@@ -121,22 +120,18 @@ abstract class BotChaining(
         val factory = message.containerFactory
 
         actionByMessageType[factory.type]?.invoke(
-            factory.create(chatId, message, chainLink.content, chainSource, bot)
+            factory.create(chatId, message, chainLink.content, chainSource, contentConverter, bot)
         ) ?: whenUnexpectedMessageType(chatId, actionByMessageType.keys)
     }
 
     private suspend fun processCallback(callback: CallbackQuery) = with(callback) {
         val data = data ?: return
-
-        val indexOfDelimiter = data.indexOf(callbackDataDelimiter)
-        if (indexOfDelimiter == -1) return
-
-        val callbackName = data.substring(0, indexOfDelimiter)
-        val callbackContent = callbackContent(data.substring(indexOfDelimiter + 1))
+        val callbackName = callbackSerializer.getNext(data)
+        val callbackContent = callbackSerializer.getContent(data)
 
         tryExecute(chatId) {
             actionByCallback[callbackName]?.invoke(
-                CallbackMassageContainer(chatId, callback, callbackContent, chainSource, bot)
+                CallbackMassageContainer(chatId, callback, callbackContent, chainSource, contentConverter, bot)
             )
         }
     }

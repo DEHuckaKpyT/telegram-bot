@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.container
 
 import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
 
@@ -16,8 +17,9 @@ abstract class MassageContainer(
     private val message: Message,
     content: String?,
     chainSource: ChainSource,
+    contentConverter: ContentConverter,
     bot: TelegramBot,
-) : Container(chatId, content, chainSource, bot) {
+) : Container(chatId, content, chainSource, contentConverter, bot) {
 
     override val from = message.from
     val messageId get() = message.messageId

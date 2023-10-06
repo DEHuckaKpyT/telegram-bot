@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.container
 
 import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
 
@@ -15,8 +16,9 @@ class CommandMassageContainer(
     chatId: Long,
     message: Message,
     chainSource: ChainSource,
+    contentConverter: ContentConverter,
     bot: TelegramBot,
-) : TextMassageContainer(chatId, message, content = null, chainSource, bot) {
+) : TextMassageContainer(chatId, message, content = null, chainSource, contentConverter, bot) {
 
     val commandPathParam get() = commandPathParamRegex.find(text)?.groupValues?.get(1)
     val commandArgument get() = commandArgumentRegex.find(text)?.groupValues?.get(1)

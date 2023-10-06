@@ -4,8 +4,8 @@ import com.dehucka.microservice.exception.CustomException
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.CONTACT
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.TEXT
-import io.github.dehuckakpyt.telegrambot.ext.contactButton
-import io.github.dehuckakpyt.telegrambot.ext.removeKeyboard
+import io.github.dehuckakpyt.telegrambot.factory.contactKeyboard
+import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard
 import io.github.dehuckakpyt.telegrambotexample.template.*
 
 
@@ -19,7 +19,7 @@ fun BotHandling.registerCommand() {
     val phonePattern = Regex("\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}")
 
     command("/register", next = "get contact") {
-        sendMessage(register, replyMarkup = contactButton(registerContactButton))
+        sendMessage(register, replyMarkup = contactKeyboard(registerContactButton))
     }
 
     // если указать тип, то в теле метода будет контейнер с полями и методами этого типа

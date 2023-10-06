@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.container
 import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
 
@@ -17,8 +18,9 @@ class AudioMassageContainer(
     private val message: Message,
     content: String?,
     chainSource: ChainSource,
+    contentConverter: ContentConverter,
     bot: TelegramBot,
-) : MassageContainer(chatId, message, content, chainSource, bot) {
+) : MassageContainer(chatId, message, content, chainSource, contentConverter, bot) {
 
     val caption get() = message.caption
     val audio get() = message.audio!!
@@ -33,8 +35,9 @@ class AudioMassageContainer(
             message: Message,
             content: String?,
             chainSource: ChainSource,
+            contentConverter: ContentConverter,
             bot: TelegramBot
-        ): MassageContainer = AudioMassageContainer(chatId, message, content, chainSource, bot)
+        ): MassageContainer = AudioMassageContainer(chatId, message, content, chainSource, contentConverter, bot)
 
         override val type = AUDIO
         override val typeName = "Аудио сообщение"

@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.container
 import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
 
@@ -17,8 +18,10 @@ class VoiceMessageContainer(
     private val message: Message,
     content: String?,
     chainSource: ChainSource,
+    contentConverter: ContentConverter,
     bot: TelegramBot,
-) : MassageContainer(chatId, message, content, chainSource, bot) {
+) : MassageContainer(chatId, message, content, chainSource, contentConverter, bot) {
+
     val voice get() = message.voice!!
 
     companion object : MessageContainerFactory {
@@ -31,8 +34,9 @@ class VoiceMessageContainer(
             message: Message,
             content: String?,
             chainSource: ChainSource,
+            contentConverter: ContentConverter,
             bot: TelegramBot
-        ): MassageContainer = VoiceMessageContainer(chatId, message, content, chainSource, bot)
+        ): MassageContainer = VoiceMessageContainer(chatId, message, content, chainSource, contentConverter, bot)
 
         override val type = VOICE
         override val typeName = "Голосовое сообщение"
