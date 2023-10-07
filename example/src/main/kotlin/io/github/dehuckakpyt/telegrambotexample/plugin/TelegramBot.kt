@@ -2,10 +2,7 @@ package io.github.dehuckakpyt.telegrambotexample.plugin
 
 import io.github.dehuckakpyt.telegrambot.ext.databaseSources
 import io.github.dehuckakpyt.telegrambot.plugin.TelegramBot
-import io.github.dehuckakpyt.telegrambotexample.handler.buttonCommand
-import io.github.dehuckakpyt.telegrambotexample.handler.chainCommand
-import io.github.dehuckakpyt.telegrambotexample.handler.registerCommand
-import io.github.dehuckakpyt.telegrambotexample.handler.startCommand
+import io.github.dehuckakpyt.telegrambotexample.handler.*
 import io.ktor.server.application.*
 
 
@@ -28,6 +25,7 @@ fun Application.configureTelegramBot() {
             chainCommand()
             registerCommand()
             buttonCommand()
+            templateCommand()
         }
     }
 }

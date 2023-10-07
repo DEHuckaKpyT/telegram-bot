@@ -9,6 +9,8 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.SimpleCallbackSerializer
+import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
+import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatterImpl
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -39,6 +41,7 @@ data class TelegramBotConfig(private val config: ApplicationConfig) {
     var contentConverter: ContentConverter = JsonContentConverter()
     var callbackSerializer: CallbackSerializer =
         SimpleCallbackSerializer(callbackContentSource, contentConverter, callbackDataDelimiter)
+    var htmlFormatter: HtmlFormatter = HtmlFormatterImpl()
 
     fun pollingOptions(block: PollingOptions.() -> Unit) {
         pollingOptions = block

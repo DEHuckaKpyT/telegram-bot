@@ -10,6 +10,7 @@ dependencies {
     api("io.ktor:ktor-server-core-jvm:$ktor_version")
     api("com.github.elbekD:kt-telegram-bot:2.2.0")
     api("org.freemarker:freemarker:2.3.32")
+    implementation("org.jsoup:jsoup:1.16.1")
 
     //region koin
     compileOnlyApi("io.insert-koin:koin-core-coroutines:$koin_version")

@@ -4,6 +4,7 @@ import com.elbekd.bot.Bot
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
+import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -34,6 +35,7 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
         single<ChainSource> { pluginConfig.chainSource }
         single<MessageSource> { pluginConfig.messageSource }
         single<CallbackSerializer> { pluginConfig.callbackSerializer }
+        single<HtmlFormatter> { pluginConfig.htmlFormatter }
         single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
         single { pluginConfig.templateConfig }
         single { BotTemplate() }
