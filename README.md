@@ -6,7 +6,7 @@
 ## Get started
 
 Бот работает с [Ktor](https://ktor.io/) + [Koin](https://insert-koin.io/).
-Пример готового приложения в репозитории example.
+Пример готового приложения в директории [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example).
 
 Для запуска и конфигурирования бота необходимо
 задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
