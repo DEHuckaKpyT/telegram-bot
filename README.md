@@ -10,6 +10,7 @@
 
 Для запуска и конфигурирования бота необходимо
 задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
+
 ```kotlin
 fun Application.configureTelegramBot() {
     install(TelegramBot) {
@@ -33,44 +34,49 @@ fun BotHandling.startCommand() {
 
 ```kotlin
         configureTemplating {
-            defaultEncoding = "UTF-8"
-            dateFormat = "yyyy-MM-dd"
-            // и остальное из документации FreeMarker
-        }
+    defaultEncoding = "UTF-8"
+    dateFormat = "yyyy-MM-dd"
+    // и остальное из документации FreeMarker
+}
 ```
 
 ### Настройка хранения состояния
 
 По умолчанию всё хранится до завершения работы приложения - в памяти. Подключение к БД не нужно.
-Это может быть удобно, если никакую информацию и не нужно хранить. 
+Это может быть удобно, если никакую информацию и не нужно хранить.
 Также это удобно в случае, если нужно быстро проверить работу бота.
+
 ```kotlin
     install(TelegramBot) {
-        callbackContentSource = CallbackContentSource.inMemory
-        chainSource = ChainSource.inMemory
-        messageSource = MessageSource.empty
-    }
+    callbackContentSource = CallbackContentSource.inMemory
+    chainSource = ChainSource.inMemory
+    messageSource = MessageSource.empty
+}
 ```
 
-Имеется возможность сохранять состояние в БД. 
+Имеется возможность сохранять состояние в БД.
 Достаточно всего лишь добавить зависимость и написать следующий код:
+
 ```kotlin
     install(TelegramBot) {
-        callbackContentSource = CallbackContentSource.inDatabase
-        chainSource = ChainSource.inDatabase
-        messageSource = MessageSource.inDatabase
-    }
+    callbackContentSource = CallbackContentSource.inDatabase
+    chainSource = ChainSource.inDatabase
+    messageSource = MessageSource.inDatabase
+}
 ```
 
 Или ещё короче:
+
 ```kotlin
     install(TelegramBot) {
-        databaseSources()
-    }
+    databaseSources()
+}
 ```
+
 Также можно комбинировать сохранение информации, как только угодно.
 
 ### Все доступные настройки
+
 ```kotlin
 class TelegramBotConfig {
     var enabled: String
@@ -93,6 +99,7 @@ class TelegramBotConfig {
 И теперь её можно легко сделать.
 
 Создание цепочек осуществляется с помощью метода расширения у класса `BotHandling`:
+
 ```kotlin
 fun BotHandling.startCommand() {
     // здесь будут обработчики команд и других событий
@@ -100,22 +107,25 @@ fun BotHandling.startCommand() {
 ```
 
 Сообщение, с которого начинается цепочка - это команда. Она обозначается с помощью метода `command()`.
+
 ```kotlin
     command("/start") {
     // здесь действия при вызове команды старт
-    }
+}
 ```
 
 ### Статические цепочки
 
 Следующие шаги цепочки обозначаются методом `step()`:
+
 ```kotlin
     step("get_name") {
     // здесь действия при вызове шага get_name
-    }
+}
 ```
 
 Связать команду и шаг в цепочку можно с помощью аргумента `next`, и тогда получится цепочка:
+
 ```kotlin
 fun BotHandling.startCommand() {
     command("/start", next = "get_name") {
@@ -130,6 +140,7 @@ fun BotHandling.startCommand() {
 ```
 
 Шагов может быть неограниченное количество, они идут прям друг за другом:
+
 ```kotlin
 fun BotHandling.startCommand() {
     command("/start", next = "get_name") {
@@ -143,7 +154,7 @@ fun BotHandling.startCommand() {
 
     step("get_age") {
         val age = text.toIntOrNull() ?: throw CustomException("Ожидается целое число")
-        
+
         sendMessage("$age лет - записано.")
     }
 }
@@ -156,14 +167,15 @@ fun BotHandling.startCommand() {
 
 ### Динамические цепочки
 
-С помощью метода `next()` можно динамически выбирать следующий шаг. 
+С помощью метода `next()` можно динамически выбирать следующий шаг.
 В примере показано, как можно строить цепочки исходя из определённых условий:
+
 ```kotlin
 fun BotHandling.isDenisCommand() {
     command("/is_denis", next = "is_denis") {
         sendMessage("Тебя зовут Денис?")
     }
-    
+
     step("is_denis") {
         if (text.lowercase() == "да") {
             sendMessage("Красавчик!")
@@ -173,7 +185,7 @@ fun BotHandling.isDenisCommand() {
             sendMessage("А какое у тебя имя?")
         }
     }
-    
+
     step("get_name") {
         sendMessage("Имя $text тоже ничего.")
     }
@@ -182,13 +194,14 @@ fun BotHandling.isDenisCommand() {
 
 Параметр `next` и метод `next()` можно комбинировать. Они взаимозаменимые.
 Также можно вызвать метод `finalizeChain()`, чтобы завершить текущую цепочку (нужно только если задан параметр `next`).
+
 ```kotlin
 fun BotHandling.isDenisCommand() {
     command("/is_denis") {
         next("is_denis")
         sendMessage("Тебя зовут Денис?")
     }
-    
+
     step("is_denis", next = "get_name") {
         if (text.lowercase() == "да") {
             sendMessage("Красавчик!")
@@ -197,7 +210,7 @@ fun BotHandling.isDenisCommand() {
             sendMessage("А какое у тебя имя?")
         }
     }
-    
+
     step("get_name") {
         sendMessage("Имя $text тоже ничего.")
     }
@@ -207,47 +220,55 @@ fun BotHandling.isDenisCommand() {
 ### Передача объектов между шагами
 
 С помощью методов `next()` и `transfer()` можно передать любой объект в следующий шаг:
+
 ```kotlin
     step("get_name", next = "get_age") {
-        sendMessage("Привет, $text!")
-        transfer(text)
-    }
+    sendMessage("Привет, $text!")
+    transfer(text)
+}
 ```
 
 А с помощью методов `transferred()` и `transferredOrNull()` можно получить этот объект в следующем шаге:
+
 ```kotlin
     step("get_age") {
-        val age = text.toIntOrNull() ?: throw CustomException("Ожидается целое число")
-        val name = transferred<String>()
+    val age = text.toIntOrNull() ?: throw CustomException("Ожидается целое число")
+    val name = transferred<String>()
 
-        sendMessage("Твоё имя $name, и тебе $age лет - записано.")
-    }
+    sendMessage("Твоё имя $name, и тебе $age лет - записано.")
+}
 ```
 
 ### Определение типа сообщения
 
-По умолчанию метод `step()` ожидает текстовое сообщение. 
+По умолчанию метод `step()` ожидает текстовое сообщение.
 С помощью параметра `type` можно задать ожидаемый тип сообщения от пользователя
+
 ```kotlin
     step("get contact", type = CONTACT) {
-        sendMessage("Твой номер ${contact.phoneNumber}")
-    }
+    sendMessage("Твой номер ${contact.phoneNumber}")
+}
 ```
 
-Для одного шага можно задать несколько типов сообщения. Показательный пример с получением номера телефона. 
+Для одного шага можно задать несколько типов сообщения. Показательный пример с получением номера телефона.
 Здесь и динамические цепочки, и передача объекта между шагами:
+
 ```kotlin
 fun BotHandling.registerCommand() {
     val phonePattern = Regex("\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}")
 
     command("/register", next = "get contact") {
-        sendMessage("Для регистрации введите номер или поделитесь своим контактом.", 
-            replyMarkup = contactButton("Поделиться контактом"))
+        sendMessage(
+            "Для регистрации введите номер или поделитесь своим контактом.",
+            replyMarkup = contactButton("Поделиться контактом")
+        )
     }
 
     step("get contact", type = CONTACT) {
-        sendMessage("${contact.firstName}, Вы успешно зарегистрировались по номеру ${contact.phoneNumber}!", 
-            replyMarkup = removeKeyboard())
+        sendMessage(
+            "${contact.firstName}, Вы успешно зарегистрировались по номеру ${contact.phoneNumber}!",
+            replyMarkup = removeKeyboard()
+        )
     }
 
     step("get contact", type = TEXT, next = "get firstname") {
@@ -265,6 +286,7 @@ fun BotHandling.registerCommand() {
 ```
 
 Доступные типы на данный момент:
+
 ```kotlin
 val TEXT = TextMassageContainer::class
 val PHOTO = PhotoMassageContainer::class
@@ -276,28 +298,32 @@ val DOCUMENT = DocumentMessageContainer::class
 
 ## Обработка кнопок с callback'ом
 
-Помимо методов для сообщений `command()` и `step()`, 
+Помимо методов для сообщений `command()` и `step()`,
 есть ещё и метод для обработки callback'ов `callback()` (неожиданно, правда?).
 Есть возможность также передавать объекты, продолжать цепочки:
+
 ```kotlin
 fun BotHandling.callbackCommand() {
     command("/callback") {
-        sendMessage("Выберите действие", replyMarkup = inlineKeyboard(
-            callbackButton("Купить тапочки", next = "buy", content = "some id 1"),
-            callbackButton("Купить шапочки", next = "buy", content = "some id 2"),
-            callbackButton("Оставить отзыв", next = "get_feedback_intro")))
+        sendMessage(
+            "Выберите действие", replyMarkup = inlineKeyboard(
+                callbackButton("Купить тапочки", next = "buy", content = "some id 1"),
+                callbackButton("Купить шапочки", next = "buy", content = "some id 2"),
+                callbackButton("Оставить отзыв", next = "get_feedback_intro")
+            )
+        )
     }
-    
+
     callback("buy") {
         val itemId = transferred<String>()
 
         sendMessage("Выбран товар с идентификатором $itemId")
     }
-    
+
     callback("get_feedback_intro", next = "get_feedback") {
         sendMessage("Напишите, пожалуйста, что вы думаете о нашем приложении.")
     }
-    
+
     step("get_feedback") {
         saveКудаНибудьСебе(text)
 
@@ -308,14 +334,16 @@ fun BotHandling.callbackCommand() {
 
 > **Note**
 > Если строка callback'а не больше допустимых 64 символов, то она передаётся в callback'е.
-Иначе объект кладётся в БД, а в callback кладётся id на сохранённый объект.
+> Иначе объект кладётся в БД, а в callback кладётся id на сохранённый объект.
 
 ## Шаблоны
 
 ### Получение шаблонов
+
 С помощью метода с делегатами `template()` можно взять шаблон из конфига.
 
 Без параметров метод получает наименование переменной, переводит его в kebab-case и берёт значение из конфига.
+
 ```kotlin
 val BotHandling.fromFieldName by template()
 val BotHandling.fromParam by template("from-param")
@@ -323,6 +351,7 @@ val BotHandling.fromParamOrDefault by template("from-param", "default template w
 ```
 
 Шаблон можно получить везде, где только вздумается:
+
 ```kotlin
 val fileWithoutClass by template()
 
@@ -334,10 +363,10 @@ class SomeClass {
 
 fun BotHandling.startCommand() {
     val insideMethods by template()
-    
+
     command("/start") {
         val insideMethodsInMethods by template()
-        
+
         sendMessage(insideMethods)
         sendMessage(insideMethodsInMethods)
     }
@@ -346,7 +375,9 @@ fun BotHandling.startCommand() {
 
 ### Подстановка значений в шаблоны
 
-С помощью наследования от интерфейса `Templating` доступна подстановка с помощью короткого метода `with()` с перегрузками:
+С помощью наследования от интерфейса `Templating` доступна подстановка с помощью короткого метода `with()` с
+перегрузками:
+
 ```kotlin
 class PresentationTestClass : Templating {
     private val testTemplate by template()
@@ -365,6 +396,7 @@ data class PresentationTestModel(
 ```
 
 Но можно пойти ещё дальше и не использовать даже метод `with()`, а просто скобочки:
+
 ```kotlin
 class PresentationTestClassExtended : TemplatingExtended {
     private val testTemplate by template()
@@ -383,6 +415,7 @@ class PresentationTestClassExtended : TemplatingExtended {
 ## Использование вне BotHandling
 
 Самым обычным образом можно получить бота и вызывать его методы:
+
 ```kotlin
 class NotifyWhenStartedRunner : TemplatingExtended {
     private val bot = get<TelegramBot>()
@@ -393,3 +426,17 @@ class NotifyWhenStartedRunner : TemplatingExtended {
     }
 }
 ```
+
+## Что обязательно нужно сделать ещё:
+- Добавить тип сообщения при сохранении в [модель](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/telegram-bot-database-source/src/main/kotlin/io/github/dehuckakpyt/telegrambot/model/DatabaseTelegramMessage.kt)
+- Вынести в конфиг обработку ошибок
+- Немного отрефакторить [либу в основе](https://github.com/DEHuckaKpyT/microservice-extensions) (получение конфига в json вместо properties, переименовать методы для транзакций, переделать в плагин подключение к бд, добавить аналог феинов)
+- Отрефакторить [BotChaining](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/telegram-bot-core/src/main/kotlin/io/github/dehuckakpyt/telegrambot/BotChaining.kt)
+- Решить вопрос с лицензией (можно ли просто скопировать себе код из [либы бота в основе](https://github.com/elbekD/kt-telegram-bot)). Если нет, то решить вопрос как-то ещё
+- Добавить тесты
+
+
+## Фишки, которые хочется сделать:
+- Придумать что-то с обработкой сообщений с длиной более 4096 символов
+- Сделать отключаемыми методы cleanHtml и escapeHtml в шаблонах
+- Возможность добавлять обработчики не только с помощью методов расширения `BotHandling`, но и с помощью создания классов (идея есть)
