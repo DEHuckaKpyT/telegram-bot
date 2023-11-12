@@ -10,7 +10,7 @@
 
 Для запуска и конфигурирования бота необходимо
 добавить зависимость, задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
-```
+```Gradle
 repositories {
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
 }
@@ -387,6 +387,34 @@ class PresentationTestClassExtended : TemplatingExtended {
 
 > **Note**
 > Внутри BotHandling доступно использование только интерфейса `Templating`.
+
+
+### Спец. методы в шаблоне
+
+При использовании FreeMarker доступны методы `escapeHtml()` и `cleanHtml()` ([реализация](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/telegram-bot-core/src/main/kotlin/io/github/dehuckakpyt/telegrambot/formatter/HtmlFormatterImpl.kt)). 
+Их можно использовать при отправке сообщения с `parseMode = Html`.
+
+
+Метод `escapeHtml()` экранирует все html символы.
+
+Метод `cleanHtml()` оставляет только форматируемые теги telegram'ом (см https://core.telegram.org/bots/api#html-style).
+```
+telegram-bot {
+    template {
+        escape-example = "formatted text: ${escapeHtml(param)}"
+        clean-example = "formatted text: ${cleanHtml(param)}"
+    }
+}
+```
+```kotlin
+fun BotHandling.templateCommand() {
+    val htmlFormattedString = "<b><u>formatted</u></b> <center>ignored</center><br>new line"
+    command("/template_html_formatted") {
+        sendMessage(cleanExample with ("param" to htmlFormattedString), parseMode = Html)
+        sendMessage(escapeExample with ("param" to htmlFormattedString), parseMode = Html)
+    }
+}
+```
 
 ## Использование вне BotHandling
 
