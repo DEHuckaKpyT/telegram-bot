@@ -6,10 +6,18 @@
 ## Get started
 
 Бот работает с [Ktor](https://ktor.io/) + [Koin](https://insert-koin.io/).
-Пример готового приложения в репозитории example.
+Пример готового приложения в [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example).
 
 Для запуска и конфигурирования бота необходимо
-задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
+добавить зависимость, задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
+```
+repositories {
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+}
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.2.3-SNAPSHOT")
+}
+```
 ```kotlin
 fun Application.configureTelegramBot() {
     install(TelegramBot) {
