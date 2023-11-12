@@ -86,12 +86,18 @@ abstract class BotChaining(
         if (update !is UpdateMessage) return
 
         val message = update.message
+        val from = message.from
         val text = message.text
         val chatId = message.chatId
 
-        tryExecute(chatId) {
-            messageSource.save(chatId, message.from?.id, message.messageId, text)
+        if (from == null) {
+            logger.warn("Don't expect message without fromId.\nchatId = '$chatId'\ntext = $text")
+            return
+        }
 
+        messageSource.save(chatId, from.id, message.messageId, text)
+
+        tryExecute(chatId) {
             fetchCommand(text, username)?.let {
                 processCommand(it, message)
             } ?: processMessage(message)
@@ -105,7 +111,7 @@ abstract class BotChaining(
     }
 
     private suspend fun processMessage(message: Message) = with(message) {
-        val chainLink = chainSource.get(chatId, from?.id)
+        val chainLink = chainSource.get(chatId, from!!.id)
 
         val step = chainLink?.step ?: let {
             whenStepNotFound(chatId)

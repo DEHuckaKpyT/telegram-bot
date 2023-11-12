@@ -1,6 +1,5 @@
 package io.github.dehuckakpyt.telegrambot.container
 
-import com.elbekd.bot.model.ChatId
 import com.elbekd.bot.types.*
 import com.elbekd.bot.util.Action
 import com.elbekd.bot.util.AllowedUpdate
@@ -126,30 +125,30 @@ abstract class TelegramApiContainer(
 
     suspend fun forwardMessage(
         chatId: Long,
-        fromChatId: ChatId,
-        msgId: Long,
+        fromChatId: Long,
+        messageId: Long,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ) = bot.forwardMessage(
         chatId = chatId,
         fromChatId = fromChatId,
-        msgId = msgId,
+        messageId = messageId,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
     )
 
     suspend fun forwardMessage(
-        fromChatId: ChatId,
-        msgId: Long,
+        fromChatId: Long,
+        messageId: Long,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ) = bot.forwardMessage(
         chatId = chatId,
         fromChatId = fromChatId,
-        msgId = msgId,
+        messageId = messageId,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -766,7 +765,7 @@ abstract class TelegramApiContainer(
     }
 
     suspend fun stopMessageLiveLocation(
-        chatId: ChatId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup?
@@ -1403,7 +1402,7 @@ abstract class TelegramApiContainer(
     }
 
     suspend fun editMessageMedia(
-        chatId: ChatId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
         media: InputMedia,
@@ -1413,7 +1412,7 @@ abstract class TelegramApiContainer(
     }
 
     suspend fun editMessageReplyMarkup(
-        chatId: ChatId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup?
@@ -1575,7 +1574,7 @@ abstract class TelegramApiContainer(
         score: Long,
         force: Boolean? = null,
         disableEditMessage: Boolean? = null,
-        chatId: ChatId.IntegerId? = null,
+        chatId: Long? = null,
         messageId: Long? = null, inlineMessageId: String?
     ): Message {
         return bot.setGameScore(userId, score, force, disableEditMessage, chatId, messageId, inlineMessageId)
@@ -1583,7 +1582,7 @@ abstract class TelegramApiContainer(
 
     suspend fun getGameHighScores(
         userId: Long,
-        chatId: ChatId.IntegerId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String?
     ): List<GameHighScore> {
@@ -1819,7 +1818,7 @@ abstract class TelegramApiContainer(
         )
     }
 
-    suspend fun stopPoll(chatId: ChatId, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll =
+    suspend fun stopPoll(chatId: Long, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll =
         bot.stopPoll(chatId, messageId, replyMarkup)
 
     suspend fun setChatPermissions(
@@ -1886,10 +1885,10 @@ abstract class TelegramApiContainer(
         inviteLink
     )
 
-    suspend fun setChatAdministratorCustomTitle(chatId: ChatId, userId: Long, customTitle: String) =
+    suspend fun setChatAdministratorCustomTitle(chatId: Long, userId: Long, customTitle: String) =
         bot.setChatAdministratorCustomTitle(chatId, userId, customTitle)
 
-    suspend fun deleteMessage(chatId: ChatId, messageId: Long): Boolean =
+    suspend fun deleteMessage(chatId: Long, messageId: Long): Boolean =
         bot.deleteMessage(chatId, messageId)
 
     suspend fun sendDice(

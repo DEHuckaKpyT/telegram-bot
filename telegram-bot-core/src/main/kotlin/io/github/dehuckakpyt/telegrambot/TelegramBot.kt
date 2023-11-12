@@ -130,8 +130,8 @@ class TelegramBot(
     suspend fun sendMessage(
         chatId: Long,
         text: String,
-        messageThreadId: Long? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         entities: List<MessageEntity>? = null,
         disableWebPagePreview: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -153,35 +153,35 @@ class TelegramBot(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         ).also {
-            messageSource.save(chatId, it.from?.id, it.messageId, text)
+            messageSource.save(chatId, it.from!!.id, it.messageId, text)
         }
     }
 
     suspend fun forwardMessage(
         chatId: Long,
-        fromChatId: ChatId,
-        msgId: Long,
+        fromChatId: Long,
+        messageId: Long,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ) = bot.forwardMessage(
         chatId = chatId.toChatId(),
-        fromChatId = fromChatId,
-        msgId = msgId,
+        fromChatId = fromChatId.toChatId(),
+        msgId = messageId,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
     ).also {
-        messageSource.save(chatId, it.from?.id, it.messageId)
+        messageSource.save(chatId, it.from!!.id, it.messageId)
     }
 
     suspend fun copyMessage(
         chatId: Long,
         fromChatId: Long,
         messageId: Long,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -208,9 +208,9 @@ class TelegramBot(
     suspend fun sendPhoto(
         chatId: Long,
         photo: SendingDocument,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -232,15 +232,15 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageSource.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from!!.id, it.messageId, caption)
     }
 
     suspend fun sendAudio(
         chatId: Long,
         audio: SendingDocument,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Long? = null,
         performer: String? = null,
@@ -268,16 +268,16 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageSource.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from!!.id, it.messageId, caption)
     }
 
     suspend fun sendDocument(
         chatId: Long,
         document: SendingDocument,
-        messageThreadId: Long? = null,
         thumb: File? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -300,19 +300,19 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageSource.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from!!.id, it.messageId, caption)
     }
 
     suspend fun sendVideo(
         chatId: Long,
         video: SendingDocument,
-        messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
         thumb: File? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         hasSpoiler: Boolean? = null,
         streaming: Boolean? = null,
@@ -340,19 +340,19 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageSource.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from!!.id, it.messageId, caption)
     }
 
     suspend fun sendAnimation(
         chatId: Long,
         animation: SendingDocument,
-        messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
         thumb: File? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -378,15 +378,15 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageSource.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from!!.id, it.messageId, caption)
     }
 
     suspend fun sendVoice(
         chatId: Long,
         voice: SendingDocument,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Long? = null,
         disableNotification: Boolean? = null,
@@ -408,7 +408,7 @@ class TelegramBot(
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     ).also {
-        messageSource.save(chatId, it.from?.id, it.messageId, caption)
+        messageSource.save(chatId, it.from!!.id, it.messageId, caption)
     }
 
     suspend fun sendVideoNote(
@@ -512,12 +512,12 @@ class TelegramBot(
     }
 
     suspend fun stopMessageLiveLocation(
-        chatId: ChatId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup?
     ): Message {
-        return bot.stopMessageLiveLocation(chatId, messageId, inlineMessageId, replyMarkup)
+        return bot.stopMessageLiveLocation(chatId?.toChatId(), messageId, inlineMessageId, replyMarkup)
     }
 
     suspend fun sendVenue(
@@ -918,22 +918,22 @@ class TelegramBot(
     }
 
     suspend fun editMessageMedia(
-        chatId: ChatId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
         media: InputMedia,
         replyMarkup: InlineKeyboardMarkup?
     ): Message {
-        return bot.editMessageMedia(chatId, messageId, inlineMessageId, media, replyMarkup)
+        return bot.editMessageMedia(chatId?.toChatId(), messageId, inlineMessageId, media, replyMarkup)
     }
 
     suspend fun editMessageReplyMarkup(
-        chatId: ChatId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup?
     ): Message {
-        return bot.editMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup)
+        return bot.editMessageReplyMarkup(chatId?.toChatId(), messageId, inlineMessageId, replyMarkup)
     }
 
     suspend fun sendSticker(
@@ -1050,19 +1050,27 @@ class TelegramBot(
         score: Long,
         force: Boolean? = null,
         disableEditMessage: Boolean? = null,
-        chatId: ChatId.IntegerId? = null,
+        chatId: Long? = null,
         messageId: Long? = null, inlineMessageId: String?
     ): Message {
-        return bot.setGameScore(userId, score, force, disableEditMessage, chatId, messageId, inlineMessageId)
+        return bot.setGameScore(
+            userId,
+            score,
+            force,
+            disableEditMessage,
+            chatId?.let { ChatId.IntegerId(chatId) },
+            messageId,
+            inlineMessageId
+        )
     }
 
     suspend fun getGameHighScores(
         userId: Long,
-        chatId: ChatId.IntegerId? = null,
+        chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String?
     ): List<GameHighScore> {
-        return bot.getGameHighScores(userId, chatId, messageId, inlineMessageId)
+        return bot.getGameHighScores(userId, chatId?.let { ChatId.IntegerId(chatId) }, messageId, inlineMessageId)
     }
 
     suspend fun sendInvoice(
@@ -1231,8 +1239,8 @@ class TelegramBot(
         )
     }
 
-    suspend fun stopPoll(chatId: ChatId, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll =
-        bot.stopPoll(chatId, messageId, replyMarkup)
+    suspend fun stopPoll(chatId: Long, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll =
+        bot.stopPoll(chatId.toChatId(), messageId, replyMarkup)
 
     suspend fun setChatPermissions(
         chatId: Long,
@@ -1298,11 +1306,11 @@ class TelegramBot(
         inviteLink
     )
 
-    suspend fun setChatAdministratorCustomTitle(chatId: ChatId, userId: Long, customTitle: String) =
-        bot.setChatAdministratorCustomTitle(chatId, userId, customTitle)
+    suspend fun setChatAdministratorCustomTitle(chatId: Long, userId: Long, customTitle: String) =
+        bot.setChatAdministratorCustomTitle(chatId.toChatId(), userId, customTitle)
 
-    suspend fun deleteMessage(chatId: ChatId, messageId: Long): Boolean =
-        bot.deleteMessage(chatId, messageId)
+    suspend fun deleteMessage(chatId: Long, messageId: Long): Boolean =
+        bot.deleteMessage(chatId.toChatId(), messageId)
 
     suspend fun sendDice(
         chatId: Long,

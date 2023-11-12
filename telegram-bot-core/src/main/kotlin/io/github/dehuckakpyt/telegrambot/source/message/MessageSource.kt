@@ -11,13 +11,6 @@ import com.dehucka.microservice.logger.Logging
  */
 interface MessageSource : Logging {
 
-    suspend fun save(chatId: Long, fromId: Long?, messageId: Long, text: String? = null) {
-        fromId ?: let {
-            logger.warn("Don't expect message without fromId.\nchatId = '$chatId'")
-            return
-        }
-    }
-
     suspend fun save(chatId: Long, fromId: Long, messageId: Long, text: String? = null)
 
     companion object

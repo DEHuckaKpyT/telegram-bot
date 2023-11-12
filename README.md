@@ -12,6 +12,7 @@
 добавить зависимость, задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
 ```Gradle
 repositories {
+    maven("https://jitpack.io") // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
 }
 dependencies {

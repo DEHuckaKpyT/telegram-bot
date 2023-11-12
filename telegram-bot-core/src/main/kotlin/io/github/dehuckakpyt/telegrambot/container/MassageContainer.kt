@@ -21,7 +21,7 @@ abstract class MassageContainer(
     bot: TelegramBot,
 ) : Container(chatId, content, chainSource, contentConverter, bot) {
 
-    override val from = message.from
+    override val from = message.from!!
     val messageId get() = message.messageId
     val chat get() = message.chat
 

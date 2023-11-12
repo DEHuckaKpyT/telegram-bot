@@ -21,7 +21,7 @@ abstract class Container(
 ) : TelegramApiContainer(chatId, bot) {
 
     val username = bot.username
-    abstract val from: User?
+    abstract val from: User
 
     private var nextStep: String? = null
     private var nextStepInstance: Any? = null
@@ -49,7 +49,7 @@ abstract class Container(
     inline fun <reified T : Any> transferredOrNull(): T? = contentConverter.fromContentOrNull(content, T::class)
 
     internal suspend fun finalize() {
-        chainSource.save(chatId, from?.id, nextStep, nextStepInstance.toContent())
+        chainSource.save(chatId, from.id, nextStep, nextStepInstance.toContent())
     }
 
     private fun Any?.toContent(): String? = contentConverter.toContentOrNull(this)
