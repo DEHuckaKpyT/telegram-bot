@@ -23,7 +23,7 @@ fun BotHandling.chainCommand() {
         // метод with подставляет в шаблон chainStartSum значение переменной target (с помощью FreeMarker)
         sendMessage(chainStartSum with ("target" to target))
         // метод transferToNext передаёт переменную в следующий шаг
-        transfer(target to 0)
+        transfer(target to startSum)
     }
 
     // указать следующий шаг можно с помощью метода next()
@@ -44,3 +44,5 @@ fun BotHandling.chainCommand() {
         sendMessage(chainEnd with mapOf("sum" to sum, "target" to target))
     }
 }
+
+private val BotHandling.startSum get() = 0

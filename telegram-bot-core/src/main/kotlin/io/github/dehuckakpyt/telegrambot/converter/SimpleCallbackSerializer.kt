@@ -27,29 +27,29 @@ class SimpleCallbackSerializer(
         return "$next$delimiter${CallbackDataType.ID}$sourceId"
     }
 
-    override suspend fun getNext(callbackData: String): String {
+    override suspend fun fromCallback(callbackData: String): CallbackDataInfo {
         val delimiterIndex = callbackData.indexOf(delimiter)
+        if (delimiterIndex == -1) return CallbackDataInfo(callbackData)
 
-        return if (delimiterIndex == -1) callbackData
-        else callbackData.substring(0, delimiterIndex)
+        val next = callbackData.substring(0, delimiterIndex)
+        val content = getContent(callbackData, delimiterIndex)
+
+        return CallbackDataInfo(next, content)
     }
 
-    override suspend fun getContent(callbackData: String): String? {
-        val delimiterIndex = callbackData.indexOf(delimiter)
-        if (delimiterIndex == -1) return null
+    override fun validateCallbackName(name: String) {
+        if (name.contains(delimiter)) throw RuntimeException("Char \"$delimiter\" was used for split callback data. Please, change symbol in TelegramBotConfig.callbackDataDelimiter or rename callback step.")
+    }
 
+    private suspend fun getContent(callbackData: String, delimiterIndex: Int): String {
         val type = callbackData.substring(delimiterIndex + 1, delimiterIndex + 2)[0]
         val data = callbackData.substring(delimiterIndex + 2)
 
         return when (type) {
             CallbackDataType.STRING -> data
             CallbackDataType.ID -> callbackContentSource.get(data.toUUID()).content
-            else -> throw RuntimeException("Callback data can not be parsed.")
+            else -> throw RuntimeException("Callback data can not be parsed. Unknown type '$type'")
         }
-    }
-
-    override fun validateCallbackName(name: String) {
-        if (name.contains(delimiter)) throw RuntimeException("Char \"$delimiter\" was used for split callback data. Please, change symbol in TelegramBotConfig.callbackDataDelimiter or rename callback step.")
     }
 
     private object CallbackDataType {

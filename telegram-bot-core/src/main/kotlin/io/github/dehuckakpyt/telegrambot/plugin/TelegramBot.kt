@@ -3,9 +3,12 @@ package io.github.dehuckakpyt.telegrambot.plugin
 import com.elbekd.bot.Bot
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.advise.ChainExceptionAdvice
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
+import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
@@ -43,8 +46,10 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
 
     val externalBot = Bot.createPolling(token, username, pluginConfig.pollingOptions)
     val telegramBot = TelegramBot(username, externalBot, pluginConfig.messageSource)
+    val chainResolver = ChainResolver(ChainExceptionAdvice())
+    val updateResolver = UpdateResolver(pluginConfig.contentConverter, telegramBot, chainResolver, username)
 
-    val botHandling = BotHandling(application, pluginConfig.contentConverter, telegramBot, username)
+    val botHandling = BotHandling(application, chainResolver)
 
     pluginConfig.configureBot(telegramBot)
     pluginConfig.handling(botHandling)
