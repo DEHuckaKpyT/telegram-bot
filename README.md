@@ -9,7 +9,7 @@
 Пример готового приложения в [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example).
 
 Для запуска и конфигурирования бота необходимо
-добавить зависимость, задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
+добавить зависимость, задать в конфигурации `telegram-bot.username` и `telegram-bot.token` и установить бота, как ktor-плагин:
 ```Gradle
 repositories {
     // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
@@ -20,6 +20,9 @@ repositories {
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.2.4-SNAPSHOT")
 }
+```
+```
+    
 ```
 ```kotlin
 fun Application.configureTelegramBot() {
@@ -40,9 +43,7 @@ fun BotHandling.startCommand() {
 
 ## Цепочки сообщений
 
-Самое ценное в библиотеке - удобное построение диалога с пользователем.
-Для бота диалог является цепочкой сообщений.
-И теперь её можно легко сделать.
+Самое ценное в библиотеке - удобное построение диалога с пользователем (далее - цепочка). 
 
 Создание цепочек осуществляется с помощью метода расширения у класса `BotHandling`:
 ```kotlin
@@ -358,7 +359,9 @@ telegram-bot {
 fun BotHandling.templateCommand() {
     val htmlFormattedString = "<b><u>formatted</u></b> <center>ignored</center><br>new line"
     command("/template_html_formatted") {
+        // текст сообщения: formatted text: <b><u>formatted</u></b> <center>ignored</center><br>new line
         sendMessage(cleanExample with ("param" to htmlFormattedString), parseMode = Html)
+        // текст сообщения: formatted text: formatted ignored new line (с underline и переносом строки)
         sendMessage(escapeExample with ("param" to htmlFormattedString), parseMode = Html)
     }
 }
@@ -368,7 +371,7 @@ fun BotHandling.templateCommand() {
 
 Самым обычным образом можно получить бота и вызывать его методы:
 ```kotlin
-class NotifyWhenStartedRunner : TemplatingExtended {
+class NotifyWhenStartedRunner : TemplatingEx {
     private val bot = get<TelegramBot>()
     private val chatIdToNotify = 1165327523L
 
@@ -387,7 +390,7 @@ class NotifyWhenStartedRunner : TemplatingExtended {
 `ChatException` напишет сообщение об ошибке обратно в чат, из которого пришёл запрос.
 
 `PrivateChatException` напишет сообщение об ошибке обратно в чат, из которого пришёл запрос, только если это личный чат. 
-При исключениях в групповых чатах бот не выведет ошибку.
+При исключениях в групповых чатах бот не выведет эту ошибку.
 
 ```kotlin
 fun BotHandling.exceptionCommand() {
@@ -403,7 +406,7 @@ fun BotHandling.exceptionCommand() {
 При любом другом исключении пользователю выведется сообщение "Произошла непредвиденная ошибка. Обратитесь к разработчику."
 
 > **Note**
-> Все текстовки настраиваются. Новые обрабатываемые исключения легко добавляются.
+> Все текстовки настраиваются. Новые исключения и их обработчики добавляются.
 
 
 ## Конфигурация
@@ -429,8 +432,6 @@ class TelegramBotConfig {
     var chainExceptionHandler: ChainExceptionHandler 
 }
 ```
-
-Далее подробнее.
 
 ### Настройка FreeMarker
 
@@ -461,7 +462,7 @@ class TelegramBotConfig {
     }
 ```
 
-Для сохранения состояния в БД необходимо подключить к бд с помощью [Exposed](https://github.com/JetBrains/Exposed) ([пример](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/plugin/DatabaseConnection.kt)).
+Для сохранения состояния в БД необходимо подключиться к ней с помощью [Exposed](https://github.com/JetBrains/Exposed) ([пример](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/plugin/DatabaseConnection.kt)).
 Затем добавить зависимость и указать source'ы:
 ```Gradle
 dependencies {
@@ -491,7 +492,30 @@ dependencies {
 
 `callbackSerializer: CallbackSerializer` - сериализатор, складывающий в строку step и объект.
 
-Чтобы сериализовать в более компактную строку, можно написать свою реализацию для сериализации.
+Чтобы сериализовать в более компактную строку, можно написать свою реализацию для сериализации. 
+Просто реализовать интерфейс `CallbackSerializer` и задать его в конфиге плагина:
+
+```kotlin
+class CustomCallbackSerializer : CallbackSerializer {
+
+    override suspend fun toCallback(next: String, instance: Any?): String {
+        // Кастомная сериализация следующего шага и объекта.
+    }
+
+    override suspend fun fromCallback(callbackData: String): CallbackDataInfo {
+        // Кастомная десериализация следующего шага и объекта.
+    }
+
+    override fun validateCallbackName(name: String) {
+       // Метод для проверки названия callback'ов. Вызывается при создании обработчика callback'а. На случай выбора недопустимых символов.
+    }
+}
+```
+```kotlin
+    install(TelegramBot) {
+        callbackSerializer = CustomCallbackSerializer()
+    }
+```
 
 ### Настройка обработки исключений
 `chainExceptionHandler: ChainExceptionHandler` - обработчик исключений в цепочках. 
