@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambotexample.runner
 
 import com.elbekd.bot.types.ParseMode.Html
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.template.ExtTemplating
+import io.github.dehuckakpyt.telegrambot.template.TemplatingEx
 import io.github.dehuckakpyt.telegrambotexample.template.runnerNotifyWhenStarted
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
@@ -15,7 +15,7 @@ import org.koin.core.component.get
  * @author Denis Matytsin
  */
 @Single
-class NotifyWhenStartedRunner : Runner, ExtTemplating {
+class NotifyWhenStartedRunner : Runner, TemplatingEx {
     // всегда доступен TelegramBot для отправки сообщений
     // достаточно просто воспользоваться Koin
     private val bot = get<TelegramBot>()

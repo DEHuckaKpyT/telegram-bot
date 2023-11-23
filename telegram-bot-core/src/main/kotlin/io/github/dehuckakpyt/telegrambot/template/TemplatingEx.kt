@@ -7,7 +7,7 @@ package io.github.dehuckakpyt.telegrambot.template
  *
  * @author Denis Matytsin
  */
-interface ExtTemplating : Templating {
+interface TemplatingEx : Templating {
     operator fun String.invoke(pair: Pair<String, Any>): String = Templating.buildTemplate(this, mapOf(pair))
     operator fun String.invoke(vararg pairs: Pair<String, Any>): String = Templating.buildTemplate(this, mapOf(*pairs))
     operator fun String.invoke(instance: Any): String = Templating.buildTemplate(this, instance)

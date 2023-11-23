@@ -31,13 +31,13 @@ import io.ktor.server.config.*
  * @author Denis Matytsin
  */
 data class TelegramBotConfig(private val config: ApplicationConfig) {
-    var enabled = config.propertyOrNull("enabled")?.getString()?.toBooleanStrict() ?: true
-    var token = config.propertyOrNull("token")?.getString()
-    var username = config.propertyOrNull("username")?.getString()
+    var enabled: Boolean = config.propertyOrNull("enabled")?.getString()?.toBooleanStrict() ?: true
+    var token: String? = config.propertyOrNull("token")?.getString()
+    var username: String? = config.propertyOrNull("username")?.getString()
     var pollingOptions: PollingOptions.() -> Unit = { PollingOptions() }
     var configureBot: TelegramBot.() -> Unit = {}
     var handling: BotHandling.() -> Unit = {}
-    var templateConfig = Configuration(Version("2.3.32"))
+    var templateConfig: Configuration = Configuration(Version("2.3.32"))
     var callbackContentSource: CallbackContentSource = InMemoryCallbackContentSource()
     var chainSource: ChainSource = InMemoryChainSource()
     var messageSource: MessageSource = EmptyMessageSource()

@@ -13,12 +13,13 @@ import org.jsoup.safety.Safelist
  *
  * @author Denis Matytsin
  */
-class HtmlFormatterImpl(
+open class HtmlFormatterImpl(
+    // Доступные теги описаны в документации https://core.telegram.org/bots/api#html-style
     allowedTags: Array<String> = arrayOf("b", "strong", "i", "em", "u", "ins", "s", "strike", "del", "a", "code", "pre"),
     allowedAttributes: Map<String, Array<String>> = mapOf("a" to arrayOf("href")),
 ) : HtmlFormatter {
-    private val safelist: Safelist = Safelist()
-    private val settings = OutputSettings().prettyPrint(false)
+    protected val safelist: Safelist = Safelist()
+    protected val settings: OutputSettings = OutputSettings().prettyPrint(false)
 
     init {
         safelist.addTags(*allowedTags)

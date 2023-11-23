@@ -12,11 +12,13 @@
 добавить зависимость, задать в конфигурации telegram-bot.username и telegram-bot.token и установить бота, как ktor-плагин:
 ```Gradle
 repositories {
-    maven("https://jitpack.io") // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
+    // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
+    maven("https://jitpack.io") 
+    // не нужен будет, когда получится залить в maven central (очень надеюсь, что получится)
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.2.3-SNAPSHOT")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.2.4-SNAPSHOT")
 }
 ```
 ```kotlin
@@ -33,65 +35,6 @@ fun BotHandling.startCommand() {
     command("/start") {
         sendMessage("Привет, меня зовут $username :-)")
     }
-}
-```
-
-## Конфигурация
-
-### Настройка FreeMarker
-
-```kotlin
-        configureTemplating {
-            defaultEncoding = "UTF-8"
-            dateFormat = "yyyy-MM-dd"
-            // и остальное из документации FreeMarker
-        }
-```
-
-### Настройка хранения состояния
-
-По умолчанию всё хранится до завершения работы приложения - в памяти. Подключение к БД не нужно.
-Это может быть удобно, если никакую информацию и не нужно хранить.
-Также это удобно в случае, если нужно быстро проверить работу бота.
-```kotlin
-    install(TelegramBot) {
-        callbackContentSource = CallbackContentSource.inMemory
-        chainSource = ChainSource.inMemory
-        messageSource = MessageSource.empty
-    }
-```
-
-Имеется возможность сохранять состояние в БД.
-Достаточно всего лишь добавить зависимость и написать следующий код:
-```kotlin
-    install(TelegramBot) {
-        callbackContentSource = CallbackContentSource.inDatabase
-        chainSource = ChainSource.inDatabase
-        messageSource = MessageSource.inDatabase
-    }
-```
-
-Или ещё короче:
-```kotlin
-    install(TelegramBot) {
-        databaseSources()
-    }
-```
-Также можно комбинировать сохранение информации, как только угодно.
-
-### Все доступные настройки
-```kotlin
-class TelegramBotConfig {
-    var enabled: String
-    var token: String
-    var username: String
-    var pollingOptions: PollingOptions.() -> Unit
-    var configureBot: TelegramBot.() -> Unit
-    var handling: BotHandling.() -> Unit
-    var templateConfig: Configuration
-    var callbackContentSource: CallbackContentSource
-    var chainSource: ChainSource
-    var messageSource: MessageSource
 }
 ```
 
@@ -283,7 +226,7 @@ val CONTACT = ContactMessageContainer::class
 val DOCUMENT = DocumentMessageContainer::class
 ```
 
-## Обработка кнопок с callback'ом
+## Создание кнопок с callback'ом
 
 Помимо методов для сообщений `command()` и `step()`,
 есть ещё и метод для обработки callback'ов `callback()` (неожиданно, правда?).
@@ -325,9 +268,14 @@ fun BotHandling.callbackCommand() {
 С помощью метода с делегатами `template()` можно взять шаблон из конфига.
 
 Без параметров метод получает наименование переменной, переводит его в kebab-case и берёт значение из конфига.
+
 ```kotlin
+// Значение возьмётся из telegram-bot.from-field-name
 val BotHandling.fromFieldName by template()
+// Значение возьмётся из telegram-bot.from-param
 val BotHandling.fromParam by template("from-param")
+// Значение возьмётся из telegram-bot.from-param. 
+// Если оно в конфиге не задано значение, то подставится "default template when null"
 val BotHandling.fromParamOrDefault by template("from-param", "default template when null")
 ```
 
@@ -375,7 +323,7 @@ data class PresentationTestModel(
 
 Но можно пойти ещё дальше и не использовать даже метод `with()`, а просто скобочки:
 ```kotlin
-class PresentationTestClassExtended : TemplatingExtended {
+class PresentationTestClassExtended : TemplatingEx {
     private val testTemplate by template()
     private val instance = PresentationTestModel("some name")
     private val simpleValue = 1
@@ -392,12 +340,11 @@ class PresentationTestClassExtended : TemplatingExtended {
 
 ### Спец. методы в шаблоне
 
-При использовании FreeMarker доступны методы `escapeHtml()` и `cleanHtml()` ([реализация](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/telegram-bot-core/src/main/kotlin/io/github/dehuckakpyt/telegrambot/formatter/HtmlFormatterImpl.kt)). 
+В шаблоне доступны методы `escapeHtml()` и `cleanHtml()` ([реализация](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/telegram-bot-core/src/main/kotlin/io/github/dehuckakpyt/telegrambot/formatter/HtmlFormatterImpl.kt)). 
 Их можно использовать при отправке сообщения с `parseMode = Html`.
 
 
 Метод `escapeHtml()` экранирует все html символы.
-
 Метод `cleanHtml()` оставляет только форматируемые теги telegram'ом (см https://core.telegram.org/bots/api#html-style).
 ```
 telegram-bot {
@@ -431,17 +378,139 @@ class NotifyWhenStartedRunner : TemplatingExtended {
 }
 ```
 
+## Обработка ошибок
+
+### Ожидаемые (выводимые) исключения
+
+Внутри обработчиков команд, шагов, callback'ов можно бросать исключения. 
+
+`ChatException` напишет сообщение об ошибке обратно в чат, из которого пришёл запрос.
+
+`PrivateChatException` напишет сообщение об ошибке обратно в чат, из которого пришёл запрос, только если это личный чат. 
+При исключениях в групповых чатах бот не выведет ошибку.
+
+```kotlin
+fun BotHandling.exceptionCommand() {
+    command("/exception") {
+        throw ChatException("Обычная ошибка")
+    }
+    command("/private_exception") {
+        throw PrivateChatException("Ошибка для личного чата")
+    }
+}
+```
+
+При любом другом исключении пользователю выведется сообщение "Произошла непредвиденная ошибка. Обратитесь к разработчику."
+
+> **Note**
+> Все текстовки настраиваются. Новые обрабатываемые исключения легко добавляются.
+
+
+## Конфигурация
+
+### Все доступные настройки
+```kotlin
+class TelegramBotConfig {
+    var enabled: String
+    var token: String
+    var username: String
+    var pollingOptions: PollingOptions.() -> Unit
+    var configureBot: TelegramBot.() -> Unit
+    var handling: BotHandling.() -> Unit
+    var templateConfig: Configuration
+    var callbackContentSource: CallbackContentSource
+    var chainSource: ChainSource
+    var messageSource: MessageSource
+    var callbackDataDelimiter: Char 
+    var contentConverter: ContentConverter 
+    var callbackSerializer: CallbackSerializer 
+    var htmlFormatter: HtmlFormatter 
+    var exceptionHandler: ExceptionHandler 
+    var chainExceptionHandler: ChainExceptionHandler 
+}
+```
+
+Далее подробнее.
+
+### Настройка FreeMarker
+
+```kotlin
+        configureTemplating {
+            defaultEncoding = "UTF-8"
+            dateFormat = "yyyy-MM-dd"
+            // и остальное из документации FreeMarker
+        }
+```
+
+### Настройка хранения в БД
+
+`callbackContentSource: CallbackContentSource` - используется для хранения callback'ов, у которых длина больше 64 символов.
+
+`chainSource: ChainSource` - используется для хранения текущего состояния цепочек (следующий шаг, контент для следующего шага).
+
+`messageSource: MessageSource` - используется для хранения истории всех сообщений.
+
+
+По умолчанию всё хранится в памяти и станет недоступно после завершения работы приложения.
+Может быть удобно для быстрого тестирования работы бота.
+```kotlin
+    install(TelegramBot) {
+        callbackContentSource = CallbackContentSource.inMemory
+        chainSource = ChainSource.inMemory
+        messageSource = MessageSource.empty
+    }
+```
+
+Для сохранения состояния в БД необходимо подключить к бд с помощью [Exposed](https://github.com/JetBrains/Exposed) ([пример](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/plugin/DatabaseConnection.kt)).
+Затем добавить зависимость и указать source'ы:
+```Gradle
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.2.4-SNAPSHOT")
+}
+```
+```kotlin
+    install(TelegramBot) {
+        callbackContentSource = CallbackContentSource.inDatabase
+        chainSource = ChainSource.inDatabase
+        messageSource = MessageSource.inDatabase
+
+        // или с помощью одного метода
+        databaseSources()
+    }
+```
+Также можно комбинировать сохранения и можно делать свои реализации.
+
+### Настройка сериализации callback'ов
+
+По умолчанию в callback записывается строка `<next step>|s<json content string>`. 
+Но если строка больше 64 символов, то в строке будет `<next step>|i<id CallbackContent>`.
+
+`callbackDataDelimiter: Char` - символ, который разделяет step и callback. По умолчанию - `|`. 
+
+`contentConverter: ContentConverter` - конвертер, сериализирующий объект в строку (по умолчанию в json).
+
+`callbackSerializer: CallbackSerializer` - сериализатор, складывающий в строку step и объект.
+
+Чтобы сериализовать в более компактную строку, можно написать свою реализацию для сериализации.
+
+### Настройка обработки исключений
+`chainExceptionHandler: ChainExceptionHandler` - обработчик исключений в цепочках. 
+Можно настроить поведение при отсутствии команды, отсутствии следующего шага и отсутствии ожидаемого типа сообщения.
+
+`exceptionHandler: ExceptionHandler` - общий обработчик исключений. 
+В нём Можно настроить поведение при ожидаемых и неожидаемых ошибках во время обработки команд, шагов и т д. 
+В том числе добавить свои типы исключений (пример [добавления](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/exception/CustomExceptionHandler.kt) и [использования](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler/ExceptionCommand.kt))
+
 
 ## Что обязательно нужно сделать ещё:
-- Добавить тип сообщения при сохранении в [модель](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/telegram-bot-database-source/src/main/kotlin/io/github/dehuckakpyt/telegrambot/model/DatabaseTelegramMessage.kt)
-- Вынести в конфиг обработку ошибок
-- Немного отрефакторить [либу в основе](https://github.com/DEHuckaKpyT/microservice-extensions) (получение конфига в json вместо properties, переименовать методы для транзакций, переделать в плагин подключение к бд, добавить аналог феинов)
-- Отрефакторить [BotChaining](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/telegram-bot-core/src/main/kotlin/io/github/dehuckakpyt/telegrambot/BotChaining.kt)
+- Немного отрефакторить [свою либу в основе](https://github.com/DEHuckaKpyT/microservice-extensions) (получение конфига в json вместо properties, переименовать методы для транзакций, переделать в плагин подключение к бд, добавить аналог феинов)
 - Решить вопрос с лицензией (можно ли просто скопировать себе код из [либы бота в основе](https://github.com/elbekD/kt-telegram-bot)). Если нет, то решить вопрос как-то ещё
 - Добавить тесты
 
 
 ## Фишки, которые хочется сделать:
 - Придумать что-то с обработкой сообщений с длиной более 4096 символов
+- Добавить возможность указывать action ('typing..' и т. п.)
 - Сделать отключаемыми методы cleanHtml и escapeHtml в шаблонах
+- Удаление callback'ов из БД по cron'у или как-то ещё
 - Возможность добавлять обработчики не только с помощью методов расширения `BotHandling`, но и с помощью создания классов (идея есть)
