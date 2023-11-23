@@ -22,6 +22,9 @@ class TelegramBot(
     private val bot: Bot,
     private val messageSource: MessageSource,
 ) {
+    fun start() = bot.start()
+
+    fun stop() = bot.stop()
 
     //region Telegram events
     fun onMessage(action: (suspend (Message) -> Unit)?) {

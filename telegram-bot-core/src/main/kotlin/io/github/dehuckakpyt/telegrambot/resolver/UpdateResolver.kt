@@ -26,7 +26,7 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-class UpdateResolver(
+internal class UpdateResolver(
     private val contentConverter: ContentConverter,
     private val bot: TelegramBot,
     private val chainResolver: ChainResolver,
@@ -38,17 +38,7 @@ class UpdateResolver(
     private val chainSource = get<ChainSource>()
     private val messageSource = get<MessageSource>()
 
-    init {
-        bot.onCallbackQuery { callbackQuery ->
-            processCallback(callbackQuery)
-        }
-
-        bot.onAnyUpdate { update ->
-            processUpdate(update)
-        }
-    }
-
-    private suspend fun processUpdate(update: Update) {
+    suspend fun processUpdate(update: Update) {
         if (update !is UpdateMessage) return
 
         val message = update.message
@@ -83,7 +73,7 @@ class UpdateResolver(
         action.invoke(factory.create(chatId, message, chain!!.content, chainSource, contentConverter, bot))
     }
 
-    private suspend fun processCallback(callback: CallbackQuery) = with(callback) {
+    suspend fun processCallback(callback: CallbackQuery) = with(callback) {
         val data = data ?: return
 
         exceptionHandler.execute(chatId) {
