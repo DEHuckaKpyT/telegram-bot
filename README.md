@@ -151,7 +151,7 @@ fun BotHandling.startCommand() {
     }
 
     step("get_age") {
-        val age = text.toIntOrNull() ?: throw CustomException("Ожидается целое число")
+        val age = text.toIntOrNull() ?: throw ChatException("Ожидается целое число")
         
         sendMessage("$age лет - записано.")
     }
@@ -226,7 +226,7 @@ fun BotHandling.isDenisCommand() {
 А с помощью методов `transferred()` и `transferredOrNull()` можно получить этот объект в следующем шаге:
 ```kotlin
     step("get_age") {
-        val age = text.toIntOrNull() ?: throw CustomException("Ожидается целое число")
+        val age = text.toIntOrNull() ?: throw ChatException("Ожидается целое число")
         val name = transferred<String>()
 
         sendMessage("Твоё имя $name, и тебе $age лет - записано.")
@@ -260,7 +260,7 @@ fun BotHandling.registerCommand() {
     }
 
     step("get contact", type = TEXT, next = "get firstname") {
-        phonePattern.find(text) ?: throw CustomException("Неверный формат номера телефона.")
+        phonePattern.find(text) ?: throw ChatException("Неверный формат номера телефона.")
 
         sendMessage("Напишите, как к Вам обращаться.", replyMarkup = removeKeyboard())
         transfer(text)

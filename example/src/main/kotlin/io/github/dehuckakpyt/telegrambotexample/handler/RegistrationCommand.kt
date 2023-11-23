@@ -1,9 +1,9 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import com.dehucka.microservice.exception.CustomException
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.CONTACT
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.TEXT
+import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.factory.contactKeyboard
 import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard
 import io.github.dehuckakpyt.telegrambotexample.template.*
@@ -34,7 +34,7 @@ fun BotHandling.registerCommand() {
     // если отправит номер текстом, то вызовется второй метод (type = TEXT)
     // если пользователь отправит что-то другое, то эти оба метода будут проигнорированы, пользователю выведется сообщение о доступных типах сообщения
     step("get contact", type = TEXT, next = "get firstname") {
-        phonePattern.find(text) ?: throw CustomException(registerWrongPhoneFormat)
+        phonePattern.find(text) ?: throw ChatException(registerWrongPhoneFormat)
 
         sendMessage(registerGetFirstname, replyMarkup = removeKeyboard())
         transfer(text)

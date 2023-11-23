@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import com.dehucka.microservice.exception.CustomBadRequestException
 import io.github.dehuckakpyt.telegrambot.BotHandling
+import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambotexample.template.chain
 import io.github.dehuckakpyt.telegrambotexample.template.chainEnd
 import io.github.dehuckakpyt.telegrambotexample.template.chainOneMore
@@ -16,9 +16,9 @@ fun BotHandling.chainCommand() {
     }
 
     step("get target", next = "sum numbers") {
-        // исключения наследуемые от CustomException выведутся пользователю
-        val target = text.toIntOrNull() ?: throw CustomBadRequestException("Ожидается целое число")
-        if (target < 1) throw CustomBadRequestException("Ожидается положительное число")
+        // исключения ChatException выведутся пользователю
+        val target = text.toIntOrNull() ?: throw ChatException("Ожидается целое число")
+        if (target < 1) throw ChatException("Ожидается положительное число")
 
         // метод with подставляет в шаблон chainStartSum значение переменной target (с помощью FreeMarker)
         sendMessage(chainStartSum with ("target" to target))
@@ -29,7 +29,7 @@ fun BotHandling.chainCommand() {
     // указать следующий шаг можно с помощью метода next()
     // если следующий шаг не задан в параметре и методом, то цепочка оборвётся
     step("sum numbers") {
-        val value = text.toIntOrNull() ?: throw CustomBadRequestException("Ожидается целое число")
+        val value = text.toIntOrNull() ?: throw ChatException("Ожидается целое число")
         // метод transferred позволяет получить переданную переменную из предыдущего шага
         var (target, sum) = transferred<Pair<Int, Int>>()
         sum += value
@@ -45,4 +45,4 @@ fun BotHandling.chainCommand() {
     }
 }
 
-private val BotHandling.startSum get() = 0
+private const val startSum = 0

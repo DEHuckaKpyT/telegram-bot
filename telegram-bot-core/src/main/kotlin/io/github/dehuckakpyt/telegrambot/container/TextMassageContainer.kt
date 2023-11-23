@@ -24,7 +24,7 @@ open class TextMassageContainer(
     val text get() = message.text!!
 
     companion object : MessageContainerFactory {
-        override fun condition(message: Message): Boolean = with(message) {
+        override fun matches(message: Message): Boolean = with(message) {
             return text != null
         }
 

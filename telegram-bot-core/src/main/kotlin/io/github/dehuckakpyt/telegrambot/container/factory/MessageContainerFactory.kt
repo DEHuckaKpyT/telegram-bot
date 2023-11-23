@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
  * @author Denis Matytsin
  */
 interface MessageContainerFactory {
-    fun condition(message: Message): Boolean
+    fun matches(message: Message): Boolean
 
     fun create(
         chatId: Long,

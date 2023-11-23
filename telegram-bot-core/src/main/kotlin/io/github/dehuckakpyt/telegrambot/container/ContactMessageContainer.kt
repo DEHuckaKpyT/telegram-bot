@@ -25,7 +25,7 @@ class ContactMessageContainer(
     val contact get() = message.contact!!
 
     companion object : MessageContainerFactory {
-        override fun condition(message: Message): Boolean = with(message) {
+        override fun matches(message: Message): Boolean = with(message) {
             return contact != null
         }
 

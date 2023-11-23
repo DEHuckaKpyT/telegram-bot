@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
-import com.dehucka.microservice.exception.CustomException
+import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.model.CallbackContent
 import io.github.dehuckakpyt.telegrambot.model.CallbackContentImpl
 import java.util.*
@@ -26,6 +26,6 @@ class InMemoryCallbackContentSource : CallbackContentSource {
     }
 
     override suspend fun get(identifier: UUID): CallbackContent {
-        return contentByIdentifier[identifier] ?: throw CustomException("Содержание для callback'а не найдено :(")
+        return contentByIdentifier[identifier] ?: throw ChatException("Содержание для callback'а не найдено :(")
     }
 }

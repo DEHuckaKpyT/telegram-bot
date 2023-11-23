@@ -9,6 +9,10 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.SimpleCallbackSerializer
+import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
+import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandlerImpl
+import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
+import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandlerImpl
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatterImpl
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
@@ -42,6 +46,8 @@ data class TelegramBotConfig(private val config: ApplicationConfig) {
     var callbackSerializer: CallbackSerializer =
         SimpleCallbackSerializer(callbackContentSource, contentConverter, callbackDataDelimiter)
     var htmlFormatter: HtmlFormatter = HtmlFormatterImpl()
+    var exceptionHandler: ExceptionHandler = ExceptionHandlerImpl()
+    var chainExceptionHandler: ChainExceptionHandler = ChainExceptionHandlerImpl()
 
     fun pollingOptions(block: PollingOptions.() -> Unit) {
         pollingOptions = block

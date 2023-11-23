@@ -1,6 +1,5 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
-import com.dehucka.microservice.exception.CustomException
 import com.dehucka.microservice.logger.Logging
 import com.elbekd.bot.types.CallbackQuery
 import com.elbekd.bot.types.Message
@@ -12,13 +11,11 @@ import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFacto
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
+import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templating
-import io.github.dehuckakpyt.telegrambot.template.whenKnownErrorTemplate
-import io.github.dehuckakpyt.telegrambot.template.whenUnknownErrorTemplate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -33,6 +30,7 @@ class UpdateResolver(
     private val contentConverter: ContentConverter,
     private val bot: TelegramBot,
     private val chainResolver: ChainResolver,
+    private val exceptionHandler: ExceptionHandler,
     private val username: String,
 ) : KoinComponent, Templating, Logging {
 
@@ -65,7 +63,7 @@ class UpdateResolver(
 
         messageSource.save(chatId, from.id, message.messageId, text)
 
-        tryExecute(chatId) {
+        exceptionHandler.execute(chatId) {
             CommandMassageContainer.fetchCommand(text, username)?.let {
                 processCommand(it, message)
             } ?: processMessage(message)
@@ -88,7 +86,7 @@ class UpdateResolver(
     private suspend fun processCallback(callback: CallbackQuery) = with(callback) {
         val data = data ?: return
 
-        tryExecute(chatId) {
+        exceptionHandler.execute(chatId) {
             val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
             chainResolver.getCallback(callbackName)?.invoke(
@@ -97,31 +95,14 @@ class UpdateResolver(
         }
     }
 
-    private suspend fun tryExecute(chatId: Long, block: suspend () -> Unit) {
-        try {
-            block()
-        } catch (ex: PrivateChatException) {
-            if (chatId > 0) {// если это личный чат
-                bot.sendMessage(chatId, whenKnownErrorTemplate with ("message" to ex.localizedMessage))
-            }
-        } catch (ex: ChatException) {
-            bot.sendMessage(chatId, whenKnownErrorTemplate with ("message" to ex.localizedMessage))
-        } catch (ex: CustomException) {
-            bot.sendMessage(chatId, whenUnknownErrorTemplate with ("message" to ex.localizedMessage))
-        } catch (throwable: Throwable) {
-            logger.error("Unexpected error while handling message in chat $chatId", throwable)
-            bot.sendMessage(chatId, whenUnknownErrorTemplate)
-        }
-    }
-
     private val Message.containerFactory: MessageContainerFactory
         get() = when {
-            TextMassageContainer.condition(this) -> TextMassageContainer.Companion
-            AudioMassageContainer.condition(this) -> AudioMassageContainer.Companion
-            VoiceMessageContainer.condition(this) -> VoiceMessageContainer.Companion
-            ContactMessageContainer.condition(this) -> ContactMessageContainer.Companion
-            DocumentMessageContainer.condition(this) -> DocumentMessageContainer.Companion
-            PhotoMassageContainer.condition(this) -> PhotoMassageContainer.Companion
-            else -> throw CustomException("Такой тип сообщения ещё не поддерживается.")
+            TextMassageContainer.matches(this) -> TextMassageContainer.Companion
+            AudioMassageContainer.matches(this) -> AudioMassageContainer.Companion
+            VoiceMessageContainer.matches(this) -> VoiceMessageContainer.Companion
+            ContactMessageContainer.matches(this) -> ContactMessageContainer.Companion
+            DocumentMessageContainer.matches(this) -> DocumentMessageContainer.Companion
+            PhotoMassageContainer.matches(this) -> PhotoMassageContainer.Companion
+            else -> throw ChatException("Такой тип сообщения ещё не поддерживается.")
         }
 }

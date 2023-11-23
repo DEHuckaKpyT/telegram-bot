@@ -1,10 +1,10 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
-import io.github.dehuckakpyt.telegrambot.advise.ChainExceptionAdvice
 import io.github.dehuckakpyt.telegrambot.container.CallbackMassageContainer
 import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer
 import io.github.dehuckakpyt.telegrambot.container.MassageContainer
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
+import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.reflect.KClass
@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
  * @author Denis Matytsin
  */
 class ChainResolver(
-    private val exceptionAdvice: ChainExceptionAdvice,
+    private val chainExceptionHandler: ChainExceptionHandler,
 ) : KoinComponent {
 
     private val callbackSerializer = get<CallbackSerializer>()
@@ -62,14 +62,14 @@ class ChainResolver(
     }
 
     fun getCommand(command: String): suspend CommandMassageContainer.() -> Unit {
-        return actionByCommand[command] ?: exceptionAdvice.whenCommandNotFound(command)
+        return actionByCommand[command] ?: chainExceptionHandler.whenCommandNotFound(command)
     }
 
     fun getStep(step: String?, messageType: KClass<out MassageContainer>): suspend MassageContainer.() -> Unit {
-        val actionByMessageType = step?.let(actionByStep::get) ?: exceptionAdvice.whenStepNotFound()
+        val actionByMessageType = step?.let(actionByStep::get) ?: chainExceptionHandler.whenStepNotFound()
 
         return actionByMessageType[messageType]
-            ?: exceptionAdvice.whenUnexpectedMessageType(actionByMessageType.keys)
+            ?: chainExceptionHandler.whenUnexpectedMessageType(actionByMessageType.keys)
     }
 
     fun getCallback(callback: String): (suspend CallbackMassageContainer.() -> Unit)? {

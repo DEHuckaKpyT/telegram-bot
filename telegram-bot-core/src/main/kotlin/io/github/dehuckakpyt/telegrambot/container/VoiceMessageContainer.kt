@@ -25,7 +25,7 @@ class VoiceMessageContainer(
     val voice get() = message.voice!!
 
     companion object : MessageContainerFactory {
-        override fun condition(message: Message): Boolean = with(message) {
+        override fun matches(message: Message): Boolean = with(message) {
             return voice != null
         }
 

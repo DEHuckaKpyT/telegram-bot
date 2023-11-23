@@ -26,7 +26,7 @@ class DocumentMessageContainer(
     val document get() = message.document!!
 
     companion object : MessageContainerFactory {
-        override fun condition(message: Message): Boolean = with(message) {
+        override fun matches(message: Message): Boolean = with(message) {
             return document != null
         }
 
