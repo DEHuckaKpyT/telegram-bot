@@ -3,9 +3,10 @@ package io.github.dehuckakpyt.telegrambot.resolver
 import io.github.dehuckakpyt.telegrambot.container.CallbackMessageContainer
 import io.github.dehuckakpyt.telegrambot.container.CommandMessageContainer
 import io.github.dehuckakpyt.telegrambot.container.MessageContainer
+import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
+import io.github.dehuckakpyt.telegrambot.context.getInternal
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.reflect.KClass
 
@@ -16,11 +17,10 @@ import kotlin.reflect.KClass
  *
  * @author Denis Matytsin
  */
-class ChainResolver(
-    private val chainExceptionHandler: ChainExceptionHandler,
-) : KoinComponent {
+internal class ChainResolver : InternalKoinComponent {
 
     private val callbackSerializer = get<CallbackSerializer>()
+    private val chainExceptionHandler = getInternal<ChainExceptionHandler>()
 
     private val actionByCommand: MutableMap<String, suspend CommandMessageContainer.() -> Unit> = hashMapOf()
     private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageContainer>, suspend MessageContainer.() -> Unit>> =

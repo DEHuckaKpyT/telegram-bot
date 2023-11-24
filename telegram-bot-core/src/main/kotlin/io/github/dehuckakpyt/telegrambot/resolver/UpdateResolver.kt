@@ -8,6 +8,8 @@ import com.elbekd.bot.types.UpdateMessage
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.*
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
+import io.github.dehuckakpyt.telegrambot.context.getInternal
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
@@ -16,7 +18,6 @@ import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templating
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 
@@ -26,17 +27,15 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-internal class UpdateResolver(
-    private val contentConverter: ContentConverter,
-    private val bot: TelegramBot,
-    private val chainResolver: ChainResolver,
-    private val exceptionHandler: ExceptionHandler,
-    private val username: String,
-) : KoinComponent, Templating, Logging {
+internal class UpdateResolver : InternalKoinComponent, Templating, Logging {
 
+    private val bot = get<TelegramBot>()
     private val callbackSerializer = get<CallbackSerializer>()
     private val chainSource = get<ChainSource>()
     private val messageSource = get<MessageSource>()
+    private val chainResolver = getInternal<ChainResolver>()
+    private val contentConverter = getInternal<ContentConverter>()
+    private val exceptionHandler = getInternal<ExceptionHandler>()
 
     suspend fun processUpdate(update: Update): Unit {
         if (update !is UpdateMessage) return
@@ -54,7 +53,7 @@ internal class UpdateResolver(
         messageSource.save(chatId, from.id, message.messageId, text)
 
         exceptionHandler.execute(chatId) {
-            CommandMessageContainer.fetchCommand(text, username)?.let {
+            CommandMessageContainer.fetchCommand(text)?.let {
                 processCommand(it, message)
             } ?: processMessage(message)
         }

@@ -8,6 +8,9 @@ import com.elbekd.bot.util.Action
 import com.elbekd.bot.util.AllowedUpdate
 import com.elbekd.bot.util.SendingDocument
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import java.io.File
 
 
@@ -18,10 +21,12 @@ import java.io.File
  * @author Denis Matytsin
  */
 class TelegramBot(
-    val username: String,
-    private val bot: Bot,
-    private val messageSource: MessageSource,
-) {
+    private val bot: Bot
+) : KoinComponent {
+
+    val username = get<String>(named("username"))
+    private val messageSource = get<MessageSource>()
+
     fun start() = bot.start()
 
     fun stop() = bot.stop()

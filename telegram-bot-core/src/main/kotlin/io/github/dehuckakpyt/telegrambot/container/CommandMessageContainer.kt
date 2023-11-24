@@ -4,6 +4,9 @@ import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 
 
 /**
@@ -23,12 +26,15 @@ class CommandMessageContainer(
     val commandPathParam get() = commandPathParamRegex.find(text)?.groupValues?.get(1)
     val commandArgument get() = commandArgumentRegex.find(text)?.groupValues?.get(1)
 
-    companion object {
+    companion object : KoinComponent {
+        private val username = get<String>(named("username"))
+
         private val commandPathParamRegex = Regex("^/[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*(?:__([a-zA-Z0-9-_]+))?")
         private val commandArgumentRegex = Regex("^/[a-zA-Z0-9_]+(?:@[a-zA-Z0-9_]+)?(?: (.+))?")
 
         private val commandRegex = Regex("^(/[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")
-        fun fetchCommand(input: String?, usernameExpected: String): String? {
+
+        fun fetchCommand(input: String?): String? {
             input ?: return null
 
             val find = commandRegex.find(input) ?: return null
@@ -37,7 +43,7 @@ class CommandMessageContainer(
             val command = groups[1]?.value ?: return null
 
             val usernameActual = groups[2]?.value
-            if (usernameActual != null && usernameActual != usernameExpected) return null
+            if (usernameActual != null && usernameActual != username) return null
 
             return command
         }
