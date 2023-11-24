@@ -1,12 +1,13 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import io.github.dehuckakpyt.telegrambot.BotHandling
+import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.container.MessageContainer.Companion.CONTACT
 import io.github.dehuckakpyt.telegrambot.container.MessageContainer.Companion.TEXT
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.factory.contactKeyboard
 import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard
 import io.github.dehuckakpyt.telegrambotexample.template.*
+import org.koin.core.annotation.Factory
 
 
 /**
@@ -15,7 +16,8 @@ import io.github.dehuckakpyt.telegrambotexample.template.*
  *
  * @author Denis Matytsin
  */
-fun BotHandling.registerCommand() {
+@Factory
+class RegistrationHandler : BotHandler({
     val phonePattern = Regex("\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}")
 
     command("/register", next = "get contact") {
@@ -44,4 +46,4 @@ fun BotHandling.registerCommand() {
         val phone = transferred<String>()
         sendMessage(registerComplete with mapOf("firstName" to text, "phoneNumber" to phone))
     }
-}
+})

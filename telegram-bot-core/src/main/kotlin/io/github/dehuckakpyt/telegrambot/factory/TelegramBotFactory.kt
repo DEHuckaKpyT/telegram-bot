@@ -51,11 +51,8 @@ internal object TelegramBotFactory : InternalKoinComponent {
         application: Application,
         config: TelegramBotConfig
     ): TelegramBot {
-        val externalBot = Bot.createPolling(token, username, config.pollingOptions)
-        val telegramBot = TelegramBot(externalBot)
-
         loadKoinModules(module {
-            single(named("username")) { username }
+            single<String>(named("username")) { username }
             single<Application> { application }
             single<CallbackContentSource> { config.callbackContentSource }
             single<ChainSource> { config.chainSource }
@@ -65,7 +62,12 @@ internal object TelegramBotFactory : InternalKoinComponent {
             single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
             single { config.templateConfig }
             single { BotTemplate() }
+        })
 
+        val externalBot = Bot.createPolling(token, username, config.pollingOptions)
+        val telegramBot = TelegramBot(externalBot)
+
+        loadKoinModules(module {
             single { telegramBot }
         })
 

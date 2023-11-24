@@ -45,6 +45,8 @@ fun BotHandling.startCommand() {
 
 Самое ценное в библиотеке - удобное построение диалога с пользователем (далее - цепочка). 
 
+### С помощью методов расширения
+
 Создание цепочек осуществляется с помощью метода расширения у класса `BotHandling`:
 ```kotlin
 fun BotHandling.startCommand() {
@@ -54,10 +56,36 @@ fun BotHandling.startCommand() {
 
 Сообщение, с которого начинается цепочка - это команда. Она обозначается с помощью метода `command()`.
 ```kotlin
+fun BotHandling.startCommand() {
     command("/start") {
-    // здесь действия при вызове команды старт
+    // здесь действия при вызове команды /start
     }
+}
 ```
+### С помощью наследования
+
+Также есть возможность создавать цепочки с помощью наследования от `BotHandler`. Можно указывать всё в конструкторе:
+```kotlin
+@Factory
+class StartBotHandler : BotHandler({
+    command("/start") {
+        // здесь действия при вызове команды /start
+    }
+})
+```
+
+А можно в теле класса в блоке `init {}`:
+```kotlin
+@Factory
+class StartBotHandler : BotHandler() {
+    init {
+        command("/start") {
+            // здесь действия при вызове команды /start
+        }
+    }
+}
+```
+Преимущество в том, что не нужно больше нигде никакие методы вызывать, не нужно никак обозначать этот класс. Достаточно просто повесить аннотацию @Factory.
 
 ### Статические цепочки
 
@@ -190,7 +218,8 @@ fun BotHandling.isDenisCommand() {
 Для одного шага можно задать несколько типов сообщения. Показательный пример с получением номера телефона.
 Здесь и динамические цепочки, и передача объекта между шагами:
 ```kotlin
-fun BotHandling.registerCommand() {
+@Factory
+class RegistrationHandler : BotHandler({
     val phonePattern = Regex("\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}")
 
     command("/register", next = "get contact") {
@@ -214,7 +243,7 @@ fun BotHandling.registerCommand() {
         val phone = transferred<String>()
         sendMessage("$text, Вы успешно зарегистрировались по номеру $phone!")
     }
-}
+})
 ```
 
 Доступные типы на данный момент:

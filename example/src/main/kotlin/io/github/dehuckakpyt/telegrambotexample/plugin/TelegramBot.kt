@@ -27,7 +27,6 @@ fun Application.configureTelegramBot() {
         handling {
             startCommand()
             chainCommand()
-            registerCommand()
             buttonCommand()
             templateCommand()
             exceptionCommand()
