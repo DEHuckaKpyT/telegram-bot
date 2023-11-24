@@ -18,6 +18,8 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     val telegramBot = TelegramBotFactory.load(application, pluginConfig)
     val username = telegramBot.username
 
+    pluginConfig.configureBot(telegramBot)
+
     fun startTelegramBot() {
         application.log.info("Starting telegram-bot '$username'..")
         telegramBot.start()

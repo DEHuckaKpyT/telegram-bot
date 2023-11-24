@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.factory
 
 import com.elbekd.bot.Bot
+import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
@@ -19,7 +20,6 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.BotTemplate
 import io.ktor.server.application.*
-import org.koin.core.component.get
 import org.koin.core.context.loadKoinModules
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -37,18 +37,10 @@ internal object TelegramBotFactory : InternalKoinComponent {
         val token = config.token ?: throw RuntimeException("Telegram-bot TOKEN must not be empty!")
         val username = config.username ?: throw RuntimeException("Telegram-bot USERNAME must not be empty!")
 
-        loadRequiredModules(token, username, application, config)
+        val telegramBot = loadRequiredModules(token, username, application, config)
         loadInternalModules(config)
-
-        val telegramBot = get<TelegramBot>()
-        val updateResolver = getInternal<UpdateResolver>()
-        val botHandling = BotHandling()
-
-        telegramBot.onCallbackQuery(updateResolver::processCallback)
-        telegramBot.onAnyUpdate(updateResolver::processUpdate)
-
-        config.configureBot(telegramBot)
-        config.handling(botHandling)
+        initiateHandlers(config)
+        subscribeToUpdates(telegramBot)
 
         return telegramBot
     }
@@ -58,8 +50,9 @@ internal object TelegramBotFactory : InternalKoinComponent {
         username: String,
         application: Application,
         config: TelegramBotConfig
-    ) {
+    ): TelegramBot {
         val externalBot = Bot.createPolling(token, username, config.pollingOptions)
+        val telegramBot = TelegramBot(externalBot)
 
         loadKoinModules(module {
             single(named("username")) { username }
@@ -73,8 +66,10 @@ internal object TelegramBotFactory : InternalKoinComponent {
             single { config.templateConfig }
             single { BotTemplate() }
 
-            single { TelegramBot(externalBot) }
+            single { telegramBot }
         })
+
+        return telegramBot
     }
 
     private fun loadInternalModules(config: TelegramBotConfig) = loadInternalKoinModules(module {
@@ -84,4 +79,20 @@ internal object TelegramBotFactory : InternalKoinComponent {
         single { ChainResolver() }
         single { UpdateResolver() }
     })
+
+    private fun initiateHandlers(config: TelegramBotConfig) {
+        // создание обработчиков из методов расширения
+        val botHandling = BotHandling()
+        config.handling(botHandling)
+
+        // создание обработчиков из классов
+        getKoin().getAll<BotHandler>()
+    }
+
+    private fun subscribeToUpdates(telegramBot: TelegramBot) {
+        val updateResolver = getInternal<UpdateResolver>()
+
+        telegramBot.onCallbackQuery(updateResolver::processCallback)
+        telegramBot.onAnyUpdate(updateResolver::processUpdate)
+    }
 }
