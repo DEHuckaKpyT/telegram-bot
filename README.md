@@ -1,4 +1,4 @@
-# telegram-bot
+# Kotlin Telegram Bot library
 
 Библиотека для написания telegram-ботов. За основу взят
 репозиторий [kt-telegram-bot](https://github.com/elbekD/kt-telegram-bot).
