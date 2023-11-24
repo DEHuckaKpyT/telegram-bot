@@ -12,17 +12,12 @@
 добавить зависимость, задать в конфигурации `telegram-bot.username` и `telegram-bot.token` и установить бота, как ktor-плагин:
 ```Gradle
 repositories {
-    // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
-    maven("https://jitpack.io") 
-    // не нужен будет, когда получится залить в maven central (очень надеюсь, что получится)
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+    mavenCentral()
+    maven("https://jitpack.io") // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.2.4-SNAPSHOT")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.2.4")
 }
-```
-```
-    
 ```
 ```kotlin
 fun Application.configureTelegramBot() {
@@ -495,7 +490,7 @@ class TelegramBotConfig {
 Затем добавить зависимость и указать source'ы:
 ```Gradle
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.2.4-SNAPSHOT")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.2.4")
 }
 ```
 ```kotlin
