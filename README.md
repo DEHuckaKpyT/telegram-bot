@@ -507,7 +507,8 @@ class CustomCallbackSerializer : CallbackSerializer {
     }
 
     override fun validateCallbackName(name: String) {
-       // Метод для проверки названия callback'ов. Вызывается при создании обработчика callback'а. На случай выбора недопустимых символов.
+        // Метод для проверки названия callback'ов. Вызывается при создании обработчика callback'а. 
+        // На случай выбора недопустимых символов.
     }
 }
 ```
@@ -520,10 +521,44 @@ class CustomCallbackSerializer : CallbackSerializer {
 ### Настройка обработки исключений
 `chainExceptionHandler: ChainExceptionHandler` - обработчик исключений в цепочках. 
 Можно настроить поведение при отсутствии команды, отсутствии следующего шага и отсутствии ожидаемого типа сообщения.
+```kotlin
+// или наследовать от ChainExceptionHandlerImpl, чтобы переопределить только часть методов
+class CustomChainExceptionHandler : ChainExceptionHandler {
+    override fun whenCommandNotFound(command: String): Nothing {
+        // когда не найдена команда
+    }
+
+    override fun whenStepNotFound(): Nothing {
+        // когда не найден следующий шаг
+    }
+
+    override fun whenUnexpectedMessageType(expectedMessageTypes: Set<KClass<out MassageContainer>>): Nothing {
+        // когда пользователь отправил неожидаемый тип сообщения
+    }
+}
+```
+```kotlin
+    install(TelegramBot) {
+        chainExceptionHandler = CustomChainExceptionHandler()
+    }
+```
 
 `exceptionHandler: ExceptionHandler` - общий обработчик исключений. 
-В нём Можно настроить поведение при ожидаемых и неожидаемых ошибках во время обработки команд, шагов и т д. 
+Можно настроить поведение при ожидаемых и неожидаемых ошибках во время обработки команд, шагов и т д. 
 В том числе добавить свои типы исключений (пример [добавления](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/exception/CustomExceptionHandler.kt) и [использования](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler/ExceptionCommand.kt))
+```kotlin
+class CustomExceptionHandler : ExceptionHandlerImpl() {
+    override suspend fun caught(chatId: Long, ex: Throwable) {
+        // Сюда придут все исключения, возникшие во время обработки запросов.
+        // Можно отправлять что-то в чат, можно писать в логи.
+    }
+}
+```
+```kotlin
+    install(TelegramBot) {
+        exceptionHandler = CustomExceptionHandler()
+    }
+```
 
 
 ## Что обязательно нужно сделать ещё:
@@ -534,6 +569,7 @@ class CustomCallbackSerializer : CallbackSerializer {
 
 ## Фишки, которые хочется сделать:
 - Придумать что-то с обработкой сообщений с длиной более 4096 символов
+- Придумать, как реализовать "мультиязычность"
 - Добавить возможность указывать action ('typing..' и т. п.)
 - Сделать отключаемыми методы cleanHtml и escapeHtml в шаблонах
 - Удаление callback'ов из БД по cron'у или как-то ещё

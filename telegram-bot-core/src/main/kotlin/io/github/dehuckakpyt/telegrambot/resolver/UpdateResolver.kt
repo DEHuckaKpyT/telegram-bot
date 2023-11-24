@@ -38,7 +38,7 @@ internal class UpdateResolver(
     private val chainSource = get<ChainSource>()
     private val messageSource = get<MessageSource>()
 
-    suspend fun processUpdate(update: Update) {
+    suspend fun processUpdate(update: Update): Unit {
         if (update !is UpdateMessage) return
 
         val message = update.message
@@ -60,12 +60,12 @@ internal class UpdateResolver(
         }
     }
 
-    private suspend fun processCommand(command: String, message: Message) = with(message) {
+    private suspend fun processCommand(command: String, message: Message): Unit = with(message) {
         chainResolver.getCommand(command)
             .invoke(CommandMassageContainer(chatId, message, chainSource, contentConverter, bot))
     }
 
-    private suspend fun processMessage(message: Message) = with(message) {
+    private suspend fun processMessage(message: Message): Unit = with(message) {
         val chain = chainSource.get(chatId, from!!.id)
         val factory = message.containerFactory
         val action = chainResolver.getStep(chain?.step, factory.type)
@@ -73,7 +73,7 @@ internal class UpdateResolver(
         action.invoke(factory.create(chatId, message, chain!!.content, chainSource, contentConverter, bot))
     }
 
-    suspend fun processCallback(callback: CallbackQuery) = with(callback) {
+    suspend fun processCallback(callback: CallbackQuery): Unit = with(callback) {
         val data = data ?: return
 
         exceptionHandler.execute(chatId) {
