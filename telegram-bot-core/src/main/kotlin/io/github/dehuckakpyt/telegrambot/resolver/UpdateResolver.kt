@@ -54,7 +54,7 @@ internal class UpdateResolver(
         messageSource.save(chatId, from.id, message.messageId, text)
 
         exceptionHandler.execute(chatId) {
-            CommandMassageContainer.fetchCommand(text, username)?.let {
+            CommandMessageContainer.fetchCommand(text, username)?.let {
                 processCommand(it, message)
             } ?: processMessage(message)
         }
@@ -62,7 +62,7 @@ internal class UpdateResolver(
 
     private suspend fun processCommand(command: String, message: Message): Unit = with(message) {
         chainResolver.getCommand(command)
-            .invoke(CommandMassageContainer(chatId, message, chainSource, contentConverter, bot))
+            .invoke(CommandMessageContainer(chatId, message, chainSource, contentConverter, bot))
     }
 
     private suspend fun processMessage(message: Message): Unit = with(message) {
@@ -80,19 +80,19 @@ internal class UpdateResolver(
             val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
             chainResolver.getCallback(callbackName)?.invoke(
-                CallbackMassageContainer(chatId, callback, callbackContent, chainSource, contentConverter, bot)
+                CallbackMessageContainer(chatId, callback, callbackContent, chainSource, contentConverter, bot)
             )
         }
     }
 
     private val Message.containerFactory: MessageContainerFactory
         get() = when {
-            TextMassageContainer.matches(this) -> TextMassageContainer.Companion
-            AudioMassageContainer.matches(this) -> AudioMassageContainer.Companion
+            TextMessageContainer.matches(this) -> TextMessageContainer.Companion
+            AudioMessageContainer.matches(this) -> AudioMessageContainer.Companion
             VoiceMessageContainer.matches(this) -> VoiceMessageContainer.Companion
             ContactMessageContainer.matches(this) -> ContactMessageContainer.Companion
             DocumentMessageContainer.matches(this) -> DocumentMessageContainer.Companion
-            PhotoMassageContainer.matches(this) -> PhotoMassageContainer.Companion
+            PhotoMessageContainer.matches(this) -> PhotoMessageContainer.Companion
             else -> throw ChatException("Такой тип сообщения ещё не поддерживается.")
         }
 }

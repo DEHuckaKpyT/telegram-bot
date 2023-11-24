@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
-import io.github.dehuckakpyt.telegrambot.container.CallbackMassageContainer
-import io.github.dehuckakpyt.telegrambot.container.CommandMassageContainer
-import io.github.dehuckakpyt.telegrambot.container.MassageContainer
+import io.github.dehuckakpyt.telegrambot.container.CallbackMessageContainer
+import io.github.dehuckakpyt.telegrambot.container.CommandMessageContainer
+import io.github.dehuckakpyt.telegrambot.container.MessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import org.koin.core.component.KoinComponent
@@ -22,12 +22,12 @@ class ChainResolver(
 
     private val callbackSerializer = get<CallbackSerializer>()
 
-    private val actionByCommand: MutableMap<String, suspend CommandMassageContainer.() -> Unit> = hashMapOf()
-    private val actionByStep: MutableMap<String, MutableMap<KClass<out MassageContainer>, suspend MassageContainer.() -> Unit>> =
+    private val actionByCommand: MutableMap<String, suspend CommandMessageContainer.() -> Unit> = hashMapOf()
+    private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageContainer>, suspend MessageContainer.() -> Unit>> =
         hashMapOf()
-    private val actionByCallback: MutableMap<String, suspend CallbackMassageContainer.() -> Unit> = hashMapOf()
+    private val actionByCallback: MutableMap<String, suspend CallbackMessageContainer.() -> Unit> = hashMapOf()
 
-    fun addCommand(command: String, next: String? = null, action: suspend CommandMassageContainer.() -> Unit) {
+    fun addCommand(command: String, next: String? = null, action: suspend CommandMessageContainer.() -> Unit) {
         actionByCommand[command] = {
             next(next)
             action()
@@ -36,7 +36,7 @@ class ChainResolver(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : MassageContainer> addStep(
+    fun <T : MessageContainer> addStep(
         step: String,
         type: KClass<out T>,
         next: String? = null,
@@ -46,12 +46,12 @@ class ChainResolver(
 
         actionByType[type] = {
             next(next)
-            (action as suspend MassageContainer.() -> Unit)(this)
+            (action as suspend MessageContainer.() -> Unit)(this)
             finalize()
         }
     }
 
-    fun addCallback(callback: String, next: String? = null, action: suspend CallbackMassageContainer.() -> Unit) {
+    fun addCallback(callback: String, next: String? = null, action: suspend CallbackMessageContainer.() -> Unit) {
         callbackSerializer.validateCallbackName(callback)
 
         actionByCallback[callback] = {
@@ -61,18 +61,18 @@ class ChainResolver(
         }
     }
 
-    fun getCommand(command: String): suspend CommandMassageContainer.() -> Unit {
+    fun getCommand(command: String): suspend CommandMessageContainer.() -> Unit {
         return actionByCommand[command] ?: chainExceptionHandler.whenCommandNotFound(command)
     }
 
-    fun getStep(step: String?, messageType: KClass<out MassageContainer>): suspend MassageContainer.() -> Unit {
+    fun getStep(step: String?, messageType: KClass<out MessageContainer>): suspend MessageContainer.() -> Unit {
         val actionByMessageType = step?.let(actionByStep::get) ?: chainExceptionHandler.whenStepNotFound()
 
         return actionByMessageType[messageType]
             ?: chainExceptionHandler.whenUnexpectedMessageType(actionByMessageType.keys)
     }
 
-    fun getCallback(callback: String): (suspend CallbackMassageContainer.() -> Unit)? {
+    fun getCallback(callback: String): (suspend CallbackMessageContainer.() -> Unit)? {
         return actionByCallback[callback]
     }
 }

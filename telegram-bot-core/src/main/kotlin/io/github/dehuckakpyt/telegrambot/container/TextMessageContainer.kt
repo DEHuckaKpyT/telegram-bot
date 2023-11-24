@@ -8,12 +8,12 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 
 
 /**
- * Created on 16.08.2023.
+ * Created on 13.08.2023.
  *<p>
  *
  * @author Denis Matytsin
  */
-class DocumentMessageContainer(
+open class TextMessageContainer(
     chatId: Long,
     private val message: Message,
     content: String?,
@@ -21,13 +21,11 @@ class DocumentMessageContainer(
     contentConverter: ContentConverter,
     bot: TelegramBot,
 ) : MessageContainer(chatId, message, content, chainSource, contentConverter, bot) {
-
-    val caption get() = message.caption
-    val document get() = message.document!!
+    val text get() = message.text!!
 
     companion object : MessageContainerFactory {
         override fun matches(message: Message): Boolean = with(message) {
-            return document != null
+            return text != null
         }
 
         override fun create(
@@ -37,9 +35,9 @@ class DocumentMessageContainer(
             chainSource: ChainSource,
             contentConverter: ContentConverter,
             bot: TelegramBot
-        ): MessageContainer = DocumentMessageContainer(chatId, message, content, chainSource, contentConverter, bot)
+        ): MessageContainer = TextMessageContainer(chatId, message, content, chainSource, contentConverter, bot)
 
-        override val type = DOCUMENT
-        override val typeName = "Файл"
+        override val type = TEXT
+        override val typeName = "Текстовое сообщение"
     }
 }

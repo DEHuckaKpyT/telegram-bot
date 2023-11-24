@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.exception.handler.chain
 
-import io.github.dehuckakpyt.telegrambot.container.MassageContainer
+import io.github.dehuckakpyt.telegrambot.container.MessageContainer
 import kotlin.reflect.KClass
 
 
@@ -13,5 +13,5 @@ import kotlin.reflect.KClass
 interface ChainExceptionHandler {
     fun whenCommandNotFound(command: String): Nothing
     fun whenStepNotFound(): Nothing
-    fun whenUnexpectedMessageType(expectedMessageTypes: Set<KClass<out MassageContainer>>): Nothing
+    fun whenUnexpectedMessageType(expectedMessageTypes: Set<KClass<out MessageContainer>>): Nothing
 }

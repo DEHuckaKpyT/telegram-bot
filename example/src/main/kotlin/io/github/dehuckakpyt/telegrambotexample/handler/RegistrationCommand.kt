@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.CONTACT
-import io.github.dehuckakpyt.telegrambot.container.MassageContainer.Companion.TEXT
+import io.github.dehuckakpyt.telegrambot.container.MessageContainer.Companion.CONTACT
+import io.github.dehuckakpyt.telegrambot.container.MessageContainer.Companion.TEXT
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.factory.contactKeyboard
 import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard

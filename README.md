@@ -219,9 +219,9 @@ fun BotHandling.registerCommand() {
 
 Доступные типы на данный момент:
 ```kotlin
-val TEXT = TextMassageContainer::class
-val PHOTO = PhotoMassageContainer::class
-val AUDIO = AudioMassageContainer::class
+val TEXT = TextMessageContainer::class
+val PHOTO = PhotoMessageContainer::class
+val AUDIO = AudioMessageContainer::class
 val VOICE = VoiceMessageContainer::class
 val CONTACT = ContactMessageContainer::class
 val DOCUMENT = DocumentMessageContainer::class
@@ -532,7 +532,7 @@ class CustomChainExceptionHandler : ChainExceptionHandler {
         // когда не найден следующий шаг
     }
 
-    override fun whenUnexpectedMessageType(expectedMessageTypes: Set<KClass<out MassageContainer>>): Nothing {
+    override fun whenUnexpectedMessageType(expectedMessageTypes: Set<KClass<out MessageContainer>>): Nothing {
         // когда пользователь отправил неожидаемый тип сообщения
     }
 }

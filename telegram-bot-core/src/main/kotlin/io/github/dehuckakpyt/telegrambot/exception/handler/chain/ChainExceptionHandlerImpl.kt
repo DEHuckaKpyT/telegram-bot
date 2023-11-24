@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.exception.handler.chain
 
-import io.github.dehuckakpyt.telegrambot.container.MassageContainer
+import io.github.dehuckakpyt.telegrambot.container.MessageContainer
 import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
@@ -20,7 +20,7 @@ open class ChainExceptionHandlerImpl : ChainExceptionHandler, Templating {
         throw PrivateChatException(whenStepNotFoundTemplate)
     }
 
-    override fun whenUnexpectedMessageType(expectedMessageTypes: Set<KClass<out MassageContainer>>): Nothing {
+    override fun whenUnexpectedMessageType(expectedMessageTypes: Set<KClass<out MessageContainer>>): Nothing {
         val expectedMessageNames = expectedMessageTypes.joinToString(", ") {
             (it.companionObjectInstance as MessageContainerFactory).typeName
         }

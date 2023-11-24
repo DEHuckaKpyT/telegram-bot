@@ -20,7 +20,7 @@ class VoiceMessageContainer(
     chainSource: ChainSource,
     contentConverter: ContentConverter,
     bot: TelegramBot,
-) : MassageContainer(chatId, message, content, chainSource, contentConverter, bot) {
+) : MessageContainer(chatId, message, content, chainSource, contentConverter, bot) {
 
     val voice get() = message.voice!!
 
@@ -36,7 +36,7 @@ class VoiceMessageContainer(
             chainSource: ChainSource,
             contentConverter: ContentConverter,
             bot: TelegramBot
-        ): MassageContainer = VoiceMessageContainer(chatId, message, content, chainSource, contentConverter, bot)
+        ): MessageContainer = VoiceMessageContainer(chatId, message, content, chainSource, contentConverter, bot)
 
         override val type = VOICE
         override val typeName = "Голосовое сообщение"

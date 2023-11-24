@@ -20,7 +20,7 @@ class ContactMessageContainer(
     chainSource: ChainSource,
     contentConverter: ContentConverter,
     bot: TelegramBot,
-) : MassageContainer(chatId, message, content, chainSource, contentConverter, bot) {
+) : MessageContainer(chatId, message, content, chainSource, contentConverter, bot) {
 
     val contact get() = message.contact!!
 
@@ -36,7 +36,7 @@ class ContactMessageContainer(
             chainSource: ChainSource,
             contentConverter: ContentConverter,
             bot: TelegramBot
-        ): MassageContainer = ContactMessageContainer(chatId, message, content, chainSource, contentConverter, bot)
+        ): MessageContainer = ContactMessageContainer(chatId, message, content, chainSource, contentConverter, bot)
 
         override val type = CONTACT
         override val typeName = "Контакт"
