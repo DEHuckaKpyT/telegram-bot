@@ -3,6 +3,80 @@
 Библиотека для написания telegram-ботов. За основу взят
 репозиторий [kt-telegram-bot](https://github.com/elbekD/kt-telegram-bot).
 
+## Examples
+
+Примеры построения диалогов:
+```kotlin
+@Factory
+class RegistrationHandler : BotHandler({
+    val phonePattern = Regex("^\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}$")
+
+    command("/register", next = "get_contact") {
+        sendMessage("Для регистрации введите номер или поделитесь своим контактом", 
+            replyMarkup = contactKeyboard("Поделиться контактом"))
+    }
+
+    step("get_contact", type = CONTACT) {
+        sendMessage("${contact.firstName}, Вы успешно зарегистрировались по номеру ${contact.phoneNumber}!", 
+            replyMarkup = removeKeyboard())
+    }
+
+    step("get_contact", type = TEXT, next = "get_firstname") {
+        phonePattern.find(text) ?: throw ChatException("Неверный формат номера телефона")
+        val phone: String = text
+
+        sendMessage("Напишите, как к Вам обращаться", replyMarkup = removeKeyboard())
+        transfer(phone)
+    }
+
+    step("get_firstname") {
+        val phone = transferred<String>()
+        sendMessage("${text}, Вы успешно зарегистрировались по номеру ${phone}!")
+    }
+})
+```
+```kotlin
+@Factory
+class PurchaseHandler(
+    private val itemService: ItemService,
+    private val feedbackService: FeedbackService,
+) : BotHandler({
+    command("/buy") {
+        sendMessage("Выберите действие", replyMarkup = inlineKeyboard(
+            callbackButton("Купить тапочки", next = "buy", content = "some id 1"),
+            callbackButton("Купить шапочки", next = "buy", content = "some id 2"),
+            callbackButton("Оставить отзыв", next = "get_feedback_intro")))
+    }
+    
+    callback("buy") {
+        val itemId = transferred<String>()
+        val item = itemService.get(itemId)
+        
+        sendInvoice(
+            title = item.title,
+            description = item.description,
+            payload = "...",
+            providerToken = "...",
+            currency = "rub",
+            prices = item.prices
+        )
+    }
+    
+    callback("get_feedback_intro", next = "get_feedback") {
+        sendMessage("Напишите, пожалуйста, что вы думаете о нашем приложении.")
+    }
+    
+    step("get_feedback") {
+        feedbackService.save(chatId, text)
+
+        sendMessage("Спасибо за отзыв!")
+        sendSticker(...)
+    }
+})
+```
+
+Больше примеров [здесь](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler)
+
 ## Get started
 
 Бот работает с [Ktor](https://ktor.io/) + [Koin](https://insert-koin.io/).
