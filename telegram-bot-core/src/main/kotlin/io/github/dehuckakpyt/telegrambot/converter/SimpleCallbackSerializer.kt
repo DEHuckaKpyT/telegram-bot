@@ -1,16 +1,18 @@
 package io.github.dehuckakpyt.telegrambot.converter
 
 import com.dehucka.microservice.ext.toUUID
+import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
+import io.github.dehuckakpyt.telegrambot.context.injectInternal
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
-import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
-class SimpleCallbackSerializer(
-    private val callbackContentSource: CallbackContentSource,
-    private val dataConverter: ContentConverter,
-    private val delimiter: Char
-) : CallbackSerializer, KoinComponent {
+class SimpleCallbackSerializer : CallbackSerializer, InternalKoinComponent {
+    private val callbackContentSource by inject<CallbackContentSource>()
+    private val dataConverter by injectInternal<ContentConverter>()
+    private val delimiter by injectInternal<Char>(named("callbackDataDelimiter"))
 
-    override suspend fun toCallback(next: String, instance: Any?): String {
+    override suspend fun toCallback(chatId: Long, fromId: Long, next: String, instance: Any?): String {
         instance ?: return next
 
         val data = dataConverter.toContent(instance)
@@ -22,7 +24,7 @@ class SimpleCallbackSerializer(
 
         if (next.length > 26) throw RuntimeException("Callback step name should be less or equal than 26 symbols to put max 64 symbols. Because callback data will contain special markers (2 symbols) + UUID id (36 symbols) + callback name.")
 
-        val sourceId = callbackContentSource.save(data).identifier
+        val sourceId = callbackContentSource.save(chatId, fromId, data).id
         //will be string stepName|icallbackData (id)
         return "$next$delimiter${CallbackDataType.ID}$sourceId"
     }

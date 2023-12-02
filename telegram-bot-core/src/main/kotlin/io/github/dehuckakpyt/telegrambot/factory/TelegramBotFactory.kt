@@ -13,6 +13,7 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.plugin.config.manager.TelegramBotConfigManager
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
@@ -37,8 +38,12 @@ internal object TelegramBotFactory : InternalKoinComponent {
         val token = config.token ?: throw RuntimeException("Telegram-bot TOKEN must not be empty!")
         val username = config.username ?: throw RuntimeException("Telegram-bot USERNAME must not be empty!")
 
+        val configManagers = getKoin().getAll<TelegramBotConfigManager>()
+        configManagers.forEach(TelegramBotConfigManager::preLoadModules)
+
         val telegramBot = loadRequiredModules(token, username, application, config)
         loadInternalModules(config)
+
         initiateHandlers(config)
         subscribeToUpdates(telegramBot)
 
@@ -53,7 +58,6 @@ internal object TelegramBotFactory : InternalKoinComponent {
     ): TelegramBot {
         loadKoinModules(module {
             single<String>(named("username")) { username }
-            single<Application> { application }
             single<CallbackContentSource> { config.callbackContentSource }
             single<ChainSource> { config.chainSource }
             single<MessageSource> { config.messageSource }
@@ -78,6 +82,7 @@ internal object TelegramBotFactory : InternalKoinComponent {
         single<ExceptionHandler> { config.exceptionHandler }
         single<ChainExceptionHandler> { config.chainExceptionHandler }
         single<ContentConverter> { config.contentConverter }
+        single(named("callbackDataDelimiter")) { config.callbackDataDelimiter }
         single { ChainResolver() }
         single { UpdateResolver() }
     })

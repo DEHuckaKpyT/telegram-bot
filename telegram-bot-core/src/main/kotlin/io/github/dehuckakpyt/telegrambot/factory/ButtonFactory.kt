@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.factory
 
 import com.elbekd.bot.types.InlineKeyboardButton
 import com.elbekd.bot.types.KeyboardButton
+import io.github.dehuckakpyt.telegrambot.container.Container
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import org.koin.mp.KoinPlatformTools
 
@@ -18,8 +19,12 @@ fun callbackButton(text: String, next: String): InlineKeyboardButton {
     return InlineKeyboardButton(text, callbackData = next)
 }
 
-suspend fun callbackButton(text: String, next: String, content: Any): InlineKeyboardButton {
-    return InlineKeyboardButton(text, callbackData = callbackSerializer.toCallback(next, content))
+suspend fun Container.callbackButton(text: String, next: String, content: Any): InlineKeyboardButton {
+    return InlineKeyboardButton(text, callbackData = callbackSerializer.toCallback(chatId, from.id, next, content))
+}
+
+suspend fun callbackButton(chatId: Long, fromId: Long, text: String, next: String, content: Any): InlineKeyboardButton {
+    return InlineKeyboardButton(text, callbackData = callbackSerializer.toCallback(chatId, fromId, next, content))
 }
 
 fun contactButton(text: String): KeyboardButton = KeyboardButton(text, requestContact = true)

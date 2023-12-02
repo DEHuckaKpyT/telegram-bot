@@ -10,6 +10,8 @@ import java.util.*
  * @author Denis Matytsin
  */
 interface CallbackContent {
-    val identifier: UUID
+    val id: UUID
+    val chatId: Long
+    val fromId: Long
     val content: String
 }

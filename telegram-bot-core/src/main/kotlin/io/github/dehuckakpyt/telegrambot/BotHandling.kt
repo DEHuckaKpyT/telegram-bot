@@ -8,9 +8,7 @@ import io.github.dehuckakpyt.telegrambot.container.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.template.Templating
-import io.ktor.server.application.*
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import kotlin.reflect.KClass
 
 
@@ -22,7 +20,6 @@ import kotlin.reflect.KClass
  */
 open class BotHandling : KoinComponent, Templating {
 
-    val application = get<Application>()
     private val chainResolver = InternalKoinContext.koin.get<ChainResolver>()
 
     fun command(command: String, next: String? = null, action: suspend CommandMessageContainer.() -> Unit) {

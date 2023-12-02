@@ -10,6 +10,8 @@ import java.util.*
  * @author Denis Matytsin
  */
 class CallbackContentImpl(
-    override val identifier: UUID,
+    override val id: UUID,
+    override val chatId: Long,
+    override val fromId: Long,
     override val content: String
 ) : CallbackContent

@@ -8,7 +8,7 @@ package io.github.dehuckakpyt.telegrambot.converter
  * @author Denis Matytsin
  */
 interface CallbackSerializer {
-    suspend fun toCallback(next: String, instance: Any?): String
+    suspend fun toCallback(chatId: Long, fromId: Long, next: String, instance: Any?): String
     suspend fun fromCallback(callbackData: String): CallbackDataInfo
     fun validateCallbackName(name: String)
 }

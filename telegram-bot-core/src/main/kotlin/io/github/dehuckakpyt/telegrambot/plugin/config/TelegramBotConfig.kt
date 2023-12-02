@@ -30,7 +30,7 @@ import io.ktor.server.config.*
  *
  * @author Denis Matytsin
  */
-data class TelegramBotConfig(private val config: ApplicationConfig) {
+class TelegramBotConfig(val config: ApplicationConfig) {
     var enabled: Boolean = config.propertyOrNull("enabled")?.getString()?.toBooleanStrict() ?: true
     var token: String? = config.propertyOrNull("token")?.getString()
     var username: String? = config.propertyOrNull("username")?.getString()
@@ -43,8 +43,7 @@ data class TelegramBotConfig(private val config: ApplicationConfig) {
     var messageSource: MessageSource = EmptyMessageSource()
     var callbackDataDelimiter: Char = '|'
     var contentConverter: ContentConverter = JsonContentConverter()
-    var callbackSerializer: CallbackSerializer =
-        SimpleCallbackSerializer(callbackContentSource, contentConverter, callbackDataDelimiter)
+    var callbackSerializer: CallbackSerializer = SimpleCallbackSerializer()
     var htmlFormatter: HtmlFormatter = HtmlFormatterImpl()
     var exceptionHandler: ExceptionHandler = ExceptionHandlerImpl()
     var chainExceptionHandler: ChainExceptionHandler = ChainExceptionHandlerImpl()

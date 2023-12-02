@@ -11,8 +11,8 @@ import java.util.*
  * @author Denis Matytsin
  */
 interface CallbackContentSource {
-    suspend fun save(content: String): CallbackContent
-    suspend fun get(identifier: UUID): CallbackContent
+    suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent
+    suspend fun get(id: UUID): CallbackContent
 
     companion object
 }

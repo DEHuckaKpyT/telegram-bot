@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambotexample.plugin
 
-import io.github.dehuckakpyt.telegrambot.ext.databaseSources
+import io.github.dehuckakpyt.telegrambot.ext.databaseSource
 import io.github.dehuckakpyt.telegrambot.plugin.TelegramBot
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.*
@@ -22,7 +22,10 @@ fun Application.configureTelegramBot() {
         // для обработки своих исключений
         exceptionHandler = CustomExceptionHandler()
 
-        databaseSources()
+        databaseSource {
+            allInDatabase()
+            maxCallbackContentsPerUser = 2
+        }
 
         handling {
             startCommand()

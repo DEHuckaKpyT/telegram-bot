@@ -3,20 +3,50 @@ package io.github.dehuckakpyt.telegrambot.source.callback
 import com.dehucka.exposed.ext.execute
 import com.dehucka.exposed.ext.read
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
+import io.github.dehuckakpyt.telegrambot.ext.toImpl
 import io.github.dehuckakpyt.telegrambot.model.CallbackContent
+import io.github.dehuckakpyt.telegrambot.model.CallbackContents
 import io.github.dehuckakpyt.telegrambot.model.DatabaseCallbackContent
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
+import java.time.LocalDateTime
 import java.util.*
 
-class DatabaseCallbackContentSource : CallbackContentSource {
+class DatabaseCallbackContentSource : CallbackContentSource, KoinComponent {
 
-    override suspend fun save(content: String): CallbackContent = execute {
-        DatabaseCallbackContent.new {
+    private val maxCallbackContentsPerUser by inject<Long>(named("maxCallbackContentsPerUser"))
+
+    override suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent = execute {
+        findLast(chatId, fromId).createOrUpdate {
+            this.chatId = chatId
+            this.fromId = fromId
+            this.callbackId = UUID.randomUUID()
             this.content = content
+            this.updateDate = LocalDateTime.now()
         }
+    }.toImpl()
+
+    override suspend fun get(callbackId: UUID): CallbackContent = read {
+        DatabaseCallbackContent.find(CallbackContents.callbackId eq callbackId)
+            .firstOrNull()
+            ?: throw ChatException("Содержание для callback'а не найдено :(")
+    }.toImpl()
+
+    private fun findLast(chatId: Long, fromId: Long): DatabaseCallbackContent? {
+        if (maxCallbackContentsPerUser < 1) return null
+
+        return DatabaseCallbackContent.find {
+            (CallbackContents.chatId eq chatId) and (CallbackContents.fromId eq fromId)
+        }.orderBy(CallbackContents.updateDate to SortOrder.DESC)
+            .limit(1, maxCallbackContentsPerUser - 1)
+            .firstOrNull()
     }
 
-    override suspend fun get(identifier: UUID): CallbackContent = read {
-        DatabaseCallbackContent.findById(identifier)
-            ?: throw ChatException("Содержание для callback'а не найдено :(")
+    private fun DatabaseCallbackContent?.createOrUpdate(block: DatabaseCallbackContent.() -> Unit): DatabaseCallbackContent {
+        return this?.apply(block) ?: DatabaseCallbackContent.new(block)
     }
 }

@@ -13,7 +13,7 @@ import org.koin.mp.KoinPlatformTools
  *
  * @author Denis Matytsin
  */
-interface InternalKoinComponent : KoinComponent {
+internal interface InternalKoinComponent : KoinComponent {
 
     /**
      * Get the associated internal Koin instance
@@ -26,7 +26,7 @@ interface InternalKoinComponent : KoinComponent {
  * @param qualifier
  * @param parameters
  */
-inline fun <reified T : Any> InternalKoinComponent.getInternal(
+internal inline fun <reified T : Any> InternalKoinComponent.getInternal(
     qualifier: Qualifier? = null,
     noinline parameters: ParametersDefinition? = null
 ): T = getInternalKoin().get(qualifier, parameters)
@@ -37,7 +37,7 @@ inline fun <reified T : Any> InternalKoinComponent.getInternal(
  * @param mode - LazyThreadSafetyMode
  * @param parameters
  */
-inline fun <reified T : Any> InternalKoinComponent.injectInternal(
+internal inline fun <reified T : Any> InternalKoinComponent.injectInternal(
     qualifier: Qualifier? = null,
     mode: LazyThreadSafetyMode = KoinPlatformTools.defaultLazyMode(),
     noinline parameters: ParametersDefinition? = null

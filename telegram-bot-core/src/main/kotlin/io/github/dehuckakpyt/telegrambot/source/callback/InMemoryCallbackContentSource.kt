@@ -14,18 +14,18 @@ import java.util.*
  */
 class InMemoryCallbackContentSource : CallbackContentSource {
 
-    private val contentByIdentifier: MutableMap<UUID, CallbackContent> = mutableMapOf()
+    private val contentById: MutableMap<UUID, CallbackContent> = mutableMapOf()
 
-    override suspend fun save(content: String): CallbackContent {
-        val identifier = UUID.randomUUID()
-        val callbackContent = CallbackContentImpl(identifier, content)
+    override suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent {
+        val id = UUID.randomUUID()
+        val callbackContent = CallbackContentImpl(id, chatId, fromId, content)
 
-        contentByIdentifier[identifier] = callbackContent
+        contentById[id] = callbackContent
 
         return callbackContent
     }
 
-    override suspend fun get(identifier: UUID): CallbackContent {
-        return contentByIdentifier[identifier] ?: throw ChatException("Содержание для callback'а не найдено :(")
+    override suspend fun get(id: UUID): CallbackContent {
+        return contentById[id] ?: throw ChatException("Содержание для callback'а не найдено :(")
     }
 }
