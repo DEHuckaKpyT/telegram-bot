@@ -1,9 +1,6 @@
-package io.github.dehuckakpyt.telegrambot.container
+package io.github.dehuckakpyt.telegrambot.argument.message
 
 import com.elbekd.bot.types.Message
-import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
-import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -15,16 +12,13 @@ import org.koin.core.qualifier.named
  *
  * @author Denis Matytsin
  */
-class CommandMessageContainer(
+class CommandArgument(
     chatId: Long,
     message: Message,
-    chainSource: ChainSource,
-    contentConverter: ContentConverter,
-    bot: TelegramBot,
-) : TextMessageContainer(chatId, message, content = null, chainSource, contentConverter, bot) {
+) : TextMessageArgument(chatId, message, content = null) {
 
-    val commandPathParam get() = commandPathParamRegex.find(text)?.groupValues?.get(1)
-    val commandArgument get() = commandArgumentRegex.find(text)?.groupValues?.get(1)
+    val commandPathParam: String? get() = commandPathParamRegex.find(text)?.groupValues?.get(1)
+    val commandArgument: String? get() = commandArgumentRegex.find(text)?.groupValues?.get(1)
 
     companion object : KoinComponent {
         private val username = get<String>(named("username"))

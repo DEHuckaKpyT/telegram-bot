@@ -5,13 +5,12 @@ import com.elbekd.bot.types.CallbackQuery
 import com.elbekd.bot.types.Message
 import com.elbekd.bot.types.Update
 import com.elbekd.bot.types.UpdateMessage
-import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.container.*
-import io.github.dehuckakpyt.telegrambot.container.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
+import io.github.dehuckakpyt.telegrambot.argument.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.argument.message.*
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
 import io.github.dehuckakpyt.telegrambot.context.getInternal
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
-import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
@@ -29,12 +28,10 @@ import org.koin.core.component.get
  */
 internal class UpdateResolver : InternalKoinComponent, Templating, Logging {
 
-    private val bot = get<TelegramBot>()
     private val callbackSerializer = get<CallbackSerializer>()
     private val chainSource = get<ChainSource>()
     private val messageSource = get<MessageSource>()
     private val chainResolver = getInternal<ChainResolver>()
-    private val contentConverter = getInternal<ContentConverter>()
     private val exceptionHandler = getInternal<ExceptionHandler>()
 
     suspend fun processUpdate(update: Update): Unit {
@@ -53,7 +50,7 @@ internal class UpdateResolver : InternalKoinComponent, Templating, Logging {
         messageSource.save(chatId, from.id, message.messageId, text)
 
         exceptionHandler.execute(chatId) {
-            CommandMessageContainer.fetchCommand(text)?.let {
+            CommandArgument.fetchCommand(text)?.let {
                 processCommand(it, message)
             } ?: processMessage(message)
         }
@@ -61,7 +58,7 @@ internal class UpdateResolver : InternalKoinComponent, Templating, Logging {
 
     private suspend fun processCommand(command: String, message: Message): Unit = with(message) {
         chainResolver.getCommand(command)
-            .invoke(CommandMessageContainer(chatId, message, chainSource, contentConverter, bot))
+            .invoke(CommandArgument(chatId, message))
     }
 
     private suspend fun processMessage(message: Message): Unit = with(message) {
@@ -69,7 +66,7 @@ internal class UpdateResolver : InternalKoinComponent, Templating, Logging {
         val factory = message.containerFactory
         val action = chainResolver.getStep(chain?.step, factory.type)
 
-        action.invoke(factory.create(chatId, message, chain!!.content, chainSource, contentConverter, bot))
+        action.invoke(factory.create(chatId, message, chain!!.content))
     }
 
     suspend fun processCallback(callback: CallbackQuery): Unit = with(callback) {
@@ -79,19 +76,19 @@ internal class UpdateResolver : InternalKoinComponent, Templating, Logging {
             val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
             chainResolver.getCallback(callbackName)?.invoke(
-                CallbackMessageContainer(chatId, callback, callbackContent, chainSource, contentConverter, bot)
+                CallbackArgument(chatId, callback, callbackContent)
             )
         }
     }
 
     private val Message.containerFactory: MessageContainerFactory
         get() = when {
-            TextMessageContainer.matches(this) -> TextMessageContainer.Companion
-            AudioMessageContainer.matches(this) -> AudioMessageContainer.Companion
-            VoiceMessageContainer.matches(this) -> VoiceMessageContainer.Companion
-            ContactMessageContainer.matches(this) -> ContactMessageContainer.Companion
-            DocumentMessageContainer.matches(this) -> DocumentMessageContainer.Companion
-            PhotoMessageContainer.matches(this) -> PhotoMessageContainer.Companion
+            TextMessageArgument.matches(this) -> TextMessageArgument.Companion
+            AudioMessageArgument.matches(this) -> AudioMessageArgument.Companion
+            VoiceMessageArgument.matches(this) -> VoiceMessageArgument.Companion
+            ContactMessageArgument.matches(this) -> ContactMessageArgument.Companion
+            DocumentMessageArgument.matches(this) -> DocumentMessageArgument.Companion
+            PhotoMessageArgument.matches(this) -> PhotoMessageArgument.Companion
             else -> throw ChatException("Такой тип сообщения ещё не поддерживается.")
         }
 }
