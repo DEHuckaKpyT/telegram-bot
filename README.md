@@ -90,7 +90,7 @@ repositories {
     maven("https://jitpack.io") // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.2.4")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.3.0")
 }
 ```
 ```kotlin
@@ -591,7 +591,7 @@ class TelegramBotConfig {
 Затем добавить зависимость и указать source'ы:
 ```Gradle
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.2.4")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.3.0")
 }
 ```
 ```kotlin
@@ -612,6 +612,17 @@ dependencies {
     }
 ```
 Также можно комбинировать сохранения и можно делать свои реализации.
+
+Доступные настройки конкретно для БД:
+```kotlin
+class DatabaseSourceConfig() {
+    /**
+     * Максимальное количество записей с содержанием callback'а для одного пользователя.
+     * -1 для игнорирования ограничения.
+     */
+    var maxCallbackContentsPerUser: Long = 20
+}
+```
 
 ### Настройка сериализации callback'ов
 
