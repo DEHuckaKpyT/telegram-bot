@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.argument.factory
+package io.github.dehuckakpyt.telegrambot.argument.message.factory
 
 import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.argument.message.MessageArgument
@@ -11,16 +11,11 @@ import kotlin.reflect.KClass
  *
  * @author Denis Matytsin
  */
-interface MessageContainerFactory {
+internal interface MessageArgumentFactory {
+
     fun matches(message: Message): Boolean
 
-    fun create(
-        chatId: Long,
-        message: Message,
-        content: String?,
-    ): MessageArgument
+    fun create(chatId: Long, message: Message, content: String?): MessageArgument
 
     val type: KClass<out MessageArgument>
-
-    val typeName: String
 }

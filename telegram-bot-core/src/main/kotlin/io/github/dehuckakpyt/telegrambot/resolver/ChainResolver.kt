@@ -73,8 +73,7 @@ internal class ChainResolver : InternalKoinComponent {
     fun getStep(step: String?, messageType: KClass<out MessageArgument>): suspend MessageArgument.() -> Unit {
         val actionByMessageType = step?.let(actionByStep::get) ?: chainExceptionHandler.whenStepNotFound()
 
-        return actionByMessageType[messageType]
-            ?: chainExceptionHandler.whenUnexpectedMessageType(actionByMessageType.keys)
+        return actionByMessageType[messageType] ?: chainExceptionHandler.whenUnexpectedMessageType()
     }
 
     fun getCallback(callback: String): (suspend CallbackArgument.() -> Unit)? {

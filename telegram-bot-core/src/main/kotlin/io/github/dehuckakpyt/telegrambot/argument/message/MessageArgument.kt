@@ -16,7 +16,7 @@ abstract class MessageArgument(
     content: String?,
 ) : Argument(chatId, content) {
 
-    override val from get() = message.from!!
+    override val from = message.from!!
     val messageId get() = message.messageId
     val chat get() = message.chat
 }

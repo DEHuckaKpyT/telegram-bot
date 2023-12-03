@@ -12,10 +12,8 @@ import org.koin.core.qualifier.named
  *
  * @author Denis Matytsin
  */
-class CommandArgument(
-    chatId: Long,
-    message: Message,
-) : TextMessageArgument(chatId, message, content = null) {
+class CommandArgument(chatId: Long, message: Message) :
+    TextMessageArgument(chatId, message, content = null) {
 
     val commandPathParam: String? get() = commandPathParamRegex.find(text)?.groupValues?.get(1)
     val commandArgument: String? get() = commandArgumentRegex.find(text)?.groupValues?.get(1)

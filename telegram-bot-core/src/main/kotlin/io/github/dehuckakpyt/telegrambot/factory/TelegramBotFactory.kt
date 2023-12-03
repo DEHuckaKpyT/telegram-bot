@@ -4,6 +4,7 @@ import com.elbekd.bot.Bot
 import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.argument.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext.loadInternalKoinModules
 import io.github.dehuckakpyt.telegrambot.context.getInternal
@@ -23,6 +24,7 @@ import io.github.dehuckakpyt.telegrambot.template.BotTemplate
 import io.ktor.server.application.*
 import org.koin.core.context.loadKoinModules
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 
@@ -85,6 +87,13 @@ internal object TelegramBotFactory : InternalKoinComponent {
         single(named("callbackDataDelimiter")) { config.callbackDataDelimiter }
         single { ChainResolver() }
         single { UpdateResolver() }
+
+        single { AudioMessageArgumentFactory() } bind MessageArgumentFactory::class
+        single { ContactMessageArgumentFactory() } bind MessageArgumentFactory::class
+        single { DocumentMessageArgumentFactory() } bind MessageArgumentFactory::class
+        single { PhotoMessageArgumentFactory() } bind MessageArgumentFactory::class
+        single { TextMessageArgumentFactory() } bind MessageArgumentFactory::class
+        single { VoiceMessageArgumentFactory() } bind MessageArgumentFactory::class
     })
 
     private fun initiateHandlers(config: TelegramBotConfig) {

@@ -16,7 +16,7 @@ internal val ChainExceptionHandler.whenCommandNotFoundTemplate by template(
 )
 internal val ChainExceptionHandler.whenUnexpectedMessageTypeTemplate by template(
     "when-unexpected-message-type",
-    "Неподходящий тип сообщения.\nОжидаемые типы: \${expectedMessageNames}"
+    "Ожидается сообщение другого типа."
 )
 internal val ChainExceptionHandler.whenStepNotFoundTemplate by template(
     "when-step-not-found",
