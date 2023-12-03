@@ -33,6 +33,7 @@ fun Application.configureTelegramBot() {
             buttonCommand()
             templateCommand()
             exceptionCommand()
+            withArgsCommand()
         }
     }
 }

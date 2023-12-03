@@ -317,13 +317,40 @@ class RegistrationHandler : BotHandler({
 
 Доступные типы на данный момент:
 ```kotlin
-val TEXT = TextMessageContainer::class
-val PHOTO = PhotoMessageContainer::class
-val AUDIO = AudioMessageContainer::class
-val VOICE = VoiceMessageContainer::class
-val CONTACT = ContactMessageContainer::class
-val DOCUMENT = DocumentMessageContainer::class
+object MessageType {
+    val TEXT = TextMessageArgument::class
+    val PHOTO = PhotoMessageArgument::class
+    val AUDIO = AudioMessageArgument::class
+    val VOICE = VoiceMessageArgument::class
+    val CONTACT = ContactMessageArgument::class
+    val DOCUMENT = DocumentMessageArgument::class
+}
 ```
+
+## Обработка команд
+
+У обработчиков команд есть все поля обычного текстового сообщения.
+Но в дополнение к ним доступно получение аргументов.
+
+Например, из строки `/some_command__abc_123 987 cxz` будут получены команда `/some_command`, параметр из команды `abc_123` и аргумент команды `987 cxz`.
+В обработчике получить их можно из полей `commandPathParam` (`abc_123`) и `commandArgument` (`987 cxz`).
+
+```kotlin
+fun BotHandling.withArgsCommand() {
+    command("/with_args") {
+        // при вызове команды строкой "/with_args__arg1_0 arg2 0" будет выведено
+        // "commandPathParam = arg1_0, commandArgument = arg2 0"
+        sendMessage("commandPathParam = $commandPathParam, commandArgument = $commandArgument")
+    }
+}
+```
+
+Параметр из команды может понадобиться в случае, например, выбора товара из списка. 
+Команда будет выглядеть примерно так: `/item__a67sdfnas5`. 
+Когда пользователь нажмёт на команду, Вы сможете вывести конкретный item по условному id `a67sdfnas5`.
+
+Аргумент команды может понадобиться, например, при создании обсуждения. 
+Пользователь может ввести `/topic Kotlin vs Java`, и вы сможете создать обсуждение с названием `Kotlin vs Java`.
 
 ## Создание кнопок с callback'ом
 
@@ -569,12 +596,19 @@ dependencies {
 ```
 ```kotlin
     install(TelegramBot) {
-        callbackContentSource = CallbackContentSource.inDatabase
-        chainSource = ChainSource.inDatabase
-        messageSource = MessageSource.inDatabase
-
-        // или с помощью одного метода
-        databaseSources()
+        // other settings
+        ...
+        databaseSource {
+            // с помощью одного метода
+            allInDatabase()
+            // или выбрать конкретные сурсы
+            callbackContentSource = CallbackContentSource.inDatabase
+            chainSource = ChainSource.inDatabase
+            messageSource = MessageSource.inDatabase
+            
+            // также внутри метода databaseSource() остальные настройки для бд
+            maxCallbackContentsPerUser = 2
+        }
     }
 ```
 Также можно комбинировать сохранения и можно делать свои реализации.
