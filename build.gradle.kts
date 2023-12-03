@@ -53,7 +53,7 @@ configure(subprojects - project(":example")) {
                 pom {
                     packaging = "jar"
                     name.set(project.name)
-                    description.set("Library for using Telegram Bot API")
+                    description.set("Kotlin Telegram Bot framework")
                     url.set("https://github.com/DEHuckaKpyT/telegram-bot")
                     scm {
                         connection.set("scm:https://github.com/DEHuckaKpyT/telegram-bot.git")

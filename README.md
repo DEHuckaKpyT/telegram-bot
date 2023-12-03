@@ -1,7 +1,9 @@
-# Kotlin Telegram Bot library
+# Kotlin Telegram Bot framework
 
-Библиотека для написания telegram-ботов. За основу взят
-репозиторий [kt-telegram-bot](https://github.com/elbekD/kt-telegram-bot).
+Фреймворк для написания telegram-ботов. Для обращения к telegram bot api используется репозиторий [kt-telegram-bot](https://github.com/elbekD/kt-telegram-bot).
+
+Бот работает на [Ktor](https://ktor.io/) + [Koin](https://insert-koin.io/).
+Пример готового приложения в [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example).
 
 ## Examples
 
@@ -78,9 +80,6 @@ class PurchaseHandler(
 Больше примеров [здесь](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler)
 
 ## Get started
-
-Бот работает с [Ktor](https://ktor.io/) + [Koin](https://insert-koin.io/).
-Пример готового приложения в [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example).
 
 Для запуска и конфигурирования бота необходимо
 добавить зависимость, задать в конфигурации `telegram-bot.username` и `telegram-bot.token` и установить бота, как ktor-плагин:
