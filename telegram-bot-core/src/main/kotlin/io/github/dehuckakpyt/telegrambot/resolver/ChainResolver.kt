@@ -10,7 +10,10 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
-import org.koin.core.component.get
+import kotlin.collections.MutableMap
+import kotlin.collections.getOrPut
+import kotlin.collections.hashMapOf
+import kotlin.collections.set
 import kotlin.reflect.KClass
 
 
@@ -22,8 +25,8 @@ import kotlin.reflect.KClass
  */
 internal class ChainResolver : InternalKoinComponent {
 
-    private val callbackSerializer = get<CallbackSerializer>()
-    private val chainSource = get<ChainSource>()
+    private val callbackSerializer = getInternal<CallbackSerializer>()
+    private val chainSource = getInternal<ChainSource>()
     private val chainExceptionHandler = getInternal<ChainExceptionHandler>()
     private val contentConverter = getInternal<ContentConverter>()
 

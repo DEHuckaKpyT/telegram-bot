@@ -2,9 +2,9 @@ package io.github.dehuckakpyt.telegrambot.source.chain
 
 import com.dehucka.exposed.ext.execute
 import com.dehucka.exposed.ext.read
-import io.github.dehuckakpyt.telegrambot.model.Chain
 import io.github.dehuckakpyt.telegrambot.model.Chains
 import io.github.dehuckakpyt.telegrambot.model.DatabaseChain
+import io.github.dehuckakpyt.telegrambot.model.source.Chain
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 

@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.chain
 
-import io.github.dehuckakpyt.telegrambot.model.Chain
-import io.github.dehuckakpyt.telegrambot.model.ChainImpl
+import io.github.dehuckakpyt.telegrambot.model.source.Chain
+import io.github.dehuckakpyt.telegrambot.model.source.ChainImpl
 
 
 /**

@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.argument.message.factory
 
-import com.elbekd.bot.types.Message
 import io.github.dehuckakpyt.telegrambot.argument.message.MessageArgument
+import io.github.dehuckakpyt.telegrambot.model.type.Message
 import kotlin.reflect.KClass
 
 

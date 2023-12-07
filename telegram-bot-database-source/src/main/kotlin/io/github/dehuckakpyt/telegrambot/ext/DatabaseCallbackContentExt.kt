@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
-import io.github.dehuckakpyt.telegrambot.model.CallbackContent
-import io.github.dehuckakpyt.telegrambot.model.CallbackContentImpl
 import io.github.dehuckakpyt.telegrambot.model.DatabaseCallbackContent
+import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
+import io.github.dehuckakpyt.telegrambot.model.source.CallbackContentImpl
 
 
 /**

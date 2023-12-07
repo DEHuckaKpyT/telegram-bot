@@ -1,10 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
 import com.dehucka.microservice.logger.Logging
-import com.elbekd.bot.types.CallbackQuery
-import com.elbekd.bot.types.Message
-import com.elbekd.bot.types.Update
-import com.elbekd.bot.types.UpdateMessage
 import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.factory.MessageArgumentFactory
@@ -14,6 +10,9 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
+import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.type.Message
+import io.github.dehuckakpyt.telegrambot.model.type.UpdateResponse
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templating
@@ -26,17 +25,17 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-internal class UpdateResolver : InternalKoinComponent, Templating, Logging {
+internal class DialogUpdateResolver : InternalKoinComponent, Templating, Logging {
 
-    private val callbackSerializer = get<CallbackSerializer>()
-    private val chainSource = get<ChainSource>()
+    private val callbackSerializer = getInternal<CallbackSerializer>()
+    private val chainSource = getInternal<ChainSource>()
     private val messageSource = get<MessageSource>()
     private val chainResolver = getInternal<ChainResolver>()
     private val exceptionHandler = getInternal<ExceptionHandler>()
     private val messageArgumentFactories = getInternalKoin().getAll<MessageArgumentFactory>()
 
-    suspend fun processUpdate(update: Update): Unit {
-        if (update !is UpdateMessage) return
+    suspend fun processUpdate(update: UpdateResponse): Unit {
+        if (update.message == null) return
 
         val message = update.message
         val from = message.from

@@ -1,10 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.api
 
-import com.elbekd.bot.types.*
-import com.elbekd.bot.util.Action
-import com.elbekd.bot.util.SendingDocument
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.argument.Argument
+import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import java.io.File
@@ -165,7 +164,7 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun sendPhoto(
         chatId: Long,
-        photo: SendingDocument,
+        photo: NamedContent,
         messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
@@ -192,7 +191,7 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendPhoto(
-        photo: SendingDocument,
+        photo: NamedContent,
         messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
@@ -220,7 +219,7 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun sendAudio(
         chatId: Long,
-        audio: SendingDocument,
+        audio: NamedContent,
         messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
@@ -253,7 +252,7 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendAudio(
-        audio: SendingDocument,
+        audio: NamedContent,
         messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
@@ -287,7 +286,7 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun sendDocument(
         chatId: Long,
-        document: SendingDocument,
+        document: NamedContent,
         messageThreadId: Long? = null,
         thumb: File? = null,
         caption: String? = null,
@@ -316,7 +315,7 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendDocument(
-        document: SendingDocument,
+        document: NamedContent,
         messageThreadId: Long? = null,
         thumb: File? = null,
         caption: String? = null,
@@ -346,7 +345,7 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun sendVideo(
         chatId: Long,
-        video: SendingDocument,
+        video: NamedContent,
         messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
@@ -383,7 +382,7 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendVideo(
-        video: SendingDocument,
+        video: NamedContent,
         messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
@@ -421,7 +420,7 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun sendAnimation(
         chatId: Long,
-        animation: SendingDocument,
+        animation: NamedContent,
         messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
@@ -456,7 +455,7 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendAnimation(
-        animation: SendingDocument,
+        animation: NamedContent,
         messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
@@ -492,7 +491,7 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun sendVoice(
         chatId: Long,
-        voice: SendingDocument,
+        voice: NamedContent,
         messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
@@ -519,7 +518,7 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendVoice(
-        voice: SendingDocument,
+        voice: NamedContent,
         messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
@@ -547,7 +546,7 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun sendVideoNote(
         chatId: Long,
-        note: SendingDocument,
+        note: NamedContent,
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
@@ -572,7 +571,7 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendVideoNote(
-        note: SendingDocument,
+        note: NamedContent,
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
@@ -1046,21 +1045,21 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun banChatSenderChat(
         chatId: Long,
-        senderChatId: Long
-    ): Boolean = bot.banChatSenderChat(chatId, senderChatId)
+        senderString: Long
+    ): Boolean = bot.banChatSenderChat(chatId, senderString)
 
     suspend fun Argument.banChatSenderChat(
-        senderChatId: Long
-    ): Boolean = bot.banChatSenderChat(chatId, senderChatId)
+        senderString: Long
+    ): Boolean = bot.banChatSenderChat(chatId, senderString)
 
     suspend fun unbanChatSenderChat(
         chatId: Long,
-        senderChatId: Long
-    ): Boolean = bot.unbanChatSenderChat(chatId, senderChatId)
+        senderString: Long
+    ): Boolean = bot.unbanChatSenderChat(chatId, senderString)
 
     suspend fun Argument.unbanChatSenderChat(
-        senderChatId: Long
-    ): Boolean = bot.unbanChatSenderChat(chatId, senderChatId)
+        senderString: Long
+    ): Boolean = bot.unbanChatSenderChat(chatId, senderString)
 
     suspend fun getFile(fileId: String) = bot.getFile(fileId)
 
@@ -1436,7 +1435,6 @@ open class TelegramApiHandling : KoinComponent {
         tgsSticker: File? = null,
         webmSticker: File? = null,
         stickerType: String? = null,
-        containsMask: Boolean? = null,
         maskPosition: MaskPosition? = null,
     ): Boolean {
         return bot.createNewStickerSet(
@@ -1448,7 +1446,6 @@ open class TelegramApiHandling : KoinComponent {
             tgsSticker = tgsSticker,
             webmSticker = webmSticker,
             stickerType = stickerType,
-            containsMask = containsMask,
             maskPosition = maskPosition,
         )
     }

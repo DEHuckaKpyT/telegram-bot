@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.argument.message
 
-import com.elbekd.bot.types.Contact
-import com.elbekd.bot.types.Message
+import io.github.dehuckakpyt.telegrambot.model.type.Contact
+import io.github.dehuckakpyt.telegrambot.model.type.Message
 
 
 /**

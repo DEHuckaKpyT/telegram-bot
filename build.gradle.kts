@@ -37,6 +37,10 @@ nexusPublishing {
 }
 
 configure(subprojects - project(":example")) {
+//    kotlin {
+//        explicitApi()
+//    }
+
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
     apply(plugin = "signing")

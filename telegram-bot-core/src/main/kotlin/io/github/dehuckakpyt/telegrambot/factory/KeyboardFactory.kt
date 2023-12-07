@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.factory
 
-import com.elbekd.bot.types.*
+import io.github.dehuckakpyt.telegrambot.model.type.*
 
 
 /**

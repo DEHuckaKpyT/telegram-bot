@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import com.elbekd.bot.types.ParseMode.Html
 import io.github.dehuckakpyt.telegrambot.BotHandling
+import io.github.dehuckakpyt.telegrambot.model.type.ParseMode.Html
 import io.github.dehuckakpyt.telegrambot.template.template
 
 
@@ -29,7 +29,7 @@ fun BotHandling.templateCommand() {
 
     val templateEscapedExample by template()
 
-    command("/template_escaped"){
+    command("/template_escaped") {
         sendMessage(templateEscapedExample with ("param" to usingTags), parseMode = Html)
         sendMessage(templateEscapedExample with ("param" to ignoreTags), parseMode = Html)
         sendMessage(templateEscapedExample with ("param" to breakLine), parseMode = Html)

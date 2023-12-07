@@ -12,7 +12,6 @@ import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.template.Templating
-import org.koin.core.component.get
 import kotlin.reflect.KClass
 
 
@@ -26,7 +25,7 @@ open class BotHandling : TelegramApiHandling(), Templating {
 
     private val chainResolver = InternalKoinContext.koin.get<ChainResolver>()
     private val contentConverter = InternalKoinContext.koin.get<ContentConverter>()
-    private val chainSource = get<ChainSource>()
+    private val chainSource = InternalKoinContext.koin.get<ChainSource>()
 
     fun command(command: String, next: String? = null, action: suspend CommandArgument.() -> Unit) {
         chainResolver.addCommand(command, next, action)

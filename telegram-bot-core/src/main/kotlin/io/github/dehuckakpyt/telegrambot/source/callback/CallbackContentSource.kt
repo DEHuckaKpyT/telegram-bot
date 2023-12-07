@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
-import io.github.dehuckakpyt.telegrambot.model.CallbackContent
+import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import java.util.*
 
 

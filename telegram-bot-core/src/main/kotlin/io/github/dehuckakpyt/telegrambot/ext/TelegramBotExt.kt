@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
-import com.elbekd.bot.types.CallbackQuery
-import com.elbekd.bot.types.Message
+import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.type.Message
 
 
 /**

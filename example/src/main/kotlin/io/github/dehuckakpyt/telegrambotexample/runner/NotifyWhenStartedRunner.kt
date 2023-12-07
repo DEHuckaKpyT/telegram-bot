@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.runner
 
-import com.elbekd.bot.types.ParseMode.Html
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.model.type.ParseMode.Html
 import io.github.dehuckakpyt.telegrambot.template.TemplatingEx
 import io.github.dehuckakpyt.telegrambotexample.template.runnerNotifyWhenStarted
 import org.koin.core.annotation.Single

@@ -4,11 +4,10 @@ import com.dehucka.microservice.ext.toUUID
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
 import io.github.dehuckakpyt.telegrambot.context.injectInternal
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
-import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class SimpleCallbackSerializer : CallbackSerializer, InternalKoinComponent {
-    private val callbackContentSource by inject<CallbackContentSource>()
+    private val callbackContentSource by injectInternal<CallbackContentSource>()
     private val dataConverter by injectInternal<ContentConverter>()
     private val delimiter by injectInternal<Char>(named("callbackDataDelimiter"))
 

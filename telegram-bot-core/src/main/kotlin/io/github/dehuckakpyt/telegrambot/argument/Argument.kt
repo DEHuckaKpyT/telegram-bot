@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.argument
 
-import com.elbekd.bot.types.User
+import io.github.dehuckakpyt.telegrambot.model.type.User
 
 
 /**

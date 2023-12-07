@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.model
 
+import io.github.dehuckakpyt.telegrambot.model.source.Chain
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

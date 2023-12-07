@@ -1,10 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.plugin.config
 
-import com.elbekd.bot.PollingOptions
 import freemarker.template.Configuration
 import freemarker.template.Version
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
@@ -34,8 +32,6 @@ class TelegramBotConfig(val config: ApplicationConfig) {
     var enabled: Boolean = config.propertyOrNull("enabled")?.getString()?.toBooleanStrict() ?: true
     var token: String? = config.propertyOrNull("token")?.getString()
     var username: String? = config.propertyOrNull("username")?.getString()
-    var pollingOptions: PollingOptions.() -> Unit = { PollingOptions() }
-    var configureBot: TelegramBot.() -> Unit = {}
     var handling: BotHandling.() -> Unit = {}
     var templateConfig: Configuration = Configuration(Version("2.3.32"))
     var callbackContentSource: CallbackContentSource = InMemoryCallbackContentSource()
@@ -47,14 +43,6 @@ class TelegramBotConfig(val config: ApplicationConfig) {
     var htmlFormatter: HtmlFormatter = HtmlFormatterImpl()
     var exceptionHandler: ExceptionHandler = ExceptionHandlerImpl()
     var chainExceptionHandler: ChainExceptionHandler = ChainExceptionHandlerImpl()
-
-    fun pollingOptions(block: PollingOptions.() -> Unit) {
-        pollingOptions = block
-    }
-
-    fun configureBot(block: TelegramBot.() -> Unit) {
-        configureBot = block
-    }
 
     fun handling(block: BotHandling.() -> Unit) {
         handling = block

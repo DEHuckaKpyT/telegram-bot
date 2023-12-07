@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.model.CallbackContent
-import io.github.dehuckakpyt.telegrambot.model.CallbackContentImpl
+import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
+import io.github.dehuckakpyt.telegrambot.model.source.CallbackContentImpl
 import java.util.*
 
 

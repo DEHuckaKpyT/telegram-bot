@@ -1,16 +1,15 @@
 package io.github.dehuckakpyt.telegrambot.template
 
+import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.ext.toKebabCase
 import io.ktor.server.config.*
 import org.koin.core.qualifier.named
-import org.koin.mp.KoinPlatformTools
 import kotlin.properties.PropertyDelegateProvider
 
 
 class BotTemplate
 
-private val telegramBotTemplate =
-    KoinPlatformTools.defaultContext().get().get<ApplicationConfig>(named("telegramBotTemplate"))
+private val telegramBotTemplate = InternalKoinContext.koin.get<ApplicationConfig>(named("telegramBotTemplate"))
 
 fun template(): PropertyDelegateProvider<Any?, Lazy<String>> = PropertyDelegateProvider { _, property ->
     lazy { getTemplate(property.name.toKebabCase()) }

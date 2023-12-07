@@ -4,9 +4,9 @@ import com.dehucka.exposed.ext.execute
 import com.dehucka.exposed.ext.read
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.ext.toImpl
-import io.github.dehuckakpyt.telegrambot.model.CallbackContent
 import io.github.dehuckakpyt.telegrambot.model.CallbackContents
 import io.github.dehuckakpyt.telegrambot.model.DatabaseCallbackContent
+import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
