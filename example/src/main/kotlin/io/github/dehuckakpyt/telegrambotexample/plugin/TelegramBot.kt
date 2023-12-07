@@ -5,6 +5,7 @@ import io.github.dehuckakpyt.telegrambot.plugin.TelegramBot
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.*
 import io.ktor.server.application.*
+import org.koin.mp.KoinPlatform
 
 
 /**
@@ -20,7 +21,7 @@ fun Application.configureTelegramBot() {
         }
 
         // для обработки своих исключений
-        exceptionHandler = CustomExceptionHandler()
+        exceptionHandler = { CustomExceptionHandler(KoinPlatform.getKoin().get()) }
 
         databaseSource {
             allInDatabase()

@@ -20,7 +20,8 @@ import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.http.HttpHeaders.ContentDisposition
 import io.ktor.serialization.jackson.*
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -56,20 +57,25 @@ class TelegramApiClient(
         }
     }
 
-    val isActive = client.isActive
-
     private suspend inline fun <reified T : Any> get(method: String): T = handleRequest(client.get(method))
 
-    private suspend inline fun <reified T> get(method: String, block: HttpRequestBuilder.() -> Unit): T =
-        handleRequest(client.get(method, block))
+    private suspend inline fun <reified T> get(method: String, crossinline block: HttpRequestBuilder.() -> Unit): T =
+        withContext(Dispatchers.IO) {
+            handleRequest(client.get(method, block))
+        }
+
 
     private suspend inline fun <reified T : Any> postForm(method: String, noinline block: FormBuilder.() -> Unit): T =
-        handleRequest(client.post(method) { formData(block) })
+        withContext(Dispatchers.IO) {
+            handleRequest(client.post(method) { formData(block) })
+        }
 
     private suspend inline fun <reified T : Any, reified R : Any> postJson(method: String, body: T): R {
-        val response = client.post(method) {
-            contentType(Json)
-            setBody(body)
+        val response = withContext(Dispatchers.IO) {
+            client.post(method) {
+                contentType(Json)
+                setBody(body)
+            }
         }
         val telegramResponse = response.body<TelegramResponse<R>>()
 

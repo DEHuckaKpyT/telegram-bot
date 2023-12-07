@@ -4,8 +4,6 @@ import com.dehucka.microservice.logger.Logging
 import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.factory.MessageArgumentFactory
-import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
-import io.github.dehuckakpyt.telegrambot.context.getInternal
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
@@ -16,7 +14,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.UpdateResponse
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templating
-import org.koin.core.component.get
 
 
 /**
@@ -25,14 +22,14 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-internal class DialogUpdateResolver : InternalKoinComponent, Templating, Logging {
-
-    private val callbackSerializer = getInternal<CallbackSerializer>()
-    private val chainSource = getInternal<ChainSource>()
-    private val messageSource = get<MessageSource>()
-    private val chainResolver = getInternal<ChainResolver>()
-    private val exceptionHandler = getInternal<ExceptionHandler>()
-    private val messageArgumentFactories = getInternalKoin().getAll<MessageArgumentFactory>()
+internal class DialogUpdateResolver(
+    private val callbackSerializer: CallbackSerializer,
+    private val chainSource: ChainSource,
+    private val chainResolver: ChainResolver,
+    private val exceptionHandler: ExceptionHandler,
+    private val messageArgumentFactories: List<MessageArgumentFactory>,
+    private val messageSource: MessageSource,
+) : Templating, Logging {
 
     suspend fun processUpdate(update: UpdateResponse): Unit {
         if (update.message == null) return

@@ -1,15 +1,13 @@
 package io.github.dehuckakpyt.telegrambot.converter
 
 import com.dehucka.microservice.ext.toUUID
-import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
-import io.github.dehuckakpyt.telegrambot.context.injectInternal
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
-import org.koin.core.qualifier.named
 
-class SimpleCallbackSerializer : CallbackSerializer, InternalKoinComponent {
-    private val callbackContentSource by injectInternal<CallbackContentSource>()
-    private val dataConverter by injectInternal<ContentConverter>()
-    private val delimiter by injectInternal<Char>(named("callbackDataDelimiter"))
+class SimpleCallbackSerializer(
+    private val callbackContentSource: CallbackContentSource,
+    private val dataConverter: ContentConverter,
+    private val delimiter: Char,
+) : CallbackSerializer {
 
     override suspend fun toCallback(chatId: Long, fromId: Long, next: String, instance: Any?): String {
         instance ?: return next

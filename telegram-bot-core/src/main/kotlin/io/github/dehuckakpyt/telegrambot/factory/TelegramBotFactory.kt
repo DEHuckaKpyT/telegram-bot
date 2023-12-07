@@ -25,9 +25,10 @@ import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.BotTemplate
 import io.ktor.server.application.*
 import org.koin.core.context.loadKoinModules
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
-import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.mp.KoinPlatform
 
 
 /**
@@ -45,49 +46,46 @@ internal object TelegramBotFactory : InternalKoinComponent {
         val configManagers = getKoin().getAll<TelegramBotConfigManager>()
         configManagers.forEach(TelegramBotConfigManager::preLoadModules)
 
-        loadPublicModules(username, config)
-        loadInternalModules(token, config, application)
-        getKoin().declare(TelegramBot())
+        val telegramApiClient = TelegramApiClient(token)
+        loadPublicModules(username, telegramApiClient, config)
+        loadInternalModules(telegramApiClient, config, application)
 
         initiateHandlers(config)
     }
 
-    private fun loadPublicModules(
-        username: String,
-        config: TelegramBotConfig
-    ) {
+    private fun loadPublicModules(username: String, telegramApiClient: TelegramApiClient, config: TelegramBotConfig) =
         loadKoinModules(module {
             single<String>(named("username")) { username }
-            single<MessageSource> { config.messageSource }
-            single<HtmlFormatter> { config.htmlFormatter }
+            single<MessageSource>(definition = config.messageSource)
+            single<HtmlFormatter>(definition = config.htmlFormatter)
             single { BotTemplate() }
+            single { TelegramBot(telegramApiClient, get(), username) }
         })
-    }
 
-    private fun loadInternalModules(
-        token: String, config: TelegramBotConfig, application: Application,
-    ) = loadInternalKoinModules(module {
-        single<CallbackContentSource> { config.callbackContentSource }
-        single<ChainSource> { config.chainSource }
-        single<CallbackSerializer> { config.callbackSerializer }
-        single<ExceptionHandler> { config.exceptionHandler }
-        single<ChainExceptionHandler> { config.chainExceptionHandler }
-        single<ContentConverter> { config.contentConverter }
-        single(named("callbackDataDelimiter")) { config.callbackDataDelimiter }
-        single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
-        single { config.templateConfig }
-        single { ChainResolver() }
-        single { DialogUpdateResolver() }
-        single { TelegramApiClient(token) }
-        single { LongPollingUpdateReceiver(LongPollingConfig()) } bind UpdateReceiver::class
+    private fun loadInternalModules(telegramApiClient: TelegramApiClient, config: TelegramBotConfig, application: Application) =
+        loadInternalKoinModules(module {
+            single<CallbackContentSource>(definition = config.callbackContentSource)
+            single<ChainSource>(definition = config.chainSource)
+            single<CallbackSerializer>(definition = config.callbackSerializer)
+            single<ExceptionHandler>(definition = config.exceptionHandler)
+            single<ChainExceptionHandler>(definition = config.chainExceptionHandler)
+            single<ContentConverter>(definition = config.contentConverter)
+            single(named("callbackDataDelimiter")) { config.callbackDataDelimiter }
+            single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
+            single { config.templateConfig }
 
-        single { AudioMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { ContactMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { DocumentMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { PhotoMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { TextMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { VoiceMessageArgumentFactory() } bind MessageArgumentFactory::class
-    })
+            single { telegramApiClient }
+            singleOf(::ChainResolver)
+            single { DialogUpdateResolver(get(), get(), get(), get(), getAll(), KoinPlatform.getKoin().get()) }
+            single<UpdateReceiver> { LongPollingUpdateReceiver(LongPollingConfig()) }
+
+            single<MessageArgumentFactory> { AudioMessageArgumentFactory() }
+            single<MessageArgumentFactory> { ContactMessageArgumentFactory() }
+            single<MessageArgumentFactory> { DocumentMessageArgumentFactory() }
+            single<MessageArgumentFactory> { PhotoMessageArgumentFactory() }
+            single<MessageArgumentFactory> { TextMessageArgumentFactory() }
+            single<MessageArgumentFactory> { VoiceMessageArgumentFactory() }
+        })
 
     private fun initiateHandlers(config: TelegramBotConfig) {
         // создание обработчиков из методов расширения

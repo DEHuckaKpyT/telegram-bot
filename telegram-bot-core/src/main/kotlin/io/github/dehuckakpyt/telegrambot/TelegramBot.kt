@@ -1,14 +1,10 @@
 package io.github.dehuckakpyt.telegrambot
 
 import io.github.dehuckakpyt.telegrambot.api.TelegramApiClient
-import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
 import java.io.File
 
 
@@ -18,11 +14,11 @@ import java.io.File
  *
  * @author Denis Matytsin
  */
-class TelegramBot : KoinComponent {
-
-    private val client = InternalKoinContext.koin.get<TelegramApiClient>()
-    private val messageSource = get<MessageSource>()
-    val username = get<String>(named("username"))
+class TelegramBot(
+    private val client: TelegramApiClient,
+    private val messageSource: MessageSource,
+    val username: String,
+) {
 
 
     //region Telegram methods

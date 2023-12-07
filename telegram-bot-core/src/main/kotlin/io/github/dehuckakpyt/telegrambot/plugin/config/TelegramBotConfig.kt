@@ -20,6 +20,9 @@ import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.server.config.*
+import org.koin.core.definition.Definition
+import org.koin.core.qualifier.named
+import org.koin.mp.KoinPlatform
 
 
 /**
@@ -34,15 +37,15 @@ class TelegramBotConfig(val config: ApplicationConfig) {
     var username: String? = config.propertyOrNull("username")?.getString()
     var handling: BotHandling.() -> Unit = {}
     var templateConfig: Configuration = Configuration(Version("2.3.32"))
-    var callbackContentSource: CallbackContentSource = InMemoryCallbackContentSource()
-    var chainSource: ChainSource = InMemoryChainSource()
-    var messageSource: MessageSource = EmptyMessageSource()
+    var callbackContentSource: Definition<CallbackContentSource> = { InMemoryCallbackContentSource() }
+    var chainSource: Definition<ChainSource> = { InMemoryChainSource() }
+    var messageSource: Definition<MessageSource> = { EmptyMessageSource() }
     var callbackDataDelimiter: Char = '|'
-    var contentConverter: ContentConverter = JsonContentConverter()
-    var callbackSerializer: CallbackSerializer = SimpleCallbackSerializer()
-    var htmlFormatter: HtmlFormatter = HtmlFormatterImpl()
-    var exceptionHandler: ExceptionHandler = ExceptionHandlerImpl()
-    var chainExceptionHandler: ChainExceptionHandler = ChainExceptionHandlerImpl()
+    var contentConverter: Definition<ContentConverter> = { JsonContentConverter() }
+    var callbackSerializer: Definition<CallbackSerializer> = { SimpleCallbackSerializer(get(), get(), get(named("callbackDataDelimiter"))) }
+    var htmlFormatter: Definition<HtmlFormatter> = { HtmlFormatterImpl() }
+    var exceptionHandler: Definition<ExceptionHandler> = { ExceptionHandlerImpl(KoinPlatform.getKoin().get()) }
+    var chainExceptionHandler: Definition<ChainExceptionHandler> = { ChainExceptionHandlerImpl() }
 
     fun handling(block: BotHandling.() -> Unit) {
         handling = block

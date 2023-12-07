@@ -10,15 +10,12 @@ import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.koin.core.qualifier.named
 import java.time.LocalDateTime
 import java.util.*
 
-class DatabaseCallbackContentSource : CallbackContentSource, KoinComponent {
-
-    private val maxCallbackContentsPerUser by inject<Long>(named("maxCallbackContentsPerUser"))
+class DatabaseCallbackContentSource(
+    private val maxCallbackContentsPerUser: Long,
+) : CallbackContentSource {
 
     override suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent = execute {
         findLast(chatId, fromId).createOrUpdate {

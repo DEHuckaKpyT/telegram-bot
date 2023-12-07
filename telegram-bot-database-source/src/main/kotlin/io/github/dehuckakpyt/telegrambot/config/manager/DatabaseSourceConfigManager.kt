@@ -1,9 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.config.manager
 
 import io.github.dehuckakpyt.telegrambot.config.DatabaseSourceConfig
+import io.github.dehuckakpyt.telegrambot.context.DatabaseKoinContext.loadDatabaseKoinModules
 import io.github.dehuckakpyt.telegrambot.plugin.config.manager.TelegramBotConfigManager
 import io.ktor.server.config.*
-import org.koin.core.context.loadKoinModules
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -22,7 +22,7 @@ class DatabaseSourceConfigManager : TelegramBotConfigManager {
     }
 
     override fun preLoadModules() {
-        loadKoinModules(module {
+        loadDatabaseKoinModules(module {
             single(named("maxCallbackContentsPerUser")) { databaseSourceConfig!!.maxCallbackContentsPerUser }
         })
     }
