@@ -2,8 +2,10 @@
 
 
 Kotlin library (framework) for creating Telegram Bots using [Ktor](https://ktor.io/), [Koin](https://insert-koin.io/) and [Exposed](https://github.com/JetBrains/Exposed).
+
 Easy to handle dialogs with users. 
 Supporting message templates and other helpful features.
+Working on coroutines.
 
 Example of application in [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example) directory. 
 
