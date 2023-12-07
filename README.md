@@ -1,9 +1,11 @@
-# Kotlin Telegram Bot framework
+# Kotlin Telegram Bot
 
-Фреймворк для написания telegram-ботов. Для обращения к telegram bot api используется репозиторий [kt-telegram-bot](https://github.com/elbekD/kt-telegram-bot).
 
-Бот работает на [Ktor](https://ktor.io/) + [Koin](https://insert-koin.io/).
-Пример готового приложения в [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example).
+Kotlin library (framework) for creating Telegram Bots using [Ktor](https://ktor.io/), [Koin](https://insert-koin.io/) and [Exposed](https://github.com/JetBrains/Exposed).
+Easy to handle dialogs with users. 
+Supporting message templates and other helpful features.
+
+Example of application in [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example) directory. 
 
 ## Examples
 
