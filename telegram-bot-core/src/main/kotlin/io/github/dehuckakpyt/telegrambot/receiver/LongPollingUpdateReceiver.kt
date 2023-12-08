@@ -3,9 +3,8 @@ package io.github.dehuckakpyt.telegrambot.receiver
 import com.dehucka.microservice.logger.Logging
 import io.github.dehuckakpyt.telegrambot.api.TelegramApiClient
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
-import io.github.dehuckakpyt.telegrambot.context.getInternal
 import io.github.dehuckakpyt.telegrambot.plugin.config.receiver.LongPollingConfig
-import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
+import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -19,11 +18,11 @@ import kotlinx.coroutines.launch
  * @author Denis Matytsin
  */
 internal class LongPollingUpdateReceiver(
+    private val client: TelegramApiClient,
+    private val updateResolver: UpdateResolver,
     private val config: LongPollingConfig,
 ) : UpdateReceiver, InternalKoinComponent, Logging {
 
-    private val client = getInternal<TelegramApiClient>()
-    private val dialogUpdateResolver = getInternal<DialogUpdateResolver>()
     private val scope = CoroutineScope(Dispatchers.Default)
 
     override fun start(): Unit {
@@ -45,7 +44,7 @@ internal class LongPollingUpdateReceiver(
 
             lastUpdateId = updates.last().updateId
 
-            updates.forEach { dialogUpdateResolver.processUpdate(it) }
+            updates.forEach { updateResolver.processUpdate(it) }
         }
     }
 

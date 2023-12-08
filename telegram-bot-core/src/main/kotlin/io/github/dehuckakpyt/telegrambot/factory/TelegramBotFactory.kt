@@ -17,6 +17,7 @@ import io.github.dehuckakpyt.telegrambot.plugin.config.manager.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
+import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
@@ -74,6 +75,7 @@ internal object TelegramBotFactory : InternalKoinComponent {
 
             single { telegramApiClient }
             singleOf(::ChainResolver)
+            singleOf(::UpdateResolver)
             single { DialogUpdateResolver(get(), get(), get(), get(), getAll(), KoinPlatform.getKoin().get()) }
             single<UpdateReceiver>(definition = config.updateReceiver)
 

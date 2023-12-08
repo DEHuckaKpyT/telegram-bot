@@ -18,7 +18,7 @@ fun Application.configureTelegramBot() {
     install(TelegramBot) {
         longPolling {
             limit = 10
-            timeout = 3
+            timeout = 25
         }
 
         configureTemplating {

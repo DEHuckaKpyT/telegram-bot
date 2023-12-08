@@ -38,7 +38,7 @@ class TelegramBotConfig(val config: ApplicationConfig) {
     var enabled: Boolean = config.propertyOrNull("enabled")?.getString()?.toBooleanStrict() ?: true
     var token: String? = config.propertyOrNull("token")?.getString()
     var username: String? = config.propertyOrNull("username")?.getString()
-    internal var updateReceiver: Definition<UpdateReceiver> = { LongPollingUpdateReceiver(LongPollingConfig()) }
+    internal var updateReceiver: Definition<UpdateReceiver> = { LongPollingUpdateReceiver(get(), get(), LongPollingConfig()) }
     var handling: BotHandling.() -> Unit = {}
     var templateConfig: Configuration = Configuration(Version("2.3.32"))
     var callbackContentSource: Definition<CallbackContentSource> = { InMemoryCallbackContentSource() }
@@ -52,7 +52,8 @@ class TelegramBotConfig(val config: ApplicationConfig) {
     var chainExceptionHandler: Definition<ChainExceptionHandler> = { ChainExceptionHandlerImpl() }
 
     fun longPolling(block: LongPollingConfig.() -> Unit) {
-        updateReceiver = { LongPollingUpdateReceiver(LongPollingConfig().apply(block)) }
+        val longPollingConfig = LongPollingConfig().apply(block)
+        updateReceiver = { LongPollingUpdateReceiver(get(), get(), longPollingConfig) }
     }
 
     fun configureTemplating(block: Configuration.() -> Unit) {

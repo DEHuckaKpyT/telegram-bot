@@ -10,7 +10,6 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.type.Message
-import io.github.dehuckakpyt.telegrambot.model.type.UpdateResponse
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templating
@@ -31,10 +30,7 @@ internal class DialogUpdateResolver(
     private val messageSource: MessageSource,
 ) : Templating, Logging {
 
-    suspend fun processUpdate(update: UpdateResponse): Unit {
-        if (update.message == null) return
-
-        val message = update.message
+    suspend fun processMessage(message: Message): Unit {
         val from = message.from
         val text = message.text
         val chatId = message.chatId
@@ -48,17 +44,17 @@ internal class DialogUpdateResolver(
 
         exceptionHandler.execute(chatId) {
             CommandArgument.fetchCommand(text)?.let {
-                processCommand(it, message)
-            } ?: processMessage(message)
+                processCommandMessage(it, message)
+            } ?: processGeneralMessage(message)
         }
     }
 
-    private suspend fun processCommand(command: String, message: Message): Unit = with(message) {
+    private suspend fun processCommandMessage(command: String, message: Message): Unit = with(message) {
         chainResolver.getCommand(command)
             .invoke(CommandArgument(chatId, message))
     }
 
-    private suspend fun processMessage(message: Message): Unit = with(message) {
+    private suspend fun processGeneralMessage(message: Message): Unit = with(message) {
         val chain = chainSource.get(chatId, from!!.id)
         val factory = message.messageArgumentFactory
         val action = chainResolver.getStep(chain?.step, factory.type)
