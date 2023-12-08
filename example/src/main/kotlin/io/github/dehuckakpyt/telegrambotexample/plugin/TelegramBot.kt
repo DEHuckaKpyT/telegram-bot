@@ -16,6 +16,11 @@ import org.koin.mp.KoinPlatform
  */
 fun Application.configureTelegramBot() {
     install(TelegramBot) {
+        longPolling {
+            limit = 10
+            timeout = 3
+        }
+
         configureTemplating {
             defaultEncoding = "UTF-8"
         }

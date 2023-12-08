@@ -14,8 +14,6 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionH
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.plugin.config.manager.TelegramBotConfigManager
-import io.github.dehuckakpyt.telegrambot.plugin.config.receiver.LongPollingConfig
-import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
@@ -77,7 +75,7 @@ internal object TelegramBotFactory : InternalKoinComponent {
             single { telegramApiClient }
             singleOf(::ChainResolver)
             single { DialogUpdateResolver(get(), get(), get(), get(), getAll(), KoinPlatform.getKoin().get()) }
-            single<UpdateReceiver> { LongPollingUpdateReceiver(LongPollingConfig()) }
+            single<UpdateReceiver>(definition = config.updateReceiver)
 
             single<MessageArgumentFactory> { AudioMessageArgumentFactory() }
             single<MessageArgumentFactory> { ContactMessageArgumentFactory() }

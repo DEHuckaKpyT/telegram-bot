@@ -13,6 +13,9 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionH
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandlerImpl
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatterImpl
+import io.github.dehuckakpyt.telegrambot.plugin.config.receiver.LongPollingConfig
+import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
+import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -35,6 +38,7 @@ class TelegramBotConfig(val config: ApplicationConfig) {
     var enabled: Boolean = config.propertyOrNull("enabled")?.getString()?.toBooleanStrict() ?: true
     var token: String? = config.propertyOrNull("token")?.getString()
     var username: String? = config.propertyOrNull("username")?.getString()
+    internal var updateReceiver: Definition<UpdateReceiver> = { LongPollingUpdateReceiver(LongPollingConfig()) }
     var handling: BotHandling.() -> Unit = {}
     var templateConfig: Configuration = Configuration(Version("2.3.32"))
     var callbackContentSource: Definition<CallbackContentSource> = { InMemoryCallbackContentSource() }
@@ -47,11 +51,15 @@ class TelegramBotConfig(val config: ApplicationConfig) {
     var exceptionHandler: Definition<ExceptionHandler> = { ExceptionHandlerImpl(KoinPlatform.getKoin().get()) }
     var chainExceptionHandler: Definition<ChainExceptionHandler> = { ChainExceptionHandlerImpl() }
 
-    fun handling(block: BotHandling.() -> Unit) {
-        handling = block
+    fun longPolling(block: LongPollingConfig.() -> Unit) {
+        updateReceiver = { LongPollingUpdateReceiver(LongPollingConfig().apply(block)) }
     }
 
     fun configureTemplating(block: Configuration.() -> Unit) {
         templateConfig.block()
+    }
+
+    fun handling(block: BotHandling.() -> Unit) {
+        handling = block
     }
 }
