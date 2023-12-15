@@ -10,10 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @author Elbek Djuraev
  * @author Denis Matytsin
  */
-internal class GetStickerSet(
-    @get:JsonProperty("name") val name: String
-)
-
 internal class GetCustomEmojiStickers(
     @get:JsonProperty("custom_emoji_ids") val customEmojiIds: List<String>
 )

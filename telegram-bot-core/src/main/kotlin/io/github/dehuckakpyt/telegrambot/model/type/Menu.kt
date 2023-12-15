@@ -21,8 +21,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 public sealed class MenuButton {
     public abstract val type: String
 
-    public data class Commands(@get:JsonProperty("type") @param:JsonProperty("type") override val type: String = "commands") :
-        MenuButton()
+    public data class Commands(
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String = "commands"
+    ) : MenuButton()
 
     public data class WebApp(
         @get:JsonProperty("text") @param:JsonProperty("text") val text: String,
@@ -32,6 +33,7 @@ public sealed class MenuButton {
         override val type: String = "web_app"
     }
 
-    public data class Default(@get:JsonProperty("type") @param:JsonProperty("type") override val type: String = "default") :
-        MenuButton()
+    public data class Default(
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String = "default"
+    ) : MenuButton()
 }

@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.internal
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.github.dehuckakpyt.telegrambot.model.type.InlineQueryResult
+import io.github.dehuckakpyt.telegrambot.model.type.InlineQueryResultsButton
 
 
 /**
@@ -17,10 +18,8 @@ internal class AnswerInlineQuery(
     @get:JsonProperty("cache_time") val cacheTime: Int? = null,
     @get:JsonProperty("is_personal") val isPersonal: Boolean? = null,
     @get:JsonProperty("next_offset") val nextOffset: String? = null,
-    @get:JsonProperty("switch_pm_text") val switchPmText: String? = null,
-    @get:JsonProperty("switch_pm_parameter") val switchPmParameter: String? = null,
+    @get:JsonProperty("button") val button: InlineQueryResultsButton? = null,
 )
-
 
 internal class AnswerWebAppQuery(
     @get:JsonProperty("web_app_query_id") val webAppQueryId: String,

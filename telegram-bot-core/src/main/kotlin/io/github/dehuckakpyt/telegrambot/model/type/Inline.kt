@@ -339,6 +339,12 @@ public data class InlineQueryResultCachedAudio(
     override val type: String = "audio"
 }
 
+public data class InlineQueryResultsButton(
+    @get:JsonProperty("text") val text: String,
+    @get:JsonProperty("web_app") val webApp: WebAppInfo? = null,
+    @get:JsonProperty("start_parameter") val startParameter: String? = null,
+)
+
 public sealed class InputMessageContent
 
 public data class InputTextMessageContent(

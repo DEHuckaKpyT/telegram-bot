@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambot.model.type.ParseMode.Html
+import io.github.dehuckakpyt.telegrambot.model.type.ParseMode.HTML
 import io.github.dehuckakpyt.telegrambot.template.template
 
 
@@ -21,18 +21,18 @@ fun BotHandling.templateCommand() {
     val templateExample by template()
 
     command("/template") {
-        sendMessage(templateExample with ("param" to usingTags), parseMode = Html)
-        sendMessage(templateExample with ("param" to ignoreTags), parseMode = Html)
-        sendMessage(templateExample with ("param" to breakLine), parseMode = Html)
-        sendMessage(templateExample with ("param" to mixed), parseMode = Html)
+        sendMessage(templateExample with ("param" to usingTags), parseMode = HTML)
+        sendMessage(templateExample with ("param" to ignoreTags), parseMode = HTML)
+        sendMessage(templateExample with ("param" to breakLine), parseMode = HTML)
+        sendMessage(templateExample with ("param" to mixed), parseMode = HTML)
     }
 
     val templateEscapedExample by template()
 
     command("/template_escaped") {
-        sendMessage(templateEscapedExample with ("param" to usingTags), parseMode = Html)
-        sendMessage(templateEscapedExample with ("param" to ignoreTags), parseMode = Html)
-        sendMessage(templateEscapedExample with ("param" to breakLine), parseMode = Html)
-        sendMessage(templateEscapedExample with ("param" to mixed), parseMode = Html)
+        sendMessage(templateEscapedExample with ("param" to usingTags), parseMode = HTML)
+        sendMessage(templateEscapedExample with ("param" to ignoreTags), parseMode = HTML)
+        sendMessage(templateEscapedExample with ("param" to breakLine), parseMode = HTML)
+        sendMessage(templateEscapedExample with ("param" to mixed), parseMode = HTML)
     }
 }

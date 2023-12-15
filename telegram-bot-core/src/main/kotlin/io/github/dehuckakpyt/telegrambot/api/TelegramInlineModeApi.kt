@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.model.type.InlineQueryResult
+import io.github.dehuckakpyt.telegrambot.model.type.InlineQueryResultsButton
 import io.github.dehuckakpyt.telegrambot.model.type.SentWebAppMessage
 
 
@@ -17,8 +18,7 @@ interface TelegramInlineModeApi {
         cacheTime: Int? = null,
         isPersonal: Boolean? = null,
         nextOffset: String? = null,
-        switchPmText: String? = null,
-        switchPmParameter: String? = null
+        button: InlineQueryResultsButton? = null,
     ): Boolean
 
     suspend fun answerWebAppQuery(

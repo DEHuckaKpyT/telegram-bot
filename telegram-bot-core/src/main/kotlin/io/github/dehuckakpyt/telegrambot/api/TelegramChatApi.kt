@@ -85,4 +85,8 @@ interface TelegramChatApi {
     suspend fun unhideGeneralForumTopic(
         chatId: String,
     ): Boolean
+
+    suspend fun unpinAllGeneralForumTopicMessages(
+        chatId: String,
+    ): Boolean
 }

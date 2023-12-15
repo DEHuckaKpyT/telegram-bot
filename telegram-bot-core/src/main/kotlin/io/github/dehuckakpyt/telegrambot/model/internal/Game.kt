@@ -27,7 +27,7 @@ internal class SetGameScore(
     @get:JsonProperty("score") val score: Long,
     @get:JsonProperty("force") val force: Boolean? = null,
     @get:JsonProperty("disable_edit_message") val disableEditMessage: Boolean? = null,
-    @get:JsonProperty("chat_id") val chatId: String? = null,
+    @get:JsonProperty("chat_id") val chatId: Long? = null,
     @get:JsonProperty("message_id") val messageId: Long? = null,
     @get:JsonProperty("inline_message_id") val inlineMessageId: String? = null
 ) {

@@ -155,22 +155,12 @@ internal class SendChatAction(
 
 internal class BanChatSenderChat(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("sender_chat_id") val senderString: Long,
+    @get:JsonProperty("sender_chat_id") val senderChatId: Long,
 )
 
 internal class UnbanChatSenderChat(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("sender_chat_id") val senderString: Long,
-)
-
-internal class GetUserProfilePhotos(
-    @get:JsonProperty("user_id") val userId: Long,
-    @get:JsonProperty("offset") val offset: Long? = null,
-    @get:JsonProperty("limit") val limit: Long? = null
-)
-
-internal class GetFile(
-    @get:JsonProperty("file_id") val fileId: String
+    @get:JsonProperty("sender_chat_id") val senderChatId: Long,
 )
 
 internal class SendPoll(
@@ -238,15 +228,18 @@ internal class PromoteChatMember(
     @get:JsonProperty("user_id") val userId: Long,
     @get:JsonProperty("is_anonymous") val isAnonymous: Boolean? = null,
     @get:JsonProperty("can_manage_chat") val canManageChat: Boolean? = null,
-    @get:JsonProperty("can_post_messages") val canPostMessages: Boolean? = null,
-    @get:JsonProperty("can_edit_messages") val canEditMessages: Boolean? = null,
     @get:JsonProperty("can_delete_messages") val canDeleteMessages: Boolean? = null,
     @get:JsonProperty("can_manage_video_chats") val canManageVideoChats: Boolean? = null,
     @get:JsonProperty("can_restrict_members") val canRestrictMembers: Boolean? = null,
     @get:JsonProperty("can_promote_members") val canPromoteMembers: Boolean? = null,
     @get:JsonProperty("can_change_info") val canChangeInfo: Boolean? = null,
     @get:JsonProperty("can_invite_users") val canInviteUsers: Boolean? = null,
+    @get:JsonProperty("can_post_messages") val canPostMessages: Boolean? = null,
+    @get:JsonProperty("can_edit_messages") val canEditMessages: Boolean? = null,
     @get:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
+    @get:JsonProperty("can_post_stories") val canPostStories: Boolean? = null,
+    @get:JsonProperty("can_edit_stories") val canEditStories: Boolean? = null,
+    @get:JsonProperty("can_delete_stories") val canDeleteStories: Boolean? = null,
     @get:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
 )
 
@@ -290,12 +283,12 @@ internal class RevokeChatInviteLink(
 
 internal class ApproveChatJoinRequest(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("invite_link") val inviteLink: String
+    @get:JsonProperty("user_id") val userId: Long
 )
 
 internal class DeclineChatJoinRequest(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("invite_link") val inviteLink: String
+    @get:JsonProperty("user_id") val userId: Long
 )
 
 internal class DeleteChatPhoto(
@@ -331,23 +324,6 @@ internal class LeaveChat(
     @get:JsonProperty("chat_id") val chatId: String
 )
 
-internal class GetChat(
-    @get:JsonProperty("chat_id") val chatId: String
-)
-
-internal class GetChatAdministrators(
-    @get:JsonProperty("chat_id") val chatId: String
-)
-
-internal class GetChatMembersCount(
-    @get:JsonProperty("chat_id") val chatId: String
-)
-
-internal class GetChatMember(
-    @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("user_id") val userId: Long
-)
-
 internal class SetChatStickerSet(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("sticker_set_name") val stickerSetName: String
@@ -379,4 +355,19 @@ internal class DeleteMyCommands(
 internal class GetMyCommands(
     @get:JsonProperty("scope") val scope: BotCommandScope? = null,
     @get:JsonProperty("language_code") val languageCode: String? = null
+)
+
+internal class SetMyName(
+    @get:JsonProperty("name") val name: String? = null,
+    @get:JsonProperty("language_code") val languageCode: String? = null,
+)
+
+internal class SetMyDescription(
+    @get:JsonProperty("description") val description: String? = null,
+    @get:JsonProperty("language_code") val languageCode: String? = null,
+)
+
+internal class SetMyShortDescription(
+    @get:JsonProperty("short_description") val shortDescription: String? = null,
+    @get:JsonProperty("language_code") val languageCode: String? = null,
 )

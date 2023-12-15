@@ -84,3 +84,7 @@ internal data class HideGeneralForumTopic(
 internal data class UnhideGeneralForumTopic(
     @get:JsonProperty("chat_id") val chatId: String,
 )
+
+internal data class UnpinAllGeneralForumTopicMessages(
+    @get:JsonProperty("chat_id") val chatId: String,
+)

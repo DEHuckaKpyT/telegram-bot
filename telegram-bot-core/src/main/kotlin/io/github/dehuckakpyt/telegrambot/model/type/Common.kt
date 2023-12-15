@@ -27,17 +27,17 @@ public data class WebhookInfo(
 )
 
 public data class User(
-    @param:JsonProperty("id") val id: Long,
-    @param:JsonProperty("is_bot") val isBot: Boolean,
-    @param:JsonProperty("first_name") val firstName: String,
-    @param:JsonProperty("last_name") val lastName: String? = null,
-    @param:JsonProperty("username") val username: String? = null,
-    @param:JsonProperty("language_code") val languageCode: String? = null,
-    @param:JsonProperty("is_premium") val isPremium: Boolean? = null,
-    @param:JsonProperty("added_to_attachment_menu") val addedToAttachmentMenu: Boolean? = null,
-    @param:JsonProperty("can_join_groups") val canJoinGroups: Boolean? = null,
-    @param:JsonProperty("can_read_all_group_messages") val canReadAllGroupMessages: Boolean? = null,
-    @param:JsonProperty("supports_inline_queries") val supportsInlineQueries: Boolean? = null,
+    @get:JsonProperty("id") @param:JsonProperty("id") val id: Long,
+    @get:JsonProperty("is_bot") @param:JsonProperty("is_bot") val isBot: Boolean,
+    @get:JsonProperty("first_name") @param:JsonProperty("first_name") val firstName: String,
+    @get:JsonProperty("last_name") @param:JsonProperty("last_name") val lastName: String? = null,
+    @get:JsonProperty("username") @param:JsonProperty("username") val username: String? = null,
+    @get:JsonProperty("language_code") @param:JsonProperty("language_code") val languageCode: String? = null,
+    @get:JsonProperty("is_premium") @param:JsonProperty("is_premium") val isPremium: Boolean? = null,
+    @get:JsonProperty("added_to_attachment_menu") @param:JsonProperty("added_to_attachment_menu") val addedToAttachmentMenu: Boolean? = null,
+    @get:JsonProperty("can_join_groups") @param:JsonProperty("can_join_groups") val canJoinGroups: Boolean? = null,
+    @get:JsonProperty("can_read_all_group_messages") @param:JsonProperty("can_read_all_group_messages") val canReadAllGroupMessages: Boolean? = null,
+    @get:JsonProperty("supports_inline_queries") @param:JsonProperty("supports_inline_queries") val supportsInlineQueries: Boolean? = null,
 )
 
 public data class Message(
@@ -129,13 +129,13 @@ public data class CallbackQuery(
 )
 
 public data class MessageEntity(
-    @param:JsonProperty("type") val type: Type,
-    @param:JsonProperty("offset") val offset: Int,
-    @param:JsonProperty("length") val length: Int,
-    @param:JsonProperty("url") val url: String? = null,
-    @param:JsonProperty("user") val user: User? = null,
-    @param:JsonProperty("language") val language: String? = null,
-    @param:JsonProperty("custom_emoji_id") val customEmojiId: String? = null,
+    @get:JsonProperty("type") @param:JsonProperty("type") val type: Type,
+    @get:JsonProperty("offset") @param:JsonProperty("offset") val offset: Int,
+    @get:JsonProperty("length") @param:JsonProperty("length") val length: Int,
+    @get:JsonProperty("url") @param:JsonProperty("url") val url: String? = null,
+    @get:JsonProperty("user") @param:JsonProperty("user") val user: User? = null,
+    @get:JsonProperty("language") @param:JsonProperty("language") val language: String? = null,
+    @get:JsonProperty("custom_emoji_id") @param:JsonProperty("custom_emoji_id") val customEmojiId: String? = null,
 ) {
 
     public enum class Type {
@@ -297,7 +297,7 @@ public data class ProximityAlertTriggered(
 
 public data class UserProfilePhotos(
     @param:JsonProperty("total_count") val totalCount: Int,
-    @param:JsonProperty("photos") val photos: List<List<PhotoSize>> = emptyList()
+    @param:JsonProperty("photos") val photos: List<List<PhotoSize>>,
 )
 
 public data class File(
@@ -313,11 +313,13 @@ public data class ResponseParameters(
 )
 
 public data class Dice(
-    @param:JsonProperty("emoji") val emoji: String, @param:JsonProperty("value") val value: Int
+    @param:JsonProperty("emoji") val emoji: String,
+    @param:JsonProperty("value") val value: Int
 )
 
 public data class BotCommand(
-    @param:JsonProperty("command") val command: String, @param:JsonProperty("description") val description: String
+    @get:JsonProperty("command") @param:JsonProperty("command") val command: String,
+    @get:JsonProperty("description") @param:JsonProperty("description") val description: String
 )
 
 public data class MessageAutoDeleteTimerChanged(
@@ -365,50 +367,55 @@ public sealed class BotCommandScope {
     public abstract val type: String
 
     @JsonTypeName("default")
-    public data class BotCommandScopeDefault(@param:JsonProperty("type") override val type: String) : BotCommandScope()
+    public data class BotCommandScopeDefault(
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+    ) : BotCommandScope()
 
     @JsonTypeName("all_private_chats")
-    public data class BotCommandScopeAllPrivateChats(@param:JsonProperty("type") override val type: String) :
-        BotCommandScope()
+    public data class BotCommandScopeAllPrivateChats(
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+    ) : BotCommandScope()
 
     @JsonTypeName("all_group_chats")
-    public data class BotCommandScopeAllGroupChats(@param:JsonProperty("type") override val type: String) :
-        BotCommandScope()
+    public data class BotCommandScopeAllGroupChats(
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+    ) : BotCommandScope()
 
     @JsonTypeName("all_chat_administrators")
-    public data class BotCommandScopeAllChatAdministrators(@param:JsonProperty("type") override val type: String) :
-        BotCommandScope()
+    public data class BotCommandScopeAllChatAdministrators(
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+    ) : BotCommandScope()
 
     @JsonTypeName("chat")
     public data class BotCommandScopeChat(
-        @param:JsonProperty("type") override val type: String,
-        @param:JsonProperty("chat_id") val chatId: String
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String
     ) : BotCommandScope()
 
     @JsonTypeName("chat_administrators")
     public data class BotCommandScopeChatAdministrators(
-        @param:JsonProperty("type") override val type: String,
-        @param:JsonProperty("chat_id") val chatId: String
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String
     ) : BotCommandScope()
 
     @JsonTypeName("chat_member")
     public data class BotCommandScopeChatMember(
-        @param:JsonProperty("type") override val type: String,
-        @param:JsonProperty("chat_id") val chatId: String
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String
     ) : BotCommandScope()
 }
 
 public data class LoginUrl(
-    @param:JsonProperty("url") val url: String,
-    @param:JsonProperty("forward_text") val forwardText: String? = null,
-    @param:JsonProperty("bot_username") val botUsername: String? = null,
-    @param:JsonProperty("request_write_access") val requestWriteAccess: Boolean? = null
+    @get:JsonProperty("url") @param:JsonProperty("url") val url: String,
+    @get:JsonProperty("forward_text") @param:JsonProperty("forward_text") val forwardText: String? = null,
+    @get:JsonProperty("bot_username") @param:JsonProperty("bot_username") val botUsername: String? = null,
+    @get:JsonProperty("request_write_access") @param:JsonProperty("request_write_access") val requestWriteAccess: Boolean? = null
 )
 
 public enum class ParseMode {
 
     @field:JsonProperty("HTML")
-    Html,
+    HTML,
 
     @field:JsonProperty("Markdown")
     Markdown,
@@ -461,3 +468,15 @@ public enum class Action {
     @field:JsonProperty("upload_video_note")
     UploadVideoNote,
 }
+
+public data class BotName(
+    @param:JsonProperty("name") val name: String,
+)
+
+public data class BotDescription(
+    @param:JsonProperty("description") val description: String,
+)
+
+public data class BotShortDescription(
+    @param:JsonProperty("short_description") val shortDescription: String,
+)

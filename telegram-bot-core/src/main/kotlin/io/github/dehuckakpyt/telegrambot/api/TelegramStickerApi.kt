@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 
 
 /**
@@ -12,8 +13,9 @@ import io.github.dehuckakpyt.telegrambot.model.type.*
 interface TelegramStickerApi {
     suspend fun sendSticker(
         chatId: String,
-        sticker: Any,
+        sticker: NamedContent,
         messageThreadId: Long? = null,
+        emoji: String?,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
@@ -27,29 +29,24 @@ interface TelegramStickerApi {
 
     suspend fun uploadStickerFile(
         userId: Long,
-        pngSticker: java.io.File
+        sticker: NamedContent,
+        stickerFormat: String
     ): File
 
     suspend fun createNewStickerSet(
         userId: Long,
         name: String,
         title: String,
-        emojis: String,
-        pngSticker: Any? = null,
-        tgsSticker: java.io.File? = null,
-        webmSticker: java.io.File? = null,
+        stickers: Collection<Any>,
+        stickerFormat: String,
         stickerType: String? = null,
-        maskPosition: MaskPosition? = null
+        needsRepainting: Boolean? = null,
     ): Boolean
 
     suspend fun addStickerToSet(
         userId: Long,
         name: String,
-        emojis: String,
-        pngSticker: Any? = null,
-        tgsSticker: java.io.File? = null,
-        webmSticker: java.io.File? = null,
-        maskPosition: MaskPosition? = null
+        sticker: Any
     ): Boolean
 
     suspend fun setStickerPositionInSet(
@@ -59,9 +56,9 @@ interface TelegramStickerApi {
 
     suspend fun deleteStickerFromSet(sticker: String): Boolean
 
-    suspend fun setStickerSetThumb(
+    suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
-        thumb: Any? = null
+        thumbnail: Any? = null
     ): Boolean
 }

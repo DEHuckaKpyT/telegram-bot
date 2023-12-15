@@ -50,20 +50,20 @@ public data class ChatLocation(
 )
 
 public data class ChatPermissions(
-    @param:JsonProperty("can_send_messages") val canSendMessages: Boolean? = null,
-    @param:JsonProperty("can_send_audios") val canSendAudios: Boolean? = null,
-    @param:JsonProperty("can_send_documents") val canSendDocuments: Boolean? = null,
-    @param:JsonProperty("can_send_photos") val canSendPhotos: Boolean? = null,
-    @param:JsonProperty("can_send_videos") val canSendVideos: Boolean? = null,
-    @param:JsonProperty("can_send_video_notes") val canSendVideoNotes: Boolean? = null,
-    @param:JsonProperty("can_send_voice_notes") val canSendVoiceNotes: Boolean? = null,
-    @param:JsonProperty("can_send_polls") val canSendPolls: Boolean? = null,
-    @param:JsonProperty("can_send_other_messages") val canSendOtherMessages: Boolean? = null,
-    @param:JsonProperty("can_add_web_page_previews") val canAddWebPagePreviews: Boolean? = null,
-    @param:JsonProperty("can_change_info") val canChangeInfo: Boolean? = null,
-    @param:JsonProperty("can_invite_users") val canInviteUsers: Boolean? = null,
-    @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
-    @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
+    @get:JsonProperty("can_send_messages") @param:JsonProperty("can_send_messages") val canSendMessages: Boolean? = null,
+    @get:JsonProperty("can_send_audios") @param:JsonProperty("can_send_audios") val canSendAudios: Boolean? = null,
+    @get:JsonProperty("can_send_documents") @param:JsonProperty("can_send_documents") val canSendDocuments: Boolean? = null,
+    @get:JsonProperty("can_send_photos") @param:JsonProperty("can_send_photos") val canSendPhotos: Boolean? = null,
+    @get:JsonProperty("can_send_videos") @param:JsonProperty("can_send_videos") val canSendVideos: Boolean? = null,
+    @get:JsonProperty("can_send_video_notes") @param:JsonProperty("can_send_video_notes") val canSendVideoNotes: Boolean? = null,
+    @get:JsonProperty("can_send_voice_notes") @param:JsonProperty("can_send_voice_notes") val canSendVoiceNotes: Boolean? = null,
+    @get:JsonProperty("can_send_polls") @param:JsonProperty("can_send_polls") val canSendPolls: Boolean? = null,
+    @get:JsonProperty("can_send_other_messages") @param:JsonProperty("can_send_other_messages") val canSendOtherMessages: Boolean? = null,
+    @get:JsonProperty("can_add_web_page_previews") @param:JsonProperty("can_add_web_page_previews") val canAddWebPagePreviews: Boolean? = null,
+    @get:JsonProperty("can_change_info") @param:JsonProperty("can_change_info") val canChangeInfo: Boolean? = null,
+    @get:JsonProperty("can_invite_users") @param:JsonProperty("can_invite_users") val canInviteUsers: Boolean? = null,
+    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
+    @get:JsonProperty("can_manage_topics") @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
 )
 
 
@@ -189,18 +189,18 @@ public data class ChatJoinRequest(
 )
 
 public data class ChatAdministratorRights(
-    @param:JsonProperty("is_anonymous") val isAnonymous: Boolean,
-    @param:JsonProperty("can_manage_chat") val canManageChat: Boolean,
-    @param:JsonProperty("can_delete_messages") val canDeleteMessages: Boolean,
-    @param:JsonProperty("can_manage_video_chats") val canManageVideoChats: Boolean,
-    @param:JsonProperty("can_restrict_members") val canRestrictMembers: Boolean,
-    @param:JsonProperty("can_promote_members") val canPromoteMembers: Boolean,
-    @param:JsonProperty("can_change_info") val canChangeInfo: Boolean,
-    @param:JsonProperty("can_invite_users") val canInviteUsers: Boolean,
-    @param:JsonProperty("can_post_messages") val canPostMessages: Boolean? = null,
-    @param:JsonProperty("can_edit_messages") val canEditMessages: Boolean? = null,
-    @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
-    @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
+    @get:JsonProperty("is_anonymous") @param:JsonProperty("is_anonymous") val isAnonymous: Boolean,
+    @get:JsonProperty("can_manage_chat") @param:JsonProperty("can_manage_chat") val canManageChat: Boolean,
+    @get:JsonProperty("can_delete_messages") @param:JsonProperty("can_delete_messages") val canDeleteMessages: Boolean,
+    @get:JsonProperty("can_manage_video_chats") @param:JsonProperty("can_manage_video_chats") val canManageVideoChats: Boolean,
+    @get:JsonProperty("can_restrict_members") @param:JsonProperty("can_restrict_members") val canRestrictMembers: Boolean,
+    @get:JsonProperty("can_promote_members") @param:JsonProperty("can_promote_members") val canPromoteMembers: Boolean,
+    @get:JsonProperty("can_change_info") @param:JsonProperty("can_change_info") val canChangeInfo: Boolean,
+    @get:JsonProperty("can_invite_users") @param:JsonProperty("can_invite_users") val canInviteUsers: Boolean,
+    @get:JsonProperty("can_post_messages") @param:JsonProperty("can_post_messages") val canPostMessages: Boolean? = null,
+    @get:JsonProperty("can_edit_messages") @param:JsonProperty("can_edit_messages") val canEditMessages: Boolean? = null,
+    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
+    @get:JsonProperty("can_manage_topics") @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
 )
 
 public data class ForumTopic(

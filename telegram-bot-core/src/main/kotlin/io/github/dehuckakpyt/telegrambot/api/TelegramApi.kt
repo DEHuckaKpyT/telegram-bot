@@ -26,28 +26,12 @@ interface TelegramApi :
 
     suspend fun close(): Boolean
 
-    suspend fun getMyCommands(
-        scope: BotCommandScope? = null,
-        languageCode: String? = null
-    ): List<BotCommand>
-
-    suspend fun setMyCommands(
-        commands: List<BotCommand>,
-        scope: BotCommandScope? = null,
-        languageCode: String? = null
-    ): Boolean
-
-    suspend fun deleteMyCommands(
-        scope: BotCommandScope? = null,
-        languageCode: String? = null
-    ): Boolean
-
     suspend fun sendMessage(
         chatId: String,
         text: String,
-        messageThreadId: Long? = null,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         disableWebPagePreview: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -59,7 +43,7 @@ interface TelegramApi :
     suspend fun forwardMessage(
         chatId: String,
         fromChatId: String,
-        msgId: Long,
+        messageId: Long,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -69,10 +53,10 @@ interface TelegramApi :
         chatId: String,
         fromChatId: String,
         messageId: Long,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
@@ -83,10 +67,25 @@ interface TelegramApi :
     suspend fun sendPhoto(
         chatId: String,
         photo: NamedContent,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null
+    ): Message
+
+    suspend fun sendPhoto(
+        chatId: String,
+        photo: String,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -98,14 +97,32 @@ interface TelegramApi :
     suspend fun sendAudio(
         chatId: String,
         audio: NamedContent,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         duration: Long? = null,
         performer: String? = null,
         title: String? = null,
-        thumb: java.io.File? = null,
+        thumbnail: NamedContent? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null
+    ): Message
+
+    suspend fun sendAudio(
+        chatId: String,
+        audio: String,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        duration: Long? = null,
+        performer: String? = null,
+        title: String? = null,
+        thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
@@ -116,11 +133,27 @@ interface TelegramApi :
     suspend fun sendDocument(
         chatId: String,
         document: NamedContent,
-        messageThreadId: Long? = null,
-        thumb: java.io.File? = null,
+        thumbnail: NamedContent? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        disableContentTypeDetection: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null
+    ): Message
+
+    suspend fun sendDocument(
+        chatId: String,
+        document: String,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -132,16 +165,36 @@ interface TelegramApi :
     suspend fun sendVideo(
         chatId: String,
         video: NamedContent,
-        messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumb: java.io.File? = null,
+        thumbnail: NamedContent? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
-        streaming: Boolean? = null,
+        supportsStreaming: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null
+    ): Message
+
+    suspend fun sendVideo(
+        chatId: String,
+        video: String,
+        duration: Long? = null,
+        width: Long? = null,
+        height: Long? = null,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        hasSpoiler: Boolean? = null,
+        supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
@@ -152,14 +205,33 @@ interface TelegramApi :
     suspend fun sendAnimation(
         chatId: String,
         animation: NamedContent,
-        messageThreadId: Long? = null,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumb: java.io.File? = null,
+        thumbnail: NamedContent? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null
+    ): Message
+
+    suspend fun sendAnimation(
+        chatId: String,
+        animation: String,
+        duration: Long? = null,
+        width: Long? = null,
+        height: Long? = null,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -171,10 +243,25 @@ interface TelegramApi :
     suspend fun sendVoice(
         chatId: String,
         voice: NamedContent,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        duration: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null
+    ): Message
+
+    suspend fun sendVoice(
+        chatId: String,
+        voice: String,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         duration: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -185,11 +272,25 @@ interface TelegramApi :
 
     suspend fun sendVideoNote(
         chatId: String,
-        note: NamedContent,
+        videoNote: NamedContent,
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
-        thumb: java.io.File? = null,
+        thumbnail: NamedContent? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null
+    ): Message
+
+    suspend fun sendVideoNote(
+        chatId: String,
+        videoNote: String,
+        messageThreadId: Long? = null,
+        duration: Long? = null,
+        length: Long? = null,
+        thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
@@ -221,25 +322,6 @@ interface TelegramApi :
         replyToMessageId: Long? = null,
         allowSendingWithoutReply: Boolean? = false,
         replyMarkup: ReplyKeyboard? = null
-    ): Message
-
-    suspend fun editMessageLiveLocation(
-        latitude: Float,
-        longitude: Float,
-        horizontalAccuracy: Float? = null,
-        heading: Long? = null,
-        proximityAlertRadius: Long? = null,
-        chatId: String? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null
-    ): Message
-
-    suspend fun stopMessageLiveLocation(
-        chatId: String? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null
     ): Message
 
     suspend fun sendVenue(
@@ -313,16 +395,6 @@ interface TelegramApi :
         messageThreadId: Long? = null,
     ): Boolean
 
-    suspend fun banChatSenderChat(
-        chatId: String,
-        senderString: Long
-    ): Boolean
-
-    suspend fun unbanChatSenderChat(
-        chatId: String,
-        senderString: Long
-    ): Boolean
-
     suspend fun getUserProfilePhotos(
         userId: Long,
         offset: Long? = null,
@@ -357,15 +429,18 @@ interface TelegramApi :
         userId: Long,
         isAnonymous: Boolean? = null,
         canManageChat: Boolean? = null,
-        canPostMessages: Boolean? = null,
-        canEditMessages: Boolean? = null,
         canDeleteMessages: Boolean? = null,
         canManageVideoChats: Boolean? = null,
         canRestrictMembers: Boolean? = null,
         canPromoteMembers: Boolean? = null,
         canChangeInfo: Boolean? = null,
         canInviteUsers: Boolean? = null,
+        canPostMessages: Boolean? = null,
+        canEditMessages: Boolean? = null,
         canPinMessages: Boolean? = null,
+        canPostStories: Boolean? = null,
+        canEditStories: Boolean? = null,
+        canDeleteStories: Boolean? = null,
         canManageTopics: Boolean? = null,
     ): Boolean
 
@@ -375,11 +450,23 @@ interface TelegramApi :
         customTitle: String
     ): Boolean
 
+    suspend fun banChatSenderChat(
+        chatId: String,
+        senderChatId: Long
+    ): Boolean
+
+    suspend fun unbanChatSenderChat(
+        chatId: String,
+        senderChatId: Long
+    ): Boolean
+
     suspend fun setChatPermissions(
         chatId: String,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean? = null,
     ): Boolean
+
+    suspend fun exportChatInviteLink(chatId: String): String
 
     suspend fun createChatInviteLink(
         chatId: String,
@@ -405,19 +492,22 @@ interface TelegramApi :
 
     suspend fun approveChatJoinRequest(
         chatId: String,
-        inviteLink: String
+        userId: Long
     ): Boolean
 
     suspend fun declineChatJoinRequest(
         chatId: String,
-        inviteLink: String
+        userId: Long
     ): Boolean
-
-    suspend fun exportChatInviteLink(chatId: String): String
 
     suspend fun setChatPhoto(
         chatId: String,
-        photo: Any
+        photo: NamedContent
+    ): Boolean
+
+    suspend fun setChatPhoto(
+        chatId: String,
+        photo: String
     ): Boolean
 
     suspend fun deleteChatPhoto(chatId: String): Boolean
@@ -469,6 +559,68 @@ interface TelegramApi :
         url: String? = null,
         cacheTime: Long? = null
     ): Boolean
+
+    suspend fun setMyCommands(
+        commands: List<BotCommand>,
+        scope: BotCommandScope? = null,
+        languageCode: String? = null
+    ): Boolean
+
+    suspend fun deleteMyCommands(
+        scope: BotCommandScope? = null,
+        languageCode: String? = null
+    ): Boolean
+
+    suspend fun getMyCommands(
+        scope: BotCommandScope? = null,
+        languageCode: String? = null
+    ): List<BotCommand>
+
+    suspend fun setMyName(
+        name: String? = null,
+        languageCode: String? = null,
+    ): Boolean
+
+    suspend fun getMyName(
+        languageCode: String? = null,
+    ): BotName
+
+    suspend fun setMyDescription(
+        description: String? = null,
+        languageCode: String? = null,
+    ): Boolean
+
+    suspend fun getMyDescription(
+        languageCode: String? = null,
+    ): BotDescription
+
+    suspend fun setMyShortDescription(
+        shortDescription: String? = null,
+        languageCode: String? = null,
+    ): Boolean
+
+    suspend fun getMyShortDescription(
+        languageCode: String? = null,
+    ): BotShortDescription
+
+    suspend fun editMessageLiveLocation(
+        latitude: Float,
+        longitude: Float,
+        horizontalAccuracy: Float? = null,
+        heading: Long? = null,
+        proximityAlertRadius: Long? = null,
+        chatId: String? = null,
+        messageId: Long? = null,
+        inlineMessageId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null
+    ): Message
+
+    suspend fun stopMessageLiveLocation(
+        chatId: String? = null,
+        messageId: Long? = null,
+        inlineMessageId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null
+    ): Message
 
     //region duplicates
     suspend fun sendMessage(

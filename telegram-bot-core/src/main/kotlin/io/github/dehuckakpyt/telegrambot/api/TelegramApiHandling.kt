@@ -2,11 +2,13 @@ package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.argument.Argument
-import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.type.Message
+import io.github.dehuckakpyt.telegrambot.model.type.MessageEntity
+import io.github.dehuckakpyt.telegrambot.model.type.ParseMode
+import io.github.dehuckakpyt.telegrambot.model.type.ReplyKeyboard
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import java.io.File
 
 
 /**
@@ -24,8 +26,8 @@ open class TelegramApiHandling : KoinComponent {
     suspend fun sendMessage(
         chatId: Long,
         text: String,
-        messageThreadId: Long? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         entities: List<MessageEntity>? = null,
         disableWebPagePreview: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -51,8 +53,8 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun Argument.sendMessage(
         text: String,
-        messageThreadId: Long? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         entities: List<MessageEntity>? = null,
         disableWebPagePreview: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -76,7 +78,7 @@ open class TelegramApiHandling : KoinComponent {
         )
     }
 
-    suspend fun forwardMessage(
+        suspend fun forwardMessage(
         chatId: Long,
         fromChatId: Long,
         messageId: Long,
@@ -111,9 +113,9 @@ open class TelegramApiHandling : KoinComponent {
         chatId: Long,
         fromChatId: Long,
         messageId: Long,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -138,9 +140,9 @@ open class TelegramApiHandling : KoinComponent {
     suspend fun Argument.copyMessage(
         fromChatId: Long,
         messageId: Long,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -151,9 +153,9 @@ open class TelegramApiHandling : KoinComponent {
         chatId = chatId,
         fromChatId = fromChatId,
         messageId = messageId,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
+        messageThreadId = messageThreadId,
         captionEntities = captionEntities,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -165,9 +167,9 @@ open class TelegramApiHandling : KoinComponent {
     suspend fun sendPhoto(
         chatId: Long,
         photo: NamedContent,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -178,9 +180,9 @@ open class TelegramApiHandling : KoinComponent {
     ) = bot.sendPhoto(
         chatId = chatId,
         photo = photo,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
+        messageThreadId = messageThreadId,
         captionEntities = captionEntities,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
@@ -192,9 +194,9 @@ open class TelegramApiHandling : KoinComponent {
 
     suspend fun Argument.sendPhoto(
         photo: NamedContent,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -203,11 +205,38 @@ open class TelegramApiHandling : KoinComponent {
         allowSendingWithoutReply: Boolean? = null,
         replyMarkup: ReplyKeyboard? = null,
     ) = bot.sendPhoto(
-        chatId = chatId,
+        chatId = chatId.toString(),
         photo = photo,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
+        messageThreadId = messageThreadId,
+        captionEntities = captionEntities,
+        hasSpoiler = hasSpoiler,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        replyToMessageId = replyToMessageId,
+        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.sendPhoto(
+        photo: String,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
+        captionEntities: List<MessageEntity>? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null,
+    ) = bot.sendPhoto(
+        chatId = chatId.toString(),
+        photo = photo,
+        caption = caption,
+        parseMode = parseMode,
+        messageThreadId = messageThreadId,
         captionEntities = captionEntities,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
@@ -220,9 +249,9 @@ open class TelegramApiHandling : KoinComponent {
     suspend fun sendAudio(
         chatId: Long,
         audio: NamedContent,
-        messageThreadId: Long? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        messageThreadId: Long? = null,
         captionEntities: List<MessageEntity>? = null,
         duration: Long? = null,
         performer: String? = null,
@@ -558,7 +587,7 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup: ReplyKeyboard? = null,
     ) = bot.sendVideoNote(
         chatId = chatId,
-        note = note,
+        videoNote = note,
         messageThreadId = messageThreadId,
         duration = duration,
         length = length,
@@ -583,7 +612,7 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup: ReplyKeyboard? = null,
     ) = bot.sendVideoNote(
         chatId = chatId,
-        note = note,
+        videoNote = note,
         messageThreadId = messageThreadId,
         duration = duration,
         length = length,
@@ -1478,7 +1507,7 @@ open class TelegramApiHandling : KoinComponent {
     suspend fun deleteStickerFromSet(sticker: String) = bot.deleteStickerFromSet(sticker)
 
     suspend fun setStickerSetThumb(name: String, userId: Long, thumb: Any?): Boolean {
-        return bot.setStickerSetThumb(name, userId, thumb)
+        return bot.setStickerSetThumbnail(name, userId, thumb)
     }
 
     suspend fun sendGame(
@@ -1861,5 +1890,5 @@ open class TelegramApiHandling : KoinComponent {
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     )
-    //endregion
+    //endregion Telegram methods
 }
