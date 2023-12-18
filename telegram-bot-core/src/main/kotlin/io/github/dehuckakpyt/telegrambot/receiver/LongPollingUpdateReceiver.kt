@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.receiver
 
 import com.dehucka.microservice.logger.Logging
-import io.github.dehuckakpyt.telegrambot.api.TelegramApiClient
+import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
 import io.github.dehuckakpyt.telegrambot.plugin.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  * @author Denis Matytsin
  */
 internal class LongPollingUpdateReceiver(
-    private val client: TelegramApiClient,
+    private val bot: TelegramBot,
     private val updateResolver: UpdateResolver,
     private val config: LongPollingConfig,
 ) : UpdateReceiver, InternalKoinComponent, Logging {
@@ -33,7 +33,7 @@ internal class LongPollingUpdateReceiver(
         while (true) {
             val offset = lastUpdateId?.inc()
 
-            val updates = client.getUpdates(
+            val updates = bot.getUpdates(
                 offset = offset,
                 allowedUpdates = null,
                 timeout = config.timeout,
@@ -50,7 +50,7 @@ internal class LongPollingUpdateReceiver(
 
     override fun stop(): Unit {
         logger.info("Stopping client.")
-        client.stop()
+        bot.stop()
         logger.info("Client stopped.")
         scope.cancel()
     }

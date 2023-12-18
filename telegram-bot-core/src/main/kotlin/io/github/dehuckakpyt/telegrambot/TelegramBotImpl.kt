@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.api
+package io.github.dehuckakpyt.telegrambot
 
 import com.dehucka.microservice.ext.mapperConfig
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -8,6 +8,7 @@ import io.github.dehuckakpyt.telegrambot.model.internal.*
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.TelegramResponse
+import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
@@ -30,9 +31,11 @@ import kotlinx.coroutines.withContext
  *
  * @author Denis Matytsin
  */
-class TelegramApiClient(
+class TelegramBotImpl(
     token: String,
-) : TelegramApi {
+    val username: String,
+    private val messageSource: MessageSource,
+) : TelegramBot {
 
     //region Make requests
     private val mapper = ObjectMapper().apply {
@@ -147,12 +150,12 @@ class TelegramApiClient(
 
     private fun Any.toJson(): String = mapper.writeValueAsString(this)
 
-    fun stop() = client.close()
+    override fun stop(): Unit = client.close()
 
     //endregion Make requests
 
     override suspend fun getUpdates(
-        offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: List<AllowedUpdate>?
+        offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: List<AllowedUpdate>?,
     ): List<UpdateResponse> = postJson("getUpdates", UpdateRequest(offset, limit, timeout, allowedUpdates))
 
     override suspend fun setWebhook(
@@ -162,7 +165,7 @@ class TelegramApiClient(
         maxConnections: Int?,
         allowedUpdates: List<AllowedUpdate>?,
         dropPendingUpdates: Boolean?,
-        secretToken: String?
+        secretToken: String?,
     ): Boolean = postMultiPart("setWebhook") {
         append("url", url)
         appendContentIfNotNull("certificate", certificate)
@@ -196,7 +199,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postJson(
         "sendMessage", SendMessage(
             chatId = chatId,
@@ -219,7 +222,7 @@ class TelegramApiClient(
         messageId: Long,
         messageThreadId: Long?,
         disableNotification: Boolean?,
-        protectContent: Boolean?
+        protectContent: Boolean?,
     ): Message = postJson(
         "forwardMessage", ForwardMessage(
             chatId = chatId,
@@ -243,7 +246,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): MessageId = postJson(
         "copyMessage", CopyMessage(
             chatId = chatId,
@@ -274,7 +277,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendPhoto") {
         append("chat_id", chatId)
         appendContent("photo", photo)
@@ -302,7 +305,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendPhoto") {
         append("chat_id", chatId)
         append("photo", photo)
@@ -333,7 +336,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendAudio") {
         append("chat_id", chatId)
         appendContent("audio", audio)
@@ -367,7 +370,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendAudio") {
         append("chat_id", chatId)
         append("audio", audio)
@@ -399,7 +402,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendDocument") {
         append("chat_id", chatId)
         appendContent("document", document)
@@ -429,7 +432,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendDocument") {
         append("chat_id", chatId)
         append("document", document)
@@ -463,7 +466,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendVideo") {
         append("chat_id", chatId)
         appendContent("video", video)
@@ -501,7 +504,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendVideo") {
         append("chat_id", chatId)
         append("video", video)
@@ -538,7 +541,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendAnimation") {
         append("chat_id", chatId)
         appendContent("animation", animation)
@@ -574,7 +577,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendAnimation") {
         append("chat_id", chatId)
         append("animation", animation)
@@ -606,7 +609,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendVoice") {
         append("chat_id", chatId)
         appendContent("voice", voice)
@@ -634,7 +637,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendVoice") {
         append("chat_id", chatId)
         append("voice", voice)
@@ -661,7 +664,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendVideoNote") {
         append("chat_id", chatId)
         appendContent("video_note", videoNote)
@@ -687,7 +690,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendVideoNote") {
         append("chat_id", chatId)
         append("video_note", videoNote)
@@ -709,7 +712,7 @@ class TelegramApiClient(
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?
+        allowSendingWithoutReply: Boolean?,
     ): ArrayList<Message> {
         TODO("Not yet implemented")
     }
@@ -727,7 +730,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postJson(
         "sendLocation",
         SendLocation(
@@ -762,7 +765,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postJson(
         "sendVenue",
         SendVenue(
@@ -795,7 +798,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postJson(
         "sendContact",
         SendContact(
@@ -832,7 +835,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postJson(
         "sendPoll",
         SendPoll(
@@ -866,7 +869,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postJson(
         "sendDice",
         SendDice(
@@ -899,7 +902,7 @@ class TelegramApiClient(
         chatId: String,
         userId: Long,
         untilDate: Long?,
-        revokeMessages: Boolean?
+        revokeMessages: Boolean?,
     ): Boolean = postJson("banChatMember", BanChatMember(chatId, userId, untilDate, revokeMessages))
 
     override suspend fun unbanChatMember(chatId: String, userId: Long, onlyIfBanned: Boolean?): Boolean = postJson(
@@ -912,7 +915,7 @@ class TelegramApiClient(
         userId: Long,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean?,
-        untilDate: Long?
+        untilDate: Long?,
     ): Boolean = postJson(
         "restrictChatMember",
         RestrictChatMember(chatId, userId, permissions, useIndependentChatPermissions, untilDate)
@@ -974,7 +977,7 @@ class TelegramApiClient(
     override suspend fun setChatPermissions(
         chatId: String,
         permissions: ChatPermissions,
-        useIndependentChatPermissions: Boolean?
+        useIndependentChatPermissions: Boolean?,
     ): Boolean = postJson("setChatPermissions", SetChatPermissions(chatId, permissions, useIndependentChatPermissions))
 
     override suspend fun exportChatInviteLink(chatId: String): String = postJson(
@@ -986,7 +989,7 @@ class TelegramApiClient(
         name: String?,
         expireDate: Long?,
         memberLimit: Long?,
-        createsJoinRequest: Boolean?
+        createsJoinRequest: Boolean?,
     ): ChatInviteLink = postJson(
         "createChatInviteLink", CreateChatInviteLink(chatId, name, expireDate, memberLimit, createsJoinRequest)
     )
@@ -997,7 +1000,7 @@ class TelegramApiClient(
         name: String?,
         expireDate: Long?,
         memberLimit: Long?,
-        createsJoinRequest: Boolean?
+        createsJoinRequest: Boolean?,
     ): ChatInviteLink = postJson(
         "editChatInviteLink", EditChatInviteLink(chatId, inviteLink, name, expireDate, memberLimit, createsJoinRequest)
     )
@@ -1083,14 +1086,14 @@ class TelegramApiClient(
         chatId: String,
         name: String,
         iconColor: Int?,
-        iconCustomEmojiId: String?
+        iconCustomEmojiId: String?,
     ): ForumTopic = postJson("createForumTopic", CreateForumTopic(chatId, name, iconColor, iconCustomEmojiId))
 
     override suspend fun editForumTopic(
         chatId: String,
         messageThreadId: Long,
         name: String?,
-        iconCustomEmojiId: String?
+        iconCustomEmojiId: String?,
     ): Boolean = postJson("editForumTopic", EditForumTopic(chatId, messageThreadId, name, iconCustomEmojiId))
 
     override suspend fun closeForumTopic(chatId: String, messageThreadId: Long): Boolean = postJson(
@@ -1138,11 +1141,11 @@ class TelegramApiClient(
         text: String?,
         showAlert: Boolean?,
         url: String?,
-        cacheTime: Long?
+        cacheTime: Long?,
     ): Boolean = postJson("answerCallbackQuery", AnswerCallbackQuery(callbackQueryId, text, showAlert, url, cacheTime))
 
     override suspend fun setMyCommands(
-        commands: List<BotCommand>, scope: BotCommandScope?, languageCode: String?
+        commands: List<BotCommand>, scope: BotCommandScope?, languageCode: String?,
     ): Boolean = postJson("setMyCommands", SetMyCommands(commands, scope, languageCode))
 
     override suspend fun deleteMyCommands(scope: BotCommandScope?, languageCode: String?): Boolean =
@@ -1184,7 +1187,7 @@ class TelegramApiClient(
 
     override suspend fun setMyDefaultAdministratorRights(
         rights: ChatAdministratorRights?,
-        forChannels: Boolean?
+        forChannels: Boolean?,
     ): Boolean = postJson("setMyDefaultAdministratorRights", SetMyDefaultAdministratorRights(rights, forChannels))
 
     override suspend fun getMyDefaultAdministratorRights(forChannels: Boolean?): ChatAdministratorRights = get("getMyDefaultAdministratorRights") {
@@ -1199,7 +1202,7 @@ class TelegramApiClient(
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         disableWebPagePreview: Boolean?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson(
         "editMessageText",
         EditMessageText(
@@ -1221,7 +1224,7 @@ class TelegramApiClient(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson(
         "editMessageCaption",
         EditMessageCaption(
@@ -1240,7 +1243,7 @@ class TelegramApiClient(
         messageId: Long?,
         inlineMessageId: String?,
         media: InputMedia,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message {
         TODO("Not yet implemented")
     }
@@ -1254,7 +1257,7 @@ class TelegramApiClient(
         chatId: String?,
         messageId: Long?,
         inlineMessageId: String?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson(
         "editMessageLiveLocation", EditMessageLiveLocation(
             chatId = chatId,
@@ -1273,7 +1276,7 @@ class TelegramApiClient(
         chatId: String?,
         messageId: Long?,
         inlineMessageId: String?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson(
         "stopMessageLiveLocation",
         StopMessageLiveLocation(
@@ -1288,7 +1291,7 @@ class TelegramApiClient(
         chatId: String?,
         messageId: Long?,
         inlineMessageId: String?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson("editMessageReplyMarkup", EditMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup))
 
     override suspend fun stopPoll(chatId: String, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll = postJson(
@@ -1308,7 +1311,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart("sendSticker") {
         append("chat_id", chatId)
         appendContent("sticker", sticker)
@@ -1351,7 +1354,7 @@ class TelegramApiClient(
     override suspend fun addStickerToSet(
         userId: Long,
         name: String,
-        sticker: Any
+        sticker: Any,
     ): Boolean {
         TODO("Not yet implemented")
     }
@@ -1409,7 +1412,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson(
         "sendInvoice",
         SendInvoice(
@@ -1464,7 +1467,7 @@ class TelegramApiClient(
         needShippingAddress: Boolean?,
         sendPhoneNumberToProvider: Boolean?,
         sendEmailToProvider: Boolean?,
-        isFlexible: Boolean?
+        isFlexible: Boolean?,
     ): String = postJson(
         "createInvoiceLink",
         CreateInvoiceLink(
@@ -1495,13 +1498,13 @@ class TelegramApiClient(
         shippingQueryId: String,
         ok: Boolean,
         shippingOptions: List<ShippingOption>?,
-        errorMessage: String?
+        errorMessage: String?,
     ): Boolean = postJson("answerShippingQuery", AnswerShippingQuery(shippingQueryId, ok, shippingOptions, errorMessage))
 
     override suspend fun answerPreCheckoutQuery(
         preCheckoutQueryId: String,
         ok: Boolean,
-        errorMessage: String?
+        errorMessage: String?,
     ): Boolean = postJson("answerPreCheckoutQuery", AnswerPreCheckoutQuery(preCheckoutQueryId, ok, errorMessage))
 
     override suspend fun setPassportDataErrors(userId: Long, errors: List<PassportElementError>): Boolean = postJson(
@@ -1516,7 +1519,7 @@ class TelegramApiClient(
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson(
         "sendGame",
         SendGame(
@@ -1538,7 +1541,7 @@ class TelegramApiClient(
         disableEditMessage: Boolean?,
         chatId: Long?,
         messageId: Long?,
-        inlineMessageId: String?
+        inlineMessageId: String?,
     ): Message = postJson(
         "setGameScore",
         SetGameScore(
@@ -1556,7 +1559,7 @@ class TelegramApiClient(
         userId: Long,
         chatId: Long?,
         messageId: Long?,
-        inlineMessageId: String?
+        inlineMessageId: String?,
     ): List<GameHighScore> = get("getGameHighScores") {
         parameter("user_id", userId)
         parameter("chat_id", chatId)

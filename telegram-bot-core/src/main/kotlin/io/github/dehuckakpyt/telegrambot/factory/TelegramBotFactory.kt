@@ -2,8 +2,7 @@ package io.github.dehuckakpyt.telegrambot.factory
 
 import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.BotHandling
-import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.api.TelegramApiClient
+import io.github.dehuckakpyt.telegrambot.TelegramBotImpl
 import io.github.dehuckakpyt.telegrambot.argument.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext.loadInternalKoinModules
@@ -39,29 +38,28 @@ import org.koin.mp.KoinPlatform
 internal object TelegramBotFactory : InternalKoinComponent {
 
     fun load(application: Application, config: TelegramBotConfig) {
-        val token = config.token ?: throw RuntimeException("Telegram-bot TOKEN must not be empty!")
-        val username = config.username ?: throw RuntimeException("Telegram-bot USERNAME must not be empty!")
+        config.token ?: throw RuntimeException("Telegram-bot TOKEN must not be empty!")
+        config.username ?: throw RuntimeException("Telegram-bot USERNAME must not be empty!")
 
         val configManagers = getKoin().getAll<TelegramBotConfigManager>()
         configManagers.forEach(TelegramBotConfigManager::preLoadModules)
 
-        val telegramApiClient = TelegramApiClient(token)
-        loadPublicModules(username, telegramApiClient, config)
-        loadInternalModules(telegramApiClient, config, application)
+        loadPublicModules(config)
+        loadInternalModules(config, application)
 
         initiateHandlers(config)
     }
 
-    private fun loadPublicModules(username: String, telegramApiClient: TelegramApiClient, config: TelegramBotConfig) =
+    private fun loadPublicModules(config: TelegramBotConfig) =
         loadKoinModules(module {
-            single<String>(named("username")) { username }
+            single<String>(named("username")) { config.username!! }
             single<MessageSource>(definition = config.messageSource)
             single<HtmlFormatter>(definition = config.htmlFormatter)
             single { BotTemplate() }
-            single { TelegramBot(telegramApiClient, get(), username) }
+            single { TelegramBotImpl(config.token!!, config.username!!, get()) }
         })
 
-    private fun loadInternalModules(telegramApiClient: TelegramApiClient, config: TelegramBotConfig, application: Application) =
+    private fun loadInternalModules(config: TelegramBotConfig, application: Application) =
         loadInternalKoinModules(module {
             single<CallbackContentSource>(definition = config.callbackContentSource)
             single<ChainSource>(definition = config.chainSource)
@@ -73,7 +71,6 @@ internal object TelegramBotFactory : InternalKoinComponent {
             single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
             single { config.templateConfig }
 
-            single { telegramApiClient }
             singleOf(::ChainResolver)
             singleOf(::UpdateResolver)
             single { DialogUpdateResolver(get(), get(), get(), get(), getAll(), KoinPlatform.getKoin().get()) }
