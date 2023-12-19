@@ -10,6 +10,9 @@ import io.github.dehuckakpyt.telegrambot.api.TelegramApi
  * @author Denis Matytsin
  */
 interface TelegramBot : TelegramApi {
+
+    val username: String
+
     //    fun start(): Unit
     fun stop(): Unit
 }

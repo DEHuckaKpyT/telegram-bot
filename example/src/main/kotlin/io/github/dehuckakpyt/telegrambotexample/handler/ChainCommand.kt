@@ -12,7 +12,7 @@ fun BotHandling.chainCommand() {
     command("/chain", next = "get target") {
         // чтобы отправить сообщение, можно указать chatId (в этом контексте chatId - чат, в котором пришло сообщение)
         // chain - шаблон сообщения, заданный val BotHandling.chain by template()
-        sendMessage(chatId, chain)
+        bot.sendMessage(chatId, chain)
     }
 
     step("get target", next = "sum numbers") {

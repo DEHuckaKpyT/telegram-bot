@@ -53,7 +53,7 @@ class TelegramBotConfig(val config: ApplicationConfig) {
 
     fun longPolling(block: LongPollingConfig.() -> Unit) {
         val longPollingConfig = LongPollingConfig().apply(block)
-        updateReceiver = { LongPollingUpdateReceiver(get(), get(), longPollingConfig) }
+        updateReceiver = { LongPollingUpdateReceiver(KoinPlatform.getKoin().get(), get(), longPollingConfig) }
     }
 
     fun configureTemplating(block: Configuration.() -> Unit) {

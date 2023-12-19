@@ -13,6 +13,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.ShippingOption
  * @author Elbek Djuraev
  */
 interface TelegramPaymentApi {
+
     suspend fun sendInvoice(
         chatId: String,
         title: String,
@@ -41,7 +42,7 @@ interface TelegramPaymentApi {
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
         allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
     suspend fun createInvoiceLink(
@@ -71,12 +72,12 @@ interface TelegramPaymentApi {
         shippingQueryId: String,
         ok: Boolean,
         shippingOptions: List<ShippingOption>? = null,
-        errorMessage: String? = null
+        errorMessage: String? = null,
     ): Boolean
 
     suspend fun answerPreCheckoutQuery(
         preCheckoutQueryId: String,
         ok: Boolean,
-        errorMessage: String? = null
+        errorMessage: String? = null,
     ): Boolean
 }

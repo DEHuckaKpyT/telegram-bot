@@ -10,6 +10,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.*
  * @author Elbek Djuraev
  */
 interface TelegramUpdatingMessagesApi {
+
     suspend fun editMessageText(
         chatId: String? = null,
         messageId: Long? = null,
@@ -18,7 +19,7 @@ interface TelegramUpdatingMessagesApi {
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         disableWebPagePreview: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
     suspend fun editMessageCaption(
@@ -28,7 +29,7 @@ interface TelegramUpdatingMessagesApi {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
-        replyMarkup: InlineKeyboardMarkup? = null
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
     suspend fun editMessageMedia(
@@ -36,24 +37,24 @@ interface TelegramUpdatingMessagesApi {
         messageId: Long? = null,
         inlineMessageId: String? = null,
         media: InputMedia,
-        replyMarkup: InlineKeyboardMarkup? = null
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
     suspend fun editMessageReplyMarkup(
         chatId: String? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
     suspend fun stopPoll(
         chatId: String,
         messageId: Long,
-        replyMarkup: InlineKeyboardMarkup? = null
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Poll
 
     suspend fun deleteMessage(
         chatId: String,
-        messageId: Long
+        messageId: Long,
     ): Boolean
 }

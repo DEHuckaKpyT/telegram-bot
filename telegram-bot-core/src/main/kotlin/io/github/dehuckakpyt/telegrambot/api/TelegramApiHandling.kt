@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.argument.Argument
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
@@ -14,29 +15,28 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-abstract class TelegramApiHandling : TelegramApi, KoinComponent {
+abstract class TelegramApiHandling : KoinComponent {
 
-    private val bot = get<TelegramBot>()
+    val bot = get<TelegramBot>()
 
     //region Telegram methods
-    override suspend fun getMe(): User = bot.getMe()
+    suspend fun getMe(): User = bot.getMe()
 
-    override suspend fun logOut(): Boolean = bot.logOut()
+    suspend fun logOut(): Boolean = bot.logOut()
 
-    override suspend fun close(): Boolean = bot.close()
+    suspend fun close(): Boolean = bot.close()
 
-    override suspend fun sendMessage(
-        chatId: String,
+    suspend fun Argument.sendMessage(
         text: String,
-        parseMode: ParseMode?,
-        entities: List<MessageEntity>?,
-        messageThreadId: Long?,
-        disableWebPagePreview: Boolean?,
-        disableNotification: Boolean?,
-        protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?,
+        parseMode: ParseMode? = null,
+        entities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        disableWebPagePreview: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendMessage(
         chatId = chatId,
         text = text,
@@ -51,8 +51,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun forwardMessage(
-        chatId: String,
+    suspend fun Argument.forwardMessage(
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long?,
@@ -67,8 +66,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         protectContent = protectContent
     )
 
-    override suspend fun copyMessage(
-        chatId: String,
+    suspend fun Argument.copyMessage(
         fromChatId: String,
         messageId: Long,
         caption: String?,
@@ -95,19 +93,18 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendPhoto(
-        chatId: String,
+    suspend fun Argument.sendPhoto(
         photo: NamedContent,
-        caption: String?,
-        parseMode: ParseMode?,
-        captionEntities: List<MessageEntity>?,
-        messageThreadId: Long?,
-        hasSpoiler: Boolean?,
-        disableNotification: Boolean?,
-        protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendPhoto(
         chatId = chatId,
         photo = photo,
@@ -123,19 +120,18 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendPhoto(
-        chatId: String,
+    suspend fun Argument.sendPhoto(
         photo: String,
-        caption: String?,
-        parseMode: ParseMode?,
-        captionEntities: List<MessageEntity>?,
-        messageThreadId: Long?,
-        hasSpoiler: Boolean?,
-        disableNotification: Boolean?,
-        protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyToMessageId: Long? = null,
+        allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendPhoto(
         chatId = chatId,
         photo = photo,
@@ -151,8 +147,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendAudio(
-        chatId: String,
+    suspend fun Argument.sendAudio(
         audio: NamedContent,
         caption: String?,
         parseMode: ParseMode?,
@@ -185,8 +180,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendAudio(
-        chatId: String,
+    suspend fun Argument.sendAudio(
         audio: String,
         caption: String?,
         parseMode: ParseMode?,
@@ -219,8 +213,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendDocument(
-        chatId: String,
+    suspend fun Argument.sendDocument(
         document: NamedContent,
         thumbnail: NamedContent?,
         caption: String?,
@@ -249,8 +242,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendDocument(
-        chatId: String,
+    suspend fun Argument.sendDocument(
         document: String,
         thumbnail: NamedContent?,
         caption: String?,
@@ -279,8 +271,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendVideo(
-        chatId: String,
+    suspend fun Argument.sendVideo(
         video: NamedContent,
         duration: Long?,
         width: Long?,
@@ -317,8 +308,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendVideo(
-        chatId: String,
+    suspend fun Argument.sendVideo(
         video: String,
         duration: Long?,
         width: Long?,
@@ -355,8 +345,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendAnimation(
-        chatId: String,
+    suspend fun Argument.sendAnimation(
         animation: NamedContent,
         duration: Long?,
         width: Long?,
@@ -391,8 +380,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendAnimation(
-        chatId: String,
+    suspend fun Argument.sendAnimation(
         animation: String,
         duration: Long?,
         width: Long?,
@@ -427,8 +415,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendVoice(
-        chatId: String,
+    suspend fun Argument.sendVoice(
         voice: NamedContent,
         caption: String?,
         parseMode: ParseMode?,
@@ -455,8 +442,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendVoice(
-        chatId: String,
+    suspend fun Argument.sendVoice(
         voice: String,
         caption: String?,
         parseMode: ParseMode?,
@@ -483,8 +469,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendVideoNote(
-        chatId: String,
+    suspend fun Argument.sendVideoNote(
         videoNote: NamedContent,
         messageThreadId: Long?,
         duration: Long?,
@@ -509,8 +494,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendVideoNote(
-        chatId: String,
+    suspend fun Argument.sendVideoNote(
         videoNote: String,
         messageThreadId: Long?,
         duration: Long?,
@@ -535,8 +519,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendMediaGroup(
-        chatId: String,
+    suspend fun Argument.sendMediaGroup(
         media: List<InputMedia>,
         messageThreadId: Long?,
         disableNotification: Boolean?,
@@ -553,8 +536,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         allowSendingWithoutReply = allowSendingWithoutReply
     )
 
-    override suspend fun sendLocation(
-        chatId: String,
+    suspend fun Argument.sendLocation(
         latitude: Float,
         longitude: Float,
         messageThreadId: Long?,
@@ -583,8 +565,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendVenue(
-        chatId: String,
+    suspend fun Argument.sendVenue(
         latitude: Float,
         longitude: Float,
         title: String,
@@ -617,8 +598,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendContact(
-        chatId: String,
+    suspend fun Argument.sendContact(
         phoneNumber: String,
         firstName: String,
         messageThreadId: Long?,
@@ -643,8 +623,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendPoll(
-        chatId: String,
+    suspend fun Argument.sendPoll(
         question: String,
         options: List<String>,
         messageThreadId: Long?,
@@ -685,8 +664,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendDice(
-        chatId: String,
+    suspend fun Argument.sendDice(
         messageThreadId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
@@ -705,8 +683,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun sendChatAction(
-        chatId: String,
+    suspend fun Argument.sendChatAction(
         action: Action,
         messageThreadId: Long?,
     ): Boolean = bot.sendChatAction(
@@ -715,7 +692,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         messageThreadId = messageThreadId
     )
 
-    override suspend fun getUserProfilePhotos(
+    suspend fun getUserProfilePhotos(
         userId: Long,
         offset: Long?,
         limit: Long?,
@@ -725,14 +702,13 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         limit = limit
     )
 
-    override suspend fun getFile(
+    suspend fun getFile(
         fileId: String,
     ): File = bot.getFile(
         fileId = fileId
     )
 
-    override suspend fun banChatMember(
-        chatId: String,
+    suspend fun Argument.banChatMember(
         userId: Long,
         untilDate: Long?,
         revokeMessages: Boolean?,
@@ -743,8 +719,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         revokeMessages = revokeMessages
     )
 
-    override suspend fun unbanChatMember(
-        chatId: String,
+    suspend fun Argument.unbanChatMember(
         userId: Long,
         onlyIfBanned: Boolean?,
     ): Boolean = bot.unbanChatMember(
@@ -753,8 +728,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         onlyIfBanned = onlyIfBanned
     )
 
-    override suspend fun restrictChatMember(
-        chatId: String,
+    suspend fun Argument.restrictChatMember(
         userId: Long,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean?,
@@ -767,8 +741,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         untilDate = untilDate
     )
 
-    override suspend fun promoteChatMember(
-        chatId: String,
+    suspend fun Argument.promoteChatMember(
         userId: Long,
         isAnonymous: Boolean?,
         canManageChat: Boolean?,
@@ -805,8 +778,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         canManageTopics = canManageTopics
     )
 
-    override suspend fun setChatAdministratorCustomTitle(
-        chatId: String,
+    suspend fun Argument.setChatAdministratorCustomTitle(
         userId: Long,
         customTitle: String,
     ): Boolean = bot.setChatAdministratorCustomTitle(
@@ -815,40 +787,34 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         customTitle = customTitle
     )
 
-    override suspend fun banChatSenderChat(
-        chatId: String,
+    suspend fun Argument.banChatSenderChat(
         senderChatId: Long,
     ): Boolean = bot.banChatSenderChat(
         chatId = chatId,
         senderChatId = senderChatId
     )
 
-    override suspend fun unbanChatSenderChat(
-        chatId: String,
+    suspend fun Argument.unbanChatSenderChat(
         senderChatId: Long,
     ): Boolean = bot.unbanChatSenderChat(
         chatId = chatId,
         senderChatId = senderChatId
     )
 
-    override suspend fun setChatPermissions(
-        chatId: String,
+    suspend fun Argument.setChatPermissions(
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean?,
-    ): Boolean = setChatPermissions(
+    ): Boolean = bot.setChatPermissions(
         chatId = chatId,
         permissions = permissions,
         useIndependentChatPermissions = useIndependentChatPermissions
     )
 
-    override suspend fun exportChatInviteLink(
-        chatId: String,
-    ): String = bot.exportChatInviteLink(
+    suspend fun Argument.exportChatInviteLink(): String = bot.exportChatInviteLink(
         chatId = chatId
     )
 
-    override suspend fun createChatInviteLink(
-        chatId: String,
+    suspend fun Argument.createChatInviteLink(
         name: String?,
         expireDate: Long?,
         memberLimit: Long?,
@@ -861,8 +827,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         createsJoinRequest = createsJoinRequest
     )
 
-    override suspend fun editChatInviteLink(
-        chatId: String,
+    suspend fun Argument.editChatInviteLink(
         inviteLink: String,
         name: String?,
         expireDate: Long?,
@@ -877,70 +842,60 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         createsJoinRequest = createsJoinRequest
     )
 
-    override suspend fun revokeChatInviteLink(
-        chatId: String,
+    suspend fun Argument.revokeChatInviteLink(
         inviteLink: String,
     ): ChatInviteLink = bot.revokeChatInviteLink(
         chatId = chatId,
         inviteLink = inviteLink
     )
 
-    override suspend fun approveChatJoinRequest(
-        chatId: String,
+    suspend fun Argument.approveChatJoinRequest(
         userId: Long,
     ): Boolean = bot.approveChatJoinRequest(
         chatId = chatId,
         userId = userId
     )
 
-    override suspend fun declineChatJoinRequest(
-        chatId: String,
+    suspend fun Argument.declineChatJoinRequest(
         userId: Long,
     ): Boolean = bot.declineChatJoinRequest(
         chatId = chatId,
         userId = userId
     )
 
-    override suspend fun setChatPhoto(
-        chatId: String,
+    suspend fun Argument.setChatPhoto(
         photo: NamedContent,
     ): Boolean = bot.setChatPhoto(
         chatId = chatId,
         photo = photo
     )
 
-    override suspend fun setChatPhoto(
-        chatId: String,
+    suspend fun Argument.setChatPhoto(
         photo: String,
     ): Boolean = bot.setChatPhoto(
         chatId = chatId,
         photo = photo
     )
 
-    override suspend fun deleteChatPhoto(
-        chatId: String,
-    ): Boolean = bot.deleteChatPhoto(
+    suspend fun Argument.deleteChatPhoto(): Boolean = bot.deleteChatPhoto(
         chatId = chatId
     )
 
-    override suspend fun setChatTitle(
-        chatId: String,
+    suspend fun Argument.setChatTitle(
         title: String,
     ): Boolean = bot.setChatTitle(
         chatId = chatId,
         title = title
     )
 
-    override suspend fun setChatDescription(
-        chatId: String,
+    suspend fun Argument.setChatDescription(
         description: String,
     ): Boolean = bot.setChatDescription(
         chatId = chatId,
         description = description
     )
 
-    override suspend fun pinChatMessage(
-        chatId: String,
+    suspend fun Argument.pinChatMessage(
         messageId: Long,
         disableNotification: Boolean?,
     ): Boolean = bot.pinChatMessage(
@@ -949,67 +904,52 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         disableNotification = disableNotification
     )
 
-    override suspend fun unpinChatMessage(
-        chatId: String,
+    suspend fun Argument.unpinChatMessage(
         messageId: Long?,
     ): Boolean = bot.unpinChatMessage(
         chatId = chatId,
         messageId = messageId
     )
 
-    override suspend fun unpinAllChatMessages(
-        chatId: String,
-    ): Boolean = bot.unpinAllChatMessages(
+    suspend fun Argument.unpinAllChatMessages(): Boolean = bot.unpinAllChatMessages(
         chatId = chatId
     )
 
-    override suspend fun leaveChat(
-        chatId: String,
-    ): Boolean = bot.leaveChat(
+    suspend fun Argument.leaveChat(): Boolean = bot.leaveChat(
         chatId = chatId
     )
 
-    override suspend fun getChat(
-        chatId: String,
-    ): Chat = bot.getChat(
+    suspend fun Argument.getChat(): Chat = bot.getChat(
         chatId = chatId
     )
 
-    override suspend fun getChatAdministrators(
-        chatId: String,
-    ): ArrayList<ChatMember> = bot.getChatAdministrators(
+    suspend fun Argument.getChatAdministrators(): ArrayList<ChatMember> = bot.getChatAdministrators(
         chatId = chatId
     )
 
-    override suspend fun getChatMemberCount(
-        chatId: String,
-    ): Long = bot.getChatMemberCount(
+    suspend fun Argument.getChatMemberCount(): Long = bot.getChatMemberCount(
         chatId = chatId
     )
 
-    override suspend fun getChatMember(
-        chatId: String,
+    suspend fun Argument.getChatMember(
         userId: Long,
     ): ChatMember = bot.getChatMember(
         chatId = chatId,
         userId = userId
     )
 
-    override suspend fun setChatStickerSet(
-        chatId: String,
+    suspend fun Argument.setChatStickerSet(
         stickerSetName: String,
     ): Boolean = bot.setChatStickerSet(
         chatId = chatId,
         stickerSetName = stickerSetName
     )
 
-    override suspend fun deleteChatStickerSet(
-        chatId: String,
-    ): Boolean = bot.deleteChatStickerSet(
+    suspend fun Argument.deleteChatStickerSet(): Boolean = bot.deleteChatStickerSet(
         chatId = chatId
     )
 
-    override suspend fun answerCallbackQuery(
+    suspend fun answerCallbackQuery(
         callbackQueryId: String,
         text: String?,
         showAlert: Boolean?,
@@ -1023,7 +963,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         cacheTime = cacheTime
     )
 
-    override suspend fun setMyCommands(
+    suspend fun setMyCommands(
         commands: List<BotCommand>,
         scope: BotCommandScope?,
         languageCode: String?,
@@ -1033,7 +973,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         languageCode = languageCode
     )
 
-    override suspend fun deleteMyCommands(
+    suspend fun deleteMyCommands(
         scope: BotCommandScope?,
         languageCode: String?,
     ): Boolean = bot.deleteMyCommands(
@@ -1041,7 +981,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         languageCode = languageCode
     )
 
-    override suspend fun getMyCommands(
+    suspend fun getMyCommands(
         scope: BotCommandScope?,
         languageCode: String?,
     ): List<BotCommand> = bot.getMyCommands(
@@ -1049,7 +989,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         languageCode = languageCode
     )
 
-    override suspend fun setMyName(
+    suspend fun setMyName(
         name: String?,
         languageCode: String?,
     ): Boolean = bot.setMyName(
@@ -1057,13 +997,13 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         languageCode = languageCode
     )
 
-    override suspend fun getMyName(
+    suspend fun getMyName(
         languageCode: String?,
     ): BotName = bot.getMyName(
         languageCode = languageCode
     )
 
-    override suspend fun setMyDescription(
+    suspend fun setMyDescription(
         description: String?,
         languageCode: String?,
     ): Boolean = bot.setMyDescription(
@@ -1071,34 +1011,32 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         languageCode = languageCode
     )
 
-    override suspend fun getMyDescription(
+    suspend fun getMyDescription(
         languageCode: String?,
     ): BotDescription = bot.getMyDescription(
         languageCode = languageCode
     )
 
-    override suspend fun setMyShortDescription(
+    suspend fun setMyShortDescription(
         shortDescription: String?, languageCode: String?,
     ): Boolean = bot.setMyShortDescription(
         shortDescription = shortDescription,
         languageCode = languageCode
     )
 
-    override suspend fun getMyShortDescription(
+    suspend fun getMyShortDescription(
         languageCode: String?,
     ): BotShortDescription = bot.getMyShortDescription(
         languageCode = languageCode
     )
 
-    override suspend fun editMessageLiveLocation(
+    suspend fun Argument.editMessageLiveLocation(
+        messageId: Long,
         latitude: Float,
         longitude: Float,
         horizontalAccuracy: Float?,
         heading: Long?,
         proximityAlertRadius: Long?,
-        chatId: String?,
-        messageId: Long?,
-        inlineMessageId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.editMessageLiveLocation(
         latitude = latitude,
@@ -1108,23 +1046,21 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         proximityAlertRadius = proximityAlertRadius,
         chatId = chatId,
         messageId = messageId,
-        inlineMessageId = inlineMessageId,
+        inlineMessageId = null,
         replyMarkup = replyMarkup
     )
 
-    override suspend fun stopMessageLiveLocation(
-        chatId: String?,
-        messageId: Long?,
-        inlineMessageId: String?,
+    suspend fun Argument.stopMessageLiveLocation(
+        messageId: Long,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.stopMessageLiveLocation(
         chatId = chatId,
         messageId = messageId,
-        inlineMessageId = inlineMessageId,
+        inlineMessageId = null,
         replyMarkup = replyMarkup
     )
 
-    override suspend fun setChatMenuButton(
+    suspend fun setChatMenuButton(
         chatId: Long?,
         menuButton: MenuButton?,
     ): Boolean = bot.setChatMenuButton(
@@ -1132,13 +1068,13 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         menuButton = menuButton
     )
 
-    override suspend fun getChatMenuButton(
+    suspend fun getChatMenuButton(
         chatId: Long?,
     ): MenuButton = bot.getChatMenuButton(
         chatId = chatId
     )
 
-    override suspend fun setMyDefaultAdministratorRights(
+    suspend fun setMyDefaultAdministratorRights(
         rights: ChatAdministratorRights?,
         forChannels: Boolean?,
     ): Boolean = bot.setMyDefaultAdministratorRights(
@@ -1146,16 +1082,15 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         forChannels = forChannels
     )
 
-    override suspend fun getMyDefaultAdministratorRights(
+    suspend fun getMyDefaultAdministratorRights(
         forChannels: Boolean?,
     ): ChatAdministratorRights = bot.getMyDefaultAdministratorRights(
         forChannels = forChannels
     )
 
-    override suspend fun getForumTopicIconStickers(): List<Sticker> = bot.getForumTopicIconStickers()
+    suspend fun getForumTopicIconStickers(): List<Sticker> = bot.getForumTopicIconStickers()
 
-    override suspend fun createForumTopic(
-        chatId: String,
+    suspend fun Argument.createForumTopic(
         name: String,
         iconColor: Int?,
         iconCustomEmojiId: String?,
@@ -1166,8 +1101,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         iconCustomEmojiId = iconCustomEmojiId
     )
 
-    override suspend fun editForumTopic(
-        chatId: String,
+    suspend fun Argument.editForumTopic(
         messageThreadId: Long,
         name: String?,
         iconCustomEmojiId: String?,
@@ -1178,85 +1112,69 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         iconCustomEmojiId = iconCustomEmojiId
     )
 
-    override suspend fun closeForumTopic(
-        chatId: String,
+    suspend fun Argument.closeForumTopic(
         messageThreadId: Long,
     ): Boolean = bot.closeForumTopic(
         chatId = chatId,
         messageThreadId = messageThreadId
     )
 
-    override suspend fun reopenForumTopic(
-        chatId: String,
+    suspend fun Argument.reopenForumTopic(
         messageThreadId: Long,
     ): Boolean = bot.reopenForumTopic(
         chatId = chatId,
         messageThreadId = messageThreadId
     )
 
-    override suspend fun deleteForumTopic(
-        chatId: String,
+    suspend fun Argument.deleteForumTopic(
         messageThreadId: Long,
     ): Boolean = bot.deleteForumTopic(
         chatId = chatId,
         messageThreadId = messageThreadId
     )
 
-    override suspend fun unpinAllForumTopicMessages(
-        chatId: String,
-        messageThreadId: Long
+    suspend fun Argument.unpinAllForumTopicMessages(
+        messageThreadId: Long,
     ): Boolean = bot.unpinAllForumTopicMessages(
         chatId = chatId,
         messageThreadId = messageThreadId
     )
 
-    override suspend fun editGeneralForumTopic(
-        chatId: String,
-        name: String
+    suspend fun Argument.editGeneralForumTopic(
+        name: String,
     ): Boolean = bot.editGeneralForumTopic(
         chatId = chatId,
         name = name
     )
 
-    override suspend fun closeGeneralForumTopic(
-        chatId: String
-    ): Boolean = bot.closeGeneralForumTopic(
+    suspend fun Argument.closeGeneralForumTopic(): Boolean = bot.closeGeneralForumTopic(
         chatId = chatId
     )
 
-    override suspend fun reopenGeneralForumTopic(
-        chatId: String
-    ): Boolean = bot.reopenGeneralForumTopic(
+    suspend fun Argument.reopenGeneralForumTopic(): Boolean = bot.reopenGeneralForumTopic(
         chatId = chatId
     )
 
-    override suspend fun hideGeneralForumTopic(
-        chatId: String
-    ): Boolean = bot.hideGeneralForumTopic(
+    suspend fun Argument.hideGeneralForumTopic(): Boolean = bot.hideGeneralForumTopic(
         chatId = chatId
     )
 
-    override suspend fun unhideGeneralForumTopic(
-        chatId: String
-    ): Boolean = bot.unhideGeneralForumTopic(
+    suspend fun Argument.unhideGeneralForumTopic(): Boolean = bot.unhideGeneralForumTopic(
         chatId = chatId
     )
 
-    override suspend fun unpinAllGeneralForumTopicMessages(
-        chatId: String
-    ): Boolean = bot.unpinAllGeneralForumTopicMessages(
+    suspend fun Argument.unpinAllGeneralForumTopicMessages(): Boolean = bot.unpinAllGeneralForumTopicMessages(
         chatId = chatId
     )
 
-    override suspend fun sendGame(
-        chatId: Long,
+    suspend fun Argument.sendGame(
         gameShortName: String,
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.sendGame(
         chatId = chatId,
         gameShortName = gameShortName,
@@ -1268,14 +1186,14 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun setGameScore(
+    suspend fun setGameScore(
         userId: Long,
         score: Long,
         force: Boolean?,
         disableEditMessage: Boolean?,
         chatId: Long?,
         messageId: Long?,
-        inlineMessageId: String?
+        inlineMessageId: String?,
     ): Message = bot.setGameScore(
         userId = userId,
         score = score,
@@ -1286,11 +1204,11 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         inlineMessageId = inlineMessageId
     )
 
-    override suspend fun getGameHighScores(
+    suspend fun getGameHighScores(
         userId: Long,
         chatId: Long?,
         messageId: Long?,
-        inlineMessageId: String?
+        inlineMessageId: String?,
     ): List<GameHighScore> = bot.getGameHighScores(
         userId = userId,
         chatId = chatId,
@@ -1298,13 +1216,13 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         inlineMessageId = inlineMessageId
     )
 
-    override suspend fun answerInlineQuery(
+    suspend fun answerInlineQuery(
         inlineQueryId: String,
         results: List<InlineQueryResult>,
         cacheTime: Int?,
         isPersonal: Boolean?,
         nextOffset: String?,
-        button: InlineQueryResultsButton?
+        button: InlineQueryResultsButton?,
     ): Boolean = bot.answerInlineQuery(
         inlineQueryId = inlineQueryId,
         results = results,
@@ -1314,24 +1232,23 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         button = button
     )
 
-    override suspend fun answerWebAppQuery(
+    suspend fun answerWebAppQuery(
         webAppQueryId: String,
-        result: InlineQueryResult
+        result: InlineQueryResult,
     ): SentWebAppMessage = bot.answerWebAppQuery(
         webAppQueryId = webAppQueryId,
         result = result
     )
 
-    override suspend fun setPassportDataErrors(
+    suspend fun setPassportDataErrors(
         userId: Long,
-        errors: List<PassportElementError>
+        errors: List<PassportElementError>,
     ): Boolean = bot.setPassportDataErrors(
         userId = userId,
         errors = errors
     )
 
-    override suspend fun sendInvoice(
-        chatId: String,
+    suspend fun Argument.sendInvoice(
         title: String,
         description: String,
         payload: String,
@@ -1358,7 +1275,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.sendInvoice(
         chatId = chatId,
         title = title,
@@ -1390,7 +1307,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun createInvoiceLink(
+    suspend fun createInvoiceLink(
         title: String,
         description: String,
         payload: String,
@@ -1410,7 +1327,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         needShippingAddress: Boolean?,
         sendPhoneNumberToProvider: Boolean?,
         sendEmailToProvider: Boolean?,
-        isFlexible: Boolean?
+        isFlexible: Boolean?,
     ): String = bot.createInvoiceLink(
         title = title,
         description = description,
@@ -1434,11 +1351,11 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         isFlexible = isFlexible
     )
 
-    override suspend fun answerShippingQuery(
+    suspend fun answerShippingQuery(
         shippingQueryId: String,
         ok: Boolean,
         shippingOptions: List<ShippingOption>?,
-        errorMessage: String?
+        errorMessage: String?,
     ): Boolean = bot.answerShippingQuery(
         shippingQueryId = shippingQueryId,
         ok = ok,
@@ -1446,18 +1363,17 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         errorMessage = errorMessage
     )
 
-    override suspend fun answerPreCheckoutQuery(
+    suspend fun answerPreCheckoutQuery(
         preCheckoutQueryId: String,
         ok: Boolean,
-        errorMessage: String?
+        errorMessage: String?,
     ): Boolean = bot.answerPreCheckoutQuery(
         preCheckoutQueryId = preCheckoutQueryId,
         ok = ok,
         errorMessage = errorMessage
     )
 
-    override suspend fun sendSticker(
-        chatId: String,
+    suspend fun Argument.sendSticker(
         sticker: NamedContent,
         messageThreadId: Long?,
         emoji: String?,
@@ -1465,7 +1381,7 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-        replyMarkup: ReplyKeyboard?
+        replyMarkup: ReplyKeyboard?,
     ): Message = bot.sendSticker(
         chatId = chatId,
         sticker = sticker,
@@ -1478,36 +1394,36 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun getStickerSet(
-        name: String
+    suspend fun getStickerSet(
+        name: String,
     ): StickerSet = bot.getStickerSet(
         name = name
     )
 
-    override suspend fun getCustomEmojiStickers(
-        customEmojiIds: List<String>
+    suspend fun getCustomEmojiStickers(
+        customEmojiIds: List<String>,
     ): List<Sticker> = bot.getCustomEmojiStickers(
         customEmojiIds = customEmojiIds
     )
 
-    override suspend fun uploadStickerFile(
+    suspend fun uploadStickerFile(
         userId: Long,
         sticker: NamedContent,
-        stickerFormat: String
+        stickerFormat: String,
     ): File = bot.uploadStickerFile(
         userId = userId,
         sticker = sticker,
         stickerFormat = stickerFormat
     )
 
-    override suspend fun createNewStickerSet(
+    suspend fun createNewStickerSet(
         userId: Long,
         name: String,
         title: String,
         stickers: Collection<Any>,
         stickerFormat: String,
         stickerType: String?,
-        needsRepainting: Boolean?
+        needsRepainting: Boolean?,
     ): Boolean = bot.createNewStickerSet(
         userId = userId,
         name = name,
@@ -1518,45 +1434,45 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         needsRepainting = needsRepainting
     )
 
-    override suspend fun addStickerToSet(
+    suspend fun addStickerToSet(
         userId: Long,
         name: String,
-        sticker: Any
+        sticker: Any,
     ): Boolean = bot.addStickerToSet(
         userId = userId,
         name = name,
         sticker = sticker
     )
 
-    override suspend fun setStickerPositionInSet(
+    suspend fun setStickerPositionInSet(
         sticker: String,
-        position: Int
+        position: Int,
     ): Boolean = bot.setStickerPositionInSet(
         sticker = sticker,
         position = position
     )
 
-    override suspend fun deleteStickerFromSet(
-        sticker: String
+    suspend fun deleteStickerFromSet(
+        sticker: String,
     ): Boolean = bot.deleteStickerFromSet(
         sticker = sticker
     )
 
-    override suspend fun setStickerSetThumbnail(
+    suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
-        thumbnail: Any?
+        thumbnail: Any?,
     ): Boolean = bot.setStickerSetThumbnail(
         name = name,
         userId = userId,
         thumbnail = thumbnail
     )
 
-    override suspend fun getUpdates(
+    suspend fun getUpdates(
         offset: Int?,
         limit: Int?,
         timeout: Int?,
-        allowedUpdates: List<AllowedUpdate>?
+        allowedUpdates: List<AllowedUpdate>?,
     ): List<UpdateResponse> = bot.getUpdates(
         offset = offset,
         limit = limit,
@@ -1564,14 +1480,14 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         allowedUpdates = allowedUpdates
     )
 
-    override suspend fun setWebhook(
+    suspend fun setWebhook(
         url: String,
         certificate: NamedContent?,
         ipAddress: String?,
         maxConnections: Int?,
         allowedUpdates: List<AllowedUpdate>?,
         dropPendingUpdates: Boolean?,
-        secretToken: String?
+        secretToken: String?,
     ): Boolean = bot.setWebhook(
         url = url,
         certificate = certificate,
@@ -1582,27 +1498,25 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         secretToken = secretToken
     )
 
-    override suspend fun deleteWebhook(
-        dropPendingUpdates: Boolean?
+    suspend fun deleteWebhook(
+        dropPendingUpdates: Boolean?,
     ): Boolean = bot.deleteWebhook(
         dropPendingUpdates = dropPendingUpdates
     )
 
-    override suspend fun getWebhookInfo(): WebhookInfo = bot.getWebhookInfo()
+    suspend fun getWebhookInfo(): WebhookInfo = bot.getWebhookInfo()
 
-    override suspend fun editMessageText(
-        chatId: String?,
-        messageId: Long?,
-        inlineMessageId: String?,
+    suspend fun Argument.editMessageText(
+        messageId: Long,
         text: String,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         disableWebPagePreview: Boolean?,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.editMessageText(
         chatId = chatId,
         messageId = messageId,
-        inlineMessageId = inlineMessageId,
+        inlineMessageId = null,
         text = text,
         parseMode = parseMode,
         entities = entities,
@@ -1610,63 +1524,55 @@ abstract class TelegramApiHandling : TelegramApi, KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    override suspend fun editMessageCaption(
-        chatId: String?,
-        messageId: Long?,
-        inlineMessageId: String?,
-        caption: String?,
-        parseMode: ParseMode?,
-        captionEntities: List<MessageEntity>?,
-        replyMarkup: InlineKeyboardMarkup?
+    suspend fun Argument.editMessageCaption(
+        messageId: Long,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = bot.editMessageCaption(
-        chatId = chatId,
+        chatId = chatId.toString(),
         messageId = messageId,
-        inlineMessageId = inlineMessageId,
+        inlineMessageId = null,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
         replyMarkup = replyMarkup
     )
 
-    override suspend fun editMessageMedia(
-        chatId: String?,
-        messageId: Long?,
-        inlineMessageId: String?,
+    suspend fun Argument.editMessageMedia(
+        messageId: Long,
         media: InputMedia,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.editMessageMedia(
         chatId = chatId,
         messageId = messageId,
-        inlineMessageId = inlineMessageId,
+        inlineMessageId = null,
         media = media,
         replyMarkup = replyMarkup
     )
 
-    override suspend fun editMessageReplyMarkup(
-        chatId: String?,
-        messageId: Long?,
-        inlineMessageId: String?,
-        replyMarkup: InlineKeyboardMarkup?
+    suspend fun Argument.editMessageReplyMarkup(
+        messageId: Long,
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.editMessageReplyMarkup(
         chatId = chatId,
         messageId = messageId,
-        inlineMessageId = inlineMessageId,
+        inlineMessageId = null,
         replyMarkup = replyMarkup
     )
 
-    override suspend fun stopPoll(
-        chatId: String,
+    suspend fun Argument.stopPoll(
         messageId: Long,
-        replyMarkup: InlineKeyboardMarkup?
+        replyMarkup: InlineKeyboardMarkup?,
     ): Poll = bot.stopPoll(
         chatId = chatId,
         messageId = messageId,
         replyMarkup = replyMarkup
     )
 
-    override suspend fun deleteMessage(
-        chatId: String,
-        messageId: Long
+    suspend fun Argument.deleteMessage(
+        messageId: Long,
     ): Boolean = bot.deleteMessage(
         chatId = chatId,
         messageId = messageId

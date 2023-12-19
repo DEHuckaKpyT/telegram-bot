@@ -33,7 +33,7 @@ import kotlinx.coroutines.withContext
  */
 class TelegramBotImpl(
     token: String,
-    val username: String,
+    override val username: String,
     private val messageSource: MessageSource,
 ) : TelegramBot {
 

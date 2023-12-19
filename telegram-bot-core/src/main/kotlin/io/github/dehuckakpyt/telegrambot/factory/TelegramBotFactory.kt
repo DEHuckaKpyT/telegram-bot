@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.factory
 
 import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.BotHandling
+import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.TelegramBotImpl
 import io.github.dehuckakpyt.telegrambot.argument.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
@@ -56,7 +57,7 @@ internal object TelegramBotFactory : InternalKoinComponent {
             single<MessageSource>(definition = config.messageSource)
             single<HtmlFormatter>(definition = config.htmlFormatter)
             single { BotTemplate() }
-            single { TelegramBotImpl(config.token!!, config.username!!, get()) }
+            single<TelegramBot> { TelegramBotImpl(config.token!!, config.username!!, get()) }
         })
 
     private fun loadInternalModules(config: TelegramBotConfig, application: Application) =
