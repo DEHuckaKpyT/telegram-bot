@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
-import com.dehucka.exposed.ext.execute
-import com.dehucka.exposed.ext.read
+import com.dehucka.exposed.ext.executeQuery
+import com.dehucka.exposed.ext.readQuery
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.ext.toImpl
 import io.github.dehuckakpyt.telegrambot.model.CallbackContents
@@ -17,7 +17,7 @@ class DatabaseCallbackContentSource(
     private val maxCallbackContentsPerUser: Long,
 ) : CallbackContentSource {
 
-    override suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent = execute {
+    override suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent = executeQuery {
         findLast(chatId, fromId).createOrUpdate {
             this.chatId = chatId
             this.fromId = fromId
@@ -27,7 +27,7 @@ class DatabaseCallbackContentSource(
         }
     }.toImpl()
 
-    override suspend fun get(callbackId: UUID): CallbackContent = read {
+    override suspend fun get(callbackId: UUID): CallbackContent = readQuery {
         DatabaseCallbackContent.find(CallbackContents.callbackId eq callbackId)
             .firstOrNull()
             ?: throw ChatException("Содержание для callback'а не найдено :(")

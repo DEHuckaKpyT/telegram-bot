@@ -86,10 +86,9 @@ class PurchaseHandler(
 ```Gradle
 repositories {
     mavenCentral()
-    maven("https://jitpack.io") // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.3.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.4.0")
 }
 ```
 ```kotlin
@@ -592,7 +591,7 @@ class TelegramBotConfig {
 Затем добавить зависимость и указать source'ы:
 ```Gradle
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.3.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.4.0")
 }
 ```
 ```kotlin

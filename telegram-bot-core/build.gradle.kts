@@ -17,6 +17,6 @@ dependencies {
     //endregion koin
 
     //region dehuckakpyt
-    api("io.github.dehuckakpyt:micro-service-core:0.1.3-SNAPSHOT")
+    api("io.github.dehuckakpyt:micro-service-core:0.1.4")
     //endregion dehuckakpyt
 }

@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.source.message
 
-import com.dehucka.exposed.ext.execute
+import com.dehucka.exposed.ext.executeQuery
 import io.github.dehuckakpyt.telegrambot.model.DatabaseTelegramMessage
 
 class DatabaseMessageSource : MessageSource {
@@ -10,7 +10,7 @@ class DatabaseMessageSource : MessageSource {
         fromId: Long,
         messageId: Long,
         text: String?
-    ): Unit = execute {
+    ): Unit = executeQuery {
         DatabaseTelegramMessage.new {
             this.chatId = chatId
             this.fromId = fromId
