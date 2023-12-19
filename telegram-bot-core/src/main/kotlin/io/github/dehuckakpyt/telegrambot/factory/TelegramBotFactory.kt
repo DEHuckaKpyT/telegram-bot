@@ -26,6 +26,7 @@ import io.ktor.server.application.*
 import org.koin.core.context.loadKoinModules
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
 
@@ -77,12 +78,12 @@ internal object TelegramBotFactory : InternalKoinComponent {
             single { DialogUpdateResolver(get(), get(), get(), get(), getAll(), KoinPlatform.getKoin().get()) }
             single<UpdateReceiver>(definition = config.updateReceiver)
 
-            single<MessageArgumentFactory> { AudioMessageArgumentFactory() }
-            single<MessageArgumentFactory> { ContactMessageArgumentFactory() }
-            single<MessageArgumentFactory> { DocumentMessageArgumentFactory() }
-            single<MessageArgumentFactory> { PhotoMessageArgumentFactory() }
-            single<MessageArgumentFactory> { TextMessageArgumentFactory() }
-            single<MessageArgumentFactory> { VoiceMessageArgumentFactory() }
+            single { AudioMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { ContactMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { DocumentMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { PhotoMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { TextMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { VoiceMessageArgumentFactory() } bind MessageArgumentFactory::class
         })
 
     private fun initiateHandlers(config: TelegramBotConfig) {
