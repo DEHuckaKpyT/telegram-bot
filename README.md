@@ -103,8 +103,10 @@ fun Application.configureTelegramBot() {
 }
 
 fun BotHandling.startCommand() {
+    val friendChatId = 123L
     command("/start") {
-        sendMessage("Привет, меня зовут $username :-)")
+        sendMessage("Привет, меня зовут ${bot.username} :-)")
+        bot.sendMessage(friendChatId, "И тебе привет)")
     }
 }
 ```
