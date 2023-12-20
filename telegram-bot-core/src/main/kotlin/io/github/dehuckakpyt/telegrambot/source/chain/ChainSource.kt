@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.chain
 
 import com.dehucka.microservice.logger.Logging
-import io.github.dehuckakpyt.telegrambot.model.Chain
+import io.github.dehuckakpyt.telegrambot.model.source.Chain
 
 
 /**

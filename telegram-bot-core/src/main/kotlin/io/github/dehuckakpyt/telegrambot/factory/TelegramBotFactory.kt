@@ -1,13 +1,12 @@
 package io.github.dehuckakpyt.telegrambot.factory
 
-import com.elbekd.bot.Bot
 import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.TelegramBotImpl
 import io.github.dehuckakpyt.telegrambot.argument.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext.loadInternalKoinModules
-import io.github.dehuckakpyt.telegrambot.context.getInternal
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
@@ -15,7 +14,9 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionH
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.plugin.config.manager.TelegramBotConfigManager
+import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
+import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -23,9 +24,11 @@ import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.BotTemplate
 import io.ktor.server.application.*
 import org.koin.core.context.loadKoinModules
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.mp.KoinPlatform
 
 
 /**
@@ -36,65 +39,52 @@ import org.koin.dsl.module
  */
 internal object TelegramBotFactory : InternalKoinComponent {
 
-    fun load(application: Application, config: TelegramBotConfig): TelegramBot {
-        val token = config.token ?: throw RuntimeException("Telegram-bot TOKEN must not be empty!")
-        val username = config.username ?: throw RuntimeException("Telegram-bot USERNAME must not be empty!")
+    fun load(application: Application, config: TelegramBotConfig) {
+        config.token ?: throw RuntimeException("Telegram-bot TOKEN must not be empty!")
+        config.username ?: throw RuntimeException("Telegram-bot USERNAME must not be empty!")
 
         val configManagers = getKoin().getAll<TelegramBotConfigManager>()
         configManagers.forEach(TelegramBotConfigManager::preLoadModules)
 
-        val telegramBot = loadRequiredModules(token, username, application, config)
-        loadInternalModules(config)
+        loadPublicModules(config)
+        loadInternalModules(config, application)
 
         initiateHandlers(config)
-        subscribeToUpdates(telegramBot)
-
-        return telegramBot
     }
 
-    private fun loadRequiredModules(
-        token: String,
-        username: String,
-        application: Application,
-        config: TelegramBotConfig
-    ): TelegramBot {
+    private fun loadPublicModules(config: TelegramBotConfig) =
         loadKoinModules(module {
-            single<String>(named("username")) { username }
-            single<CallbackContentSource> { config.callbackContentSource }
-            single<ChainSource> { config.chainSource }
-            single<MessageSource> { config.messageSource }
-            single<CallbackSerializer> { config.callbackSerializer }
-            single<HtmlFormatter> { config.htmlFormatter }
+            single<String>(named("username")) { config.username!! }
+            single<MessageSource>(definition = config.messageSource)
+            single<HtmlFormatter>(definition = config.htmlFormatter)
+            single { BotTemplate() }
+            single<TelegramBot> { TelegramBotImpl(config.token!!, config.username!!, get()) }
+        })
+
+    private fun loadInternalModules(config: TelegramBotConfig, application: Application) =
+        loadInternalKoinModules(module {
+            single<CallbackContentSource>(definition = config.callbackContentSource)
+            single<ChainSource>(definition = config.chainSource)
+            single<CallbackSerializer>(definition = config.callbackSerializer)
+            single<ExceptionHandler>(definition = config.exceptionHandler)
+            single<ChainExceptionHandler>(definition = config.chainExceptionHandler)
+            single<ContentConverter>(definition = config.contentConverter)
+            single(named("callbackDataDelimiter")) { config.callbackDataDelimiter }
             single(named("telegramBotTemplate")) { application.environment.config.config("telegram-bot.template") }
             single { config.templateConfig }
-            single { BotTemplate() }
+
+            singleOf(::ChainResolver)
+            singleOf(::UpdateResolver)
+            single { DialogUpdateResolver(get(), get(), get(), get(), getAll(), KoinPlatform.getKoin().get()) }
+            single<UpdateReceiver>(definition = config.updateReceiver)
+
+            single { AudioMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { ContactMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { DocumentMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { PhotoMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { TextMessageArgumentFactory() } bind MessageArgumentFactory::class
+            single { VoiceMessageArgumentFactory() } bind MessageArgumentFactory::class
         })
-
-        val externalBot = Bot.createPolling(token, username, config.pollingOptions)
-        val telegramBot = TelegramBot(externalBot)
-
-        loadKoinModules(module {
-            single { telegramBot }
-        })
-
-        return telegramBot
-    }
-
-    private fun loadInternalModules(config: TelegramBotConfig) = loadInternalKoinModules(module {
-        single<ExceptionHandler> { config.exceptionHandler }
-        single<ChainExceptionHandler> { config.chainExceptionHandler }
-        single<ContentConverter> { config.contentConverter }
-        single(named("callbackDataDelimiter")) { config.callbackDataDelimiter }
-        single { ChainResolver() }
-        single { UpdateResolver() }
-
-        single { AudioMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { ContactMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { DocumentMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { PhotoMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { TextMessageArgumentFactory() } bind MessageArgumentFactory::class
-        single { VoiceMessageArgumentFactory() } bind MessageArgumentFactory::class
-    })
 
     private fun initiateHandlers(config: TelegramBotConfig) {
         // создание обработчиков из методов расширения
@@ -103,12 +93,5 @@ internal object TelegramBotFactory : InternalKoinComponent {
 
         // создание обработчиков из классов
         getKoin().getAll<BotHandler>()
-    }
-
-    private fun subscribeToUpdates(telegramBot: TelegramBot) {
-        val updateResolver = getInternal<UpdateResolver>()
-
-        telegramBot.onCallbackQuery(updateResolver::processCallback)
-        telegramBot.onAnyUpdate(updateResolver::processUpdate)
     }
 }

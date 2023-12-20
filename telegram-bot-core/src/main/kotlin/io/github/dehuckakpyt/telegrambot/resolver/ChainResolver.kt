@@ -4,13 +4,11 @@ import io.github.dehuckakpyt.telegrambot.argument.Argument
 import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.MessageArgument
-import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
-import io.github.dehuckakpyt.telegrambot.context.getInternal
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
-import org.koin.core.component.get
+import kotlin.collections.set
 import kotlin.reflect.KClass
 
 
@@ -20,12 +18,12 @@ import kotlin.reflect.KClass
  *
  * @author Denis Matytsin
  */
-internal class ChainResolver : InternalKoinComponent {
-
-    private val callbackSerializer = get<CallbackSerializer>()
-    private val chainSource = get<ChainSource>()
-    private val chainExceptionHandler = getInternal<ChainExceptionHandler>()
-    private val contentConverter = getInternal<ContentConverter>()
+internal class ChainResolver(
+    private val callbackSerializer: CallbackSerializer,
+    private val chainSource: ChainSource,
+    private val chainExceptionHandler: ChainExceptionHandler,
+    private val contentConverter: ContentConverter,
+) {
 
     private val actionByCommand: MutableMap<String, suspend CommandArgument.() -> Unit> = hashMapOf()
     private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageArgument>, suspend MessageArgument.() -> Unit>> =

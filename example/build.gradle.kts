@@ -33,6 +33,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("com.zaxxer:HikariCP:$hikaricp_version")
     implementation("org.postgresql:postgresql:$postgresql_version")
+    compileOnly("io.insert-koin:koin-annotations:1.2.2")
     ksp("io.insert-koin:koin-ksp-compiler:1.2.2")
     //endregion other
 }

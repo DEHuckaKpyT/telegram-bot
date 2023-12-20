@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.model
+package io.github.dehuckakpyt.telegrambot.model.source
 
 import java.util.*
 

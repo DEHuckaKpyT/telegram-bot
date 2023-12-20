@@ -1,10 +1,10 @@
 package io.github.dehuckakpyt.telegrambot.factory
 
-import com.elbekd.bot.types.InlineKeyboardButton
-import com.elbekd.bot.types.KeyboardButton
 import io.github.dehuckakpyt.telegrambot.argument.Argument
+import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
-import org.koin.mp.KoinPlatformTools
+import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardButton
+import io.github.dehuckakpyt.telegrambot.model.type.KeyboardButton
 
 
 /**
@@ -13,7 +13,7 @@ import org.koin.mp.KoinPlatformTools
  *
  * @author Denis Matytsin
  */
-private val callbackSerializer = KoinPlatformTools.defaultContext().get().get<CallbackSerializer>()
+private val callbackSerializer = InternalKoinContext.koin.get<CallbackSerializer>()
 
 fun callbackButton(text: String, next: String): InlineKeyboardButton {
     return InlineKeyboardButton(text, callbackData = next)

@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.config.constans
 
+import io.github.dehuckakpyt.telegrambot.context.DatabaseKoinContext
 import io.github.dehuckakpyt.telegrambot.model.CallbackContents
 import io.github.dehuckakpyt.telegrambot.model.Chains
 import io.github.dehuckakpyt.telegrambot.model.TelegramMessages
@@ -12,6 +13,8 @@ import io.github.dehuckakpyt.telegrambot.source.message.DatabaseMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.core.definition.Definition
+import org.koin.core.qualifier.named
 
 
 /**
@@ -21,37 +24,37 @@ import org.jetbrains.exposed.sql.transactions.transaction
  * @author Denis Matytsin
  */
 interface DatabaseSourceFactory {
-    val CallbackContentSource.Companion.inDatabase: CallbackContentSource
+    val CallbackContentSource.Companion.inDatabase: Definition<CallbackContentSource>
         get() {
             transaction {
                 SchemaUtils.createMissingTablesAndColumns(CallbackContents)
             }
 
-            return DatabaseCallbackContentSource()
+            return { DatabaseCallbackContentSource(DatabaseKoinContext.koin.get(named("maxCallbackContentsPerUser"))) }
         }
 
-    val ChainSource.Companion.inDatabase: ChainSource
+    val ChainSource.Companion.inDatabase: Definition<ChainSource>
         get() {
             transaction {
                 SchemaUtils.createMissingTablesAndColumns(Chains)
             }
 
-            return DatabaseChainSource()
+            return { DatabaseChainSource() }
         }
 
-    val MessageSource.Companion.inDatabase: MessageSource
+    val MessageSource.Companion.inDatabase: Definition<MessageSource>
         get() {
             transaction {
                 SchemaUtils.createMissingTablesAndColumns(TelegramMessages)
             }
 
-            return DatabaseMessageSource()
+            return { DatabaseMessageSource() }
         }
 
     fun TelegramBotConfig.allInDatabase() {
-        callbackContentSource = DatabaseCallbackContentSource()
-        chainSource = DatabaseChainSource()
-        messageSource = DatabaseMessageSource()
+        callbackContentSource = { DatabaseCallbackContentSource(DatabaseKoinContext.koin.get(named("maxCallbackContentsPerUser"))) }
+        chainSource = { DatabaseChainSource() }
+        messageSource = { DatabaseMessageSource() }
 
         transaction {
             SchemaUtils.createMissingTablesAndColumns(

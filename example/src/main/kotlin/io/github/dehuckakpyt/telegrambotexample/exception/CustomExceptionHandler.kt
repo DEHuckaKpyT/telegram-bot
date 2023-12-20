@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.exception
 
 import com.dehucka.microservice.exception.CustomException
+import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandlerImpl
 
 
@@ -10,7 +11,7 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandlerImpl
  *
  * @author Denis Matytsin
  */
-class CustomExceptionHandler : ExceptionHandlerImpl() {
+class CustomExceptionHandler(bot: TelegramBot) : ExceptionHandlerImpl(bot) {
     override suspend fun caught(chatId: Long, ex: Throwable) {
         when (ex) {
             is CustomException -> bot.sendMessage(chatId, ex.localizedMessage)

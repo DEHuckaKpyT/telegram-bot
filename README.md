@@ -90,10 +90,9 @@ class PurchaseHandler(
 ```Gradle
 repositories {
     mavenCentral()
-    maven("https://jitpack.io") // не нужен будет, когда в основе не будет библиотеки kt-telegram-bot
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.3.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.4.0")
 }
 ```
 ```kotlin
@@ -107,8 +106,10 @@ fun Application.configureTelegramBot() {
 }
 
 fun BotHandling.startCommand() {
+    val friendChatId = 123L
     command("/start") {
-        sendMessage("Привет, меня зовут $username :-)")
+        sendMessage("Привет, меня зовут ${bot.username} :-)")
+        bot.sendMessage(friendChatId, "И тебе привет)")
     }
 }
 ```
@@ -594,7 +595,7 @@ class TelegramBotConfig {
 Затем добавить зависимость и указать source'ы:
 ```Gradle
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.3.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.4.0")
 }
 ```
 ```kotlin

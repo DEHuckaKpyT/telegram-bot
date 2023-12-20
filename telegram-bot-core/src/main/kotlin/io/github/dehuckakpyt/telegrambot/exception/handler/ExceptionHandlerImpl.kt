@@ -7,8 +7,6 @@ import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
 import io.github.dehuckakpyt.telegrambot.template.Templating
 import io.github.dehuckakpyt.telegrambot.template.whenKnownErrorTemplate
 import io.github.dehuckakpyt.telegrambot.template.whenUnknownErrorTemplate
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 
 /**
@@ -17,8 +15,9 @@ import org.koin.core.component.inject
  *
  * @author Denis Matytsin
  */
-open class ExceptionHandlerImpl : ExceptionHandler(), KoinComponent, Templating, Logging {
-    protected val bot by inject<TelegramBot>()
+open class ExceptionHandlerImpl(
+    protected val bot: TelegramBot,
+) : ExceptionHandler(), Templating, Logging {
 
     override suspend fun execute(chatId: Long, block: suspend () -> Unit): Unit {
         try {

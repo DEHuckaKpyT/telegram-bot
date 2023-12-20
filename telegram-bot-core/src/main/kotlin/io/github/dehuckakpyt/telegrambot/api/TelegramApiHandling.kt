@@ -1,13 +1,12 @@
 package io.github.dehuckakpyt.telegrambot.api
 
-import com.elbekd.bot.types.*
-import com.elbekd.bot.util.Action
-import com.elbekd.bot.util.SendingDocument
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.argument.Argument
+import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
+import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import java.io.File
 
 
 /**
@@ -16,146 +15,77 @@ import java.io.File
  *
  * @author Denis Matytsin
  */
-open class TelegramApiHandling : KoinComponent {
+abstract class TelegramApiHandling : KoinComponent {
 
-    private val bot = get<TelegramBot>()
+    val bot = get<TelegramBot>()
 
     //region Telegram methods
+    suspend fun getMe(): User = bot.getMe()
 
-    suspend fun sendMessage(
-        chatId: Long,
-        text: String,
-        messageThreadId: Long? = null,
-        parseMode: ParseMode? = null,
-        entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ): Message {
-        return bot.sendMessage(
-            chatId = chatId,
-            text = text,
-            messageThreadId = messageThreadId,
-            parseMode = parseMode,
-            entities = entities,
-            disableWebPagePreview = disableWebPagePreview,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
-            replyMarkup = replyMarkup
-        )
-    }
+    suspend fun logOut(): Boolean = bot.logOut()
+
+    suspend fun close(): Boolean = bot.close()
 
     suspend fun Argument.sendMessage(
         text: String,
-        messageThreadId: Long? = null,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         disableWebPagePreview: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
         allowSendingWithoutReply: Boolean? = null,
         replyMarkup: ReplyKeyboard? = null,
-    ): Message {
-        return bot.sendMessage(
-            chatId = chatId,
-            text = text,
-            messageThreadId = messageThreadId,
-            parseMode = parseMode,
-            entities = entities,
-            disableWebPagePreview = disableWebPagePreview,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
-            replyMarkup = replyMarkup
-        )
-    }
-
-    suspend fun forwardMessage(
-        chatId: Long,
-        fromChatId: Long,
-        messageId: Long,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-    ) = bot.forwardMessage(
+    ): Message = bot.sendMessage(
         chatId = chatId,
-        fromChatId = fromChatId,
-        messageId = messageId,
+        text = text,
+        parseMode = parseMode,
+        entities = entities,
         messageThreadId = messageThreadId,
+        disableWebPagePreview = disableWebPagePreview,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        replyToMessageId = replyToMessageId,
+        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyMarkup = replyMarkup
     )
 
     suspend fun Argument.forwardMessage(
-        fromChatId: Long,
+        fromChatId: String,
         messageId: Long,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-    ) = bot.forwardMessage(
+        messageThreadId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+    ): Message = bot.forwardMessage(
         chatId = chatId,
         fromChatId = fromChatId,
         messageId = messageId,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
-        protectContent = protectContent,
-    )
-
-    suspend fun copyMessage(
-        chatId: Long,
-        fromChatId: Long,
-        messageId: Long,
-        messageThreadId: Long? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.copyMessage(
-        chatId = chatId,
-        fromChatId = fromChatId,
-        messageId = messageId,
-        messageThreadId = messageThreadId,
-        caption = caption,
-        parseMode = parseMode,
-        captionEntities = captionEntities,
-        disableNotification = disableNotification,
-        protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
-        replyMarkup = replyMarkup
+        protectContent = protectContent
     )
 
     suspend fun Argument.copyMessage(
-        fromChatId: Long,
+        fromChatId: String,
         messageId: Long,
-        messageThreadId: Long? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.copyMessage(
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): MessageId = bot.copyMessage(
         chatId = chatId,
         fromChatId = fromChatId,
         messageId = messageId,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -163,26 +93,25 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendPhoto(
-        chatId: Long,
-        photo: SendingDocument,
-        messageThreadId: Long? = null,
+    suspend fun Argument.sendPhoto(
+        photo: NamedContent,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
         allowSendingWithoutReply: Boolean? = null,
         replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendPhoto(
+    ): Message = bot.sendPhoto(
         chatId = chatId,
         photo = photo,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -192,24 +121,24 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendPhoto(
-        photo: SendingDocument,
-        messageThreadId: Long? = null,
+        photo: String,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyToMessageId: Long? = null,
         allowSendingWithoutReply: Boolean? = null,
         replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendPhoto(
+    ): Message = bot.sendPhoto(
         chatId = chatId,
         photo = photo,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -218,33 +147,32 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendAudio(
-        chatId: Long,
-        audio: SendingDocument,
-        messageThreadId: Long? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        duration: Long? = null,
-        performer: String? = null,
-        title: String? = null,
-        thumb: File? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendAudio(
+    suspend fun Argument.sendAudio(
+        audio: NamedContent,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        duration: Long?,
+        performer: String?,
+        title: String?,
+        thumbnail: NamedContent?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendAudio(
         chatId = chatId,
         audio = audio,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         duration = duration,
         performer = performer,
         title = title,
-        thumb = thumb,
+        thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -253,31 +181,31 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendAudio(
-        audio: SendingDocument,
-        messageThreadId: Long? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        duration: Long? = null,
-        performer: String? = null,
-        title: String? = null,
-        thumb: File? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendAudio(
+        audio: String,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        duration: Long?,
+        performer: String?,
+        title: String?,
+        thumbnail: NamedContent?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendAudio(
         chatId = chatId,
         audio = audio,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         duration = duration,
         performer = performer,
         title = title,
-        thumb = thumb,
+        thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -285,28 +213,27 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendDocument(
-        chatId: Long,
-        document: SendingDocument,
-        messageThreadId: Long? = null,
-        thumb: File? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        disableContentTypeDetection: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendDocument(
+    suspend fun Argument.sendDocument(
+        document: NamedContent,
+        thumbnail: NamedContent?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        disableContentTypeDetection: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendDocument(
         chatId = chatId,
         document = document,
-        messageThreadId = messageThreadId,
-        thumb = thumb,
+        thumbnail = thumbnail,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -316,26 +243,26 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendDocument(
-        document: SendingDocument,
-        messageThreadId: Long? = null,
-        thumb: File? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        disableContentTypeDetection: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendDocument(
+        document: String,
+        thumbnail: NamedContent?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        disableContentTypeDetection: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendDocument(
         chatId = chatId,
         document = document,
-        messageThreadId = messageThreadId,
-        thumb = thumb,
+        thumbnail = thumbnail,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -344,37 +271,36 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendVideo(
-        chatId: Long,
-        video: SendingDocument,
-        messageThreadId: Long? = null,
-        duration: Long? = null,
-        width: Long? = null,
-        height: Long? = null,
-        thumb: File? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        hasSpoiler: Boolean? = null,
-        streaming: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVideo(
+    suspend fun Argument.sendVideo(
+        video: NamedContent,
+        duration: Long?,
+        width: Long?,
+        height: Long?,
+        thumbnail: NamedContent?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        hasSpoiler: Boolean?,
+        supportsStreaming: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendVideo(
         chatId = chatId,
         video = video,
-        messageThreadId = messageThreadId,
         duration = duration,
         width = width,
         height = height,
-        thumb = thumb,
+        thumbnail = thumbnail,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
-        streaming = streaming,
+        supportsStreaming = supportsStreaming,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -383,35 +309,35 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendVideo(
-        video: SendingDocument,
-        messageThreadId: Long? = null,
-        duration: Long? = null,
-        width: Long? = null,
-        height: Long? = null,
-        thumb: File? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        hasSpoiler: Boolean? = null,
-        streaming: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVideo(
+        video: String,
+        duration: Long?,
+        width: Long?,
+        height: Long?,
+        thumbnail: NamedContent?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        hasSpoiler: Boolean?,
+        supportsStreaming: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendVideo(
         chatId = chatId,
         video = video,
-        messageThreadId = messageThreadId,
         duration = duration,
         width = width,
         height = height,
-        thumb = thumb,
+        thumbnail = thumbnail,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
-        streaming = streaming,
+        supportsStreaming = supportsStreaming,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -419,34 +345,33 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendAnimation(
-        chatId: Long,
-        animation: SendingDocument,
-        messageThreadId: Long? = null,
-        duration: Long? = null,
-        width: Long? = null,
-        height: Long? = null,
-        thumb: File? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        hasSpoiler: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendAnimation(
+    suspend fun Argument.sendAnimation(
+        animation: NamedContent,
+        duration: Long?,
+        width: Long?,
+        height: Long?,
+        thumbnail: NamedContent?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        hasSpoiler: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendAnimation(
         chatId = chatId,
         animation = animation,
-        messageThreadId = messageThreadId,
         duration = duration,
         width = width,
         height = height,
-        thumb = thumb,
+        thumbnail = thumbnail,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -456,32 +381,32 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendAnimation(
-        animation: SendingDocument,
-        messageThreadId: Long? = null,
-        duration: Long? = null,
-        width: Long? = null,
-        height: Long? = null,
-        thumb: File? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        hasSpoiler: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendAnimation(
+        animation: String,
+        duration: Long?,
+        width: Long?,
+        height: Long?,
+        thumbnail: NamedContent?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        hasSpoiler: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendAnimation(
         chatId = chatId,
         animation = animation,
-        messageThreadId = messageThreadId,
         duration = duration,
         width = width,
         height = height,
-        thumb = thumb,
+        thumbnail = thumbnail,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -490,26 +415,25 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendVoice(
-        chatId: Long,
-        voice: SendingDocument,
-        messageThreadId: Long? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        duration: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVoice(
+    suspend fun Argument.sendVoice(
+        voice: NamedContent,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        duration: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendVoice(
         chatId = chatId,
         voice = voice,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        messageThreadId = messageThreadId,
         duration = duration,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -519,51 +443,25 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendVoice(
-        voice: SendingDocument,
-        messageThreadId: Long? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        duration: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVoice(
+        voice: String,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        messageThreadId: Long?,
+        duration: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendVoice(
         chatId = chatId,
         voice = voice,
-        messageThreadId = messageThreadId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
-        duration = duration,
-        disableNotification = disableNotification,
-        protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
-        replyMarkup = replyMarkup
-    )
-
-    suspend fun sendVideoNote(
-        chatId: Long,
-        note: SendingDocument,
-        messageThreadId: Long? = null,
-        duration: Long? = null,
-        length: Long? = null,
-        thumb: File? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVideoNote(
-        chatId = chatId,
-        note = note,
         messageThreadId = messageThreadId,
         duration = duration,
-        length = length,
-        thumb = thumb,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -572,23 +470,23 @@ open class TelegramApiHandling : KoinComponent {
     )
 
     suspend fun Argument.sendVideoNote(
-        note: SendingDocument,
-        messageThreadId: Long? = null,
-        duration: Long? = null,
-        length: Long? = null,
-        thumb: File? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVideoNote(
+        videoNote: NamedContent,
+        messageThreadId: Long?,
+        duration: Long?,
+        length: Long?,
+        thumbnail: NamedContent?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendVideoNote(
         chatId = chatId,
-        note = note,
+        videoNote = videoNote,
         messageThreadId = messageThreadId,
         duration = duration,
         length = length,
-        thumb = thumb,
+        thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -596,89 +494,62 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendMediaGroup(
-        chatId: Long,
-        media: List<InputMedia>,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-    ): ArrayList<Message> {
-        return bot.sendMediaGroup(
-            chatId = chatId,
-            media = media,
-            messageThreadId = messageThreadId,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply
-        )
-    }
-
-    suspend fun Argument.sendMediaGroup(
-        media: List<InputMedia>,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-    ): ArrayList<Message> {
-        return bot.sendMediaGroup(
-            chatId = chatId,
-            media = media,
-            messageThreadId = messageThreadId,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply
-        )
-    }
-
-    suspend fun sendLocation(
-        chatId: Long,
-        latitude: Float,
-        longitude: Float,
-        messageThreadId: Long? = null,
-        horizontalAccuracy: Float? = null,
-        livePeriod: Long? = null,
-        heading: Long? = null,
-        proximityAlertRadius: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendLocation(
+    suspend fun Argument.sendVideoNote(
+        videoNote: String,
+        messageThreadId: Long?,
+        duration: Long?,
+        length: Long?,
+        thumbnail: NamedContent?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendVideoNote(
         chatId = chatId,
-        latitude = latitude,
-        longitude = longitude,
+        videoNote = videoNote,
         messageThreadId = messageThreadId,
-        horizontalAccuracy = horizontalAccuracy,
-        livePeriod = livePeriod,
-        heading = heading,
-        proximityAlertRadius = proximityAlertRadius,
+        duration = duration,
+        length = length,
+        thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.sendMediaGroup(
+        media: List<InputMedia>,
+        messageThreadId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+    ): ArrayList<Message> = bot.sendMediaGroup(
+        chatId = chatId,
+        media = media,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        replyToMessageId = replyToMessageId,
+        allowSendingWithoutReply = allowSendingWithoutReply
     )
 
     suspend fun Argument.sendLocation(
         latitude: Float,
         longitude: Float,
-        messageThreadId: Long? = null,
-        horizontalAccuracy: Float? = null,
-        livePeriod: Long? = null,
-        heading: Long? = null,
-        proximityAlertRadius: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendLocation(
+        messageThreadId: Long?,
+        horizontalAccuracy: Float?,
+        livePeriod: Long?,
+        heading: Long?,
+        proximityAlertRadius: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendLocation(
         chatId = chatId,
         latitude = latitude,
         longitude = longitude,
@@ -687,73 +558,6 @@ open class TelegramApiHandling : KoinComponent {
         livePeriod = livePeriod,
         heading = heading,
         proximityAlertRadius = proximityAlertRadius,
-        disableNotification = disableNotification,
-        protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
-        replyMarkup = replyMarkup
-    )
-
-    suspend fun editMessageLiveLocation(
-        latitude: Float,
-        longitude: Float,
-        horizontalAccuracy: Float? = null,
-        heading: Long? = null,
-        proximityAlertRadius: Long? = null,
-        chatId: Long? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message {
-        return bot.editMessageLiveLocation(
-            latitude = latitude,
-            longitude = longitude,
-            horizontalAccuracy = horizontalAccuracy,
-            heading = heading,
-            proximityAlertRadius = proximityAlertRadius,
-            chatId = chatId,
-            messageId = messageId,
-            inlineMessageId = inlineMessageId,
-            replyMarkup = replyMarkup
-        )
-    }
-
-    suspend fun stopMessageLiveLocation(
-        chatId: Long? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message {
-        return bot.stopMessageLiveLocation(chatId, messageId, inlineMessageId, replyMarkup)
-    }
-
-    suspend fun sendVenue(
-        chatId: Long,
-        latitude: Float,
-        longitude: Float,
-        title: String,
-        address: String,
-        messageThreadId: Long? = null,
-        foursquareId: String? = null,
-        foursquareType: String? = null,
-        googlePlaceId: String? = null,
-        googlePlaceType: String? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVenue(
-        chatId = chatId,
-        latitude = latitude,
-        longitude = longitude,
-        title = title,
-        address = address,
-        messageThreadId = messageThreadId,
-        foursquareId = foursquareId,
-        foursquareType = foursquareType,
-        googlePlaceId = googlePlaceId,
-        googlePlaceType = googlePlaceType,
         disableNotification = disableNotification,
         protectContent = protectContent,
         replyToMessageId = replyToMessageId,
@@ -766,17 +570,17 @@ open class TelegramApiHandling : KoinComponent {
         longitude: Float,
         title: String,
         address: String,
-        messageThreadId: Long? = null,
-        foursquareId: String? = null,
-        foursquareType: String? = null,
-        googlePlaceId: String? = null,
-        googlePlaceType: String? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendVenue(
+        messageThreadId: Long?,
+        foursquareId: String?,
+        foursquareType: String?,
+        googlePlaceId: String?,
+        googlePlaceType: String?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendVenue(
         chatId = chatId,
         latitude = latitude,
         longitude = longitude,
@@ -794,44 +598,18 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendContact(
-        chatId: Long,
-        phoneNumber: String,
-        firstName: String,
-        messageThreadId: Long? = null,
-        lastName: String? = null,
-        vcard: String? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendContact(
-        chatId = chatId,
-        phoneNumber = phoneNumber,
-        firstName = firstName,
-        messageThreadId = messageThreadId,
-        lastName = lastName,
-        vcard = vcard,
-        disableNotification = disableNotification,
-        protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
-        replyMarkup = replyMarkup
-    )
-
     suspend fun Argument.sendContact(
         phoneNumber: String,
         firstName: String,
-        messageThreadId: Long? = null,
-        lastName: String? = null,
-        vcard: String? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendContact(
+        messageThreadId: Long?,
+        lastName: String?,
+        vcard: String?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendContact(
         chatId = chatId,
         phoneNumber = phoneNumber,
         firstName = firstName,
@@ -845,443 +623,339 @@ open class TelegramApiHandling : KoinComponent {
         replyMarkup = replyMarkup
     )
 
-    suspend fun sendChatAction(
-        chatId: Long,
-        action: Action,
-        messageThreadId: Long? = null,
-    ) = bot.sendChatAction(
+    suspend fun Argument.sendPoll(
+        question: String,
+        options: List<String>,
+        messageThreadId: Long?,
+        isAnonymous: Boolean?,
+        type: String?,
+        allowsMultipleAnswers: Boolean?,
+        correctOptionId: Long?,
+        explanation: String?,
+        explanationParseMode: String?,
+        explanationEntities: List<MessageEntity>?,
+        openPeriod: Long?,
+        closeDate: Long?,
+        isClosed: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendPoll(
         chatId = chatId,
-        action = action,
-        messageThreadId = messageThreadId
+        question = question,
+        options = options,
+        messageThreadId = messageThreadId,
+        isAnonymous = isAnonymous,
+        type = type,
+        allowsMultipleAnswers = allowsMultipleAnswers,
+        correctOptionId = correctOptionId,
+        explanation = explanation,
+        explanationParseMode = explanationParseMode,
+        explanationEntities = explanationEntities,
+        openPeriod = openPeriod,
+        closeDate = closeDate,
+        isClosed = isClosed,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        replyToMessageId = replyToMessageId,
+        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.sendDice(
+        messageThreadId: Long?,
+        emoji: String?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendDice(
+        chatId = chatId,
+        messageThreadId = messageThreadId,
+        emoji = emoji,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        replyToMessageId = replyToMessageId,
+        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyMarkup = replyMarkup
     )
 
     suspend fun Argument.sendChatAction(
         action: Action,
-        messageThreadId: Long? = null,
-    ) = bot.sendChatAction(
+        messageThreadId: Long?,
+    ): Boolean = bot.sendChatAction(
         chatId = chatId,
         action = action,
         messageThreadId = messageThreadId
     )
 
-    suspend fun setChatMenuButton(chatId: Long? = null, menuButton: MenuButton?) =
-        bot.setChatMenuButton(chatId = chatId, menuButton = menuButton)
-
-    suspend fun getChatMenuButton(chatId: Long? = null) =
-        bot.getChatMenuButton(chatId = chatId)
-
-    suspend fun setMyDefaultAdministratorRights(
-        rights: ChatAdministratorRights? = null,
-        forChannels: Boolean? = null,
-    ) = bot.setMyDefaultAdministratorRights(rights = rights, forChannels = forChannels)
-
-    suspend fun getMyDefaultAdministratorRights(
-        forChannels: Boolean? = null,
-    ) = bot.getMyDefaultAdministratorRights(forChannels = forChannels)
-
-    suspend fun getForumTopicIconStickers() = bot.getForumTopicIconStickers()
-
-    suspend fun createForumTopic(
-        chatId: Long,
-        name: String,
-        iconColor: Int? = null,
-        iconCustomEmojiId: String? = null,
-    ) = bot.createForumTopic(
-        chatId = chatId,
-        name = name,
-        iconColor = iconColor,
-        iconCustomEmojiId = iconCustomEmojiId,
-    )
-
-    suspend fun Argument.createForumTopic(
-        name: String,
-        iconColor: Int? = null,
-        iconCustomEmojiId: String? = null,
-    ) = bot.createForumTopic(
-        chatId = chatId,
-        name = name,
-        iconColor = iconColor,
-        iconCustomEmojiId = iconCustomEmojiId,
-    )
-
-    suspend fun editForumTopic(
-        chatId: Long,
-        messageThreadId: Long,
-        name: String? = null,
-        iconCustomEmojiId: String? = null,
-    ) = bot.editForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-        name = name,
-        iconCustomEmojiId = iconCustomEmojiId,
-    )
-
-    suspend fun Argument.editForumTopic(
-        messageThreadId: Long,
-        name: String? = null,
-        iconCustomEmojiId: String? = null,
-    ) = bot.editForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-        name = name,
-        iconCustomEmojiId = iconCustomEmojiId,
-    )
-
-    suspend fun closeForumTopic(
-        chatId: Long,
-        messageThreadId: Long
-    ) = bot.closeForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun Argument.closeForumTopic(
-        messageThreadId: Long
-    ) = bot.closeForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun reopenForumTopic(
-        chatId: Long,
-        messageThreadId: Long
-    ) = bot.reopenForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun Argument.reopenForumTopic(
-        messageThreadId: Long
-    ) = bot.reopenForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun deleteForumTopic(
-        chatId: Long,
-        messageThreadId: Long
-    ) = bot.deleteForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun Argument.deleteForumTopic(
-        messageThreadId: Long
-    ) = bot.deleteForumTopic(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun unpinAllForumTopicMessages(
-        chatId: Long,
-        messageThreadId: Long
-    ) = bot.unpinAllForumTopicMessages(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun Argument.unpinAllForumTopicMessages(
-        messageThreadId: Long
-    ) = bot.unpinAllForumTopicMessages(
-        chatId = chatId,
-        messageThreadId = messageThreadId,
-    )
-
-    suspend fun editGeneralForumTopic(
-        chatId: Long,
-        name: String
-    ) = bot.editGeneralForumTopic(
-        chatId = chatId,
-        name = name,
-    )
-
-    suspend fun Argument.editGeneralForumTopic(
-        name: String
-    ) = bot.editGeneralForumTopic(
-        chatId = chatId,
-        name = name,
-    )
-
-    suspend fun closeGeneralForumTopic(
-        chatId: Long,
-    ) = bot.closeGeneralForumTopic(
-        chatId = chatId,
-    )
-
-    suspend fun Argument.closeGeneralForumTopic() = bot.closeGeneralForumTopic(chatId)
-
-    suspend fun reopenGeneralForumTopic(
-        chatId: Long,
-    ) = bot.reopenGeneralForumTopic(
-        chatId = chatId,
-    )
-
-    suspend fun Argument.reopenGeneralForumTopic() = bot.reopenGeneralForumTopic(chatId)
-
-    suspend fun hideGeneralForumTopic(
-        chatId: Long,
-    ) = bot.hideGeneralForumTopic(
-        chatId = chatId,
-    )
-
-    suspend fun Argument.hideGeneralForumTopic() = bot.hideGeneralForumTopic(chatId)
-
-    suspend fun unhideGeneralForumTopic(
-        chatId: Long,
-    ) = bot.unhideGeneralForumTopic(
-        chatId = chatId,
-    )
-
-    suspend fun Argument.unhideGeneralForumTopic() = bot.unhideGeneralForumTopic(chatId)
-
     suspend fun getUserProfilePhotos(
         userId: Long,
-        offset: Long? = null,
-        limit: Long? = null,
-    ) = bot.getUserProfilePhotos(
+        offset: Long?,
+        limit: Long?,
+    ): UserProfilePhotos = bot.getUserProfilePhotos(
         userId = userId,
         offset = offset,
         limit = limit
     )
 
-    suspend fun banChatSenderChat(
-        chatId: Long,
-        senderChatId: Long
-    ): Boolean = bot.banChatSenderChat(chatId, senderChatId)
-
-    suspend fun Argument.banChatSenderChat(
-        senderChatId: Long
-    ): Boolean = bot.banChatSenderChat(chatId, senderChatId)
-
-    suspend fun unbanChatSenderChat(
-        chatId: Long,
-        senderChatId: Long
-    ): Boolean = bot.unbanChatSenderChat(chatId, senderChatId)
-
-    suspend fun Argument.unbanChatSenderChat(
-        senderChatId: Long
-    ): Boolean = bot.unbanChatSenderChat(chatId, senderChatId)
-
-    suspend fun getFile(fileId: String) = bot.getFile(fileId)
-
-    suspend fun banChatMember(
-        chatId: Long,
-        userId: Long,
-        untilDate: Long? = null,
-        revokeMessages: Boolean? = null,
-    ) = bot.banChatMember(chatId, userId, untilDate, revokeMessages)
+    suspend fun getFile(
+        fileId: String,
+    ): File = bot.getFile(
+        fileId = fileId
+    )
 
     suspend fun Argument.banChatMember(
         userId: Long,
-        untilDate: Long? = null,
-        revokeMessages: Boolean? = null,
-    ) = bot.banChatMember(chatId, userId, untilDate, revokeMessages)
-
-    suspend fun unbanChatMember(
-        chatId: Long,
-        userId: Long,
-        onlyIfBanned: Boolean? = null,
-    ) = bot.unbanChatMember(chatId, userId, onlyIfBanned)
+        untilDate: Long?,
+        revokeMessages: Boolean?,
+    ): Boolean = bot.banChatMember(
+        chatId = chatId,
+        userId = userId,
+        untilDate = untilDate,
+        revokeMessages = revokeMessages
+    )
 
     suspend fun Argument.unbanChatMember(
         userId: Long,
-        onlyIfBanned: Boolean? = null,
-    ) = bot.unbanChatMember(chatId, userId, onlyIfBanned)
-
-    suspend fun restrictChatMember(
-        chatId: Long,
-        userId: Long,
-        permissions: ChatPermissions,
-        useIndependentChatPermissions: Boolean? = null,
-        untilDate: Long? = null,
-    ) = bot.restrictChatMember(
+        onlyIfBanned: Boolean?,
+    ): Boolean = bot.unbanChatMember(
         chatId = chatId,
         userId = userId,
-        permissions = permissions,
-        useIndependentChatPermissions = useIndependentChatPermissions,
-        untilDate = untilDate,
+        onlyIfBanned = onlyIfBanned
     )
 
     suspend fun Argument.restrictChatMember(
         userId: Long,
         permissions: ChatPermissions,
-        useIndependentChatPermissions: Boolean? = null,
-        untilDate: Long? = null,
-    ) = bot.restrictChatMember(
+        useIndependentChatPermissions: Boolean?,
+        untilDate: Long?,
+    ): Boolean = bot.restrictChatMember(
         chatId = chatId,
         userId = userId,
         permissions = permissions,
         useIndependentChatPermissions = useIndependentChatPermissions,
-        untilDate = untilDate,
-    )
-
-    suspend fun promoteChatMember(
-        chatId: Long,
-        userId: Long,
-        isAnonymous: Boolean? = null,
-        canManageChat: Boolean? = null,
-        canPostMessages: Boolean? = null,
-        canEditMessages: Boolean? = null,
-        canDeleteMessages: Boolean? = null,
-        canManageVideoChats: Boolean? = null,
-        canRestrictMembers: Boolean? = null,
-        canPromoteMembers: Boolean? = null,
-        canChangeInfo: Boolean? = null,
-        canInviteUsers: Boolean? = null,
-        canPinMessages: Boolean? = null,
-        canManageTopics: Boolean? = null,
-    ): Boolean = bot.promoteChatMember(
-        chatId = chatId,
-        userId = userId,
-        isAnonymous = isAnonymous,
-        canManageChat = canManageChat,
-        canPostMessages = canPostMessages,
-        canEditMessages = canEditMessages,
-        canDeleteMessages = canDeleteMessages,
-        canManageVideoChats = canManageVideoChats,
-        canRestrictMembers = canRestrictMembers,
-        canPromoteMembers = canPromoteMembers,
-        canChangeInfo = canChangeInfo,
-        canInviteUsers = canInviteUsers,
-        canPinMessages = canPinMessages,
-        canManageTopics = canManageTopics,
+        untilDate = untilDate
     )
 
     suspend fun Argument.promoteChatMember(
         userId: Long,
-        isAnonymous: Boolean? = null,
-        canManageChat: Boolean? = null,
-        canPostMessages: Boolean? = null,
-        canEditMessages: Boolean? = null,
-        canDeleteMessages: Boolean? = null,
-        canManageVideoChats: Boolean? = null,
-        canRestrictMembers: Boolean? = null,
-        canPromoteMembers: Boolean? = null,
-        canChangeInfo: Boolean? = null,
-        canInviteUsers: Boolean? = null,
-        canPinMessages: Boolean? = null,
-        canManageTopics: Boolean? = null,
+        isAnonymous: Boolean?,
+        canManageChat: Boolean?,
+        canDeleteMessages: Boolean?,
+        canManageVideoChats: Boolean?,
+        canRestrictMembers: Boolean?,
+        canPromoteMembers: Boolean?,
+        canChangeInfo: Boolean?,
+        canInviteUsers: Boolean?,
+        canPostMessages: Boolean?,
+        canEditMessages: Boolean?,
+        canPinMessages: Boolean?,
+        canPostStories: Boolean?,
+        canEditStories: Boolean?,
+        canDeleteStories: Boolean?,
+        canManageTopics: Boolean?,
     ): Boolean = bot.promoteChatMember(
         chatId = chatId,
         userId = userId,
         isAnonymous = isAnonymous,
         canManageChat = canManageChat,
-        canPostMessages = canPostMessages,
-        canEditMessages = canEditMessages,
         canDeleteMessages = canDeleteMessages,
         canManageVideoChats = canManageVideoChats,
         canRestrictMembers = canRestrictMembers,
         canPromoteMembers = canPromoteMembers,
         canChangeInfo = canChangeInfo,
         canInviteUsers = canInviteUsers,
+        canPostMessages = canPostMessages,
+        canEditMessages = canEditMessages,
         canPinMessages = canPinMessages,
-        canManageTopics = canManageTopics,
+        canPostStories = canPostStories,
+        canEditStories = canEditStories,
+        canDeleteStories = canDeleteStories,
+        canManageTopics = canManageTopics
     )
 
-    suspend fun exportChatInviteLink(chatId: Long) = bot.exportChatInviteLink(chatId)
+    suspend fun Argument.setChatAdministratorCustomTitle(
+        userId: Long,
+        customTitle: String,
+    ): Boolean = bot.setChatAdministratorCustomTitle(
+        chatId = chatId,
+        userId = userId,
+        customTitle = customTitle
+    )
 
-    suspend fun Argument.exportChatInviteLink() = bot.exportChatInviteLink(chatId)
+    suspend fun Argument.banChatSenderChat(
+        senderChatId: Long,
+    ): Boolean = bot.banChatSenderChat(
+        chatId = chatId,
+        senderChatId = senderChatId
+    )
 
-    suspend fun setChatPhoto(
-        chatId: Long,
-        photo: Any
-    ) = bot.setChatPhoto(chatId, photo)
+    suspend fun Argument.unbanChatSenderChat(
+        senderChatId: Long,
+    ): Boolean = bot.unbanChatSenderChat(
+        chatId = chatId,
+        senderChatId = senderChatId
+    )
+
+    suspend fun Argument.setChatPermissions(
+        permissions: ChatPermissions,
+        useIndependentChatPermissions: Boolean?,
+    ): Boolean = bot.setChatPermissions(
+        chatId = chatId,
+        permissions = permissions,
+        useIndependentChatPermissions = useIndependentChatPermissions
+    )
+
+    suspend fun Argument.exportChatInviteLink(): String = bot.exportChatInviteLink(
+        chatId = chatId
+    )
+
+    suspend fun Argument.createChatInviteLink(
+        name: String?,
+        expireDate: Long?,
+        memberLimit: Long?,
+        createsJoinRequest: Boolean?,
+    ): ChatInviteLink = bot.createChatInviteLink(
+        chatId = chatId,
+        name = name,
+        expireDate = expireDate,
+        memberLimit = memberLimit,
+        createsJoinRequest = createsJoinRequest
+    )
+
+    suspend fun Argument.editChatInviteLink(
+        inviteLink: String,
+        name: String?,
+        expireDate: Long?,
+        memberLimit: Long?,
+        createsJoinRequest: Boolean?,
+    ): ChatInviteLink = bot.editChatInviteLink(
+        chatId = chatId,
+        inviteLink = inviteLink,
+        name = name,
+        expireDate = expireDate,
+        memberLimit = memberLimit,
+        createsJoinRequest = createsJoinRequest
+    )
+
+    suspend fun Argument.revokeChatInviteLink(
+        inviteLink: String,
+    ): ChatInviteLink = bot.revokeChatInviteLink(
+        chatId = chatId,
+        inviteLink = inviteLink
+    )
+
+    suspend fun Argument.approveChatJoinRequest(
+        userId: Long,
+    ): Boolean = bot.approveChatJoinRequest(
+        chatId = chatId,
+        userId = userId
+    )
+
+    suspend fun Argument.declineChatJoinRequest(
+        userId: Long,
+    ): Boolean = bot.declineChatJoinRequest(
+        chatId = chatId,
+        userId = userId
+    )
 
     suspend fun Argument.setChatPhoto(
-        photo: Any
-    ) = bot.setChatPhoto(chatId, photo)
+        photo: NamedContent,
+    ): Boolean = bot.setChatPhoto(
+        chatId = chatId,
+        photo = photo
+    )
 
-    suspend fun deleteChatPhoto(chatId: Long) = bot.deleteChatPhoto(chatId)
+    suspend fun Argument.setChatPhoto(
+        photo: String,
+    ): Boolean = bot.setChatPhoto(
+        chatId = chatId,
+        photo = photo
+    )
 
-    suspend fun Argument.deleteChatPhoto() = bot.deleteChatPhoto(chatId)
-
-    suspend fun setChatTitle(
-        chatId: Long,
-        title: String
-    ) = bot.setChatTitle(chatId, title)
+    suspend fun Argument.deleteChatPhoto(): Boolean = bot.deleteChatPhoto(
+        chatId = chatId
+    )
 
     suspend fun Argument.setChatTitle(
-        title: String
-    ) = bot.setChatTitle(chatId, title)
-
-    suspend fun setChatDescription(
-        chatId: Long,
-        description: String
-    ) = bot.setChatDescription(chatId, description)
+        title: String,
+    ): Boolean = bot.setChatTitle(
+        chatId = chatId,
+        title = title
+    )
 
     suspend fun Argument.setChatDescription(
-        description: String
-    ) = bot.setChatDescription(chatId, description)
-
-    suspend fun pinChatMessage(
-        chatId: Long,
-        messageId: Long,
-        disableNotification: Boolean? = null,
-    ) = bot.pinChatMessage(chatId, messageId, disableNotification)
+        description: String,
+    ): Boolean = bot.setChatDescription(
+        chatId = chatId,
+        description = description
+    )
 
     suspend fun Argument.pinChatMessage(
         messageId: Long,
-        disableNotification: Boolean? = null,
-    ) = bot.pinChatMessage(chatId, messageId, disableNotification)
-
-    suspend fun unpinChatMessage(
-        chatId: Long,
-        messageId: Long? = null,
-    ) = bot.unpinChatMessage(chatId, messageId)
+        disableNotification: Boolean?,
+    ): Boolean = bot.pinChatMessage(
+        chatId = chatId,
+        messageId = messageId,
+        disableNotification = disableNotification
+    )
 
     suspend fun Argument.unpinChatMessage(
-        messageId: Long? = null,
-    ) = bot.unpinChatMessage(chatId, messageId)
+        messageId: Long?,
+    ): Boolean = bot.unpinChatMessage(
+        chatId = chatId,
+        messageId = messageId
+    )
 
-    suspend fun unpinAllChatMessages(chatId: Long): Boolean = bot.unpinAllChatMessages(chatId)
+    suspend fun Argument.unpinAllChatMessages(): Boolean = bot.unpinAllChatMessages(
+        chatId = chatId
+    )
 
-    suspend fun Argument.unpinAllChatMessages(): Boolean = bot.unpinAllChatMessages(chatId)
+    suspend fun Argument.leaveChat(): Boolean = bot.leaveChat(
+        chatId = chatId
+    )
 
-    suspend fun leaveChat(chatId: Long) = bot.leaveChat(chatId)
+    suspend fun Argument.getChat(): Chat = bot.getChat(
+        chatId = chatId
+    )
 
-    suspend fun Argument.leaveChat() = bot.leaveChat(chatId)
+    suspend fun Argument.getChatAdministrators(): ArrayList<ChatMember> = bot.getChatAdministrators(
+        chatId = chatId
+    )
 
-    suspend fun getChat(chatId: Long) = bot.getChat(chatId)
-
-    suspend fun Argument.getChat() = bot.getChat(chatId)
-
-    suspend fun getChatAdministrators(chatId: Long) = bot.getChatAdministrators(chatId)
-
-    suspend fun Argument.getChatAdministrators() = bot.getChatAdministrators(chatId)
-
-    suspend fun getChatMemberCount(chatId: Long) = bot.getChatMemberCount(chatId)
-
-    suspend fun Argument.getChatMemberCount() = bot.getChatMemberCount(chatId)
-
-    suspend fun getChatMember(
-        chatId: Long,
-        userId: Long
-    ) = bot.getChatMember(chatId, userId)
+    suspend fun Argument.getChatMemberCount(): Long = bot.getChatMemberCount(
+        chatId = chatId
+    )
 
     suspend fun Argument.getChatMember(
-        userId: Long
-    ) = bot.getChatMember(chatId, userId)
-
-    suspend fun setChatStickerSet(
-        chatId: Long,
-        stickerSetName: String
-    ) = bot.setChatStickerSet(chatId, stickerSetName)
+        userId: Long,
+    ): ChatMember = bot.getChatMember(
+        chatId = chatId,
+        userId = userId
+    )
 
     suspend fun Argument.setChatStickerSet(
-        stickerSetName: String
-    ) = bot.setChatStickerSet(chatId, stickerSetName)
+        stickerSetName: String,
+    ): Boolean = bot.setChatStickerSet(
+        chatId = chatId,
+        stickerSetName = stickerSetName
+    )
 
-    suspend fun deleteChatStickerSet(chatId: Long) = bot.deleteChatStickerSet(chatId)
-
-    suspend fun Argument.deleteChatStickerSet() = bot.deleteChatStickerSet(chatId)
+    suspend fun Argument.deleteChatStickerSet(): Boolean = bot.deleteChatStickerSet(
+        chatId = chatId
+    )
 
     suspend fun answerCallbackQuery(
         callbackQueryId: String,
-        text: String? = null,
-        showAlert: Boolean? = null,
-        url: String? = null,
-        cacheTime: Long? = null,
-    ) = bot.answerCallbackQuery(
+        text: String?,
+        showAlert: Boolean?,
+        url: String?,
+        cacheTime: Long?,
+    ): Boolean = bot.answerCallbackQuery(
         callbackQueryId = callbackQueryId,
         text = text,
         showAlert = showAlert,
@@ -1289,230 +963,219 @@ open class TelegramApiHandling : KoinComponent {
         cacheTime = cacheTime
     )
 
-    suspend fun answerInlineQuery(
-        inlineQueryId: String,
-        results: List<InlineQueryResult>,
-        cacheTime: Int? = null,
-        isPersonal: Boolean? = null,
-        nextOffset: String? = null,
-        switchPmText: String? = null,
-        switchPmParameter: String? = null,
-    ) = bot.answerInlineQuery(
-        inlineQueryId = inlineQueryId,
-        results = results,
-        cacheTime = cacheTime,
-        isPersonal = isPersonal,
-        nextOffset = nextOffset,
-        switchPmText = switchPmText,
-        switchPmParameter = switchPmParameter
+    suspend fun setMyCommands(
+        commands: List<BotCommand>,
+        scope: BotCommandScope?,
+        languageCode: String?,
+    ): Boolean = bot.setMyCommands(
+        commands = commands,
+        scope = scope,
+        languageCode = languageCode
     )
 
-    suspend fun answerWebAppQuery(webAppQueryId: String, result: InlineQueryResult) =
-        bot.answerWebAppQuery(
-            webAppQueryId = webAppQueryId,
-            result = result
-        )
+    suspend fun deleteMyCommands(
+        scope: BotCommandScope?,
+        languageCode: String?,
+    ): Boolean = bot.deleteMyCommands(
+        scope = scope,
+        languageCode = languageCode
+    )
 
-    suspend fun editMessageText(
-        chatId: Long? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        text: String,
-        parseMode: ParseMode? = null,
-        entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message {
-        return bot.editMessageText(
-            chatId = chatId,
-            messageId = messageId,
-            inlineMessageId = inlineMessageId,
-            text = text,
-            parseMode = parseMode,
-            entities = entities,
-            disableWebPagePreview = disableWebPagePreview,
-            replyMarkup = replyMarkup
-        )
-    }
+    suspend fun getMyCommands(
+        scope: BotCommandScope?,
+        languageCode: String?,
+    ): List<BotCommand> = bot.getMyCommands(
+        scope = scope,
+        languageCode = languageCode
+    )
 
-    suspend fun editMessageCaption(
-        chatId: Long? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        caption: String? = null,
-        parseMode: ParseMode? = null,
-        captionEntities: List<MessageEntity>? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message {
-        return bot.editMessageCaption(
-            chatId = chatId,
-            messageId = messageId,
-            inlineMessageId = inlineMessageId,
-            caption = caption,
-            parseMode = parseMode,
-            captionEntities = captionEntities,
-            replyMarkup = replyMarkup
-        )
-    }
+    suspend fun setMyName(
+        name: String?,
+        languageCode: String?,
+    ): Boolean = bot.setMyName(
+        name = name,
+        languageCode = languageCode
+    )
 
-    suspend fun editMessageMedia(
-        chatId: Long? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        media: InputMedia,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message {
-        return bot.editMessageMedia(chatId, messageId, inlineMessageId, media, replyMarkup)
-    }
+    suspend fun getMyName(
+        languageCode: String?,
+    ): BotName = bot.getMyName(
+        languageCode = languageCode
+    )
 
-    suspend fun editMessageReplyMarkup(
-        chatId: Long? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message {
-        return bot.editMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup)
-    }
+    suspend fun setMyDescription(
+        description: String?,
+        languageCode: String?,
+    ): Boolean = bot.setMyDescription(
+        description = description,
+        languageCode = languageCode
+    )
 
-    suspend fun sendSticker(
-        chatId: Long,
-        sticker: Any,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ): Message {
-        return bot.sendSticker(
-            chatId = chatId,
-            sticker = sticker,
-            messageThreadId = messageThreadId,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
-            replyMarkup = replyMarkup
-        )
-    }
+    suspend fun getMyDescription(
+        languageCode: String?,
+    ): BotDescription = bot.getMyDescription(
+        languageCode = languageCode
+    )
 
-    suspend fun Argument.sendSticker(
-        sticker: Any,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ): Message {
-        return bot.sendSticker(
-            chatId = chatId,
-            sticker = sticker,
-            messageThreadId = messageThreadId,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
-            replyMarkup = replyMarkup
-        )
-    }
+    suspend fun setMyShortDescription(
+        shortDescription: String?, languageCode: String?,
+    ): Boolean = bot.setMyShortDescription(
+        shortDescription = shortDescription,
+        languageCode = languageCode
+    )
 
-    suspend fun getStickerSet(name: String) = bot.getStickerSet(name)
+    suspend fun getMyShortDescription(
+        languageCode: String?,
+    ): BotShortDescription = bot.getMyShortDescription(
+        languageCode = languageCode
+    )
 
-    suspend fun getCustomEmojiStickers(customEmojiIds: List<String>) =
-        bot.getCustomEmojiStickers(customEmojiIds)
-
-    suspend fun uploadStickerFile(
-        userId: Long,
-        pngSticker: File
-    ) = bot.uploadStickerFile(userId, pngSticker)
-
-    suspend fun createNewStickerSet(
-        userId: Long,
-        name: String,
-        title: String,
-        emojis: String,
-        pngSticker: Any? = null,
-        tgsSticker: File? = null,
-        webmSticker: File? = null,
-        stickerType: String? = null,
-        containsMask: Boolean? = null,
-        maskPosition: MaskPosition? = null,
-    ): Boolean {
-        return bot.createNewStickerSet(
-            userId = userId,
-            name = name,
-            title = title,
-            emojis = emojis,
-            pngSticker = pngSticker,
-            tgsSticker = tgsSticker,
-            webmSticker = webmSticker,
-            stickerType = stickerType,
-            containsMask = containsMask,
-            maskPosition = maskPosition,
-        )
-    }
-
-    suspend fun addStickerToSet(
-        userId: Long,
-        name: String,
-        emojis: String,
-        pngSticker: Any? = null,
-        tgsSticker: File? = null,
-        webmSticker: File? = null,
-        maskPosition: MaskPosition? = null,
-    ): Boolean {
-        return bot.addStickerToSet(
-            userId = userId,
-            name = name,
-            emojis = emojis,
-            pngSticker = pngSticker,
-            tgsSticker = tgsSticker,
-            webmSticker = webmSticker,
-            maskPosition = maskPosition,
-        )
-    }
-
-    suspend fun setStickerPositionInSet(
-        sticker: String,
-        position: Int
-    ) = bot.setStickerPositionInSet(sticker, position)
-
-    suspend fun deleteStickerFromSet(sticker: String) = bot.deleteStickerFromSet(sticker)
-
-    suspend fun setStickerSetThumb(name: String, userId: Long, thumb: Any?): Boolean {
-        return bot.setStickerSetThumb(name, userId, thumb)
-    }
-
-    suspend fun sendGame(
-        chatId: Long,
-        gameShortName: String,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ) = bot.sendGame(
+    suspend fun Argument.editMessageLiveLocation(
+        messageId: Long,
+        latitude: Float,
+        longitude: Float,
+        horizontalAccuracy: Float?,
+        heading: Long?,
+        proximityAlertRadius: Long?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = bot.editMessageLiveLocation(
+        latitude = latitude,
+        longitude = longitude,
+        horizontalAccuracy = horizontalAccuracy,
+        heading = heading,
+        proximityAlertRadius = proximityAlertRadius,
         chatId = chatId,
-        gameShortName = gameShortName,
-        messageThreadId = messageThreadId,
-        disableNotification = disableNotification,
-        protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        messageId = messageId,
+        inlineMessageId = null,
         replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.stopMessageLiveLocation(
+        messageId: Long,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = bot.stopMessageLiveLocation(
+        chatId = chatId,
+        messageId = messageId,
+        inlineMessageId = null,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun setChatMenuButton(
+        chatId: Long?,
+        menuButton: MenuButton?,
+    ): Boolean = bot.setChatMenuButton(
+        chatId = chatId,
+        menuButton = menuButton
+    )
+
+    suspend fun getChatMenuButton(
+        chatId: Long?,
+    ): MenuButton = bot.getChatMenuButton(
+        chatId = chatId
+    )
+
+    suspend fun setMyDefaultAdministratorRights(
+        rights: ChatAdministratorRights?,
+        forChannels: Boolean?,
+    ): Boolean = bot.setMyDefaultAdministratorRights(
+        rights = rights,
+        forChannels = forChannels
+    )
+
+    suspend fun getMyDefaultAdministratorRights(
+        forChannels: Boolean?,
+    ): ChatAdministratorRights = bot.getMyDefaultAdministratorRights(
+        forChannels = forChannels
+    )
+
+    suspend fun getForumTopicIconStickers(): List<Sticker> = bot.getForumTopicIconStickers()
+
+    suspend fun Argument.createForumTopic(
+        name: String,
+        iconColor: Int?,
+        iconCustomEmojiId: String?,
+    ): ForumTopic = bot.createForumTopic(
+        chatId = chatId,
+        name = name,
+        iconColor = iconColor,
+        iconCustomEmojiId = iconCustomEmojiId
+    )
+
+    suspend fun Argument.editForumTopic(
+        messageThreadId: Long,
+        name: String?,
+        iconCustomEmojiId: String?,
+    ): Boolean = bot.editForumTopic(
+        chatId = chatId,
+        messageThreadId = messageThreadId,
+        name = name,
+        iconCustomEmojiId = iconCustomEmojiId
+    )
+
+    suspend fun Argument.closeForumTopic(
+        messageThreadId: Long,
+    ): Boolean = bot.closeForumTopic(
+        chatId = chatId,
+        messageThreadId = messageThreadId
+    )
+
+    suspend fun Argument.reopenForumTopic(
+        messageThreadId: Long,
+    ): Boolean = bot.reopenForumTopic(
+        chatId = chatId,
+        messageThreadId = messageThreadId
+    )
+
+    suspend fun Argument.deleteForumTopic(
+        messageThreadId: Long,
+    ): Boolean = bot.deleteForumTopic(
+        chatId = chatId,
+        messageThreadId = messageThreadId
+    )
+
+    suspend fun Argument.unpinAllForumTopicMessages(
+        messageThreadId: Long,
+    ): Boolean = bot.unpinAllForumTopicMessages(
+        chatId = chatId,
+        messageThreadId = messageThreadId
+    )
+
+    suspend fun Argument.editGeneralForumTopic(
+        name: String,
+    ): Boolean = bot.editGeneralForumTopic(
+        chatId = chatId,
+        name = name
+    )
+
+    suspend fun Argument.closeGeneralForumTopic(): Boolean = bot.closeGeneralForumTopic(
+        chatId = chatId
+    )
+
+    suspend fun Argument.reopenGeneralForumTopic(): Boolean = bot.reopenGeneralForumTopic(
+        chatId = chatId
+    )
+
+    suspend fun Argument.hideGeneralForumTopic(): Boolean = bot.hideGeneralForumTopic(
+        chatId = chatId
+    )
+
+    suspend fun Argument.unhideGeneralForumTopic(): Boolean = bot.unhideGeneralForumTopic(
+        chatId = chatId
+    )
+
+    suspend fun Argument.unpinAllGeneralForumTopicMessages(): Boolean = bot.unpinAllGeneralForumTopicMessages(
+        chatId = chatId
     )
 
     suspend fun Argument.sendGame(
         gameShortName: String,
-        messageThreadId: Long? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ) = bot.sendGame(
+        messageThreadId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = bot.sendGame(
         chatId = chatId,
         gameShortName = gameShortName,
         messageThreadId = messageThreadId,
@@ -1526,81 +1189,63 @@ open class TelegramApiHandling : KoinComponent {
     suspend fun setGameScore(
         userId: Long,
         score: Long,
-        force: Boolean? = null,
-        disableEditMessage: Boolean? = null,
-        chatId: Long? = null,
-        messageId: Long? = null, inlineMessageId: String? = null,
-    ): Message {
-        return bot.setGameScore(userId, score, force, disableEditMessage, chatId, messageId, inlineMessageId)
-    }
+        force: Boolean?,
+        disableEditMessage: Boolean?,
+        chatId: Long?,
+        messageId: Long?,
+        inlineMessageId: String?,
+    ): Message = bot.setGameScore(
+        userId = userId,
+        score = score,
+        force = force,
+        disableEditMessage = disableEditMessage,
+        chatId = chatId,
+        messageId = messageId,
+        inlineMessageId = inlineMessageId
+    )
 
     suspend fun getGameHighScores(
         userId: Long,
-        chatId: Long? = null,
-        messageId: Long? = null,
-        inlineMessageId: String? = null,
-    ): List<GameHighScore> {
-        return bot.getGameHighScores(userId, chatId, messageId, inlineMessageId)
-    }
-
-    suspend fun sendInvoice(
-        chatId: Long,
-        title: String,
-        description: String,
-        payload: String,
-        providerToken: String,
-        currency: String,
-        prices: List<LabeledPrice>,
-        messageThreadId: Long? = null,
-        maxTipAmount: Int? = null,
-        suggestedTipAmount: List<Int>? = null,
-        startParameter: String? = null,
-        providerData: String? = null,
-        photoUrl: String? = null,
-        photoSize: Int? = null,
-        photoWidth: Int? = null,
-        photoHeight: Int? = null,
-        needName: Boolean? = null,
-        needPhoneNumber: Boolean? = null,
-        needEmail: Boolean? = null,
-        needShippingAddress: Boolean? = null,
-        sendPhoneNumberToProvider: Boolean? = null,
-        sendEmailToProvider: Boolean? = null,
-        isFlexible: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message = bot.sendInvoice(
+        chatId: Long?,
+        messageId: Long?,
+        inlineMessageId: String?,
+    ): List<GameHighScore> = bot.getGameHighScores(
+        userId = userId,
         chatId = chatId,
-        title = title,
-        description = description,
-        payload = payload,
-        providerToken = providerToken,
-        currency = currency,
-        prices = prices,
-        messageThreadId = messageThreadId,
-        maxTipAmount = maxTipAmount,
-        suggestedTipAmount = suggestedTipAmount,
-        startParameter = startParameter,
-        providerData = providerData,
-        photoUrl = photoUrl,
-        photoSize = photoSize,
-        photoWidth = photoWidth,
-        photoHeight = photoHeight,
-        needName = needName,
-        needPhoneNumber = needPhoneNumber,
-        needEmail = needEmail,
-        needShippingAddress = needShippingAddress,
-        sendPhoneNumberToProvider = sendPhoneNumberToProvider,
-        sendEmailToProvider = sendEmailToProvider,
-        isFlexible = isFlexible,
-        protectContent = protectContent,
-        disableNotification = disableNotification,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
-        replyMarkup = replyMarkup
+        messageId = messageId,
+        inlineMessageId = inlineMessageId
+    )
+
+    suspend fun answerInlineQuery(
+        inlineQueryId: String,
+        results: List<InlineQueryResult>,
+        cacheTime: Int?,
+        isPersonal: Boolean?,
+        nextOffset: String?,
+        button: InlineQueryResultsButton?,
+    ): Boolean = bot.answerInlineQuery(
+        inlineQueryId = inlineQueryId,
+        results = results,
+        cacheTime = cacheTime,
+        isPersonal = isPersonal,
+        nextOffset = nextOffset,
+        button = button
+    )
+
+    suspend fun answerWebAppQuery(
+        webAppQueryId: String,
+        result: InlineQueryResult,
+    ): SentWebAppMessage = bot.answerWebAppQuery(
+        webAppQueryId = webAppQueryId,
+        result = result
+    )
+
+    suspend fun setPassportDataErrors(
+        userId: Long,
+        errors: List<PassportElementError>,
+    ): Boolean = bot.setPassportDataErrors(
+        userId = userId,
+        errors = errors
     )
 
     suspend fun Argument.sendInvoice(
@@ -1610,27 +1255,27 @@ open class TelegramApiHandling : KoinComponent {
         providerToken: String,
         currency: String,
         prices: List<LabeledPrice>,
-        messageThreadId: Long? = null,
-        maxTipAmount: Int? = null,
-        suggestedTipAmount: List<Int>? = null,
-        startParameter: String? = null,
-        providerData: String? = null,
-        photoUrl: String? = null,
-        photoSize: Int? = null,
-        photoWidth: Int? = null,
-        photoHeight: Int? = null,
-        needName: Boolean? = null,
-        needPhoneNumber: Boolean? = null,
-        needEmail: Boolean? = null,
-        needShippingAddress: Boolean? = null,
-        sendPhoneNumberToProvider: Boolean? = null,
-        sendEmailToProvider: Boolean? = null,
-        isFlexible: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
+        messageThreadId: Long?,
+        maxTipAmount: Int?,
+        suggestedTipAmount: List<Int>?,
+        startParameter: String?,
+        providerData: String?,
+        photoUrl: String?,
+        photoSize: Int?,
+        photoWidth: Int?,
+        photoHeight: Int?,
+        needName: Boolean?,
+        needPhoneNumber: Boolean?,
+        needEmail: Boolean?,
+        needShippingAddress: Boolean?,
+        sendPhoneNumberToProvider: Boolean?,
+        sendEmailToProvider: Boolean?,
+        isFlexible: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message = bot.sendInvoice(
         chatId = chatId,
         title = title,
@@ -1655,8 +1300,8 @@ open class TelegramApiHandling : KoinComponent {
         sendPhoneNumberToProvider = sendPhoneNumberToProvider,
         sendEmailToProvider = sendEmailToProvider,
         isFlexible = isFlexible,
-        protectContent = protectContent,
         disableNotification = disableNotification,
+        protectContent = protectContent,
         replyToMessageId = replyToMessageId,
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
@@ -1669,20 +1314,20 @@ open class TelegramApiHandling : KoinComponent {
         providerToken: String,
         currency: String,
         prices: List<LabeledPrice>,
-        maxTipAmount: Int? = null,
-        suggestedTipAmount: List<Int>? = null,
-        providerData: String? = null,
-        photoUrl: String? = null,
-        photoSize: Int? = null,
-        photoWidth: Int? = null,
-        photoHeight: Int? = null,
-        needName: Boolean? = null,
-        needPhoneNumber: Boolean? = null,
-        needEmail: Boolean? = null,
-        needShippingAddress: Boolean? = null,
-        sendPhoneNumberToProvider: Boolean? = null,
-        sendEmailToProvider: Boolean? = null,
-        isFlexible: Boolean? = null,
+        maxTipAmount: Int?,
+        suggestedTipAmount: List<Int>?,
+        providerData: String?,
+        photoUrl: String?,
+        photoSize: Int?,
+        photoWidth: Int?,
+        photoHeight: Int?,
+        needName: Boolean?,
+        needPhoneNumber: Boolean?,
+        needEmail: Boolean?,
+        needShippingAddress: Boolean?,
+        sendPhoneNumberToProvider: Boolean?,
+        sendEmailToProvider: Boolean?,
+        isFlexible: Boolean?,
     ): String = bot.createInvoiceLink(
         title = title,
         description = description,
@@ -1709,153 +1354,37 @@ open class TelegramApiHandling : KoinComponent {
     suspend fun answerShippingQuery(
         shippingQueryId: String,
         ok: Boolean,
-        shippingOptions: List<ShippingOption>? = null,
-        errorMessage: String? = null,
-    ) = bot.answerShippingQuery(shippingQueryId, ok, shippingOptions, errorMessage)
+        shippingOptions: List<ShippingOption>?,
+        errorMessage: String?,
+    ): Boolean = bot.answerShippingQuery(
+        shippingQueryId = shippingQueryId,
+        ok = ok,
+        shippingOptions = shippingOptions,
+        errorMessage = errorMessage
+    )
 
     suspend fun answerPreCheckoutQuery(
         preCheckoutQueryId: String,
         ok: Boolean,
-        errorMessage: String? = null,
-    ) = bot.answerPreCheckoutQuery(preCheckoutQueryId, ok, errorMessage)
+        errorMessage: String?,
+    ): Boolean = bot.answerPreCheckoutQuery(
+        preCheckoutQueryId = preCheckoutQueryId,
+        ok = ok,
+        errorMessage = errorMessage
+    )
 
-    suspend fun setPassportDataErrors(
-        userId: Long,
-        errors: List<PassportElementError>
-    ) = bot.setPassportDataErrors(userId, errors)
-
-    suspend fun sendPoll(
-        chatId: Long,
-        question: String,
-        options: List<String>,
-        messageThreadId: Long? = null,
-        isAnonymous: Boolean? = null,
-        type: String? = null,
-        allowsMultipleAnswers: Boolean? = null,
-        correctOptionId: Long? = null,
-        explanation: String? = null,
-        explanationParseMode: String? = null,
-        explanationEntities: List<MessageEntity>? = null,
-        openPeriod: Long? = null,
-        closeDate: Long? = null,
-        isClosed: Boolean? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ): Message {
-        if (openPeriod != null && closeDate != null) {
-            throw IllegalArgumentException("openPeriod and closeDate can't be used together")
-        }
-
-        return bot.sendPoll(
-            chatId = chatId,
-            question = question,
-            options = options,
-            messageThreadId = messageThreadId,
-            isAnonymous = isAnonymous,
-            type = type,
-            allowsMultipleAnswers = allowsMultipleAnswers,
-            correctOptionId = correctOptionId,
-            explanation = explanation,
-            explanationParseMode = explanationParseMode,
-            explanationEntities = explanationEntities,
-            openPeriod = openPeriod,
-            closeDate = closeDate,
-            isClosed = isClosed,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
-            replyMarkup = replyMarkup
-        )
-    }
-
-    suspend fun stopPoll(chatId: Long, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll =
-        bot.stopPoll(chatId, messageId, replyMarkup)
-
-    suspend fun setChatPermissions(
-        chatId: Long,
-        permissions: ChatPermissions,
-        useIndependentChatPermissions: Boolean? = null,
-    ) = bot.setChatPermissions(
+    suspend fun Argument.sendSticker(
+        sticker: NamedContent,
+        messageThreadId: Long?,
+        emoji: String?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyToMessageId: Long?,
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: ReplyKeyboard?,
+    ): Message = bot.sendSticker(
         chatId = chatId,
-        permissions = permissions,
-        useIndependentChatPermissions = useIndependentChatPermissions,
-    )
-
-    suspend fun createChatInviteLink(
-        chatId: Long,
-        name: String? = null,
-        expireDate: Long? = null,
-        memberLimit: Long? = null,
-        createsJoinRequest: Boolean? = null,
-    ): ChatInviteLink = bot.createChatInviteLink(
-        chatId,
-        name,
-        expireDate,
-        memberLimit,
-        createsJoinRequest,
-    )
-
-    suspend fun editChatInviteLink(
-        chatId: Long,
-        inviteLink: String,
-        name: String? = null,
-        expireDate: Long? = null,
-        memberLimit: Long? = null,
-        createsJoinRequest: Boolean? = null,
-    ): ChatInviteLink = bot.editChatInviteLink(
-        chatId,
-        inviteLink,
-        name,
-        expireDate,
-        memberLimit,
-        createsJoinRequest
-    )
-
-    suspend fun revokeChatInviteLink(
-        chatId: Long,
-        inviteLink: String
-    ): ChatInviteLink = bot.revokeChatInviteLink(
-        chatId,
-        inviteLink
-    )
-
-    suspend fun approveChatJoinRequest(
-        chatId: Long,
-        inviteLink: String
-    ): Boolean = bot.approveChatJoinRequest(
-        chatId,
-        inviteLink
-    )
-
-    suspend fun declineChatJoinRequest(
-        chatId: Long,
-        inviteLink: String
-    ): Boolean = bot.declineChatJoinRequest(
-        chatId,
-        inviteLink
-    )
-
-    suspend fun setChatAdministratorCustomTitle(chatId: Long, userId: Long, customTitle: String) =
-        bot.setChatAdministratorCustomTitle(chatId, userId, customTitle)
-
-    suspend fun deleteMessage(chatId: Long, messageId: Long): Boolean =
-        bot.deleteMessage(chatId, messageId)
-
-    suspend fun sendDice(
-        chatId: Long,
-        messageThreadId: Long? = null,
-        emoji: String? = null,
-        disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
-        replyMarkup: ReplyKeyboard? = null,
-    ) = bot.sendDice(
-        chatId = chatId,
+        sticker = sticker,
         messageThreadId = messageThreadId,
         emoji = emoji,
         disableNotification = disableNotification,
@@ -1864,5 +1393,189 @@ open class TelegramApiHandling : KoinComponent {
         allowSendingWithoutReply = allowSendingWithoutReply,
         replyMarkup = replyMarkup
     )
-    //endregion
+
+    suspend fun getStickerSet(
+        name: String,
+    ): StickerSet = bot.getStickerSet(
+        name = name
+    )
+
+    suspend fun getCustomEmojiStickers(
+        customEmojiIds: List<String>,
+    ): List<Sticker> = bot.getCustomEmojiStickers(
+        customEmojiIds = customEmojiIds
+    )
+
+    suspend fun uploadStickerFile(
+        userId: Long,
+        sticker: NamedContent,
+        stickerFormat: String,
+    ): File = bot.uploadStickerFile(
+        userId = userId,
+        sticker = sticker,
+        stickerFormat = stickerFormat
+    )
+
+    suspend fun createNewStickerSet(
+        userId: Long,
+        name: String,
+        title: String,
+        stickers: Collection<Any>,
+        stickerFormat: String,
+        stickerType: String?,
+        needsRepainting: Boolean?,
+    ): Boolean = bot.createNewStickerSet(
+        userId = userId,
+        name = name,
+        title = title,
+        stickers = stickers,
+        stickerFormat = stickerFormat,
+        stickerType = stickerType,
+        needsRepainting = needsRepainting
+    )
+
+    suspend fun addStickerToSet(
+        userId: Long,
+        name: String,
+        sticker: Any,
+    ): Boolean = bot.addStickerToSet(
+        userId = userId,
+        name = name,
+        sticker = sticker
+    )
+
+    suspend fun setStickerPositionInSet(
+        sticker: String,
+        position: Int,
+    ): Boolean = bot.setStickerPositionInSet(
+        sticker = sticker,
+        position = position
+    )
+
+    suspend fun deleteStickerFromSet(
+        sticker: String,
+    ): Boolean = bot.deleteStickerFromSet(
+        sticker = sticker
+    )
+
+    suspend fun setStickerSetThumbnail(
+        name: String,
+        userId: Long,
+        thumbnail: Any?,
+    ): Boolean = bot.setStickerSetThumbnail(
+        name = name,
+        userId = userId,
+        thumbnail = thumbnail
+    )
+
+    suspend fun getUpdates(
+        offset: Int?,
+        limit: Int?,
+        timeout: Int?,
+        allowedUpdates: List<AllowedUpdate>?,
+    ): List<UpdateResponse> = bot.getUpdates(
+        offset = offset,
+        limit = limit,
+        timeout = timeout,
+        allowedUpdates = allowedUpdates
+    )
+
+    suspend fun setWebhook(
+        url: String,
+        certificate: NamedContent?,
+        ipAddress: String?,
+        maxConnections: Int?,
+        allowedUpdates: List<AllowedUpdate>?,
+        dropPendingUpdates: Boolean?,
+        secretToken: String?,
+    ): Boolean = bot.setWebhook(
+        url = url,
+        certificate = certificate,
+        ipAddress = ipAddress,
+        maxConnections = maxConnections,
+        allowedUpdates = allowedUpdates,
+        dropPendingUpdates = dropPendingUpdates,
+        secretToken = secretToken
+    )
+
+    suspend fun deleteWebhook(
+        dropPendingUpdates: Boolean?,
+    ): Boolean = bot.deleteWebhook(
+        dropPendingUpdates = dropPendingUpdates
+    )
+
+    suspend fun getWebhookInfo(): WebhookInfo = bot.getWebhookInfo()
+
+    suspend fun Argument.editMessageText(
+        messageId: Long,
+        text: String,
+        parseMode: ParseMode?,
+        entities: List<MessageEntity>?,
+        disableWebPagePreview: Boolean?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = bot.editMessageText(
+        chatId = chatId,
+        messageId = messageId,
+        inlineMessageId = null,
+        text = text,
+        parseMode = parseMode,
+        entities = entities,
+        disableWebPagePreview = disableWebPagePreview,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.editMessageCaption(
+        messageId: Long,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message = bot.editMessageCaption(
+        chatId = chatId.toString(),
+        messageId = messageId,
+        inlineMessageId = null,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.editMessageMedia(
+        messageId: Long,
+        media: InputMedia,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = bot.editMessageMedia(
+        chatId = chatId,
+        messageId = messageId,
+        inlineMessageId = null,
+        media = media,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.editMessageReplyMarkup(
+        messageId: Long,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = bot.editMessageReplyMarkup(
+        chatId = chatId,
+        messageId = messageId,
+        inlineMessageId = null,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.stopPoll(
+        messageId: Long,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Poll = bot.stopPoll(
+        chatId = chatId,
+        messageId = messageId,
+        replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.deleteMessage(
+        messageId: Long,
+    ): Boolean = bot.deleteMessage(
+        chatId = chatId,
+        messageId = messageId
+    )
+    //endregion Telegram methods
 }

@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.argument.message
 
-import com.elbekd.bot.types.Audio
-import com.elbekd.bot.types.Message
+import io.github.dehuckakpyt.telegrambot.model.type.Audio
+import io.github.dehuckakpyt.telegrambot.model.type.Message
 
 
 /**

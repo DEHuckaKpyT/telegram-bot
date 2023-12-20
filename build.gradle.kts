@@ -10,15 +10,12 @@ plugins {
 
 allprojects {
     group = "io.github.dehuckakpyt.telegrambot"
-    version = "0.3.0"
+    version = "0.4.0"
 }
 
 subprojects {
     repositories {
-        mavenLocal()
         mavenCentral()
-        maven("https://jitpack.io")
-        maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
     }
 }
 
@@ -37,6 +34,10 @@ nexusPublishing {
 }
 
 configure(subprojects - project(":example")) {
+//    kotlin {
+//        explicitApi()
+//    }
+
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
     apply(plugin = "signing")

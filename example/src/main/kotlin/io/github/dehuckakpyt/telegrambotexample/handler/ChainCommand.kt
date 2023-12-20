@@ -8,11 +8,14 @@ import io.github.dehuckakpyt.telegrambotexample.template.chainOneMore
 import io.github.dehuckakpyt.telegrambotexample.template.chainStartSum
 
 fun BotHandling.chainCommand() {
+
+    val startSum = 0
+
     // next - указание следующего шага
     command("/chain", next = "get target") {
         // чтобы отправить сообщение, можно указать chatId (в этом контексте chatId - чат, в котором пришло сообщение)
         // chain - шаблон сообщения, заданный val BotHandling.chain by template()
-        sendMessage(chatId, chain)
+        bot.sendMessage(chatId, chain)
     }
 
     step("get target", next = "sum numbers") {
@@ -44,5 +47,3 @@ fun BotHandling.chainCommand() {
         sendMessage(chainEnd with mapOf("sum" to sum, "target" to target))
     }
 }
-
-private const val startSum = 0

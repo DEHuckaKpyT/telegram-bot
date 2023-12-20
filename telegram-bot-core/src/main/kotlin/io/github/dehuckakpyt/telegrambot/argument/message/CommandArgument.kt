@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.argument.message
 
-import com.elbekd.bot.types.Message
+import io.github.dehuckakpyt.telegrambot.model.type.Message
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named

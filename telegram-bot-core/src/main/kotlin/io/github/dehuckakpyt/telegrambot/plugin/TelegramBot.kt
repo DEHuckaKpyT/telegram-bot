@@ -1,9 +1,13 @@
 package io.github.dehuckakpyt.telegrambot.plugin
 
+import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
 import io.github.dehuckakpyt.telegrambot.plugin.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
+import org.koin.core.qualifier.named
+import org.koin.mp.KoinPlatform
 
 
 /**
@@ -15,20 +19,19 @@ import io.ktor.server.application.hooks.*
 val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot", { TelegramBotConfig(it) }) {
     if (!pluginConfig.enabled) return@createApplicationPlugin
 
-    val telegramBot = TelegramBotFactory.load(application, pluginConfig)
-    val username = telegramBot.username
-
-    pluginConfig.configureBot(telegramBot)
+    TelegramBotFactory.load(application, pluginConfig)
+    val username = KoinPlatform.getKoin().get<String>(named("username"))
+    val updateReceiver = InternalKoinContext.koin.get<UpdateReceiver>()
 
     fun startTelegramBot() {
         application.log.info("Starting telegram-bot '$username'..")
-        telegramBot.start()
+        updateReceiver.start()
         application.log.info("Telegram-bot '$username' started.")
     }
 
     fun stopTelegramBot() {
         application.log.info("Stopping telegram-bot '$username'..")
-        telegramBot.stop()
+        updateReceiver.stop()
         application.log.info("Telegram-bot '$username' stopped.")
     }
 
