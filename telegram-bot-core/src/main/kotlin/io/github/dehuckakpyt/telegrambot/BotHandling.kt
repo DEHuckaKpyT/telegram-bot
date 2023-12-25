@@ -7,10 +7,9 @@ import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.MessageArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.MessageType.TEXT
 import io.github.dehuckakpyt.telegrambot.argument.message.TextMessageArgument
-import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
+import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
-import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.template.Templating
 import kotlin.reflect.KClass
 
@@ -21,11 +20,15 @@ import kotlin.reflect.KClass
  *
  * @author Denis Matytsin
  */
-open class BotHandling : TelegramApiHandling(), Templating {
-
-    private val chainResolver = InternalKoinContext.koin.get<ChainResolver>()
-    private val contentConverter = InternalKoinContext.koin.get<ContentConverter>()
-    private val chainSource = InternalKoinContext.koin.get<ChainSource>()
+open class BotHandling internal constructor(
+    public override val bot: TelegramBot,
+    private val chainResolver: ChainResolver,
+    private val contentConverter: ContentConverter,
+    templating: Templating,
+    buttonFactory: ButtonFactory,
+) : TelegramApiHandling(),
+    Templating by templating,
+    ButtonFactory by buttonFactory {
 
     fun command(command: String, next: String? = null, action: suspend CommandArgument.() -> Unit) {
         chainResolver.addCommand(command, next, action)
@@ -39,7 +42,7 @@ open class BotHandling : TelegramApiHandling(), Templating {
         step: String,
         type: KClass<out T>,
         next: String? = null,
-        action: suspend T.() -> Unit
+        action: suspend T.() -> Unit,
     ) {
         chainResolver.addStep(step, type, next, action)
     }

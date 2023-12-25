@@ -1,8 +1,14 @@
 package io.github.dehuckakpyt.telegrambot
 
-import com.dehucka.microservice.ext.mapperConfig
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.core.util.DefaultIndenter
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.github.dehuckakpyt.telegrambot.model.internal.*
 import io.github.dehuckakpyt.telegrambot.model.type.*
@@ -23,6 +29,7 @@ import io.ktor.http.HttpHeaders.ContentDisposition
 import io.ktor.serialization.jackson.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 
 
 /**
@@ -38,9 +45,29 @@ class TelegramBotImpl(
 ) : TelegramBot {
 
     //region Make requests
-    private val mapper = ObjectMapper().apply {
-        mapperConfig()
-        setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    private val mapper = jacksonMapperBuilder().apply {
+        configure(SerializationFeature.INDENT_OUTPUT, true)
+        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    }.build().apply {
+        setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
+            indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
+            indentObjectsWith(DefaultIndenter("  ", "\n"))
+        })
+        dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+
+        registerModule(JavaTimeModule())
+
+        registerModule(
+            KotlinModule.Builder()
+                .withReflectionCacheSize(512)
+                .configure(KotlinFeature.NullToEmptyCollection, false)
+                .configure(KotlinFeature.NullToEmptyMap, false)
+                .configure(KotlinFeature.NullIsSameAsDefault, false)
+                .configure(KotlinFeature.SingletonSupport, false)
+                .configure(KotlinFeature.StrictNullChecks, false)
+                .build()
+        )
     }
 
     private val client = HttpClient(Apache) {
@@ -65,7 +92,6 @@ class TelegramBotImpl(
         withContext(Dispatchers.IO) {
             handleRequest(client.get(method, block))
         }
-
 
     private suspend inline fun <reified T : Any> postMultiPart(method: String, noinline block: FormBuilder.() -> Unit): T =
         withContext(Dispatchers.IO) {

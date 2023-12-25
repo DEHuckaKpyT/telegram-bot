@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.converter
 
-import com.dehucka.microservice.ext.toUUID
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
+import java.util.*
 
 class SimpleCallbackSerializer(
     private val callbackContentSource: CallbackContentSource,
@@ -46,7 +46,7 @@ class SimpleCallbackSerializer(
 
         return when (type) {
             CallbackDataType.STRING -> data
-            CallbackDataType.ID -> callbackContentSource.get(data.toUUID()).content
+            CallbackDataType.ID -> callbackContentSource.get(UUID.fromString(data)).content
             else -> throw RuntimeException("Callback data can not be parsed. Unknown type '$type'")
         }
     }

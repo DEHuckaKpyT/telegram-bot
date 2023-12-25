@@ -5,6 +5,6 @@ plugins {
 dependencies {
     //region dehuckakpyt
     api("io.github.dehuckakpyt:exposed-extensions:0.1.4")
-    api(project(":telegram-bot-core"))
+    implementation(project(":telegram-bot-core"))
     //endregion dehuckakpyt
 }

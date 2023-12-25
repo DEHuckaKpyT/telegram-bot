@@ -3,8 +3,6 @@ package io.github.dehuckakpyt.telegrambot.template.model.method
 import freemarker.template.SimpleScalar
 import freemarker.template.TemplateMethodModelEx
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 
 
 /**
@@ -13,8 +11,9 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-internal class CleanHtmlMethod : TemplateMethodModelEx, KoinComponent {
-    private val htmlFormatter = get<HtmlFormatter>()
+internal class CleanHtmlMethod(
+    private val htmlFormatter: HtmlFormatter,
+) : TemplateMethodModelEx {
 
     override fun exec(arguments: MutableList<Any?>): Any? {
         if (arguments.size != 1) throw RuntimeException("Expected only one argument")

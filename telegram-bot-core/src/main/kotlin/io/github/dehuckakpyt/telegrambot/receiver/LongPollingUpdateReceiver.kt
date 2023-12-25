@@ -1,14 +1,13 @@
 package io.github.dehuckakpyt.telegrambot.receiver
 
-import com.dehucka.microservice.logger.Logging
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.context.InternalKoinComponent
-import io.github.dehuckakpyt.telegrambot.plugin.config.receiver.LongPollingConfig
+import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 
 
 /**
@@ -21,8 +20,9 @@ internal class LongPollingUpdateReceiver(
     private val bot: TelegramBot,
     private val updateResolver: UpdateResolver,
     private val config: LongPollingConfig,
-) : UpdateReceiver, InternalKoinComponent, Logging {
+) : UpdateReceiver {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
     private val scope = CoroutineScope(Dispatchers.Default)
 
     override fun start(): Unit {

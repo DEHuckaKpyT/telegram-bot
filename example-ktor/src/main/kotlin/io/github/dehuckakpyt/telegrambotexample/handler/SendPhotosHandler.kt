@@ -1,0 +1,19 @@
+package io.github.dehuckakpyt.telegrambotexample.handler
+
+
+/**
+ * Created on 08.12.2023.
+ *<p>
+ *
+ * @author Denis Matytsin
+ */
+//@Factory
+//class SendPhotosHandler : BotHandler({
+//    command("/photos") {
+//        val message = sendPhoto(NamedResourceContent("Hello.jpg", "/images/cat.jpg"))
+//        val fileId = message.photo[0].fileId
+//
+//        delay(500)
+//        sendPhoto(fileId, "So cute!")
+//    }
+//})

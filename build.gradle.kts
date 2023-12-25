@@ -33,7 +33,7 @@ nexusPublishing {
     }
 }
 
-configure(subprojects - project(":example")) {
+configure(subprojects - project(":example-ktor")) {
 //    kotlin {
 //        explicitApi()
 //    }

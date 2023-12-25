@@ -1,12 +1,11 @@
 package io.github.dehuckakpyt.telegrambot.exception.handler
 
-import com.dehucka.microservice.logger.Logging
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
+import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templating
-import io.github.dehuckakpyt.telegrambot.template.whenKnownErrorTemplate
-import io.github.dehuckakpyt.telegrambot.template.whenUnknownErrorTemplate
+import org.slf4j.LoggerFactory
 
 
 /**
@@ -17,7 +16,11 @@ import io.github.dehuckakpyt.telegrambot.template.whenUnknownErrorTemplate
  */
 open class ExceptionHandlerImpl(
     protected val bot: TelegramBot,
-) : ExceptionHandler(), Templating, Logging {
+    protected val template: MessageTemplate,
+    templating: Templating,
+) : ExceptionHandler(), Templating by templating {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     override suspend fun execute(chatId: Long, block: suspend () -> Unit): Unit {
         try {
@@ -31,14 +34,14 @@ open class ExceptionHandlerImpl(
         when (ex) {
             is PrivateChatException -> {
                 if (chatId < 0) return // у личных чатов положительный id
-                bot.sendMessage(chatId, whenKnownErrorTemplate with ("message" to ex.localizedMessage))
+                bot.sendMessage(chatId, template.whenKnownException with ("message" to ex.localizedMessage))
             }
 
-            is ChatException -> bot.sendMessage(chatId, whenKnownErrorTemplate with ("message" to ex.localizedMessage))
+            is ChatException -> bot.sendMessage(chatId, template.whenKnownException with ("message" to ex.localizedMessage))
 
             else -> {
                 logger.error("Unexpected error while handling message in chat $chatId", ex)
-                bot.sendMessage(chatId, whenUnknownErrorTemplate)
+                bot.sendMessage(chatId, template.whenUnknownException)
             }
         }
     }

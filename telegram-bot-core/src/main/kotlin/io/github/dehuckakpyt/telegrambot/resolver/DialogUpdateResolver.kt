@@ -1,6 +1,5 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
-import com.dehucka.microservice.logger.Logging
 import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
 import io.github.dehuckakpyt.telegrambot.argument.message.factory.MessageArgumentFactory
@@ -12,7 +11,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.template.Templating
+import org.slf4j.LoggerFactory
 
 
 /**
@@ -28,7 +27,10 @@ internal class DialogUpdateResolver(
     private val exceptionHandler: ExceptionHandler,
     private val messageArgumentFactories: List<MessageArgumentFactory>,
     private val messageSource: MessageSource,
-) : Templating, Logging {
+    private val username: String,
+) {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     suspend fun processMessage(message: Message): Unit {
         val from = message.from
@@ -43,7 +45,7 @@ internal class DialogUpdateResolver(
         messageSource.save(chatId, from.id, message.messageId, text)
 
         exceptionHandler.execute(chatId) {
-            CommandArgument.fetchCommand(text)?.let {
+            fetchCommand(text)?.let {
                 processCommandMessage(it, message)
             } ?: processGeneralMessage(message)
         }
@@ -77,4 +79,22 @@ internal class DialogUpdateResolver(
     private val Message.messageArgumentFactory: MessageArgumentFactory
         get() = messageArgumentFactories.firstOrNull { it.matches(this) }
             ?: throw ChatException("Такой тип сообщения ещё не поддерживается.")
+
+    private fun fetchCommand(input: String?): String? {
+        input ?: return null
+
+        val find = commandRegex.find(input) ?: return null
+        val groups = find.groups
+
+        val command = groups[1]?.value ?: return null
+
+        val usernameActual = groups[2]?.value
+        if (usernameActual != null && usernameActual != username) return null
+
+        return command
+    }
+
+    companion object {
+        private val commandRegex = Regex("^(/[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")
+    }
 }

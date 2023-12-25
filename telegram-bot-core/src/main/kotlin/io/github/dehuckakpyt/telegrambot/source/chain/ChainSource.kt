@@ -1,6 +1,5 @@
 package io.github.dehuckakpyt.telegrambot.source.chain
 
-import com.dehucka.microservice.logger.Logging
 import io.github.dehuckakpyt.telegrambot.model.source.Chain
 
 
@@ -10,7 +9,7 @@ import io.github.dehuckakpyt.telegrambot.model.source.Chain
  *
  * @author Denis Matytsin
  */
-interface ChainSource : Logging {
+interface ChainSource {
 
     suspend fun save(chatId: Long, fromId: Long, step: String?, content: String?)
 

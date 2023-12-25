@@ -5,8 +5,6 @@ import io.github.dehuckakpyt.telegrambot.argument.Argument
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 
 
 /**
@@ -15,9 +13,9 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-abstract class TelegramApiHandling : KoinComponent {
+abstract class TelegramApiHandling {
 
-    val bot = get<TelegramBot>()
+    protected abstract val bot: TelegramBot
 
     //region Telegram methods
     suspend fun getMe(): User = bot.getMe()
