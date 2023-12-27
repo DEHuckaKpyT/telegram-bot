@@ -26,7 +26,9 @@ internal class LongPollingUpdateReceiver(
     private val scope = CoroutineScope(Dispatchers.Default)
 
     override fun start(): Unit {
+        logger.info("Starting Telegram Bot..")
         scope.launch { receiveUpdates() }
+        logger.info("Telegram Bot started.")
     }
 
     private suspend fun receiveUpdates() {
@@ -49,9 +51,9 @@ internal class LongPollingUpdateReceiver(
     }
 
     override fun stop(): Unit {
-        logger.info("Stopping client.")
+        logger.info("Stopping Telegram Bot..")
         bot.stop()
-        logger.info("Client stopped.")
+        logger.info("Telegram Bot stopped.")
         scope.cancel()
     }
 

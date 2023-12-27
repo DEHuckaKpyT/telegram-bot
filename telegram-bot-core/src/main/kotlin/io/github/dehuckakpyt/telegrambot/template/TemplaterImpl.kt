@@ -24,10 +24,10 @@ import java.text.SimpleDateFormat
  *
  * @author Denis Matytsin
  */
-class TemplatingImpl(
+class TemplaterImpl(
     private val templateConfiguration: Configuration,
     htmlFormatter: HtmlFormatter,
-) : Templating {
+) : Templater {
     private val cleanHtmlMethod = CleanHtmlMethod(htmlFormatter)
     private val escapeHtmlMethod = EscapeHtmlMethod(htmlFormatter)
     private val mapper = jacksonMapperBuilder().run {

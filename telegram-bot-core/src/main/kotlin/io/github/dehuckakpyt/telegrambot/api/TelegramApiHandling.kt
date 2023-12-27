@@ -18,11 +18,11 @@ abstract class TelegramApiHandling {
     protected abstract val bot: TelegramBot
 
     //region Telegram methods
-    suspend fun getMe(): User = bot.getMe()
+    suspend fun Argument.getMe(): User = bot.getMe()
 
-    suspend fun logOut(): Boolean = bot.logOut()
+    suspend fun Argument.logOut(): Boolean = bot.logOut()
 
-    suspend fun close(): Boolean = bot.close()
+    suspend fun Argument.close(): Boolean = bot.close()
 
     suspend fun Argument.sendMessage(
         text: String,
@@ -690,7 +690,7 @@ abstract class TelegramApiHandling {
         messageThreadId = messageThreadId
     )
 
-    suspend fun getUserProfilePhotos(
+    suspend fun Argument.getUserProfilePhotos(
         userId: Long,
         offset: Long?,
         limit: Long?,
@@ -700,7 +700,7 @@ abstract class TelegramApiHandling {
         limit = limit
     )
 
-    suspend fun getFile(
+    suspend fun Argument.getFile(
         fileId: String,
     ): File = bot.getFile(
         fileId = fileId
@@ -961,7 +961,7 @@ abstract class TelegramApiHandling {
         cacheTime = cacheTime
     )
 
-    suspend fun setMyCommands(
+    suspend fun Argument.setMyCommands(
         commands: List<BotCommand>,
         scope: BotCommandScope?,
         languageCode: String?,
@@ -971,7 +971,7 @@ abstract class TelegramApiHandling {
         languageCode = languageCode
     )
 
-    suspend fun deleteMyCommands(
+    suspend fun Argument.deleteMyCommands(
         scope: BotCommandScope?,
         languageCode: String?,
     ): Boolean = bot.deleteMyCommands(
@@ -979,7 +979,7 @@ abstract class TelegramApiHandling {
         languageCode = languageCode
     )
 
-    suspend fun getMyCommands(
+    suspend fun Argument.getMyCommands(
         scope: BotCommandScope?,
         languageCode: String?,
     ): List<BotCommand> = bot.getMyCommands(
@@ -987,7 +987,7 @@ abstract class TelegramApiHandling {
         languageCode = languageCode
     )
 
-    suspend fun setMyName(
+    suspend fun Argument.setMyName(
         name: String?,
         languageCode: String?,
     ): Boolean = bot.setMyName(
@@ -995,13 +995,13 @@ abstract class TelegramApiHandling {
         languageCode = languageCode
     )
 
-    suspend fun getMyName(
+    suspend fun Argument.getMyName(
         languageCode: String?,
     ): BotName = bot.getMyName(
         languageCode = languageCode
     )
 
-    suspend fun setMyDescription(
+    suspend fun Argument.setMyDescription(
         description: String?,
         languageCode: String?,
     ): Boolean = bot.setMyDescription(
@@ -1009,20 +1009,20 @@ abstract class TelegramApiHandling {
         languageCode = languageCode
     )
 
-    suspend fun getMyDescription(
+    suspend fun Argument.getMyDescription(
         languageCode: String?,
     ): BotDescription = bot.getMyDescription(
         languageCode = languageCode
     )
 
-    suspend fun setMyShortDescription(
+    suspend fun Argument.setMyShortDescription(
         shortDescription: String?, languageCode: String?,
     ): Boolean = bot.setMyShortDescription(
         shortDescription = shortDescription,
         languageCode = languageCode
     )
 
-    suspend fun getMyShortDescription(
+    suspend fun Argument.getMyShortDescription(
         languageCode: String?,
     ): BotShortDescription = bot.getMyShortDescription(
         languageCode = languageCode
@@ -1058,7 +1058,7 @@ abstract class TelegramApiHandling {
         replyMarkup = replyMarkup
     )
 
-    suspend fun setChatMenuButton(
+    suspend fun Argument.setChatMenuButton(
         chatId: Long?,
         menuButton: MenuButton?,
     ): Boolean = bot.setChatMenuButton(
@@ -1066,13 +1066,13 @@ abstract class TelegramApiHandling {
         menuButton = menuButton
     )
 
-    suspend fun getChatMenuButton(
+    suspend fun Argument.getChatMenuButton(
         chatId: Long?,
     ): MenuButton = bot.getChatMenuButton(
         chatId = chatId
     )
 
-    suspend fun setMyDefaultAdministratorRights(
+    suspend fun Argument.setMyDefaultAdministratorRights(
         rights: ChatAdministratorRights?,
         forChannels: Boolean?,
     ): Boolean = bot.setMyDefaultAdministratorRights(
@@ -1080,13 +1080,13 @@ abstract class TelegramApiHandling {
         forChannels = forChannels
     )
 
-    suspend fun getMyDefaultAdministratorRights(
+    suspend fun Argument.getMyDefaultAdministratorRights(
         forChannels: Boolean?,
     ): ChatAdministratorRights = bot.getMyDefaultAdministratorRights(
         forChannels = forChannels
     )
 
-    suspend fun getForumTopicIconStickers(): List<Sticker> = bot.getForumTopicIconStickers()
+    suspend fun Argument.getForumTopicIconStickers(): List<Sticker> = bot.getForumTopicIconStickers()
 
     suspend fun Argument.createForumTopic(
         name: String,
@@ -1184,7 +1184,7 @@ abstract class TelegramApiHandling {
         replyMarkup = replyMarkup
     )
 
-    suspend fun setGameScore(
+    suspend fun Argument.setGameScore(
         userId: Long,
         score: Long,
         force: Boolean?,
@@ -1202,7 +1202,7 @@ abstract class TelegramApiHandling {
         inlineMessageId = inlineMessageId
     )
 
-    suspend fun getGameHighScores(
+    suspend fun Argument.getGameHighScores(
         userId: Long,
         chatId: Long?,
         messageId: Long?,
@@ -1238,7 +1238,7 @@ abstract class TelegramApiHandling {
         result = result
     )
 
-    suspend fun setPassportDataErrors(
+    suspend fun Argument.setPassportDataErrors(
         userId: Long,
         errors: List<PassportElementError>,
     ): Boolean = bot.setPassportDataErrors(
@@ -1305,7 +1305,7 @@ abstract class TelegramApiHandling {
         replyMarkup = replyMarkup
     )
 
-    suspend fun createInvoiceLink(
+    suspend fun Argument.createInvoiceLink(
         title: String,
         description: String,
         payload: String,
@@ -1392,19 +1392,19 @@ abstract class TelegramApiHandling {
         replyMarkup = replyMarkup
     )
 
-    suspend fun getStickerSet(
+    suspend fun Argument.getStickerSet(
         name: String,
     ): StickerSet = bot.getStickerSet(
         name = name
     )
 
-    suspend fun getCustomEmojiStickers(
+    suspend fun Argument.getCustomEmojiStickers(
         customEmojiIds: List<String>,
     ): List<Sticker> = bot.getCustomEmojiStickers(
         customEmojiIds = customEmojiIds
     )
 
-    suspend fun uploadStickerFile(
+    suspend fun Argument.uploadStickerFile(
         userId: Long,
         sticker: NamedContent,
         stickerFormat: String,
@@ -1414,7 +1414,7 @@ abstract class TelegramApiHandling {
         stickerFormat = stickerFormat
     )
 
-    suspend fun createNewStickerSet(
+    suspend fun Argument.createNewStickerSet(
         userId: Long,
         name: String,
         title: String,
@@ -1442,7 +1442,7 @@ abstract class TelegramApiHandling {
         sticker = sticker
     )
 
-    suspend fun setStickerPositionInSet(
+    suspend fun Argument.setStickerPositionInSet(
         sticker: String,
         position: Int,
     ): Boolean = bot.setStickerPositionInSet(
@@ -1450,13 +1450,13 @@ abstract class TelegramApiHandling {
         position = position
     )
 
-    suspend fun deleteStickerFromSet(
+    suspend fun Argument.deleteStickerFromSet(
         sticker: String,
     ): Boolean = bot.deleteStickerFromSet(
         sticker = sticker
     )
 
-    suspend fun setStickerSetThumbnail(
+    suspend fun Argument.setStickerSetThumbnail(
         name: String,
         userId: Long,
         thumbnail: Any?,
@@ -1466,7 +1466,7 @@ abstract class TelegramApiHandling {
         thumbnail = thumbnail
     )
 
-    suspend fun getUpdates(
+    suspend fun Argument.getUpdates(
         offset: Int?,
         limit: Int?,
         timeout: Int?,
@@ -1478,7 +1478,7 @@ abstract class TelegramApiHandling {
         allowedUpdates = allowedUpdates
     )
 
-    suspend fun setWebhook(
+    suspend fun Argument.setWebhook(
         url: String,
         certificate: NamedContent?,
         ipAddress: String?,
@@ -1496,13 +1496,13 @@ abstract class TelegramApiHandling {
         secretToken = secretToken
     )
 
-    suspend fun deleteWebhook(
+    suspend fun Argument.deleteWebhook(
         dropPendingUpdates: Boolean?,
     ): Boolean = bot.deleteWebhook(
         dropPendingUpdates = dropPendingUpdates
     )
 
-    suspend fun getWebhookInfo(): WebhookInfo = bot.getWebhookInfo()
+    suspend fun Argument.getWebhookInfo(): WebhookInfo = bot.getWebhookInfo()
 
     suspend fun Argument.editMessageText(
         messageId: Long,

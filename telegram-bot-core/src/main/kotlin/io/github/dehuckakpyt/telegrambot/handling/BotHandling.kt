@@ -1,5 +1,6 @@
-package io.github.dehuckakpyt.telegrambot
+package io.github.dehuckakpyt.telegrambot.handling
 
+import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.api.TelegramApiHandling
 import io.github.dehuckakpyt.telegrambot.argument.Argument
 import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
@@ -10,7 +11,7 @@ import io.github.dehuckakpyt.telegrambot.argument.message.TextMessageArgument
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
-import io.github.dehuckakpyt.telegrambot.template.Templating
+import io.github.dehuckakpyt.telegrambot.template.Templater
 import kotlin.reflect.KClass
 
 
@@ -20,14 +21,14 @@ import kotlin.reflect.KClass
  *
  * @author Denis Matytsin
  */
-open class BotHandling internal constructor(
+class BotHandling internal constructor(
     public override val bot: TelegramBot,
     private val chainResolver: ChainResolver,
     private val contentConverter: ContentConverter,
-    templating: Templating,
+    templater: Templater,
     buttonFactory: ButtonFactory,
 ) : TelegramApiHandling(),
-    Templating by templating,
+    Templater by templater,
     ButtonFactory by buttonFactory {
 
     fun command(command: String, next: String? = null, action: suspend CommandArgument.() -> Unit) {

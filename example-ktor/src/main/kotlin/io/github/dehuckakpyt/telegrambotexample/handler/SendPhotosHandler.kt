@@ -1,5 +1,10 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
+import io.github.dehuckakpyt.telegrambot.BotHandler
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedResourceContent
+import kotlinx.coroutines.delay
+import org.koin.core.annotation.Factory
+
 
 /**
  * Created on 08.12.2023.
@@ -7,13 +12,13 @@ package io.github.dehuckakpyt.telegrambotexample.handler
  *
  * @author Denis Matytsin
  */
-//@Factory
-//class SendPhotosHandler : BotHandler({
-//    command("/photos") {
-//        val message = sendPhoto(NamedResourceContent("Hello.jpg", "/images/cat.jpg"))
-//        val fileId = message.photo[0].fileId
-//
-//        delay(500)
-//        sendPhoto(fileId, "So cute!")
-//    }
-//})
+@Factory
+class SendPhotosHandler : BotHandler({
+    command("/photos") {
+        val message = sendPhoto(NamedResourceContent("Hello.jpg", "/images/cat.jpg"))
+        val fileId = message.photo[0].fileId
+
+        delay(500)
+        sendPhoto(fileId, "So cute!")
+    }
+})

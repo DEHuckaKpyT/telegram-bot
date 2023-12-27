@@ -1,12 +1,11 @@
 package io.github.dehuckakpyt.telegrambotexample.plugin
 
 import io.github.dehuckakpyt.telegrambot.config.inDatabase
-import io.github.dehuckakpyt.telegrambot.config.template.templating
-import io.github.dehuckakpyt.telegrambot.ext.databaseSource
 import io.github.dehuckakpyt.telegrambot.plugin.TelegramBot
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.*
 import io.ktor.server.application.*
 
@@ -19,25 +18,23 @@ import io.ktor.server.application.*
  */
 fun Application.configureTelegramBot() {
     install(TelegramBot) {
-        token = "5238202878:AAHGHJgor3PRhlp8-ZqJKcYfqQzekxwae8Q"
-        username = "DEHuckaTestBot"
+        messageSource = { MessageSource.inDatabase }
 
-        messageSource = MessageSource.inDatabase
-
-        receiving { telegramBot ->
+        receiving {
             longPolling {
                 limit = 10
                 timeout = 25
             }
 
-            databaseSource {
-                maxCallbackContentsPerUser = 2
-                callbackContentSource = CallbackContentSource.inDatabase
-                chainSource = ChainSource.inDatabase
+            callbackContentSource = {
+                CallbackContentSource.inDatabase(
+                    maxCallbackContentsPerUser = 2
+                )
             }
+            chainSource = { ChainSource.inDatabase }
 
             // для обработки своих исключений
-//            exceptionHandler = CustomExceptionHandler(telegramBot)
+            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
 
             templating {
                 freemarker {
@@ -49,7 +46,7 @@ fun Application.configureTelegramBot() {
                 startCommand()
                 chainCommand()
                 buttonCommand()
-//                templateCommand()
+                templateCommand()
                 exceptionCommand()
                 withArgsCommand()
             }

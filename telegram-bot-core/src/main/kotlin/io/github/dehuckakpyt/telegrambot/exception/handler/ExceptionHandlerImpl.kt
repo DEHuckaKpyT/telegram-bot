@@ -4,7 +4,7 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
-import io.github.dehuckakpyt.telegrambot.template.Templating
+import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
 
 
@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory
 open class ExceptionHandlerImpl(
     protected val bot: TelegramBot,
     protected val template: MessageTemplate,
-    templating: Templating,
-) : ExceptionHandler(), Templating by templating {
+    templater: Templater,
+) : ExceptionHandler(), Templater by templater {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 

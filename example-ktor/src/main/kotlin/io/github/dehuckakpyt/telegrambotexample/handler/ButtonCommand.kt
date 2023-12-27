@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.factory.inlineKeyboard
+import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 
 
 /**
@@ -13,7 +13,7 @@ import io.github.dehuckakpyt.telegrambot.factory.inlineKeyboard
 fun BotHandling.buttonCommand() {
     data class TransferringTest(
         val key: String,
-        val value: Int
+        val value: Int,
     )
 
     val longString =

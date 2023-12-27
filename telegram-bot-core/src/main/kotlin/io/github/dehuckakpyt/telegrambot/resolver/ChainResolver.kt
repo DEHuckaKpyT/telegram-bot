@@ -43,7 +43,7 @@ internal class ChainResolver(
         step: String,
         type: KClass<out T>,
         next: String? = null,
-        action: suspend T.() -> Unit
+        action: suspend T.() -> Unit,
     ) {
         val actionByType = actionByStep.getOrPut(step) { hashMapOf() }
 

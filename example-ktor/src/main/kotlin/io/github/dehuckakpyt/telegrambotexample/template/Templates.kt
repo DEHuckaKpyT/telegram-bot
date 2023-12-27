@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.template
 
-import io.github.dehuckakpyt.telegrambot.BotHandling
 import io.github.dehuckakpyt.telegrambot.factory.template.TemplateFactory.property
+import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambotexample.runner.NotifyWhenStartedRunner
 
 val BotHandling.start by property()

@@ -1,7 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.config.template
 
 import freemarker.template.Configuration
-import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
+import freemarker.template.Version
+import io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfig
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
 
 
@@ -12,17 +13,11 @@ import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatter
  * @author Denis Matytsin
  */
 class TelegramBotTemplatingConfig(
-    var htmlFormatter: HtmlFormatter? = null,
-    internal var freemarkerConfig: (Configuration.() -> Unit)? = null,
+    var htmlFormatter: (TelegramBotActualConfig.() -> HtmlFormatter)? = null,
 ) {
+    internal val freemarkerConfig: Configuration = Configuration(Version("2.3.32"))
 
     fun freemarker(block: Configuration.() -> Unit) {
-        freemarkerConfig = block
+        freemarkerConfig.block()
     }
-}
-
-fun UpdateReceiverConfig.templating(block: TelegramBotTemplatingConfig.() -> Unit) {
-    val templatingConfig = TelegramBotTemplatingConfig().apply(block)
-    this.htmlFormatter = templatingConfig.htmlFormatter
-    templatingConfig.freemarkerConfig?.let { templatingConfig.freemarkerConfig!!.invoke(this.freemarkerConfig) }
 }

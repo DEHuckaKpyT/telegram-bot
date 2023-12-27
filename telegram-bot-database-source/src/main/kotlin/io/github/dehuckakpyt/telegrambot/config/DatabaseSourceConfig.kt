@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
+import io.github.dehuckakpyt.telegrambot.constant.Default.MAX_CALLBACK_CONTENTS_PER_USER
 import io.github.dehuckakpyt.telegrambot.model.CallbackContents
 import io.github.dehuckakpyt.telegrambot.model.Chains
 import io.github.dehuckakpyt.telegrambot.model.TelegramMessages
@@ -20,33 +20,38 @@ import org.jetbrains.exposed.sql.transactions.transaction
  *
  * @author Denis Matytsin
  */
-class DatabaseSourceConfig {
-
+fun CallbackContentSource.Companion.inDatabase(
     /**
      * Максимальное количество записей с содержанием callback'а для одного пользователя.
      * -1 для игнорирования ограничения.
      * ВАЖНО: эта проперть должна быть задана раньше, чем callbackContentSource
      */
-    var maxCallbackContentsPerUser: Long = 20
+    maxCallbackContentsPerUser: Long = MAX_CALLBACK_CONTENTS_PER_USER,
+): CallbackContentSource {
+    transaction {
+        SchemaUtils.createMissingTablesAndColumns(CallbackContents)
+    }
 
-    val CallbackContentSource.Companion.inDatabase: CallbackContentSource
-        get() {
-            transaction {
-                SchemaUtils.createMissingTablesAndColumns(CallbackContents)
-            }
-
-            return DatabaseCallbackContentSource(maxCallbackContentsPerUser)
-        }
-
-    val ChainSource.Companion.inDatabase: ChainSource
-        get() {
-            transaction {
-                SchemaUtils.createMissingTablesAndColumns(Chains)
-            }
-
-            return DatabaseChainSource()
-        }
+    return DatabaseCallbackContentSource(maxCallbackContentsPerUser)
 }
+
+val CallbackContentSource.Companion.inDatabase: CallbackContentSource
+    get() {
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(CallbackContents)
+        }
+
+        return DatabaseCallbackContentSource(MAX_CALLBACK_CONTENTS_PER_USER)
+    }
+
+val ChainSource.Companion.inDatabase: ChainSource
+    get() {
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(Chains)
+        }
+
+        return DatabaseChainSource()
+    }
 
 val MessageSource.Companion.inDatabase: MessageSource
     get() {

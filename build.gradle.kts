@@ -33,7 +33,7 @@ nexusPublishing {
     }
 }
 
-configure(subprojects - project(":example-ktor")) {
+configure(subprojects.filter { it.path.startsWith(":example").not() }) {
 //    kotlin {
 //        explicitApi()
 //    }
