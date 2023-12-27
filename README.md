@@ -1,20 +1,19 @@
 # Kotlin Telegram Bot
 
 
-Kotlin library (framework) for creating Telegram Bots using [Ktor](https://ktor.io/), [Koin](https://insert-koin.io/) and [Exposed](https://github.com/JetBrains/Exposed).
+Kotlin library for creating Telegram Bots (may use [Ktor](https://ktor.io/), [Koin](https://insert-koin.io/) and [Exposed](https://github.com/JetBrains/Exposed)).
 
 Easy to handle dialogs with users. 
 Supporting message templates and other helpful features.
 Working on coroutines.
 
-Example of application in [example](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example) directory. 
+Example of applications in [example-ktor](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor), [example-core](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-core) directories. 
 
 ## Examples
 
 Примеры построения диалогов:
 ```kotlin
-@Factory
-class RegistrationHandler : BotHandler({
+fun BotHandling.registrationHandler() {
     val phonePattern = Regex("^\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}$")
 
     command("/register", next = "get_contact") {
@@ -39,7 +38,7 @@ class RegistrationHandler : BotHandler({
         val phone = transferred<String>()
         sendMessage("${text}, Вы успешно зарегистрировались по номеру ${phone}!")
     }
-})
+}
 ```
 ```kotlin
 @Factory
@@ -81,18 +80,69 @@ class PurchaseHandler(
 })
 ```
 
-Больше примеров [здесь](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler)
+Больше примеров [здесь](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler)
 
 ## Get started
 
-Для запуска и конфигурирования бота необходимо
-добавить зависимость, задать в конфигурации `telegram-bot.username` и `telegram-bot.token` и установить бота, как ktor-плагин:
+### Without frameworks
+
+Необходимо всего лишь добавить одну зависимость, создать конфиг, указать token и создать контекст с ботом
+
 ```Gradle
 repositories {
     mavenCentral()
 }
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.4.0")
+}
+```
+```kotlin
+fun main(args: Array<String>): Unit {
+    val config = TelegramBotConfig().apply {
+        token = "<bot token required>"
+        username = "<bot username required>"
+
+        receiving {
+            handling {
+                startCommand()
+                exceptionCommand()
+            }
+        }
+    }
+
+    val context = TelegramBotFactory.createTelegramBotContext(config)
+    val bot = context.telegramBot
+    val updateReceiver = context.updateReceiver
+
+    updateReceiver.start()
+    readlnOrNull()
+    updateReceiver.stop()
+}
+
+fun BotHandling.startCommand() {
+    command("/start") {
+        sendMessage("Hello! My name is \${botUsername} :-)" with ("botUsername" to bot.username))
+    }
+}
+
+fun BotHandling.exceptionCommand() {
+    command("/exception") {
+        throw CustomException("text from exception message")
+    }
+}
+```
+
+### Ktor + Koin
+
+Для запуска и конфигурирования бота необходимо
+добавить зависимости, задать в конфигурации `telegram-bot.username` и `telegram-bot.token` и установить бота, как ktor-плагин:
+```Gradle
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.4.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:0.4.0")
 }
 ```
 ```kotlin
@@ -105,13 +155,14 @@ fun Application.configureTelegramBot() {
     }
 }
 
-fun BotHandling.startCommand() {
+@Factory
+class StartHandler : BotHandler({
     val friendChatId = 123L
     command("/start") {
         sendMessage("Привет, меня зовут ${bot.username} :-)")
         bot.sendMessage(friendChatId, "И тебе привет)")
     }
-}
+})
 ```
 
 ## Цепочки сообщений
@@ -135,7 +186,7 @@ fun BotHandling.startCommand() {
     }
 }
 ```
-### С помощью наследования
+### С помощью наследования (Ktor + Koin)
 
 Также есть возможность создавать цепочки с помощью наследования от `BotHandler`. Можно указывать всё в конструкторе:
 ```kotlin
@@ -147,17 +198,6 @@ class StartBotHandler : BotHandler({
 })
 ```
 
-А можно в теле класса в блоке `init {}`:
-```kotlin
-@Factory
-class StartBotHandler : BotHandler() {
-    init {
-        command("/start") {
-            // здесь действия при вызове команды /start
-        }
-    }
-}
-```
 Преимущество в том, что не нужно больше нигде никакие методы вызывать, не нужно никак обозначать этот класс. Достаточно просто повесить аннотацию @Factory.
 
 ### Статические цепочки
@@ -394,36 +434,36 @@ fun BotHandling.callbackCommand() {
 
 ## Шаблоны
 
-### Получение шаблонов
-С помощью метода с делегатами `template()` можно взять шаблон из конфига.
+### Получение шаблонов (Ktor + Koin)
+С помощью метода с делегатами `property()` можно взять шаблон из конфига.
 
 Без параметров метод получает наименование переменной, переводит его в kebab-case и берёт значение из конфига.
 
 ```kotlin
 // Значение возьмётся из telegram-bot.from-field-name
-val BotHandling.fromFieldName by template()
+val BotHandling.fromFieldName by property()
 // Значение возьмётся из telegram-bot.from-param
-val BotHandling.fromParam by template("from-param")
+val BotHandling.fromParam by property("from-param")
 // Значение возьмётся из telegram-bot.from-param. 
 // Если оно в конфиге не задано значение, то подставится "default template when null"
-val BotHandling.fromParamOrDefault by template("from-param", "default template when null")
+val BotHandling.fromParamOrDefault by property("from-param", "default template when null")
 ```
 
 Шаблон можно получить везде, где только вздумается:
 ```kotlin
-val fileWithoutClass by template()
+val fileWithoutClass by property()
 
-val BotHandling.extendedField by template()
+val BotHandling.extendedField by property()
 
 class SomeClass {
-    val inAnyClass by template()
+    val inAnyClass by property()
 }
 
 fun BotHandling.startCommand() {
-    val insideMethods by template()
+    val insideMethods by property()
     
     command("/start") {
-        val insideMethodsInMethods by template()
+        val insideMethodsInMethods by property()
         
         sendMessage(insideMethods)
         sendMessage(insideMethodsInMethods)
@@ -436,7 +476,7 @@ fun BotHandling.startCommand() {
 С помощью наследования от интерфейса `Templating` доступна подстановка с помощью короткого метода `with()` с перегрузками:
 ```kotlin
 class PresentationTestClass : Templating {
-    private val testTemplate by template()
+    private val testTemplate by property()
     private val instance = PresentationTestModel("some name")
     private val simpleValue = 1
 
@@ -449,19 +489,6 @@ class PresentationTestClass : Templating {
 data class PresentationTestModel(
     val value: String
 )
-```
-
-Но можно пойти ещё дальше и не использовать даже метод `with()`, а просто скобочки:
-```kotlin
-class PresentationTestClassExtended : TemplatingEx {
-    private val testTemplate by template()
-    private val instance = PresentationTestModel("some name")
-    private val simpleValue = 1
-
-    val example1 = testTemplate(instance)
-    val example2 = testTemplate(mapOf("value" to simpleValue))
-    val example3 = testTemplate("value" to simpleValue)
-}
 ```
 
 > **Note**
@@ -496,16 +523,19 @@ fun BotHandling.templateCommand() {
 }
 ```
 
-## Использование вне BotHandling
+## Использование вне BotHandling (Ktor + Koin)
 
 Самым обычным образом можно получить бота и вызывать его методы:
 ```kotlin
-class NotifyWhenStartedRunner : TemplatingEx {
+@Single
+class NotifyWhenStartedRunner : Runner, Templating {
+    // всегда доступен TelegramBot для отправки сообщений
+    // достаточно просто воспользоваться Koin
     private val bot = get<TelegramBot>()
     private val chatIdToNotify = 1165327523L
 
-    suspend fun execute() {
-        bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted("botUsername" to bot.username), parseMode = Html)
+    override suspend fun execute() {
+        bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted with ("botUsername" to bot.username), parseMode = HTML)
     }
 }
 ```
@@ -562,16 +592,6 @@ class TelegramBotConfig {
 }
 ```
 
-### Настройка FreeMarker
-
-```kotlin
-        configureTemplating {
-            defaultEncoding = "UTF-8"
-            dateFormat = "yyyy-MM-dd"
-            // и остальное из документации FreeMarker
-        }
-```
-
 ### Настройка хранения в БД
 
 `callbackContentSource: CallbackContentSource` - используется для хранения callback'ов, у которых длина больше 64 символов.
@@ -585,9 +605,11 @@ class TelegramBotConfig {
 Может быть удобно для быстрого тестирования работы бота.
 ```kotlin
     install(TelegramBot) {
-        callbackContentSource = CallbackContentSource.inMemory
-        chainSource = ChainSource.inMemory
-        messageSource = MessageSource.empty
+        messageSource = { MessageSource.empty }
+        receiving {
+            callbackContentSource = { CallbackContentSource.inMemory }
+            chainSource = { ChainSource.inMemory }
+        }
     }
 ```
 
@@ -600,33 +622,18 @@ dependencies {
 ```
 ```kotlin
     install(TelegramBot) {
-        // other settings
-        ...
-        databaseSource {
-            // с помощью одного метода
-            allInDatabase()
-            // или выбрать конкретные сурсы
-            callbackContentSource = CallbackContentSource.inDatabase
-            chainSource = ChainSource.inDatabase
-            messageSource = MessageSource.inDatabase
-            
-            // также внутри метода databaseSource() остальные настройки для бд
-            maxCallbackContentsPerUser = 2
+    messageSource = { MessageSource.inDatabase }
+    receiving {
+        callbackContentSource = {
+            CallbackContentSource.inDatabase(
+                maxCallbackContentsPerUser = 2
+            )
         }
+        chainSource = { ChainSource.inDatabase }
     }
-```
-Также можно комбинировать сохранения и можно делать свои реализации.
-
-Доступные настройки конкретно для БД:
-```kotlin
-class DatabaseSourceConfig() {
-    /**
-     * Максимальное количество записей с содержанием callback'а для одного пользователя.
-     * -1 для игнорирования ограничения.
-     */
-    var maxCallbackContentsPerUser: Long = 20
 }
 ```
+Также можно комбинировать сохранения и можно делать свои реализации.
 
 ### Настройка сериализации callback'ов
 
@@ -661,7 +668,9 @@ class CustomCallbackSerializer : CallbackSerializer {
 ```
 ```kotlin
     install(TelegramBot) {
-        callbackSerializer = CustomCallbackSerializer()
+        receiving {
+            callbackSerializer = CustomCallbackSerializer()
+        }
     }
 ```
 
@@ -686,7 +695,9 @@ class CustomChainExceptionHandler : ChainExceptionHandler {
 ```
 ```kotlin
     install(TelegramBot) {
-        chainExceptionHandler = CustomChainExceptionHandler()
+        receiving {
+            chainExceptionHandler = CustomChainExceptionHandler()
+        }
     }
 ```
 
@@ -703,15 +714,17 @@ class CustomExceptionHandler : ExceptionHandlerImpl() {
 ```
 ```kotlin
     install(TelegramBot) {
-        exceptionHandler = CustomExceptionHandler()
+        receiving {
+            exceptionHandler = CustomExceptionHandler()
+        }
     }
 ```
 
 
 ## Что обязательно нужно сделать ещё:
-- Немного отрефакторить [свою либу в основе](https://github.com/DEHuckaKpyT/microservice-extensions) (получение конфига в json вместо properties, переименовать методы для транзакций, переделать в плагин подключение к бд, добавить аналог феинов)
-- Решить вопрос с лицензией (можно ли просто скопировать себе код из [либы бота в основе](https://github.com/elbekD/kt-telegram-bot)). Если нет, то решить вопрос как-то ещё
+- Реализацию со Spring
 - Добавить тесты
+- Добавить webhook
 
 
 ## Фишки, которые хочется сделать:
@@ -719,5 +732,4 @@ class CustomExceptionHandler : ExceptionHandlerImpl() {
 - Придумать, как реализовать "мультиязычность"
 - Добавить возможность указывать action ('typing..' и т. п.)
 - Сделать отключаемыми методы cleanHtml и escapeHtml в шаблонах
-- Удаление callback'ов из БД по cron'у или как-то ещё
-- Возможность добавлять обработчики не только с помощью методов расширения `BotHandling`, но и с помощью создания классов (идея есть)
+- Разобрать, как сделать нормально разные реализации для запросов (ktor и spring своими инструментами чтобы делали запросы, а не всегда ktor-client) 
