@@ -93,7 +93,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.4.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.5.0")
 }
 ```
 ```kotlin
@@ -141,8 +141,8 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.4.0")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:0.4.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.5.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:0.5.0")
 }
 ```
 ```kotlin
@@ -617,7 +617,7 @@ class TelegramBotConfig {
 Затем добавить зависимость и указать source'ы:
 ```Gradle
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.4.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.5.0")
 }
 ```
 ```kotlin
