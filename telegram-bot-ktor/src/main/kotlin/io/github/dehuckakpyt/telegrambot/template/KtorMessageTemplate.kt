@@ -10,7 +10,7 @@ import io.github.dehuckakpyt.telegrambot.factory.template.TemplateFactory.proper
  * @author Denis Matytsin
  */
 class KtorMessageTemplate : MessageTemplate() {
-    override val whenCommandNotFound: String by property("when-command-not-found", "Введена неизвестная команда `\${command}`\\. Посмотреть возможные действия можно, вызвав команду /help\\.")
+    override val whenCommandNotFound: String by property("when-command-not-found", "Введена неизвестная команда \${command}. Посмотреть возможные действия можно, вызвав команду /help.")
     override val whenUnexpectedMessageType: String by property("when-unexpected-message-type", "Ожидается сообщение другого типа.")
     override val whenStepNotFound: String by property("when-step-not-found", "Неожидаемое сообщение. Посмотреть возможные действия можно, вызвав команду /help.")
     override val whenKnownException: String by property("when-known-error", "\${message}")

@@ -13,6 +13,5 @@ interface TelegramBot : TelegramApi {
 
     val username: String
 
-    //    fun start(): Unit
     fun stop(): Unit
 }

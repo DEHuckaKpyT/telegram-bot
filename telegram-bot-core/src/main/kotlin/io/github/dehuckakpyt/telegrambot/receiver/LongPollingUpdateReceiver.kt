@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import org.slf4j.LoggerFactory
 
 
 /**
@@ -22,13 +21,10 @@ internal class LongPollingUpdateReceiver(
     private val config: LongPollingConfig,
 ) : UpdateReceiver {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
     private val scope = CoroutineScope(Dispatchers.Default)
 
     override fun start(): Unit {
-        logger.info("Starting Telegram Bot..")
         scope.launch { receiveUpdates() }
-        logger.info("Telegram Bot started.")
     }
 
     private suspend fun receiveUpdates() {
@@ -51,9 +47,7 @@ internal class LongPollingUpdateReceiver(
     }
 
     override fun stop(): Unit {
-        logger.info("Stopping Telegram Bot..")
         bot.stop()
-        logger.info("Telegram Bot stopped.")
         scope.cancel()
     }
 
