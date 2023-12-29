@@ -1,17 +1,20 @@
 # Kotlin Telegram Bot
 
 
-Kotlin library for creating Telegram Bots (may use [Ktor](https://ktor.io/), [Koin](https://insert-koin.io/) and [Exposed](https://github.com/JetBrains/Exposed)).
+Kotlin library for creating Telegram Bots. You can use clean version, with implementation for [Spring](https://spring.io/), [Ktor](https://ktor.io/)+[Koin](https://insert-koin.io/) or create with you own implementation.
+Now it have also possibility to save state in database with [Exposed](https://github.com/JetBrains/Exposed).
 
 Easy to handle dialogs with users. 
 Supporting message templates and other helpful features.
 Working on coroutines.
 
-Example of applications in [example-ktor](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor), [example-core](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-core) directories. 
+Example of applications in [example-spring](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-spring), [example-ktor](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor), [example-core](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-core) directories. 
 
 ## Examples
 
 Примеры построения диалогов:
+
+Без фреймворков:
 ```kotlin
 fun BotHandling.registrationHandler() {
     val phonePattern = Regex("^\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}$")
@@ -40,6 +43,8 @@ fun BotHandling.registrationHandler() {
     }
 }
 ```
+
+С использованием Ktor + Koin:
 ```kotlin
 @Factory
 class PurchaseHandler(
@@ -80,7 +85,42 @@ class PurchaseHandler(
 })
 ```
 
-Больше примеров [здесь](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler)
+С использованием Spring:
+```kotlin
+@HandlerComponent
+class GameChainHandler : BotHandler({
+
+    val startSum = 0
+
+    command("/chain", next = "get target") {
+        bot.sendMessage(chatId, chain)
+    }
+
+    step("get target", next = "sum numbers") {
+        val target = text.toIntOrNull() ?: throw ChatException("Ожидается целое число")
+        if (target < 1) throw ChatException("Ожидается положительное число")
+
+        sendMessage(chainStartSum with ("target" to target))
+        transfer(target to startSum)
+    }
+
+    step("sum numbers") {
+        val value = text.toIntOrNull() ?: throw ChatException("Ожидается целое число")
+        var (target, sum) = transferred<Pair<Int, Int>>()
+        sum += value
+
+        if (sum < target) {
+            sendMessage(chainOneMore with mapOf("sum" to sum, "target" to target))
+            next("sum numbers", target to sum)
+            return@step
+        }
+
+        sendMessage(chainEnd with mapOf("sum" to sum, "target" to target))
+    }
+})
+```
+
+Больше примеров [здесь](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-spring/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/handler)
 
 ## Get started
 
@@ -93,7 +133,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.5.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.6.0")
 }
 ```
 ```kotlin
@@ -141,8 +181,8 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.5.0")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:0.5.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.6.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:0.6.0")
 }
 ```
 ```kotlin
@@ -163,6 +203,50 @@ class StartHandler : BotHandler({
         bot.sendMessage(friendChatId, "И тебе привет)")
     }
 })
+```
+*Также нужно не забыть установить плагин с Koin ([пример](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example-ktor/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/plugin/DependencyInjection.kt)) до инициализации бота.
+
+
+### Spring
+
+Для запуска и конфигурирования бота необходимо
+добавить зависимости, задать в конфигурации `telegram-bot.username` и `telegram-bot.token` и повесить аннотацию `@EnableTelegramBot`:
+```Gradle
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.6.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:0.6.0")
+}
+```
+```kotlin
+@EnableTelegramBot
+@Configuration
+class BotConfig
+
+@HandlerComponent
+class StartHandler : BotHandler({
+    val friendChatId = 123L
+    command("/start") {
+        sendMessage("Привет, меня зовут ${bot.username} :-)")
+        bot.sendMessage(friendChatId, "И тебе привет)")
+    }
+})
+```
+Для настройки бота можно добавить бин:
+```kotlin
+@EnableTelegramBot
+@Configuration
+class BotConfig{
+
+    @Bean
+    fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
+        receiving {
+            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
+        }
+    }
+}
 ```
 
 ## Цепочки сообщений
@@ -186,11 +270,24 @@ fun BotHandling.startCommand() {
     }
 }
 ```
+
 ### С помощью наследования (Ktor + Koin)
 
 Также есть возможность создавать цепочки с помощью наследования от `BotHandler`. Можно указывать всё в конструкторе:
 ```kotlin
 @Factory
+class StartBotHandler : BotHandler({
+    command("/start") {
+        // здесь действия при вызове команды /start
+    }
+})
+```
+
+### С помощью наследования (Spring)
+
+Также есть возможность создавать цепочки с помощью наследования от `BotHandler`. Можно указывать всё в конструкторе:
+```kotlin
+@HandlerComponent
 class StartBotHandler : BotHandler({
     command("/start") {
         // здесь действия при вызове команды /start
@@ -434,8 +531,8 @@ fun BotHandling.callbackCommand() {
 
 ## Шаблоны
 
-### Получение шаблонов (Ktor + Koin)
-С помощью метода с делегатами `property()` можно взять шаблон из конфига.
+### Получение шаблонов (Ktor + Koin, Spring)
+С помощью метода с делегатами `TemplateFactory.property()` можно взять шаблон из конфига.
 
 Без параметров метод получает наименование переменной, переводит его в kebab-case и берёт значение из конфига.
 
@@ -451,6 +548,8 @@ val BotHandling.fromParamOrDefault by property("from-param", "default template w
 
 Шаблон можно получить везде, где только вздумается:
 ```kotlin
+import io.github.dehuckakpyt.telegrambot.factory.template.TemplateFactory.property
+
 val fileWithoutClass by property()
 
 val BotHandling.extendedField by property()
@@ -471,9 +570,9 @@ fun BotHandling.startCommand() {
 }
 ```
 
-### Подстановка значений в шаблоны
+### Подстановка значений в шаблоны 
 
-С помощью наследования от интерфейса `Templating` доступна подстановка с помощью короткого метода `with()` с перегрузками:
+Доступна подстановка с помощью короткого метода `with()` с перегрузками. По умолчанию в классе BotHandling. А также для Ktor + Koin, Spring и в других классах с помощью интерфейса `Templating`.
 ```kotlin
 class PresentationTestClass : Templating {
     private val testTemplate by property()
@@ -490,9 +589,6 @@ data class PresentationTestModel(
     val value: String
 )
 ```
-
-> **Note**
-> Внутри BotHandling доступно использование только интерфейса `Templating`.
 
 
 ### Спец. методы в шаблоне
@@ -535,6 +631,23 @@ class NotifyWhenStartedRunner : Runner, Templating {
     private val chatIdToNotify = 1165327523L
 
     override suspend fun execute() {
+        bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted with ("botUsername" to bot.username), parseMode = HTML)
+    }
+}
+```
+
+## Использование вне BotHandling (Spring)
+
+Бот доступен, как бин:
+```kotlin
+@Component
+class NotifyWhenStartedRunner(
+    // всегда доступен TelegramBot для отправки сообщений
+    private val bot: TelegramBot,
+) : CommandLineRunner, Templating {
+    private val chatIdToNotify = 1165327523L
+
+    override fun run(vararg args: String): Unit = runBlocking {
         bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted with ("botUsername" to bot.username), parseMode = HTML)
     }
 }
@@ -592,7 +705,7 @@ class TelegramBotConfig {
 }
 ```
 
-### Настройка хранения в БД
+### Настройка хранения в БД (Exposed)
 
 `callbackContentSource: CallbackContentSource` - используется для хранения callback'ов, у которых длина больше 64 символов.
 
@@ -617,7 +730,7 @@ class TelegramBotConfig {
 Затем добавить зависимость и указать source'ы:
 ```Gradle
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.5.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.6.0")
 }
 ```
 ```kotlin
