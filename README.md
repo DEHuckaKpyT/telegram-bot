@@ -14,7 +14,7 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 
 Примеры построения диалогов:
 
-Без фреймворков:
+### Без фреймворков:
 ```kotlin
 fun BotHandling.registrationHandler() {
     val phonePattern = Regex("^\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}$")
@@ -44,7 +44,7 @@ fun BotHandling.registrationHandler() {
 }
 ```
 
-С использованием Ktor + Koin:
+### С использованием Ktor + Koin:
 ```kotlin
 @Factory
 class PurchaseHandler(
@@ -85,7 +85,7 @@ class PurchaseHandler(
 })
 ```
 
-С использованием Spring:
+### С использованием Spring:
 ```kotlin
 @HandlerComponent
 class GameChainHandler : BotHandler({
@@ -835,14 +835,14 @@ class CustomExceptionHandler : ExceptionHandlerImpl() {
 
 
 ## Что обязательно нужно сделать ещё:
-- Реализацию со Spring
+- Доделать несколько оставшихся Telegram Api
+- Написать документацию в Writerside
 - Добавить тесты
 - Добавить webhook
 
 
 ## Фишки, которые хочется сделать:
-- Придумать что-то с обработкой сообщений с длиной более 4096 символов
+- Придумать что-то с обработкой сообщений длиной более 4096 символов
 - Придумать, как реализовать "мультиязычность"
 - Добавить возможность указывать action ('typing..' и т. п.)
 - Сделать отключаемыми методы cleanHtml и escapeHtml в шаблонах
-- Разобрать, как сделать нормально разные реализации для запросов (ktor и spring своими инструментами чтобы делали запросы, а не всегда ktor-client) 

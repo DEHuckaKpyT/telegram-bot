@@ -14,8 +14,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
-import org.springframework.core.Ordered
-import org.springframework.core.annotation.Order
 import org.springframework.core.env.Environment
 
 
@@ -25,7 +23,6 @@ import org.springframework.core.env.Environment
  *
  * @author Denis Matytsin
  */
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 class TelegramBotInitializationConfig(
     private val environment: Environment,
