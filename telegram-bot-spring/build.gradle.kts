@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val spring_version: String by project
+
 plugins {
-    id("org.springframework.boot") version "3.2.1"
-    id("io.spring.dependency-management") version "1.1.4"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
 }
 
 dependencies {
     //region springframework
-    api("org.springframework.boot:spring-boot-starter")
-    api("org.springframework.boot:spring-boot-starter-web")
+    api("org.springframework.boot:spring-boot-starter:$spring_version")
+    api("org.springframework.boot:spring-boot-starter-web:$spring_version")
     //endregion springframework
 
     //region dehuckakpyt
@@ -22,7 +22,7 @@ dependencies {
     //endregion other
 
     //region springframework
-    testApi("org.springframework.boot:spring-boot-starter-test")
+    testApi("org.springframework.boot:spring-boot-starter-test:$spring_version")
     //endregion springframework
 }
 
