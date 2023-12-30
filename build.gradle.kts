@@ -54,7 +54,7 @@ configure(subprojects.filter { it.path.startsWith(":example").not() }) {
                 pom {
                     packaging = "jar"
                     name.set(project.name)
-                    description.set("Kotlin Telegram Bot framework")
+                    description.set("Kotlin Telegram Bot library")
                     url.set("https://github.com/DEHuckaKpyT/telegram-bot")
                     scm {
                         connection.set("scm:https://github.com/DEHuckaKpyT/telegram-bot.git")
