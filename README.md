@@ -8,6 +8,8 @@ Easy to handle dialogs with users.
 Supporting message templates and other helpful features.
 Working on coroutines.
 
+[Full documentation](https://dehuckakpyt.github.io/telegram-bot/starter-topic.html) (coming soon).
+
 Example of applications in [example-spring](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-spring), [example-ktor](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor), [example-core](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-core) directories. 
 
 ## Examples

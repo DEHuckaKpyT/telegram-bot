@@ -6,7 +6,18 @@
                  name="Kotlin Telegram Bot"
                  start-page="starter-topic.md">
 
-    <toc-element topic="starter-topic.md">
-        <toc-element topic="Get-Started.md"/>
+    <toc-element topic="starter-topic.md"/>
+    <toc-element topic="get-started.md"/>
+    <toc-element topic="message-chains.md">
+        <toc-element topic="entry-points.md"/>
+        <toc-element topic="static-chains.md"/>
+        <toc-element topic="dynamic-chains.md"/>
+        <toc-element topic="object-transfer.md"/>
+        <toc-element topic="step-types.md"/>
     </toc-element>
+    <toc-element topic="templates.md"/>
+    <toc-element topic="exception-handling.md">
+        <toc-element topic="application-exceptions.md"/>
+    </toc-element>
+    <toc-element topic="additional.md"/>
 </instance-profile>

@@ -1,4 +1,4 @@
-# Get Started
+# Get started
 
 To use the library, all you need to do is add a dependency, build a config, specify token and username and create the bot and its context.
 

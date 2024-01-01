@@ -1,0 +1,3 @@
+# Application exceptions
+
+Start typing here...

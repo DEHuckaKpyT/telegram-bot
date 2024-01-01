@@ -94,6 +94,10 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
     </tab>
 </tabs>
 
+<note>Everything that works in the core version also works in the frameworks.
+Such as the extension method from BotHandling. 
+Most of the examples will be shown on the core version only.</note>
+
 ## More complex examples
 
 <tabs id="complex-example" group="telegram-bot-code">
@@ -184,22 +188,22 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
             fun BotHandling.registrationHandler() {
                 val phonePattern = &lt;phone regex&gt;
                 command("/register", next = "get_contact") {
-                    sendMessage("Для регистрации введите номер или поделитесь своим контактом", 
-                        replyMarkup = contactKeyboard("Поделиться контактом"))
+                    sendMessage("Enter a number or share your contact to register", 
+                        replyMarkup = contactKeyboard("Share contact"))
                 }
                 step("get_contact", type = CONTACT) {
-                    sendMessage("${contact.firstName}, Вы успешно зарегистрировались по номеру ${contact.phoneNumber}!", 
+                    sendMessage("${contact.firstName}, You have successfully registered with number ${contact.phoneNumber}!", 
                         replyMarkup = removeKeyboard())
                 }
                 step("get_contact", type = TEXT, next = "get_firstname") {
-                    phonePattern.find(text) ?: throw ChatException("Неверный формат номера телефона")
+                    phonePattern.find(text) ?: throw ChatException("Incorrect phone number format")
                     val phone: String = text
-                    sendMessage("Напишите, как к Вам обращаться", replyMarkup = removeKeyboard())
+                    sendMessage("What is your name?", replyMarkup = removeKeyboard())
                     transfer(phone)
                 }
                 step("get_firstname") {
                     val phone = transferred&lt;String&gt;()
-                    sendMessage("${text}, Вы успешно зарегистрировались по номеру ${phone}!")
+                    sendMessage("${text}, You have successfully registered with number ${phone}!")
                 }
             }
         </code-block>
