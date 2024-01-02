@@ -28,7 +28,7 @@ This way we can make chains of any length:
 ```kotlin
 fun BotHandling.startCommand() {
     command("/start", next = "get_name") {
-        sendMessage("Введите своё имя")
+        sendMessage("Please enter your name")
     }
 
     step("get_name", next = "get_age") {
@@ -45,4 +45,4 @@ fun BotHandling.startCommand() {
 ```
 
 <note>If the user sends a message after the end of the chain, a human-readable exception will be displayed.
-See <a href="application-exceptions.md">here</a> for how to configure it.</note>
+See <a href="exception-handling.md">here</a> for how to configure it.</note>

@@ -9,12 +9,12 @@ Without parameters, the method gets the variable name, translates it into kebab-
 
 ```kotlin
 // the value will be received from telegram-bot.from-field-name
-val BotHandling.fromFieldName by property()
+val BotHandling.fromFieldName by TemplateFactory.property()
 // the value will be received from telegram-bot.from-custom-param
-val BotHandling.fromParam by property("from-custom-param")
+val BotHandling.fromParam by TemplateFactory.property("from-custom-param")
 // the value will be received from telegram-bot.from-param. 
 // if no value is specified in the config, "default template when null" will be substituted
-val BotHandling.fromParamOrDefault by property("from-param", "default template when null")
+val BotHandling.fromParamOrDefault by TemplateFactory.property("from-param", "default template when null")
 ```
 
 You can get the template anywhere you want it:

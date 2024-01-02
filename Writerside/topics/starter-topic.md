@@ -155,9 +155,9 @@ Most of the examples will be shown on the core version only.</note>
             ) : BotHandler({
                 command("/buy") {
                     sendMessage("Выберите действие", replyMarkup = inlineKeyboard(
-                        callbackButton("Купить тапочки", next = "buy", content = "some id 1"),
-                        callbackButton("Купить шапочки", next = "buy", content = "some id 2"),
-                        callbackButton("Оставить отзыв", next = "get_feedback_intro")))
+                        callbackButton("Buy slippers", next = "buy", content = "some id 1"),
+                        callbackButton("Buy hats", next = "buy", content = "some id 2"),
+                        callbackButton("Give feedback", next = "get_feedback_intro")))
                 }
                 callback("buy") {
                     val itemId = transferred&lt;String&gt;()
@@ -172,11 +172,11 @@ Most of the examples will be shown on the core version only.</note>
                     )
                 }
                 callback("get_feedback_intro", next = "get_feedback") {
-                    sendMessage("Напишите, пожалуйста, что вы думаете о нашем приложении.")
+                    sendMessage("Please write us what you think about our company")
                 }
                 step("get_feedback") {
                     feedbackService.save(chatId, text)
-                    sendMessage("Спасибо за отзыв!")
+                    sendMessage("Thanks for the feedback!")
                     sendSticker(...)
                 }
             })

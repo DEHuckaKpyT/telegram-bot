@@ -91,7 +91,6 @@ To use the library, all you need to do is add a dependency, build a config, spec
                     receiving {
                         handling {
                             startCommand()
-                            exceptionCommand()
                         }
                     }
                 }
