@@ -9,7 +9,7 @@ class DatabaseMessageSource : MessageSource {
         chatId: Long,
         fromId: Long,
         messageId: Long,
-        text: String?
+        text: String?,
     ): Unit = executeQuery {
         DatabaseTelegramMessage.new {
             this.chatId = chatId

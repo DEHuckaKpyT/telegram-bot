@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.model
 
+import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -23,12 +24,12 @@ object CallbackContents : UUIDTable("callback_content") {
     val updateDate = datetime("update_date")
 }
 
-class DatabaseCallbackContent(id: EntityID<UUID>) : UUIDEntity(id) {
+class DatabaseCallbackContent(id: EntityID<UUID>) : UUIDEntity(id), CallbackContent {
     companion object : UUIDEntityClass<DatabaseCallbackContent>(CallbackContents)
 
-    var callbackId by CallbackContents.callbackId
-    var chatId by CallbackContents.chatId
-    var fromId by CallbackContents.fromId
-    var content by CallbackContents.content
+    override var chatId by CallbackContents.chatId
+    override var fromId by CallbackContents.fromId
+    override var callbackId by CallbackContents.callbackId
+    override var content by CallbackContents.content
     var updateDate by CallbackContents.updateDate
 }

@@ -10,8 +10,8 @@ To use the library, all you need to do is add a dependency, build a config, spec
                 mavenCentral()
             }
             dependencies {
-                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.6.0")
-                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:0.6.0")
+                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
+                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:%current_version%")
             }
         </code-block>
         <code>com/example/myproject/config/BotConfig.kt</code>
@@ -42,8 +42,8 @@ To use the library, all you need to do is add a dependency, build a config, spec
                 mavenCentral()
             }
             dependencies {
-                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.6.0")
-                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:0.6.0")
+                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
+                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:%current_version%")
             }
         </code-block>
         <code>com/example/myproject/KtorApp.kt</code>
@@ -79,7 +79,7 @@ To use the library, all you need to do is add a dependency, build a config, spec
                 mavenCentral()
             }
             dependencies {
-                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.6.0")
+                implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
             }
         </code-block>
         <code>com/example/myproject/KtorApp.kt</code>

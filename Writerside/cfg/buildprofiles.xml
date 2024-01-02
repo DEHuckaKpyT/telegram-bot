@@ -9,4 +9,7 @@
         <download-page>https://github.com/DEHuckaKpyT/telegram-bot</download-page>
         <showDownloadButton>true</showDownloadButton>
     </variables>
+    <footer>
+        <link href="https://github.com/DEHuckaKpyT/telegram-bot">Github</link>
+    </footer>
 </buildprofiles>

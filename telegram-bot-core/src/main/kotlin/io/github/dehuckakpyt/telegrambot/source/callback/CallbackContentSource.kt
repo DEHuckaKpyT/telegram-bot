@@ -12,7 +12,7 @@ import java.util.*
  */
 interface CallbackContentSource {
     suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent
-    suspend fun get(id: UUID): CallbackContent
+    suspend fun get(callbackId: UUID): CallbackContent
 
     companion object
 }

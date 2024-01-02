@@ -4,8 +4,8 @@ To save the state in the database, it is necessary to connect to it using [Expos
 Then add the dependency and specify the sources:
 ```Gradle
 dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:0.6.0")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:0.6.0")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:%current_version%")
 }
 ```
 ```kotlin

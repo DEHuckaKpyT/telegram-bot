@@ -21,7 +21,7 @@ class SimpleCallbackSerializer(
 
         if (next.length > 26) throw RuntimeException("Callback step name should be less or equal than 26 symbols to put max 64 symbols. Because callback data will contain special markers (2 symbols) + UUID id (36 symbols) + callback name.")
 
-        val sourceId = callbackContentSource.save(chatId, fromId, data).id
+        val sourceId = callbackContentSource.save(chatId, fromId, data).callbackId
         //will be string stepName|icallbackData (id)
         return "$next$delimiter${CallbackDataType.ID}$sourceId"
     }

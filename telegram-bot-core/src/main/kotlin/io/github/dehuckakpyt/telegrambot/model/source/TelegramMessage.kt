@@ -14,5 +14,5 @@ interface TelegramMessage {
     val fromId: Long
     val messageId: Long
     val text: String?
-    val createdDate: LocalDateTime
+    val createDate: LocalDateTime
 }

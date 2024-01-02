@@ -19,9 +19,9 @@ dependencies {
     //endregion ktor
 
     //region dehuckakpyt
-    implementation(project(":telegram-bot-database-source"))
     implementation(project(":telegram-bot-core"))
     implementation(project(":telegram-bot-ktor"))
+    implementation(project(":telegram-bot-source-exposed"))
     //endregion dehuckakpyt
 
     //region other

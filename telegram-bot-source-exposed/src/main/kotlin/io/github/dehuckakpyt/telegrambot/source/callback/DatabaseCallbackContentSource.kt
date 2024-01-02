@@ -3,7 +3,6 @@ package io.github.dehuckakpyt.telegrambot.source.callback
 import com.dehucka.exposed.ext.executeQuery
 import com.dehucka.exposed.ext.readQuery
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.ext.toImpl
 import io.github.dehuckakpyt.telegrambot.model.CallbackContents
 import io.github.dehuckakpyt.telegrambot.model.DatabaseCallbackContent
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
@@ -25,13 +24,13 @@ class DatabaseCallbackContentSource(
             this.content = content
             this.updateDate = LocalDateTime.now()
         }
-    }.toImpl()
+    }
 
     override suspend fun get(callbackId: UUID): CallbackContent = readQuery {
         DatabaseCallbackContent.find(CallbackContents.callbackId eq callbackId)
             .firstOrNull()
             ?: throw ChatException("Содержание для callback'а не найдено :(")
-    }.toImpl()
+    }
 
     private fun findLast(chatId: Long, fromId: Long): DatabaseCallbackContent? {
         if (maxCallbackContentsPerUser < 1) return null
