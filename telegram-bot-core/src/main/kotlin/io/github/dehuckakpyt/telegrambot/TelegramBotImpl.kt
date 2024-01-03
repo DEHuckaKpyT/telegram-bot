@@ -10,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
+import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.model.internal.*
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
@@ -226,7 +227,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postJson(
+    ): Message = postJson<SendMessage, Message>(
         "sendMessage", SendMessage(
             chatId = chatId,
             text = text,
@@ -240,7 +241,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "TEXT", text = text) }
 
     override suspend fun forwardMessage(
         chatId: String,
@@ -304,7 +305,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendPhoto") {
+    ): Message = postMultiPart<Message>("sendPhoto") {
         append("chat_id", chatId)
         appendContent("photo", photo)
         appendIfNotNull("caption", caption)
@@ -317,7 +318,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "PHOTO", text = caption) }
 
     override suspend fun sendPhoto(
         chatId: String,
@@ -332,7 +333,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendPhoto") {
+    ): Message = postMultiPart<Message>("sendPhoto") {
         append("chat_id", chatId)
         append("photo", photo)
         appendIfNotNull("caption", caption)
@@ -345,7 +346,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "PHOTO", text = caption) }
 
     override suspend fun sendAudio(
         chatId: String,
@@ -363,7 +364,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendAudio") {
+    ): Message = postMultiPart<Message>("sendAudio") {
         append("chat_id", chatId)
         appendContent("audio", audio)
         appendIfNotNull("caption", caption)
@@ -379,7 +380,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "AUDIO", text = caption) }
 
     override suspend fun sendAudio(
         chatId: String,
@@ -397,7 +398,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendAudio") {
+    ): Message = postMultiPart<Message>("sendAudio") {
         append("chat_id", chatId)
         append("audio", audio)
         appendIfNotNull("caption", caption)
@@ -413,7 +414,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "AUDIO", text = caption) }
 
     override suspend fun sendDocument(
         chatId: String,
@@ -429,7 +430,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendDocument") {
+    ): Message = postMultiPart<Message>("sendDocument") {
         append("chat_id", chatId)
         appendContent("document", document)
         appendContentIfNotNull("thumbnail", thumbnail)
@@ -443,7 +444,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DOCUMENT", text = caption) }
 
     override suspend fun sendDocument(
         chatId: String,
@@ -459,7 +460,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendDocument") {
+    ): Message = postMultiPart<Message>("sendDocument") {
         append("chat_id", chatId)
         append("document", document)
         appendContentIfNotNull("thumbnail", thumbnail)
@@ -473,7 +474,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DOCUMENT", text = caption) }
 
     override suspend fun sendVideo(
         chatId: String,
@@ -493,7 +494,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendVideo") {
+    ): Message = postMultiPart<Message>("sendVideo") {
         append("chat_id", chatId)
         appendContent("video", video)
         appendIfNotNull("duration", duration)
@@ -511,7 +512,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO", text = caption) }
 
     override suspend fun sendVideo(
         chatId: String,
@@ -531,7 +532,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendVideo") {
+    ): Message = postMultiPart<Message>("sendVideo") {
         append("chat_id", chatId)
         append("video", video)
         appendIfNotNull("duration", duration)
@@ -549,7 +550,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO", text = caption) }
 
     override suspend fun sendAnimation(
         chatId: String,
@@ -568,7 +569,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendAnimation") {
+    ): Message = postMultiPart<Message>("sendAnimation") {
         append("chat_id", chatId)
         appendContent("animation", animation)
         appendIfNotNull("duration", duration)
@@ -585,7 +586,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "ANIMATION", text = caption) }
 
     override suspend fun sendAnimation(
         chatId: String,
@@ -604,7 +605,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendAnimation") {
+    ): Message = postMultiPart<Message>("sendAnimation") {
         append("chat_id", chatId)
         append("animation", animation)
         appendIfNotNull("duration", duration)
@@ -621,7 +622,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "ANIMATION", text = caption) }
 
     override suspend fun sendVoice(
         chatId: String,
@@ -636,7 +637,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendVoice") {
+    ): Message = postMultiPart<Message>("sendVoice") {
         append("chat_id", chatId)
         appendContent("voice", voice)
         appendIfNotNull("caption", caption)
@@ -649,7 +650,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VOICE", text = caption) }
 
     override suspend fun sendVoice(
         chatId: String,
@@ -664,7 +665,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendVoice") {
+    ): Message = postMultiPart<Message>("sendVoice") {
         append("chat_id", chatId)
         append("voice", voice)
         appendIfNotNull("caption", caption)
@@ -677,7 +678,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VOICE", text = caption) }
 
     override suspend fun sendVideoNote(
         chatId: String,
@@ -691,7 +692,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendVideoNote") {
+    ): Message = postMultiPart<Message>("sendVideoNote") {
         append("chat_id", chatId)
         appendContent("video_note", videoNote)
         appendIfNotNull("message_thread_id", messageThreadId)
@@ -703,7 +704,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO_NOTE") }
 
     override suspend fun sendVideoNote(
         chatId: String,
@@ -717,7 +718,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendVideoNote") {
+    ): Message = postMultiPart<Message>("sendVideoNote") {
         append("chat_id", chatId)
         append("video_note", videoNote)
         appendIfNotNull("message_thread_id", messageThreadId)
@@ -729,7 +730,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO_NOTE") }
 
     override suspend fun sendMediaGroup(
         chatId: String,
@@ -757,7 +758,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postJson(
+    ): Message = postJson<SendLocation, Message>(
         "sendLocation",
         SendLocation(
             chatId = chatId,
@@ -774,7 +775,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "LOCATION", text = "latitude = $latitude, longitude = $longitude") }
 
     override suspend fun sendVenue(
         chatId: String,
@@ -792,7 +793,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postJson(
+    ): Message = postJson<SendVenue, Message>(
         "sendVenue",
         SendVenue(
             chatId = chatId,
@@ -811,7 +812,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VENUE", text = "latitude = $latitude, longitude = $longitude, title = $title, address = $address") }
 
     override suspend fun sendContact(
         chatId: String,
@@ -825,7 +826,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postJson(
+    ): Message = postJson<SendContact, Message>(
         "sendContact",
         SendContact(
             chatId = chatId,
@@ -840,7 +841,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "CONTACT", text = "phoneNumber = $phoneNumber, firstName = $firstName") }
 
     override suspend fun sendPoll(
         chatId: String,
@@ -862,7 +863,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postJson(
+    ): Message = postJson<SendPoll, Message>(
         "sendPoll",
         SendPoll(
             chatId = chatId,
@@ -885,7 +886,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "POLL", text = question) }
 
     override suspend fun sendDice(
         chatId: String,
@@ -896,7 +897,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postJson(
+    ): Message = postJson<SendDice, Message>(
         "sendDice",
         SendDice(
             chatId,
@@ -908,7 +909,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply,
             replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DICE", text = emoji) }
 
     override suspend fun sendChatAction(chatId: String, action: Action, messageThreadId: Long?): Boolean = postJson(
         "sendChatAction", SendChatAction(chatId, action, messageThreadId)
@@ -1229,7 +1230,7 @@ class TelegramBotImpl(
         entities: List<MessageEntity>?,
         disableWebPagePreview: Boolean?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = postJson(
+    ): Message = postJson<EditMessageText, Message>(
         "editMessageText",
         EditMessageText(
             chatId = chatId,
@@ -1241,7 +1242,7 @@ class TelegramBotImpl(
             disableWebPagePreview = disableWebPagePreview,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_TEXT", text = text) }
 
     override suspend fun editMessageCaption(
         chatId: String?,
@@ -1251,7 +1252,7 @@ class TelegramBotImpl(
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = postJson(
+    ): Message = postJson<EditMessageCaption, Message>(
         "editMessageCaption",
         EditMessageCaption(
             chatId = chatId,
@@ -1262,7 +1263,7 @@ class TelegramBotImpl(
             captionEntities = captionEntities,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_CAPTION", text = caption) }
 
     override suspend fun editMessageMedia(
         chatId: String?,
@@ -1284,7 +1285,7 @@ class TelegramBotImpl(
         messageId: Long?,
         inlineMessageId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = postJson(
+    ): Message = postJson<EditMessageLiveLocation, Message>(
         "editMessageLiveLocation", EditMessageLiveLocation(
             chatId = chatId,
             messageId = messageId,
@@ -1296,14 +1297,14 @@ class TelegramBotImpl(
             proximityAlertRadius = proximityAlertRadius,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_LIVE_LOCATION", text = "latitude = $latitude, longitude = $longitude") }
 
     override suspend fun stopMessageLiveLocation(
         chatId: String?,
         messageId: Long?,
         inlineMessageId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = postJson(
+    ): Message = postJson<StopMessageLiveLocation, Message>(
         "stopMessageLiveLocation",
         StopMessageLiveLocation(
             chatId = chatId,
@@ -1311,14 +1312,22 @@ class TelegramBotImpl(
             inlineMessageId = inlineMessageId,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "STOP_LIVE_LOCATION") }
 
     override suspend fun editMessageReplyMarkup(
         chatId: String?,
         messageId: Long?,
         inlineMessageId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = postJson("editMessageReplyMarkup", EditMessageReplyMarkup(chatId, messageId, inlineMessageId, replyMarkup))
+    ): Message = postJson<EditMessageReplyMarkup, Message>(
+        "editMessageReplyMarkup",
+        EditMessageReplyMarkup(
+            chatId,
+            messageId,
+            inlineMessageId,
+            replyMarkup
+        )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_REPLY_MARKUP") }
 
     override suspend fun stopPoll(chatId: String, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll = postJson(
         "stopPoll", StopPoll(chatId, messageId, replyMarkup)
@@ -1338,7 +1347,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: ReplyKeyboard?,
-    ): Message = postMultiPart("sendSticker") {
+    ): Message = postMultiPart<Message>("sendSticker") {
         append("chat_id", chatId)
         appendContent("sticker", sticker)
         appendIfNotNull("message_thread_id", messageThreadId)
@@ -1348,7 +1357,7 @@ class TelegramBotImpl(
         appendIfNotNull("reply_to_message_id", replyToMessageId)
         appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
-    }
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "STICKER", text = emoji) }
 
     override suspend fun getStickerSet(name: String): StickerSet = get("getStickerSet") {
         parameter("name", name)
@@ -1439,7 +1448,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = postJson(
+    ): Message = postJson<SendInvoice, Message>(
         "sendInvoice",
         SendInvoice(
             chatId = chatId,
@@ -1471,7 +1480,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "INVOICE", text = title) }
 
     override suspend fun createInvoiceLink(
         title: String,
@@ -1546,7 +1555,7 @@ class TelegramBotImpl(
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = postJson(
+    ): Message = postJson<SendGame, Message>(
         "sendGame",
         SendGame(
             chatId = chatId,
@@ -1558,7 +1567,7 @@ class TelegramBotImpl(
             allowSendingWithoutReply = allowSendingWithoutReply,
             replyMarkup = replyMarkup
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "GAME", text = gameShortName) }
 
     override suspend fun setGameScore(
         userId: Long,
@@ -1568,7 +1577,7 @@ class TelegramBotImpl(
         chatId: Long?,
         messageId: Long?,
         inlineMessageId: String?,
-    ): Message = postJson(
+    ): Message = postJson<SetGameScore, Message>(
         "setGameScore",
         SetGameScore(
             userId = userId,
@@ -1579,7 +1588,7 @@ class TelegramBotImpl(
             messageId = messageId,
             inlineMessageId = inlineMessageId
         )
-    )
+    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "GAME_SCORE", text = "userId = $userId, score = $score") }
 
     override suspend fun getGameHighScores(
         userId: Long,

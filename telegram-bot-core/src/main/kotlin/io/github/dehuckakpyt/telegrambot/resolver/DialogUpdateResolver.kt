@@ -42,8 +42,6 @@ internal class DialogUpdateResolver(
             return
         }
 
-        messageSource.save(chatId, from.id, message.messageId, text)
-
         exceptionHandler.execute(chatId) {
             fetchCommand(text)?.let {
                 processCommandMessage(it, message)
@@ -52,13 +50,17 @@ internal class DialogUpdateResolver(
     }
 
     private suspend fun processCommandMessage(command: String, message: Message): Unit = with(message) {
-        chainResolver.getCommand(command)
-            .invoke(CommandArgument(chatId, message))
+        messageSource.save(chatId, from!!.id, messageId, type = "COMMAND", text = text)
+
+        chainResolver.getCommand(command).invoke(CommandArgument(chatId, message))
     }
 
     private suspend fun processGeneralMessage(message: Message): Unit = with(message) {
         val chain = chainSource.get(chatId, from!!.id)
         val factory = message.messageArgumentFactory
+
+        messageSource.save(chatId, from.id, messageId, factory.messageType, chain?.step, factory.getMessageText(message))
+
         val action = chainResolver.getStep(chain?.step, factory.type)
 
         action.invoke(factory.create(chatId, message, chain!!.content))

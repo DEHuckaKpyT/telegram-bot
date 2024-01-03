@@ -22,5 +22,9 @@ internal class TextMessageArgumentFactory : MessageArgumentFactory {
     override fun create(chatId: Long, message: Message, content: String?): MessageArgument =
         TextMessageArgument(chatId, message, content)
 
+    override fun getMessageText(message: Message): String? = message.text
+
     override val type: KClass<out MessageArgument> = MessageType.TEXT
+
+    override val messageType: String = "TEXT"
 }

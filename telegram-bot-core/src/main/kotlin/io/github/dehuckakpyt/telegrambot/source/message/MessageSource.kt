@@ -9,7 +9,14 @@ package io.github.dehuckakpyt.telegrambot.source.message
  */
 interface MessageSource {
 
-    suspend fun save(chatId: Long, fromId: Long, messageId: Long, text: String? = null)
+    suspend fun save(
+        chatId: Long,
+        fromId: Long,
+        messageId: Long,
+        type: String,
+        step: String? = null,
+        text: String? = null,
+    )
 
     companion object
 }

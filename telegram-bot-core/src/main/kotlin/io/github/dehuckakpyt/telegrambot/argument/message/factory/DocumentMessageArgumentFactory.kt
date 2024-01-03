@@ -22,5 +22,9 @@ internal class DocumentMessageArgumentFactory : MessageArgumentFactory {
     override fun create(chatId: Long, message: Message, content: String?): MessageArgument =
         DocumentMessageArgument(chatId, message, content)
 
+    override fun getMessageText(message: Message): String? = message.caption
+
     override val type: KClass<out MessageArgument> = MessageType.DOCUMENT
+
+    override val messageType: String = "DOCUMENT"
 }

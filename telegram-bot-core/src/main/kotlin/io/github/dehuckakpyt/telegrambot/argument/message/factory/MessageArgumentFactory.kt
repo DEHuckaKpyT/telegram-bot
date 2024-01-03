@@ -17,5 +17,9 @@ internal interface MessageArgumentFactory {
 
     fun create(chatId: Long, message: Message, content: String?): MessageArgument
 
+    fun getMessageText(message: Message): String?
+
     val type: KClass<out MessageArgument>
+
+    val messageType: String
 }

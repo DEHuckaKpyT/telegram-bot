@@ -22,5 +22,9 @@ internal class PhotoMessageArgumentFactory : MessageArgumentFactory {
     override fun create(chatId: Long, message: Message, content: String?): MessageArgument =
         PhotoMessageArgument(chatId, message, content)
 
+    override fun getMessageText(message: Message): String? = message.caption
+
     override val type: KClass<out MessageArgument> = MessageType.PHOTO
+
+    override val messageType: String = "PHOTO"
 }

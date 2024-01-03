@@ -22,7 +22,11 @@ import org.koin.mp.KoinPlatform.getKoin
  * @author Denis Matytsin
  */
 val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot", { TelegramBotConfig() }) {
-    InternalKoinContext.koin.declare<ApplicationConfig>(application.environment.config.config("telegram-bot.template"), named("telegramBotTemplate"))
+    val appConfig = application.environment.config
+    if (pluginConfig.token == null) pluginConfig.token = appConfig.tryGetString("telegram-bot.token")
+    if (pluginConfig.username == null) pluginConfig.username = appConfig.tryGetString("telegram-bot.username")
+
+    InternalKoinContext.koin.declare<ApplicationConfig>(appConfig.config("telegram-bot.template"), named("telegramBotTemplate"))
 
     val context = TelegramBotFactory.createTelegramBotContext(pluginConfig)
     val telegramBot = context.telegramBot

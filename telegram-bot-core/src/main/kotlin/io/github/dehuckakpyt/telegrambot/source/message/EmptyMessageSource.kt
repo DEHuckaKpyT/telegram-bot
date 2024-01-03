@@ -8,5 +8,5 @@ package io.github.dehuckakpyt.telegrambot.source.message
  * @author Denis Matytsin
  */
 class EmptyMessageSource : MessageSource {
-    override suspend fun save(chatId: Long, fromId: Long, messageId: Long, text: String?) {}
+    override suspend fun save(chatId: Long, fromId: Long, messageId: Long, type: String, step: String?, text: String?) {}
 }

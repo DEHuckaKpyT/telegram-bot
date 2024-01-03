@@ -13,6 +13,8 @@ interface TelegramMessage {
     val chatId: Long
     val fromId: Long
     val messageId: Long
+    val type: String
+    val step: String?
     val text: String?
     val createDate: LocalDateTime
 }

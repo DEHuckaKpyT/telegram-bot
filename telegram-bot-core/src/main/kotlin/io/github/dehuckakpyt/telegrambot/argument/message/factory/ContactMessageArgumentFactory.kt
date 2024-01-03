@@ -22,5 +22,11 @@ internal class ContactMessageArgumentFactory : MessageArgumentFactory {
     override fun create(chatId: Long, message: Message, content: String?): MessageArgument =
         ContactMessageArgument(chatId, message, content)
 
+    override fun getMessageText(message: Message): String {
+        return "phoneNumber = ${message.contact!!.phoneNumber}, firstName = ${message.contact.firstName}"
+    }
+
     override val type: KClass<out MessageArgument> = MessageType.CONTACT
+
+    override val messageType: String = "CONTACT"
 }

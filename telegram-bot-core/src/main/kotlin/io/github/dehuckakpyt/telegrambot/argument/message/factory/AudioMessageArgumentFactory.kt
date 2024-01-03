@@ -22,5 +22,9 @@ internal class AudioMessageArgumentFactory : MessageArgumentFactory {
     override fun create(chatId: Long, message: Message, content: String?): MessageArgument =
         AudioMessageArgument(chatId, message, content)
 
+    override fun getMessageText(message: Message): String? = message.caption
+
     override val type: KClass<out MessageArgument> = MessageType.AUDIO
+
+    override val messageType: String = "AUDIO"
 }

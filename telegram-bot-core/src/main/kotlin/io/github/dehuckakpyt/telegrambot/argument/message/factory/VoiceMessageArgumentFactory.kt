@@ -22,5 +22,9 @@ internal class VoiceMessageArgumentFactory : MessageArgumentFactory {
     override fun create(chatId: Long, message: Message, content: String?): MessageArgument =
         VoiceMessageArgument(chatId, message, content)
 
+    override fun getMessageText(message: Message): String? = message.caption
+
     override val type: KClass<out MessageArgument> = MessageType.VOICE
+
+    override val messageType: String = "VOICE"
 }

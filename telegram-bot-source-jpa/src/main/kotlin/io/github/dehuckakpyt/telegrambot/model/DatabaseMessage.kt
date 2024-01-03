@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import org.hibernate.annotations.ColumnDefault
 import java.time.LocalDateTime
 
 
@@ -25,9 +26,15 @@ class DatabaseMessage(
     @Column(nullable = false)
     override val messageId: Long,
 
+    @Column(nullable = false)
+    override val type: String,
+
+    override val step: String?,
+
     @Column(columnDefinition = "text")
     override val text: String?,
 
     @Column(nullable = false)
-    override val createDate: LocalDateTime,
+    @ColumnDefault("'now()'")
+    override val createDate: LocalDateTime = LocalDateTime.now(),
 ) : UUIDTable(), TelegramMessage
