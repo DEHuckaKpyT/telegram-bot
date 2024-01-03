@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "io.github.dehuckakpyt.telegrambot"
-    version = "0.6.0"
+    version = "0.7.0"
 }
 
 subprojects {

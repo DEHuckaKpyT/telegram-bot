@@ -1,5 +1,6 @@
-package io.github.dehuckakpyt.telegrambot.model
+package io.github.dehuckakpyt.telegrambot.model.message
 
+import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -16,7 +17,7 @@ import java.time.LocalDateTime
  */
 @Entity
 @Table(name = "telegram_message")
-class DatabaseMessage(
+class DatabaseTelegramMessage(
     @Column(nullable = false)
     override val chatId: Long,
 

@@ -1,11 +1,11 @@
 package io.github.dehuckakpyt.telegrambot.source.chain
 
-import io.github.dehuckakpyt.telegrambot.model.DatabaseChain
-import io.github.dehuckakpyt.telegrambot.repository.ChainRepository
+import io.github.dehuckakpyt.telegrambot.model.chain.DatabaseChain
+import io.github.dehuckakpyt.telegrambot.repository.chain.DatabaseChainRepository
 import org.springframework.transaction.annotation.Transactional
 
 internal class DatabaseChainSource(
-    private val repository: ChainRepository,
+    private val repository: DatabaseChainRepository,
 ) : ChainSource {
 
     @Transactional

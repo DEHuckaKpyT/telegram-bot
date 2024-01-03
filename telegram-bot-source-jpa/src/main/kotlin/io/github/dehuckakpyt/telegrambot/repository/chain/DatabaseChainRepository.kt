@@ -1,6 +1,6 @@
-package io.github.dehuckakpyt.telegrambot.repository
+package io.github.dehuckakpyt.telegrambot.repository.chain
 
-import io.github.dehuckakpyt.telegrambot.model.DatabaseChain
+import io.github.dehuckakpyt.telegrambot.model.chain.DatabaseChain
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
@@ -11,7 +11,7 @@ import java.util.*
  *
  * @author Denis Matytsin
  */
-interface ChainRepository : JpaRepository<DatabaseChain, UUID> {
+interface DatabaseChainRepository : JpaRepository<DatabaseChain, UUID> {
 
     fun findFirstByChatIdAndFromId(chatId: Long, fromId: Long): DatabaseChain?
 }

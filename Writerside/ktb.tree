@@ -23,8 +23,8 @@
         <toc-element topic="callback-serialization.md"/>
     </toc-element>
     <toc-element topic="database-integration.md">
-        <toc-element topic="exposed.md"/>
         <toc-element topic="spring-jpa.md"/>
+        <toc-element topic="exposed.md"/>
     </toc-element>
     <toc-element topic="additional.md"/>
 </instance-profile>

@@ -2,14 +2,14 @@ package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.constant.Default.MAX_CALLBACK_CONTENTS_PER_USER
 import io.github.dehuckakpyt.telegrambot.context.SpringContext.autowired
-import io.github.dehuckakpyt.telegrambot.repository.CallbackContentRepository
-import io.github.dehuckakpyt.telegrambot.repository.ChainRepository
-import io.github.dehuckakpyt.telegrambot.repository.MessageRepository
+import io.github.dehuckakpyt.telegrambot.repository.callback.DatabaseCallbackContentRepository
+import io.github.dehuckakpyt.telegrambot.repository.chain.DatabaseChainRepository
+import io.github.dehuckakpyt.telegrambot.repository.message.DatabaseTelegramMessageRepository
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.DatabaseCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chain.DatabaseChainSource
-import io.github.dehuckakpyt.telegrambot.source.message.DatabaseMessageSource
+import io.github.dehuckakpyt.telegrambot.source.message.DatabaseTelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 
 
@@ -28,7 +28,7 @@ fun CallbackContentSource.Companion.inDatabase(
     maxCallbackContentsPerUser: Long = MAX_CALLBACK_CONTENTS_PER_USER,
 ): CallbackContentSource {
     return DatabaseCallbackContentSource(
-        repository = autowired<CallbackContentRepository>(),
+        repository = autowired<DatabaseCallbackContentRepository>(),
         maxCallbackContentsPerUser = maxCallbackContentsPerUser,
     )
 }
@@ -36,7 +36,7 @@ fun CallbackContentSource.Companion.inDatabase(
 val CallbackContentSource.Companion.inDatabase: CallbackContentSource
     get() {
         return DatabaseCallbackContentSource(
-            repository = autowired<CallbackContentRepository>(),
+            repository = autowired<DatabaseCallbackContentRepository>(),
             maxCallbackContentsPerUser = MAX_CALLBACK_CONTENTS_PER_USER,
         )
     }
@@ -44,13 +44,13 @@ val CallbackContentSource.Companion.inDatabase: CallbackContentSource
 val ChainSource.Companion.inDatabase: ChainSource
     get() {
         return DatabaseChainSource(
-            repository = autowired<ChainRepository>(),
+            repository = autowired<DatabaseChainRepository>(),
         )
     }
 
 val MessageSource.Companion.inDatabase: MessageSource
     get() {
-        return DatabaseMessageSource(
-            repository = autowired<MessageRepository>(),
+        return DatabaseTelegramMessageSource(
+            repository = autowired<DatabaseTelegramMessageRepository>(),
         )
     }

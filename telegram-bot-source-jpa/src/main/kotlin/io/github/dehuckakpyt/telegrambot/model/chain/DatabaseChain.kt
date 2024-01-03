@@ -1,5 +1,6 @@
-package io.github.dehuckakpyt.telegrambot.model
+package io.github.dehuckakpyt.telegrambot.model.chain
 
+import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.Chain
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

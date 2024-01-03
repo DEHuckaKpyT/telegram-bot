@@ -1,6 +1,6 @@
-package io.github.dehuckakpyt.telegrambot.repository
+package io.github.dehuckakpyt.telegrambot.repository.callback
 
-import io.github.dehuckakpyt.telegrambot.model.DatabaseCallbackContent
+import io.github.dehuckakpyt.telegrambot.model.callback.DatabaseCallbackContent
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -13,7 +13,7 @@ import java.util.*
  *
  * @author Denis Matytsin
  */
-interface CallbackContentRepository : JpaRepository<DatabaseCallbackContent, UUID> {
+interface DatabaseCallbackContentRepository : JpaRepository<DatabaseCallbackContent, UUID> {
     fun findFirstByCallbackId(callbackId: UUID): DatabaseCallbackContent?
     fun findByChatIdAndFromIdOrderByUpdateDateDesc(chatId: Long, fromId: Long, pageable: Pageable): Page<DatabaseCallbackContent>
 }
