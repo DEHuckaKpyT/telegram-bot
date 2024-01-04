@@ -1,77 +1,115 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version: String by project
-val koin_version: String by project
-val exposed_version: String by project
-
 plugins {
     kotlin("jvm") version "1.8.22"
-    id("com.google.devtools.ksp") version "1.8.22-1.0.11"
     `java-library`
     `maven-publish`
+    signing
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
 }
 
-group = "com.dehucka"
-version = "0.1-SNAPSHOT"
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://jitpack.io")
+allprojects {
+    group = "io.github.dehuckakpyt.telegrambot"
+    version = "0.7.0"
 }
 
-dependencies {
-    api("io.ktor:ktor-server-core-jvm:$ktor_version")
-    api("com.github.elbekD:kt-telegram-bot:2.2.0")
-    api("org.freemarker:freemarker:2.3.32")
-
-    //region koin
-    compileOnly("io.insert-koin:koin-core-coroutines:$koin_version")
-    implementation("io.insert-koin:koin-ktor:$koin_version")
-    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
-    compileOnly("io.insert-koin:koin-annotations:1.2.2")
-    ksp("io.insert-koin:koin-ksp-compiler:1.2.2")
-    //endregion koin
-
-    //region database
-    api("org.jetbrains.exposed:exposed-core:$exposed_version")
-    api("org.jetbrains.exposed:exposed-dao:$exposed_version")
-    api("org.jetbrains.exposed:exposed-java-time:$exposed_version")
-    //endregion database
-
-    // region local
-    implementation("com.dehucka:micro-service-core:0.1-SNAPSHOT")
-    implementation("com.dehucka:exposed-extensions:0.1-SNAPSHOT")
-    // endregion local
+subprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+nexusPublishing {
+    packageGroup.set(project.group as String)
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
+    repositories {
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
 
-sourceSets.main {
-    java.srcDirs("build/generated/ksp/main/kotlin")
-}
-
-publishing {
-    publications {
-        create<MavenPublication>(project.name) {
-            groupId = project.group as String
-            artifactId = project.name
-            version = project.version as String
-
-            from(components["java"])
+            username.set(project.properties["sonatypeUsername"].toString())
+            password.set(project.properties["sonatypePassword"].toString())
         }
     }
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+configure(subprojects.filter { it.path.startsWith(":example").not() }) {
+//    kotlin {
+//        explicitApi()
+//    }
+
+    apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+    apply(plugin = "signing")
+
+    publishing {
+        publications {
+            create<MavenPublication>(project.name) {
+                groupId = project.group as String
+                artifactId = project.name
+                version = project.version as String
+
+                from(components["java"])
+
+                pom {
+                    packaging = "jar"
+                    name.set(project.name)
+                    description.set("Kotlin Telegram Bot library")
+                    url.set("https://github.com/DEHuckaKpyT/telegram-bot")
+                    scm {
+                        connection.set("scm:https://github.com/DEHuckaKpyT/telegram-bot.git")
+                        developerConnection.set("scm:git@github.com:DEHuckaKpyT/telegram-bot.git")
+                        url.set("https://github.com/DEHuckaKpyT/telegram-bot")
+                    }
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("DEHuckaKpyT")
+                            name.set("Denis Matytsin")
+                            email.set("den-matytsin@mail.com")
+                        }
+                    }
+                }
+                repositories {
+                    maven {
+                        val releasesUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                        val snapshotsUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                        url = if (version.toString().endsWith("SNAPSHOT")) snapshotsUrl else releasesUrl
+                        credentials {
+                            username = project.properties["sonatypeUsername"].toString()
+                            password = project.properties["sonatypePassword"].toString()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        sign(publishing.publications[project.name])
+    }
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    tasks.test {
+        useJUnitPlatform()
+    }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
+    sourceSets.main {
+        java.srcDirs("build/generated/ksp/main/kotlin")
+    }
 }
