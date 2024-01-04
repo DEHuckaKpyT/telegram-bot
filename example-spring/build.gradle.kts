@@ -13,6 +13,11 @@ dependencies {
     implementation(project(":telegram-bot-spring"))
     implementation(project(":telegram-bot-source-jpa"))
     //endregion dehuckakpyt
+
+    //region other
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("org.postgresql:postgresql:42.7.1")
+    //endregion other
 }
 
 java {

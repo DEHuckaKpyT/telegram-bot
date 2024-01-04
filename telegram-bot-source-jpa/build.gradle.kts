@@ -15,11 +15,6 @@ dependencies {
     //region springframework
     api("org.springframework.boot:spring-boot-starter-data-jpa:$spring_version")
     //endregion springframework
-
-    //region other
-    implementation("com.zaxxer:HikariCP:5.1.0")
-    implementation("org.postgresql:postgresql:42.7.1")
-    //endregion other
 }
 
 allOpen {
