@@ -101,6 +101,7 @@ object TelegramBotFactory {
         handling.invoke(botHandling)
 
         context.botHandling = botHandling
+        context.buttonFactory = buttonFactory
         context.updateReceiver = updateReceiver?.invoke(actual.telegramBot, updateResolver) ?: LongPollingUpdateReceiver(actual.telegramBot, updateResolver, LongPollingConfig())
     }
 }

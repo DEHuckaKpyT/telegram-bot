@@ -5,6 +5,7 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.context.SpringContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
+import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
@@ -50,6 +51,9 @@ class TelegramBotInitializationConfig(
 
     @Bean
     fun templater(): Templater = botContext.templater
+
+    @Bean
+    fun buttonFactory(): ButtonFactory = botContext.buttonFactory
 
     @Bean(autowireCandidate = false)
     fun botHandling(): BotHandling = botContext.botHandling

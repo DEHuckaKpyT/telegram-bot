@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.factory.button
 
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardButton
+import io.github.dehuckakpyt.telegrambot.model.type.LoginUrl
 
 
 /**
@@ -20,5 +21,9 @@ class ButtonFactoryImpl(
 
     override suspend fun callbackButton(chatId: Long, fromId: Long, text: String, next: String, content: Any): InlineKeyboardButton {
         return InlineKeyboardButton(text, callbackData = callbackSerializer.toCallback(chatId, fromId, next, content))
+    }
+
+    override suspend fun authButton(text: String, authUrl: String, requestWriteAccess: Boolean): InlineKeyboardButton {
+        return InlineKeyboardButton(text, loginUrl = LoginUrl(authUrl, requestWriteAccess = requestWriteAccess))
     }
 }

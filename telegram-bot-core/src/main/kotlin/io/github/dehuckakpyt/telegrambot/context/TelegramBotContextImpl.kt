@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.context
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.template.Templater
@@ -17,4 +18,5 @@ internal class TelegramBotContextImpl : TelegramBotContext {
     override lateinit var updateReceiver: UpdateReceiver
     override lateinit var botHandling: BotHandling
     override lateinit var templater: Templater
+    override lateinit var buttonFactory: ButtonFactory
 }

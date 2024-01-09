@@ -8,13 +8,26 @@
     <step>Change all sources in configuration.</step>
 </procedure>
 
-```kotlin
+<tabs>
+<tab title="Spring 3.0">
+<code-block lang="kotlin">
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:%current_version%")
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-jpa:%current_version%")
 }
-```
+</code-block>
+</tab>
+<tab title="Spring 2.7">
+<code-block lang="kotlin">
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:%current_version%")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-spring2-jpa:%current_version%")
+}
+</code-block>
+</tab>
+</tabs>
 
 ```kotlin
 @EnableTelegramBot

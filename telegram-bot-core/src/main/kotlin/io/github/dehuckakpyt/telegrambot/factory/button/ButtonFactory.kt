@@ -16,4 +16,5 @@ interface ButtonFactory {
     suspend fun Argument.callbackButton(text: String, next: String, content: Any): InlineKeyboardButton = callbackButton(chatId, from.id, text, next, content)
     suspend fun callbackButton(chatId: Long, fromId: Long, text: String, next: String, content: Any): InlineKeyboardButton
     fun contactButton(text: String): KeyboardButton = KeyboardButton(text, requestContact = true)
+    suspend fun authButton(text: String, authUrl: String, requestWriteAccess: Boolean = false): InlineKeyboardButton
 }

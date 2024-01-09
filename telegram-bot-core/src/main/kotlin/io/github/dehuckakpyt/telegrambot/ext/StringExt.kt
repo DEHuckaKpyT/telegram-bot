@@ -9,5 +9,5 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
  *
  * @author Denis Matytsin
  */
-internal fun String.toKebabCase(): String =
-    PropertyNamingStrategies.KebabCaseStrategy.INSTANCE.translate(this)
+private val translator = PropertyNamingStrategies.KebabCaseStrategy()
+internal fun String.toKebabCase(): String = translator.translate(this)

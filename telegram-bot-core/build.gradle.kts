@@ -19,7 +19,11 @@ dependencies {
     //endregion ktor
 
     //region other
-    api("org.freemarker:freemarker:2.3.32")
+    api("org.freemarker:freemarker") {
+        version {
+            strictly("2.3.32")
+        }
+    }
     implementation("org.jsoup:jsoup:1.16.1")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     api("ch.qos.logback:logback-classic:1.4.14")
