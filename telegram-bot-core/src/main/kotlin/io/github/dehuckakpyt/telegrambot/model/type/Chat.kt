@@ -24,6 +24,7 @@ public data class Chat(
     @param:JsonProperty("photo") val photo: ChatPhoto? = null,
     @param:JsonProperty("active_usernames") val activeUsernames: List<String>? = null,
     @param:JsonProperty("emoji_status_custom_emoji_id") val emojiStatusCustomEmojiId: String? = null,
+    @param:JsonProperty("emoji_status_expiration_date") val emojiStatusExpirationDate: Long? = null,
     @param:JsonProperty("bio") val bio: String? = null,
     @param:JsonProperty("has_private_forwards") val hasPrivateForwards: Boolean? = null,
     @param:JsonProperty("has_restricted_voice_and_video_messages") val hasRestrictedVoiceAndVideoMessages: Boolean? = null,
@@ -46,7 +47,7 @@ public data class Chat(
 
 public data class ChatLocation(
     @param:JsonProperty("location") val location: Location,
-    @param:JsonProperty("address") val address: String
+    @param:JsonProperty("address") val address: String,
 )
 
 public data class ChatPermissions(
@@ -71,7 +72,7 @@ public data class ChatPhoto(
     @param:JsonProperty("small_file_id") val smallFileId: String,
     @param:JsonProperty("small_file_unique_id") val smallFileUniqueId: String,
     @param:JsonProperty("big_file_id") val bigFileId: String,
-    @param:JsonProperty("big_file_unique_id") val bigFileUniqueId: String
+    @param:JsonProperty("big_file_unique_id") val bigFileUniqueId: String,
 )
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "status")
@@ -93,7 +94,7 @@ public sealed class ChatMember {
         @param:JsonProperty("status") override val status: String,
         @param:JsonProperty("user") override val user: User,
         @param:JsonProperty("is_anonymous") val isAnonymous: Boolean? = null,
-        @param:JsonProperty("custom_title") val customTitle: String? = null
+        @param:JsonProperty("custom_title") val customTitle: String? = null,
     ) : ChatMember()
 
     @JsonTypeName("administrator")
@@ -112,8 +113,11 @@ public sealed class ChatMember {
         @param:JsonProperty("can_post_messages") val canPostMessages: Boolean? = null,
         @param:JsonProperty("can_edit_messages") val canEditMessages: Boolean? = null,
         @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
+        @param:JsonProperty("can_post_stories") val canPostStories: Boolean? = null,
+        @param:JsonProperty("can_edit_stories") val canEditStories: Boolean? = null,
+        @param:JsonProperty("can_delete_stories") val canDeleteStories: Boolean? = null,
         @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
-        @param:JsonProperty("custom_title") val customTitle: String? = null
+        @param:JsonProperty("custom_title") val customTitle: String? = null,
     ) : ChatMember()
 
     @JsonTypeName("member")
@@ -141,7 +145,7 @@ public sealed class ChatMember {
         @param:JsonProperty("can_invite_users") val canInviteUsers: Boolean,
         @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean,
         @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean,
-        @param:JsonProperty("until_date") val untilDate: Int
+        @param:JsonProperty("until_date") val untilDate: Int,
     ) : ChatMember()
 
     @JsonTypeName("left")
@@ -154,17 +158,18 @@ public sealed class ChatMember {
     public data class Banned(
         @param:JsonProperty("status") override val status: String,
         @param:JsonProperty("user") override val user: User,
-        @param:JsonProperty("until_date") val untilDate: Int
+        @param:JsonProperty("until_date") val untilDate: Int,
     ) : ChatMember()
 }
 
 public data class ChatMemberUpdated(
     @param:JsonProperty("chat") val chat: Chat,
     @param:JsonProperty("from") val from: User,
-    @param:JsonProperty("date") val date: Int,
+    @param:JsonProperty("date") val date: Long,
     @param:JsonProperty("old_chat_member") val oldChatMember: ChatMember,
     @param:JsonProperty("new_chat_member") val newChatMember: ChatMember,
-    @param:JsonProperty("invite_link") val inviteLink: ChatInviteLink? = null
+    @param:JsonProperty("invite_link") val inviteLink: ChatInviteLink? = null,
+    @param:JsonProperty("via_chat_folder_invite_link") val viaChatFolderInviteLink: Boolean? = null,
 )
 
 public data class ChatInviteLink(
@@ -200,6 +205,9 @@ public data class ChatAdministratorRights(
     @get:JsonProperty("can_post_messages") @param:JsonProperty("can_post_messages") val canPostMessages: Boolean? = null,
     @get:JsonProperty("can_edit_messages") @param:JsonProperty("can_edit_messages") val canEditMessages: Boolean? = null,
     @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
+    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_post_stories") val canPostStories: Boolean? = null,
+    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_edit_stories") val canEditStories: Boolean? = null,
+    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_delete_stories") val canDeleteStories: Boolean? = null,
     @get:JsonProperty("can_manage_topics") @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
 )
 
@@ -219,4 +227,8 @@ public class GeneralForumTopicHidden
 
 public class GeneralForumTopicUnhidden
 
-public class WriteAccessAllowed
+public class WriteAccessAllowed(
+    @param:JsonProperty("from_request") val fromRequest: Boolean? = null,
+    @param:JsonProperty("web_app_name") val webAppName: String? = null,
+    @param:JsonProperty("from_attachment_menu") val fromAttachmentMenu: Boolean? = null,
+)

@@ -16,7 +16,7 @@ public data class InlineQuery(
     @param:JsonProperty("query") val query: String,
     @param:JsonProperty("offset") val offset: String,
     @param:JsonProperty("chat_type") val chatType: String? = null,
-    @param:JsonProperty("location") val location: Location? = null
+    @param:JsonProperty("location") val location: Location? = null,
 )
 
 public sealed class InlineQueryResult {
@@ -32,9 +32,9 @@ public data class InlineQueryResultArticle(
     @get:JsonProperty("url") val url: String? = null,
     @get:JsonProperty("hide_url") val hideUrl: Boolean? = null,
     @get:JsonProperty("description") val description: String? = null,
-    @get:JsonProperty("thumb_url") val thumbUrl: String? = null,
-    @get:JsonProperty("thumb_width") val thumbWidth: Int? = null,
-    @get:JsonProperty("thumb_height") val thumbHeight: Int? = null,
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
+    @get:JsonProperty("thumbnail_width") val thumbnailWidth: Int? = null,
+    @get:JsonProperty("thumbnail_height") val thumbnailHeight: Int? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "article"
@@ -43,7 +43,7 @@ public data class InlineQueryResultArticle(
 public data class InlineQueryResultPhoto(
     @get:JsonProperty("id") val id: String,
     @get:JsonProperty("photo_url") val photoUrl: String,
-    @get:JsonProperty("thumb_url") val thumbUrl: String,
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
     @get:JsonProperty("photo_width") val photoWidth: Int? = null,
     @get:JsonProperty("photo_height") val photoHeight: Int? = null,
     @get:JsonProperty("title") val title: String? = null,
@@ -52,7 +52,7 @@ public data class InlineQueryResultPhoto(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "photo"
@@ -61,17 +61,17 @@ public data class InlineQueryResultPhoto(
 public data class InlineQueryResultGif(
     @get:JsonProperty("id") val id: String,
     @get:JsonProperty("gif_url") val gifUrl: String,
-    @get:JsonProperty("thumb_url") val thumbUrl: String,
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
     @get:JsonProperty("gif_width") val gifWidth: Int? = null,
     @get:JsonProperty("gif_height") val gifHeight: Int? = null,
     @get:JsonProperty("gif_duration") val gifDuration: Int? = null,
-    @get:JsonProperty("thumb_mime_type") val thumbMimeType: String? = null,
+    @get:JsonProperty("thumbnail_mime_type") val thumbnailMimeType: String? = null,
     @get:JsonProperty("title") val title: String? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "gif"
@@ -80,16 +80,16 @@ public data class InlineQueryResultGif(
 public data class InlineQueryResultMpeg4Gif(
     @get:JsonProperty("id") val id: String,
     @get:JsonProperty("mpeg4_url") val mpeg4Url: String,
-    @get:JsonProperty("thumb_url") val thumbUrl: String,
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
     @get:JsonProperty("mpeg4_width") val mpeg4Width: Int? = null,
     @get:JsonProperty("mpeg4_height") val mpeg4Height: Int? = null,
     @get:JsonProperty("mpeg4_duration") val mpeg4Duration: Int? = null,
-    @get:JsonProperty("thumb_mime_type") val thumbMimeType: String? = null,
+    @get:JsonProperty("thumbnail_mime_type") val thumbnailMimeType: String? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "mpeg4_gif"
@@ -99,7 +99,7 @@ public data class InlineQueryResultVideo(
     @get:JsonProperty("id") val id: String,
     @get:JsonProperty("video_url") val videoUrl: String,
     @get:JsonProperty("mime_type") val mimeType: String,
-    @get:JsonProperty("thumb_url") val thumbUrl: String,
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
     @get:JsonProperty("title") val title: String,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
@@ -109,7 +109,7 @@ public data class InlineQueryResultVideo(
     @get:JsonProperty("video_duration") val videoDuration: Int? = null,
     @get:JsonProperty("description") val description: String? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "video"
@@ -125,7 +125,7 @@ public data class InlineQueryResultAudio(
     @get:JsonProperty("performer") val performer: String? = null,
     @get:JsonProperty("audio_duration") val audioDuration: Int? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "audio"
@@ -140,7 +140,7 @@ public data class InlineQueryResultVoice(
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("voice_duration") val voiceDuration: Int? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "voice"
@@ -157,9 +157,9 @@ public data class InlineQueryResultDocument(
     @get:JsonProperty("description") val description: String? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
-    @get:JsonProperty("thumb_url") val thumbUrl: String? = null,
-    @get:JsonProperty("thumb_width") val thumbWidth: Int? = null,
-    @get:JsonProperty("thumb_height") val thumbHeight: Int? = null
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
+    @get:JsonProperty("thumbnail_width") val thumbnailWidth: Int? = null,
+    @get:JsonProperty("thumbnail_height") val thumbnailHeight: Int? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "document"
@@ -176,9 +176,9 @@ public data class InlineQueryResultLocation(
     @get:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Int? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
-    @get:JsonProperty("thumb_url") val thumbUrl: String? = null,
-    @get:JsonProperty("thumb_width") val thumbWidth: Int? = null,
-    @get:JsonProperty("thumb_height") val thumbHeight: Int? = null
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
+    @get:JsonProperty("thumbnail_width") val thumbnailWidth: Int? = null,
+    @get:JsonProperty("thumbnail_height") val thumbnailHeight: Int? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "location"
@@ -196,9 +196,9 @@ public data class InlineQueryResultVenue(
     @get:JsonProperty("google_place_type") val googlePlaceType: String? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
-    @get:JsonProperty("thumb_url") val thumbUrl: String? = null,
-    @get:JsonProperty("thumb_width") val thumbWidth: Int? = null,
-    @get:JsonProperty("thumb_height") val thumbHeight: Int? = null
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
+    @get:JsonProperty("thumbnail_width") val thumbnailWidth: Int? = null,
+    @get:JsonProperty("thumbnail_height") val thumbnailHeight: Int? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "venue"
@@ -212,9 +212,9 @@ public data class InlineQueryResultContact(
     @get:JsonProperty("vcard") val vcard: String? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
-    @get:JsonProperty("thumb_url") val thumbUrl: String? = null,
-    @get:JsonProperty("thumb_width") val thumbWidth: Int? = null,
-    @get:JsonProperty("thumb_height") val thumbHeight: Int? = null
+    @get:JsonProperty("thumbnail_url") val thumbnailUrl: String? = null,
+    @get:JsonProperty("thumbnail_width") val thumbnailWidth: Int? = null,
+    @get:JsonProperty("thumbnail_height") val thumbnailHeight: Int? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "contact"
@@ -223,7 +223,7 @@ public data class InlineQueryResultContact(
 public data class InlineQueryResultGame(
     @get:JsonProperty("id") val id: String,
     @get:JsonProperty("game_short_name") val gameShortName: String,
-    @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null
+    @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "game"
@@ -238,7 +238,7 @@ public data class InlineQueryResultCachedPhoto(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "photo"
@@ -252,7 +252,7 @@ public data class InlineQueryResultCachedGif(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "gif"
@@ -266,7 +266,7 @@ public data class InlineQueryResultCachedMpeg4Gif(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "mpeg4_gif"
@@ -276,7 +276,7 @@ public data class InlineQueryResultCachedSticker(
     @get:JsonProperty("id") val id: String,
     @get:JsonProperty("sticker_file_id") val stickerFileId: String,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "sticker"
@@ -291,7 +291,7 @@ public data class InlineQueryResultCachedDocument(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "document"
@@ -306,7 +306,7 @@ public data class InlineQueryResultCachedVideo(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "video"
@@ -320,7 +320,7 @@ public data class InlineQueryResultCachedVoice(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "voice"
@@ -333,7 +333,7 @@ public data class InlineQueryResultCachedAudio(
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null
+    @get:JsonProperty("input_message_content") val inputMessageContent: InputMessageContent? = null,
 ) : InlineQueryResult() {
     @get:JsonProperty("type")
     override val type: String = "audio"
@@ -351,7 +351,7 @@ public data class InputTextMessageContent(
     @get:JsonProperty("message_text") val messageText: String,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
-    @get:JsonProperty("disable_web_page_preview") val disableWebPagePreview: Boolean? = null
+    @get:JsonProperty("disable_web_page_preview") val disableWebPagePreview: Boolean? = null,
 ) : InputMessageContent()
 
 public data class InputLocationMessageContent(
@@ -360,7 +360,7 @@ public data class InputLocationMessageContent(
     @get:JsonProperty("horizontal_accuracy") val horizontalAccuracy: Float? = null,
     @get:JsonProperty("live_period") val livePeriod: Int? = null,
     @get:JsonProperty("heading") val heading: Int? = null,
-    @get:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Int? = null
+    @get:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Int? = null,
 ) : InputMessageContent()
 
 public data class InputVenueMessageContent(
@@ -371,14 +371,14 @@ public data class InputVenueMessageContent(
     @get:JsonProperty("foursquare_id") val foursquareId: String? = null,
     @get:JsonProperty("foursquare_type") val foursquareType: String? = null,
     @get:JsonProperty("google_place_id") val googlePlaceId: String? = null,
-    @get:JsonProperty("google_place_type") val googlePlaceType: String? = null
+    @get:JsonProperty("google_place_type") val googlePlaceType: String? = null,
 ) : InputMessageContent()
 
 public data class InputContactMessageContent(
     @get:JsonProperty("phone_number") val phoneNumber: String,
     @get:JsonProperty("first_name") val firstName: String,
     @get:JsonProperty("last_name") val lastName: String? = null,
-    @get:JsonProperty("vcard") val vcard: String? = null
+    @get:JsonProperty("vcard") val vcard: String? = null,
 ) : InputMessageContent()
 
 public data class InputInvoiceMessageContent(
@@ -409,5 +409,5 @@ public data class ChosenInlineResult(
     @param:JsonProperty("from") val from: User,
     @param:JsonProperty("location") val location: Location? = null,
     @param:JsonProperty("inline_message_id") val inlineMessageId: String? = null,
-    @param:JsonProperty("query") val query: String
+    @param:JsonProperty("query") val query: String,
 )

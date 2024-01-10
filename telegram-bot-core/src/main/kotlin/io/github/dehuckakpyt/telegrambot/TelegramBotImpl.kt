@@ -1414,7 +1414,6 @@ class TelegramBotImpl(
         }
     }
 
-    // TODO добавить ещё методы со стикерами
     override suspend fun addStickerToSet(
         userId: Long,
         name: String,

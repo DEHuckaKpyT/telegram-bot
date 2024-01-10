@@ -50,7 +50,7 @@ public data class KeyboardButtonRequestChat(
 
 public class KeyboardButtonPollType(
     @get:JsonProperty("type")
-    public val type: Type
+    public val type: Type,
 ) {
     public enum class Type {
         @field:JsonProperty("quiz")
@@ -81,6 +81,7 @@ public data class InlineKeyboardButton(
     @get:JsonProperty("web_app") val webApp: WebAppInfo? = null,
     @get:JsonProperty("switch_inline_query") val switchInlineQuery: String? = null,
     @get:JsonProperty("switch_inline_query_current_chat") val switchInlineQueryCurrentChat: String? = null,
+    @get:JsonProperty("switch_inline_query_chosen_chat") val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat? = null,
     @get:JsonProperty("callback_game") val callbackGame: CallbackGame? = null,
     @get:JsonProperty("pay") val pay: Boolean? = null,
 )
@@ -90,3 +91,11 @@ public data class ForceReply(
     @get:JsonProperty("input_field_placeholder") val inputFieldPlaceholder: String? = null,
     @get:JsonProperty("selective") val selective: Boolean? = null,
 ) : ReplyKeyboard()
+
+public data class SwitchInlineQueryChosenChat(
+    @get:JsonProperty("query") val query: String? = null,
+    @get:JsonProperty("allow_user_chats") val allowUserChats: Boolean? = null,
+    @get:JsonProperty("allow_bot_chats") val allowBotChats: Boolean? = null,
+    @get:JsonProperty("allow_group_chats") val allowGroupChats: Boolean? = null,
+    @get:JsonProperty("allow_channel_chats") val allowChannelChats: Boolean? = null,
+)

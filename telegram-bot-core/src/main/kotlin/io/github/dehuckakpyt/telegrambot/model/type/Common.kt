@@ -23,7 +23,7 @@ public data class WebhookInfo(
     @param:JsonProperty("last_error_message") val lastErrorMessage: String? = null,
     @param:JsonProperty("last_synchronization_error_date") val lastSynchronizationErrorDate: Long? = null,
     @param:JsonProperty("max_connections") val maxConnections: Int? = null,
-    @param:JsonProperty("allowed_updates") val allowedUpdates: List<AllowedUpdate>? = null
+    @param:JsonProperty("allowed_updates") val allowedUpdates: List<AllowedUpdate>? = null,
 )
 
 public data class User(
@@ -68,6 +68,7 @@ public data class Message(
     @param:JsonProperty("document") val document: Document? = null,
     @param:JsonProperty("photo") val photo: List<PhotoSize> = emptyList(),
     @param:JsonProperty("sticker") val sticker: Sticker? = null,
+    @param:JsonProperty("story") val story: Story? = null,
     @param:JsonProperty("video") val video: Video? = null,
     @param:JsonProperty("video_note") val videoNote: VideoNote? = null,
     @param:JsonProperty("voice") val voice: Voice? = null,
@@ -115,7 +116,7 @@ public data class Message(
 )
 
 public data class MessageId(
-    @param:JsonProperty("message_id") val messageId: Long
+    @param:JsonProperty("message_id") val messageId: Long,
 )
 
 public data class CallbackQuery(
@@ -125,7 +126,7 @@ public data class CallbackQuery(
     @param:JsonProperty("inline_message_id") val inlineMessageId: String? = null,
     @param:JsonProperty("chat_instance") val chatInstance: String,
     @param:JsonProperty("data") val data: String? = null,
-    @param:JsonProperty("game_short_name") val gameShortName: String? = null
+    @param:JsonProperty("game_short_name") val gameShortName: String? = null,
 )
 
 public data class MessageEntity(
@@ -209,56 +210,58 @@ public data class Audio(
     @param:JsonProperty("file_name") val fileName: String? = null,
     @param:JsonProperty("mime_type") val mimeType: String? = null,
     @param:JsonProperty("file_size") val fileSize: Long? = null,
-    @param:JsonProperty("thumb") val thumb: PhotoSize? = null
+    @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
 )
 
 public data class Document(
     @param:JsonProperty("file_id") val fileId: String,
     @param:JsonProperty("file_unique_id") val fileUniqueId: String,
-    @param:JsonProperty("thumb") val thumb: PhotoSize? = null,
+    @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
     @param:JsonProperty("file_name") val fileName: String? = null,
     @param:JsonProperty("mime_type") val mimeType: String? = null,
     @param:JsonProperty("file_size") val fileSize: Long? = null,
 )
 
+public class Story
+
 public data class Video(
-    @param:JsonProperty("file_id") val file_id: String,
-    @param:JsonProperty("file_unique_id") val file_unique_id: String,
+    @param:JsonProperty("file_id") val fileId: String,
+    @param:JsonProperty("file_unique_id") val fileUniqueId: String,
     @param:JsonProperty("width") val width: Int,
     @param:JsonProperty("height") val height: Int,
     @param:JsonProperty("duration") val duration: Int,
-    @param:JsonProperty("thumb") val thumb: PhotoSize? = null,
+    @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
     @param:JsonProperty("file_name") val fileName: String? = null,
     @param:JsonProperty("mime_type") val mimeType: String? = null,
     @param:JsonProperty("file_size") val fileSize: Long? = null,
 )
 
 public data class Animation(
-    @param:JsonProperty("file_id") val file_id: String,
-    @param:JsonProperty("file_unique_id") val file_unique_id: String,
+    @param:JsonProperty("file_id") val fileId: String,
+    @param:JsonProperty("file_unique_id") val fileUniqueId: String,
     @param:JsonProperty("width") val width: Int,
     @param:JsonProperty("height") val height: Int,
     @param:JsonProperty("duration") val duration: Int,
-    @param:JsonProperty("thumb") val thumb: PhotoSize? = null,
+    @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
     @param:JsonProperty("file_name") val fileName: String? = null,
     @param:JsonProperty("mime_type") val mimeType: String? = null,
-    @param:JsonProperty("fil_size") val fileSize: Long? = null
+    @param:JsonProperty("fil_size") val fileSize: Long? = null,
 )
 
 public data class Voice(
-    @param:JsonProperty("file_id") val file_id: String,
-    @param:JsonProperty("file_unique_id") val file_unique_id: String,
+    @param:JsonProperty("file_id") val fileId: String,
+    @param:JsonProperty("file_unique_id") val fileUniqueId: String,
     @param:JsonProperty("duration") val duration: Int,
     @param:JsonProperty("mim_type") val mimeType: String? = null,
     @param:JsonProperty("file_size") val fileSize: Long? = null,
 )
 
 public data class VideoNote(
-    @param:JsonProperty("file_id") val file_id: String,
-    @param:JsonProperty("file_unique_id") val file_unique_id: String,
+    @param:JsonProperty("file_id") val fileId: String,
+    @param:JsonProperty("file_unique_id") val fileUniqueId: String,
     @param:JsonProperty("length") val length: Int,
     @param:JsonProperty("duration") val duration: Int,
-    @param:JsonProperty("thumb") val thumb: PhotoSize? = null,
+    @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
     @param:JsonProperty("file_size") val fileSize: Int? = null,
 )
 
@@ -267,7 +270,7 @@ public data class Contact(
     @param:JsonProperty("first_name") val firstName: String,
     @param:JsonProperty("last_name") val lastName: String? = null,
     @param:JsonProperty("user_id") val userId: Int? = null,
-    @param:JsonProperty("vcard") val vcard: String? = null
+    @param:JsonProperty("vcard") val vcard: String? = null,
 )
 
 public data class Location(
@@ -276,7 +279,7 @@ public data class Location(
     @param:JsonProperty("horizontal_accuracy") val horizontalAccuracy: Float? = null,
     @param:JsonProperty("live_period") val livePeriod: Int? = null,
     @param:JsonProperty("heading") val heading: Int? = null,
-    @param:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Int? = null
+    @param:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Int? = null,
 )
 
 public data class Venue(
@@ -286,13 +289,13 @@ public data class Venue(
     @param:JsonProperty("foursquare_id") val foursquareId: String? = null,
     @param:JsonProperty("foursquare_type") val foursquareType: String? = null,
     @param:JsonProperty("google_place_id") val googlePlaceId: String? = null,
-    @param:JsonProperty("google_place_type") val googlePlaceType: String? = null
+    @param:JsonProperty("google_place_type") val googlePlaceType: String? = null,
 )
 
 public data class ProximityAlertTriggered(
     @param:JsonProperty("traveler") val traveler: User,
     @param:JsonProperty("watcher") val watcher: User,
-    @param:JsonProperty("distance") val distance: Int
+    @param:JsonProperty("distance") val distance: Int,
 )
 
 public data class UserProfilePhotos(
@@ -309,21 +312,21 @@ public data class File(
 
 public data class ResponseParameters(
     @param:JsonProperty("migrate_to_chat_id") val migrateToString: Long,
-    @param:JsonProperty("retry_after") val retryAfter: Int
+    @param:JsonProperty("retry_after") val retryAfter: Int,
 )
 
 public data class Dice(
     @param:JsonProperty("emoji") val emoji: String,
-    @param:JsonProperty("value") val value: Int
+    @param:JsonProperty("value") val value: Int,
 )
 
 public data class BotCommand(
     @get:JsonProperty("command") @param:JsonProperty("command") val command: String,
-    @get:JsonProperty("description") @param:JsonProperty("description") val description: String
+    @get:JsonProperty("description") @param:JsonProperty("description") val description: String,
 )
 
 public data class MessageAutoDeleteTimerChanged(
-    @param:JsonProperty("message_auto_delete_time") val messageAutoDeleteTime: Long
+    @param:JsonProperty("message_auto_delete_time") val messageAutoDeleteTime: Long,
 )
 
 public data class ForumTopicCreated(
@@ -337,7 +340,7 @@ public class ForumTopicClosed
 public class ForumTopicReopened
 
 public data class VideoChatScheduled(
-    @param:JsonProperty("start_date") val startDate: Long
+    @param:JsonProperty("start_date") val startDate: Long,
 )
 
 public class VideoChatStarted
@@ -368,40 +371,40 @@ public sealed class BotCommandScope {
 
     @JsonTypeName("default")
     public data class BotCommandScopeDefault(
-        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
     ) : BotCommandScope()
 
     @JsonTypeName("all_private_chats")
     public data class BotCommandScopeAllPrivateChats(
-        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
     ) : BotCommandScope()
 
     @JsonTypeName("all_group_chats")
     public data class BotCommandScopeAllGroupChats(
-        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
     ) : BotCommandScope()
 
     @JsonTypeName("all_chat_administrators")
     public data class BotCommandScopeAllChatAdministrators(
-        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String
+        @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
     ) : BotCommandScope()
 
     @JsonTypeName("chat")
     public data class BotCommandScopeChat(
         @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
-        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String
+        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String,
     ) : BotCommandScope()
 
     @JsonTypeName("chat_administrators")
     public data class BotCommandScopeChatAdministrators(
         @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
-        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String
+        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String,
     ) : BotCommandScope()
 
     @JsonTypeName("chat_member")
     public data class BotCommandScopeChatMember(
         @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
-        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String
+        @get:JsonProperty("chat_id") @param:JsonProperty("chat_id") val chatId: String,
     ) : BotCommandScope()
 }
 
@@ -409,7 +412,7 @@ public data class LoginUrl(
     @get:JsonProperty("url") @param:JsonProperty("url") val url: String,
     @get:JsonProperty("forward_text") @param:JsonProperty("forward_text") val forwardText: String? = null,
     @get:JsonProperty("bot_username") @param:JsonProperty("bot_username") val botUsername: String? = null,
-    @get:JsonProperty("request_write_access") @param:JsonProperty("request_write_access") val requestWriteAccess: Boolean? = null
+    @get:JsonProperty("request_write_access") @param:JsonProperty("request_write_access") val requestWriteAccess: Boolean? = null,
 )
 
 public enum class ParseMode {

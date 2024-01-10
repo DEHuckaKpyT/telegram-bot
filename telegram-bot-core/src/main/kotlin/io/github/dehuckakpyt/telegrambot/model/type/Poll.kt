@@ -11,19 +11,19 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @author Denis Matytsin
  */
 public data class Poll(
-    @get:JsonProperty("id") @param:JsonProperty("id") val id: String,
-    @get:JsonProperty("question") @param:JsonProperty("question") val question: String,
-    @get:JsonProperty("options") @param:JsonProperty("options") val options: List<PollOption>,
-    @get:JsonProperty("total_voter_count") @param:JsonProperty("total_voter_count") val totalVoterCount: Int,
-    @get:JsonProperty("is_closed") @param:JsonProperty("is_closed") val isClosed: Boolean,
-    @get:JsonProperty("is_anonymous") @param:JsonProperty("is_anonymous") val isAnonymous: Boolean,
-    @get:JsonProperty("type") @param:JsonProperty("type") val type: String,
-    @get:JsonProperty("allows_multiple_answers") @param:JsonProperty("allows_multiple_answers") val allowsMultipleAnswers: Boolean,
-    @get:JsonProperty("correct_option_id") @param:JsonProperty("correct_option_id") val correctOptionId: Int? = null,
-    @get:JsonProperty("explanation") @param:JsonProperty("explanation") val explanation: String? = null,
-    @get:JsonProperty("explanation_entities") @param:JsonProperty("explanation_entities") val explanationEntities: List<MessageEntity>? = null,
-    @get:JsonProperty("open_period") @param:JsonProperty("open_period") val openPeriod: Int? = null,
-    @get:JsonProperty("close_date") @param:JsonProperty("close_date") val closeDate: Long? = null,
+    @param:JsonProperty("id") val id: String,
+    @param:JsonProperty("question") val question: String,
+    @param:JsonProperty("options") val options: List<PollOption>,
+    @param:JsonProperty("total_voter_count") val totalVoterCount: Int,
+    @param:JsonProperty("is_closed") val isClosed: Boolean,
+    @param:JsonProperty("is_anonymous") val isAnonymous: Boolean,
+    @param:JsonProperty("type") val type: String,
+    @param:JsonProperty("allows_multiple_answers") val allowsMultipleAnswers: Boolean,
+    @param:JsonProperty("correct_option_id") val correctOptionId: Int? = null,
+    @param:JsonProperty("explanation") val explanation: String? = null,
+    @param:JsonProperty("explanation_entities") val explanationEntities: List<MessageEntity>? = null,
+    @param:JsonProperty("open_period") val openPeriod: Int? = null,
+    @param:JsonProperty("close_date") val closeDate: Long? = null,
 )
 
 public data class PollOption(
@@ -32,7 +32,8 @@ public data class PollOption(
 )
 
 public data class PollAnswer(
-    @get:JsonProperty("poll_id") @param:JsonProperty("poll_id") val pollId: String,
-    @get:JsonProperty("user") @param:JsonProperty("user") val user: User,
-    @get:JsonProperty("option_ids") @param:JsonProperty("option_ids") val optionIds: List<Int>,
+    @param:JsonProperty("poll_id") val pollId: String,
+    @param:JsonProperty("voter_chat") val chat: Chat? = null,
+    @param:JsonProperty("user") val user: User? = null,
+    @param:JsonProperty("option_ids") val optionIds: List<Int>,
 )

@@ -19,12 +19,13 @@ public data class Sticker(
     @get:JsonProperty("height") @param:JsonProperty("height") val height: Int,
     @get:JsonProperty("is_animated") @param:JsonProperty("is_animated") val isAnimated: Boolean,
     @get:JsonProperty("is_video") @param:JsonProperty("is_video") val isVideo: Boolean,
-    @get:JsonProperty("thumb") @param:JsonProperty("thumb") val thumb: PhotoSize? = null,
+    @get:JsonProperty("thumbnail") @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
     @get:JsonProperty("emoji") @param:JsonProperty("emoji") val emoji: String? = null,
     @get:JsonProperty("set_name") @param:JsonProperty("set_name") val setName: String? = null,
     @get:JsonProperty("premium_animation") @param:JsonProperty("premium_animation") val premiumAnimation: File? = null,
     @get:JsonProperty("mask_position") @param:JsonProperty("mask_position") val maskPosition: MaskPosition? = null,
     @get:JsonProperty("custom_emoji_id") @param:JsonProperty("custom_emoji_id") val customEmojiId: String? = null,
+    @get:JsonProperty("needs_repainting") @param:JsonProperty("needs_repainting") val needsRepainting: Boolean? = null,
     @get:JsonProperty("file_size") @param:JsonProperty("file_size") val fileSize: Int? = null,
 )
 
@@ -35,7 +36,7 @@ public data class StickerSet(
     @get:JsonProperty("is_animated") @param:JsonProperty("is_animated") val isAnimated: Boolean,
     @get:JsonProperty("is_video") @param:JsonProperty("is_video") val isVideo: Boolean,
     @get:JsonProperty("stickers") @param:JsonProperty("stickers") val stickers: List<Sticker>,
-    @get:JsonProperty("thumb") @param:JsonProperty("thumb") val thumb: PhotoSize? = null,
+    @get:JsonProperty("thumbnail") @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
 )
 
 public data class MaskPosition(
