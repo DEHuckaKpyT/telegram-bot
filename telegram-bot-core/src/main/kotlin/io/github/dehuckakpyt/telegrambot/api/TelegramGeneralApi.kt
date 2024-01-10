@@ -292,7 +292,7 @@ interface TelegramGeneralApi {
 
     suspend fun sendMediaGroup(
         chatId: String,
-        media: List<InputMedia>,
+        media: Iterable<InputMedia>,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,

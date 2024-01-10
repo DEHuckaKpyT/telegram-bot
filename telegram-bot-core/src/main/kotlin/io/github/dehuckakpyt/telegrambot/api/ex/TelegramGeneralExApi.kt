@@ -613,7 +613,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendMediaGroup(
         chatId: Long,
-        media: List<InputMedia>,
+        media: Iterable<InputMedia>,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,

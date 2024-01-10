@@ -1,7 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.model.type
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.io.File
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 
 
 /**
@@ -14,29 +15,51 @@ import java.io.File
 public sealed class InputMedia {
     public abstract val type: String
     public abstract val media: String
-    public abstract val attachment: File?
-    public abstract val thumb: Any?
+    public abstract val mediaContent: NamedContent?
+    public abstract val thumbnail: String?
+    public abstract val thumbnailContent: NamedContent?
 }
 
-public data class InputMediaPhoto(
+public data class InputMediaPhoto private constructor(
     @get:JsonProperty("media") override val media: String,
-    @Transient override val attachment: File? = null,
+    @get:JsonIgnore override val mediaContent: NamedContent? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("has_spoiler") val hasSpoiler: Boolean? = null,
 ) : InputMedia() {
-    @Transient
-    override val thumb: Any? = null
+
+    public constructor(
+        media: String,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        hasSpoiler: Boolean? = null,
+    ) : this(media, null, caption, parseMode, captionEntities, hasSpoiler)
+
+    public constructor(
+        media: NamedContent,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        hasSpoiler: Boolean? = null,
+    ) : this("attach://${media.fileName}", media, caption, parseMode, captionEntities, hasSpoiler)
+
+    @get:JsonProperty("thumbnail")
+    override val thumbnail: String? = null
+
+    @get:JsonIgnore
+    override val thumbnailContent: NamedContent? = null
 
     @get:JsonProperty("type")
     override val type: String = "photo"
 }
 
-public data class InputMediaVideo(
+public data class InputMediaVideo private constructor(
     @get:JsonProperty("media") override val media: String,
-    @Transient override val attachment: File? = null,
-    @Transient override val thumb: Any? = null,
+    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -46,14 +69,42 @@ public data class InputMediaVideo(
     @get:JsonProperty("supports_streaming") val supportsStreaming: Boolean? = null,
     @get:JsonProperty("has_spoiler") val hasSpoiler: Boolean? = null,
 ) : InputMedia() {
+
+    public constructor(
+        media: String,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        width: Int? = null,
+        height: Int? = null,
+        duration: Int? = null,
+        supportsStreaming: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+    ) : this(media, null, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, width, height, duration, supportsStreaming, hasSpoiler)
+
+    public constructor(
+        media: NamedContent,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        width: Int? = null,
+        height: Int? = null,
+        duration: Int? = null,
+        supportsStreaming: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+    ) : this("attach://${media.fileName}", media, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, width, height, duration, supportsStreaming, hasSpoiler)
+
     @get:JsonProperty("type")
     override val type: String = "video"
 }
 
-public data class InputMediaAnimation(
+public data class InputMediaAnimation private constructor(
     @get:JsonProperty("media") override val media: String,
-    @Transient override val attachment: File? = null,
-    @Transient override val thumb: Any? = null,
+    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -62,14 +113,40 @@ public data class InputMediaAnimation(
     @get:JsonProperty("duration") val duration: Int? = null,
     @get:JsonProperty("has_spoiler") val hasSpoiler: Boolean? = null,
 ) : InputMedia() {
+
+    public constructor(
+        media: String,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        width: Int? = null,
+        height: Int? = null,
+        duration: Int? = null,
+        hasSpoiler: Boolean? = null,
+    ) : this(media, null, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, width, height, duration, hasSpoiler)
+
+    public constructor(
+        media: NamedContent,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        width: Int? = null,
+        height: Int? = null,
+        duration: Int? = null,
+        hasSpoiler: Boolean? = null,
+    ) : this("attach://${media.fileName}", media, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, width, height, duration, hasSpoiler)
+
     @get:JsonProperty("type")
     override val type: String = "animation"
 }
 
-public data class InputMediaAudio(
+public data class InputMediaAudio private constructor(
     @get:JsonProperty("media") override val media: String,
-    @Transient override val attachment: File? = null,
-    @Transient override val thumb: Any? = null,
+    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -77,19 +154,62 @@ public data class InputMediaAudio(
     @get:JsonProperty("performer") val performer: String? = null,
     @get:JsonProperty("title") val title: String? = null,
 ) : InputMedia() {
+
+    public constructor(
+        media: String,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        performer: String? = null,
+        title: String? = null,
+    ) : this(media, null, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, duration, performer, title)
+
+    public constructor(
+        media: NamedContent,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        performer: String? = null,
+        title: String? = null,
+    ) : this("attach://${media.fileName}", media, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, duration, performer, title)
+
     @get:JsonProperty("type")
     override val type: String = "audio"
 }
 
-public data class InputMediaDocument(
+public data class InputMediaDocument private constructor(
     @get:JsonProperty("media") override val media: String,
-    @Transient override val attachment: File? = null,
-    @Transient override val thumb: Any? = null,
+    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("disable_content_type_detection") val disableContentTypeDetection: Boolean? = null,
 ) : InputMedia() {
+
+    public constructor(
+        media: String,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        disableContentTypeDetection: Boolean? = null,
+    ) : this(media, null, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, disableContentTypeDetection)
+
+    public constructor(
+        media: NamedContent,
+        thumbnail: NamedContent? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: List<MessageEntity>? = null,
+        disableContentTypeDetection: Boolean? = null,
+    ) : this("attach://${media.fileName}", media, thumbnail?.let { "attach://${thumbnail.fileName}" }, thumbnail, caption, parseMode, captionEntities, disableContentTypeDetection)
+
     @get:JsonProperty("type")
     override val type: String = "document"
 }

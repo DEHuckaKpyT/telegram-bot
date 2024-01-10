@@ -1,6 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.model.type
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 
 
 /**
@@ -42,3 +44,26 @@ public data class MaskPosition(
     @get:JsonProperty("y_shift") @param:JsonProperty("y_shift") val yShift: Float,
     @get:JsonProperty("scale") @param:JsonProperty("scale") val scale: Float,
 )
+
+public data class InputSticker private constructor(
+    @get:JsonProperty("sticker") val sticker: String,
+    @get:JsonIgnore val stickerContent: NamedContent?,
+    @get:JsonProperty("emoji_list") val emojiList: Iterable<String>,
+    @get:JsonProperty("mask_position") val maskPosition: MaskPosition?,
+    @get:JsonProperty("keywords") val keywords: Iterable<String>?,
+) {
+
+    public constructor(
+        sticker: String,
+        emojiList: Iterable<String>,
+        maskPosition: MaskPosition? = null,
+        keywords: Iterable<String>? = null,
+    ) : this(sticker, null, emojiList, maskPosition, keywords)
+
+    public constructor(
+        sticker: NamedContent,
+        emojiList: Iterable<String>,
+        maskPosition: MaskPosition? = null,
+        keywords: Iterable<String>? = null,
+    ) : this("attach://${sticker.fileName}", sticker, emojiList, maskPosition, keywords)
+}

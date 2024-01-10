@@ -171,6 +171,11 @@ class TelegramBotImpl(
         append(key, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.fileName}\""))
     }
 
+    private fun FormBuilder.appendContentIfNotNull(value: NamedContent?) {
+        value ?: return
+        append(value.fileName, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.fileName}\""))
+    }
+
     private fun FormBuilder.appendContent(key: String, value: NamedContent) {
         append(key, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.fileName}\""))
     }
@@ -734,14 +739,24 @@ class TelegramBotImpl(
 
     override suspend fun sendMediaGroup(
         chatId: String,
-        media: List<InputMedia>,
+        media: Iterable<InputMedia>,
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyToMessageId: Long?,
         allowSendingWithoutReply: Boolean?,
-    ): ArrayList<Message> {
-        TODO("Not yet implemented")
+    ): ArrayList<Message> = postMultiPart("sendMediaGroup") {
+        append("chat_id", chatId)
+        append("media", media.toJson())
+        appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("protect_content", protectContent)
+        appendIfNotNull("reply_to_message_id", replyToMessageId)
+        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+
+        media.forEach { input ->
+            appendContentIfNotNull(input.mediaContent)
+            appendContentIfNotNull(input.thumbnailContent)
+        }
     }
 
     override suspend fun sendLocation(
@@ -1271,9 +1286,13 @@ class TelegramBotImpl(
         inlineMessageId: String?,
         media: InputMedia,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message {
-        TODO("Not yet implemented")
-    }
+    ): Message = postMultiPart<Message>("editMessageMedia") {
+        appendIfNotNull("chat_id", chatId)
+        appendIfNotNull("message_id", messageId)
+        appendIfNotNull("inline_message_id", inlineMessageId)
+        append("media", media.toJson())
+        appendIfNotNull("reply_markup", replyMarkup?.toJson())
+    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_MEDIA", media.media) }
 
     override suspend fun editMessageLiveLocation(
         latitude: Float,
@@ -1377,21 +1396,35 @@ class TelegramBotImpl(
         userId: Long,
         name: String,
         title: String,
-        stickers: Collection<Any>,
+        stickers: Iterable<InputSticker>,
         stickerFormat: String,
         stickerType: String?,
         needsRepainting: Boolean?,
-    ): Boolean {
-        TODO("Not yet implemented")
+    ): Boolean = postMultiPart("createNewStickerSet") {
+        append("user_id", userId)
+        append("name", name)
+        append("title", title)
+        append("stickers", stickers.toJson())
+        append("sticker_format", stickerFormat)
+        appendIfNotNull("sticker_type", stickerType)
+        appendIfNotNull("needs_repainting", needsRepainting)
+
+        stickers.forEach { sticker ->
+            appendContentIfNotNull(sticker.stickerContent)
+        }
     }
 
     // TODO добавить ещё методы со стикерами
     override suspend fun addStickerToSet(
         userId: Long,
         name: String,
-        sticker: Any,
-    ): Boolean {
-        TODO("Not yet implemented")
+        sticker: InputSticker,
+    ): Boolean = postMultiPart("addStickerToSet") {
+        append("user_id", userId)
+        append("name", name)
+        append("sticker", sticker.toJson())
+
+        appendContentIfNotNull(sticker.stickerContent)
     }
 
     override suspend fun setStickerPositionInSet(sticker: String, position: Int): Boolean = postJson(
@@ -1402,9 +1435,40 @@ class TelegramBotImpl(
         "deleteStickerFromSet", DeleteStickerFromSet(sticker)
     )
 
-    override suspend fun setStickerSetThumbnail(name: String, userId: Long, thumbnail: Any?): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean = postJson(
+        "setStickerEmojiList", SetStickerEmojiList(sticker, emojiList)
+    )
+
+    override suspend fun setStickerKeywords(sticker: String, keywords: Iterable<String>?): Boolean = postJson(
+        "setStickerKeywords", SetStickerKeywords(sticker, keywords)
+    )
+
+    override suspend fun setStickerMaskPosition(sticker: String, maskPosition: MaskPosition?): Boolean = postJson(
+        "setStickerMaskPosition", SetStickerMaskPosition(sticker, maskPosition)
+    )
+
+    override suspend fun setStickerSetTitle(sticker: String, title: String): Boolean = postJson(
+        "setStickerSetTitle", SetStickerSetTitle(sticker, title)
+    )
+
+    override suspend fun setStickerSetThumbnail(
+        name: String,
+        userId: Long,
+        thumbnail: NamedContent?,
+    ): Boolean = postMultiPart("setStickerSetThumbnail") {
+        append("name", name)
+        append("user_id", userId)
+
+        appendContentIfNotNull("thumbnail", thumbnail)
     }
+
+    override suspend fun setCustomEmojiStickerSetThumbnail(name: String, customEmojiId: String?): Boolean = postJson(
+        "setCustomEmojiStickerSetThumbnail", SetCustomEmojiStickerSetThumbnail(name, customEmojiId)
+    )
+
+    override suspend fun deleteStickerSet(name: String): Boolean = postJson(
+        "deleteStickerSet", DeleteStickerSet(name)
+    )
 
     override suspend fun answerInlineQuery(
         inlineQueryId: String,
