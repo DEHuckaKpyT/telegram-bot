@@ -17,11 +17,10 @@ internal class SendMessage(
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("parse_mode") val parseMode: ParseMode? = null,
     @get:JsonProperty("entities") val entities: List<MessageEntity>? = null,
-    @get:JsonProperty("disable_web_page_preview") val disableWebPagePreview: Boolean? = null,
+    @get:JsonProperty("link_preview_options") val linkPreviewOptions: LinkPreviewOptions? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 )
 
@@ -29,6 +28,15 @@ internal class ForwardMessage(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("from_chat_id") val fromChatId: String,
     @get:JsonProperty("message_id") val messageId: Long,
+    @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
+    @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
+    @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
+)
+
+internal class ForwardMessages(
+    @get:JsonProperty("chat_id") val chatId: String,
+    @get:JsonProperty("from_chat_id") val fromChatId: String,
+    @get:JsonProperty("message_ids") val messageIds: Iterable<Long>,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
@@ -42,12 +50,20 @@ internal class CopyMessage(
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: ParseMode? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
-    @get:JsonProperty("has_spoiler") val hasSpoiler: Boolean? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
+)
+
+internal class CopyMessages(
+    @get:JsonProperty("chat_id") val chatId: String,
+    @get:JsonProperty("from_chat_id") val fromChatId: String,
+    @get:JsonProperty("message_ids") val messageIds: Iterable<Long>,
+    @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
+    @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
+    @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
+    @get:JsonProperty("remove_caption") val removeCaption: Boolean? = null,
 )
 
 internal class SendLocation(
@@ -61,9 +77,8 @@ internal class SendLocation(
     @get:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Long? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 )
 
 internal class EditMessageLiveLocation(
@@ -75,7 +90,7 @@ internal class EditMessageLiveLocation(
     @get:JsonProperty("horizontal_accuracy") val horizontalAccuracy: Float? = null,
     @get:JsonProperty("heading") val heading: Long? = null,
     @get:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Long? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 ) {
     init {
         if (chatId == null && messageId == null) {
@@ -97,7 +112,7 @@ internal class StopMessageLiveLocation(
     @get:JsonProperty("chat_id") val chatId: String? = null,
     @get:JsonProperty("message_id") val messageId: Long? = null,
     @get:JsonProperty("inline_message_id") val inlineMessageId: String? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 ) {
     init {
         if (chatId == null && messageId == null) {
@@ -128,9 +143,8 @@ internal class SendVenue(
     @get:JsonProperty("google_place_type") val googlePlaceType: String? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 )
 
 internal class SendContact(
@@ -142,9 +156,8 @@ internal class SendContact(
     @get:JsonProperty("vcard") val vcard: String? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 )
 
 internal class SendChatAction(
@@ -180,9 +193,8 @@ internal class SendPoll(
     @get:JsonProperty("is_closed") val isClosed: Boolean? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 ) {
     init {
         if (options.size < 2 || options.size > 10) {
@@ -197,22 +209,21 @@ internal class SendDice(
     @get:JsonProperty("emoji") val emoji: String? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
+    @get:JsonProperty("reply_markup") val replyMarkup: ReplyKeyboard? = null,
 )
 
 internal class BanChatMember(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("user_id") val userId: Long,
     @get:JsonProperty("until_date") val untilDate: Long? = null,
-    @get:JsonProperty("revoke_messages") val revokeMessages: Boolean? = null
+    @get:JsonProperty("revoke_messages") val revokeMessages: Boolean? = null,
 )
 
 internal class UnbanChatMember(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("user_id") val userId: Long,
-    @get:JsonProperty("only_if_banned") val onlyIfBanned: Boolean? = null
+    @get:JsonProperty("only_if_banned") val onlyIfBanned: Boolean? = null,
 )
 
 internal class RestrictChatMember(
@@ -246,7 +257,7 @@ internal class PromoteChatMember(
 internal class SetChatAdministratorCustomTitle(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("user_id") val userId: Long,
-    @get:JsonProperty("custom_title") val customTitle: String
+    @get:JsonProperty("custom_title") val customTitle: String,
 )
 
 internal class SetChatPermissions(
@@ -256,7 +267,7 @@ internal class SetChatPermissions(
 )
 
 internal class ExportChatInviteLink(
-    @get:JsonProperty("chat_id") val chatId: String
+    @get:JsonProperty("chat_id") val chatId: String,
 )
 
 internal class CreateChatInviteLink(
@@ -278,59 +289,59 @@ internal class EditChatInviteLink(
 
 internal class RevokeChatInviteLink(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("invite_link") val inviteLink: String
+    @get:JsonProperty("invite_link") val inviteLink: String,
 )
 
 internal class ApproveChatJoinRequest(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("user_id") val userId: Long
+    @get:JsonProperty("user_id") val userId: Long,
 )
 
 internal class DeclineChatJoinRequest(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("user_id") val userId: Long
+    @get:JsonProperty("user_id") val userId: Long,
 )
 
 internal class DeleteChatPhoto(
-    @get:JsonProperty("chat_id") val chatId: String
+    @get:JsonProperty("chat_id") val chatId: String,
 )
 
 internal class SetChatTitle(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("title") val title: String
+    @get:JsonProperty("title") val title: String,
 )
 
 internal class SetChatDescription(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("description") val description: String
+    @get:JsonProperty("description") val description: String,
 )
 
 internal class PinChatMessage(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("message_id") val messageId: Long,
-    @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null
+    @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
 )
 
 internal class UnpinChatMessage(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("message_id") val messageId: Long? = null
+    @get:JsonProperty("message_id") val messageId: Long? = null,
 )
 
 internal class UnpinAllChatMessages(
-    @get:JsonProperty("chat_id") val chatId: String
+    @get:JsonProperty("chat_id") val chatId: String,
 )
 
 internal class LeaveChat(
-    @get:JsonProperty("chat_id") val chatId: String
+    @get:JsonProperty("chat_id") val chatId: String,
 )
 
 internal class SetChatStickerSet(
     @get:JsonProperty("chat_id") val chatId: String,
-    @get:JsonProperty("sticker_set_name") val stickerSetName: String
+    @get:JsonProperty("sticker_set_name") val stickerSetName: String,
 )
 
 internal class DeleteChatStickerSet(
-    @get:JsonProperty("chat_id") val chatId: String
+    @get:JsonProperty("chat_id") val chatId: String,
 )
 
 internal class AnswerCallbackQuery(
@@ -338,23 +349,23 @@ internal class AnswerCallbackQuery(
     @get:JsonProperty("text") val text: String? = null,
     @get:JsonProperty("show_alert") val showAlert: Boolean? = null,
     @get:JsonProperty("url") val url: String? = null,
-    @get:JsonProperty("cache_time") val cacheTime: Long? = null
+    @get:JsonProperty("cache_time") val cacheTime: Long? = null,
 )
 
 internal class SetMyCommands(
     @get:JsonProperty("commands") val commands: List<BotCommand>,
     @get:JsonProperty("scope") val scope: BotCommandScope? = null,
-    @get:JsonProperty("language_code") val languageCode: String? = null
+    @get:JsonProperty("language_code") val languageCode: String? = null,
 )
 
 internal class DeleteMyCommands(
     @get:JsonProperty("scope") val scope: BotCommandScope? = null,
-    @get:JsonProperty("language_code") val languageCode: String? = null
+    @get:JsonProperty("language_code") val languageCode: String? = null,
 )
 
 internal class GetMyCommands(
     @get:JsonProperty("scope") val scope: BotCommandScope? = null,
-    @get:JsonProperty("language_code") val languageCode: String? = null
+    @get:JsonProperty("language_code") val languageCode: String? = null,
 )
 
 internal class SetMyName(

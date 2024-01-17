@@ -18,4 +18,6 @@ interface TelegramApi :
     TelegramPassportApi,
     TelegramGameApi,
     TelegramUpdatesApi,
-    TelegramChatExApi
+    TelegramChatExApi,
+    TelegramReactionExApi,
+    TelegramChatBoostExApi

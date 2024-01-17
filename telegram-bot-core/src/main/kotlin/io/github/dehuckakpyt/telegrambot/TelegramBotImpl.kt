@@ -226,11 +226,10 @@ class TelegramBotImpl(
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         messageThreadId: Long?,
-        disableWebPagePreview: Boolean?,
+        linkPreviewOptions: LinkPreviewOptions?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postJson<SendMessage, Message>(
         "sendMessage", SendMessage(
@@ -239,11 +238,10 @@ class TelegramBotImpl(
             parseMode = parseMode,
             entities = entities,
             messageThreadId = messageThreadId,
-            disableWebPagePreview = disableWebPagePreview,
+            linkPreviewOptions = linkPreviewOptions,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "TEXT", text = text) }
@@ -266,6 +264,24 @@ class TelegramBotImpl(
         )
     )
 
+    override suspend fun forwardMessages(
+        chatId: String,
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+    ): List<MessageId> = postJson(
+        "forwardMessages", ForwardMessages(
+            chatId = chatId,
+            fromChatId = fromChatId,
+            messageIds = messageIds,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+        )
+    )
+
     override suspend fun copyMessage(
         chatId: String,
         fromChatId: String,
@@ -276,8 +292,7 @@ class TelegramBotImpl(
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): MessageId = postJson(
         "copyMessage", CopyMessage(
@@ -288,12 +303,30 @@ class TelegramBotImpl(
             parseMode = parseMode,
             captionEntities = captionEntities,
             messageThreadId = messageThreadId,
-            hasSpoiler = disableNotification,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
+        )
+    )
+
+    override suspend fun copyMessages(
+        chatId: String,
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        removeCaption: Boolean?,
+    ): List<MessageId> = postJson(
+        "copyMessages", CopyMessages(
+            chatId = chatId,
+            fromChatId = fromChatId,
+            messageIds = messageIds,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            removeCaption = removeCaption,
         )
     )
 
@@ -307,8 +340,7 @@ class TelegramBotImpl(
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendPhoto") {
         append("chat_id", chatId)
@@ -320,8 +352,7 @@ class TelegramBotImpl(
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "PHOTO", text = caption) }
 
@@ -335,8 +366,7 @@ class TelegramBotImpl(
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendPhoto") {
         append("chat_id", chatId)
@@ -348,8 +378,7 @@ class TelegramBotImpl(
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "PHOTO", text = caption) }
 
@@ -366,8 +395,7 @@ class TelegramBotImpl(
         thumbnail: NamedContent?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendAudio") {
         append("chat_id", chatId)
@@ -382,8 +410,7 @@ class TelegramBotImpl(
         appendThumbnailIfNotNull("thumbnail", thumbnail)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "AUDIO", text = caption) }
 
@@ -400,8 +427,7 @@ class TelegramBotImpl(
         thumbnail: NamedContent?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendAudio") {
         append("chat_id", chatId)
@@ -416,8 +442,7 @@ class TelegramBotImpl(
         appendThumbnailIfNotNull("thumbnail", thumbnail)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "AUDIO", text = caption) }
 
@@ -432,8 +457,7 @@ class TelegramBotImpl(
         disableContentTypeDetection: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendDocument") {
         append("chat_id", chatId)
@@ -446,8 +470,7 @@ class TelegramBotImpl(
         appendIfNotNull("disable_content_type_detection", disableContentTypeDetection)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DOCUMENT", text = caption) }
 
@@ -462,8 +485,7 @@ class TelegramBotImpl(
         disableContentTypeDetection: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendDocument") {
         append("chat_id", chatId)
@@ -476,8 +498,7 @@ class TelegramBotImpl(
         appendIfNotNull("disable_content_type_detection", disableContentTypeDetection)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DOCUMENT", text = caption) }
 
@@ -496,8 +517,7 @@ class TelegramBotImpl(
         supportsStreaming: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendVideo") {
         append("chat_id", chatId)
@@ -514,8 +534,7 @@ class TelegramBotImpl(
         appendIfNotNull("supports_streaming", supportsStreaming)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO", text = caption) }
 
@@ -534,8 +553,7 @@ class TelegramBotImpl(
         supportsStreaming: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendVideo") {
         append("chat_id", chatId)
@@ -552,8 +570,7 @@ class TelegramBotImpl(
         appendIfNotNull("supports_streaming", supportsStreaming)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO", text = caption) }
 
@@ -571,8 +588,7 @@ class TelegramBotImpl(
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendAnimation") {
         append("chat_id", chatId)
@@ -588,8 +604,7 @@ class TelegramBotImpl(
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "ANIMATION", text = caption) }
 
@@ -607,8 +622,7 @@ class TelegramBotImpl(
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendAnimation") {
         append("chat_id", chatId)
@@ -624,8 +638,7 @@ class TelegramBotImpl(
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "ANIMATION", text = caption) }
 
@@ -639,8 +652,7 @@ class TelegramBotImpl(
         duration: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendVoice") {
         append("chat_id", chatId)
@@ -652,8 +664,7 @@ class TelegramBotImpl(
         appendIfNotNull("duration", duration)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VOICE", text = caption) }
 
@@ -667,8 +678,7 @@ class TelegramBotImpl(
         duration: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendVoice") {
         append("chat_id", chatId)
@@ -680,8 +690,7 @@ class TelegramBotImpl(
         appendIfNotNull("duration", duration)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VOICE", text = caption) }
 
@@ -694,8 +703,7 @@ class TelegramBotImpl(
         thumbnail: NamedContent?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendVideoNote") {
         append("chat_id", chatId)
@@ -706,8 +714,7 @@ class TelegramBotImpl(
         appendContentIfNotNull("thumbnail", thumbnail)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO_NOTE") }
 
@@ -720,8 +727,7 @@ class TelegramBotImpl(
         thumbnail: NamedContent?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendVideoNote") {
         append("chat_id", chatId)
@@ -732,8 +738,7 @@ class TelegramBotImpl(
         appendContentIfNotNull("thumbnail", thumbnail)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO_NOTE") }
 
@@ -743,15 +748,13 @@ class TelegramBotImpl(
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
     ): ArrayList<Message> = postMultiPart("sendMediaGroup") {
         append("chat_id", chatId)
         append("media", media.toJson())
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
 
         media.forEach { input ->
             appendContentIfNotNull(input.mediaContent)
@@ -770,8 +773,7 @@ class TelegramBotImpl(
         proximityAlertRadius: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postJson<SendLocation, Message>(
         "sendLocation",
@@ -786,8 +788,7 @@ class TelegramBotImpl(
             proximityAlertRadius = proximityAlertRadius,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "LOCATION", text = "latitude = $latitude, longitude = $longitude") }
@@ -805,8 +806,7 @@ class TelegramBotImpl(
         googlePlaceType: String?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postJson<SendVenue, Message>(
         "sendVenue",
@@ -823,8 +823,7 @@ class TelegramBotImpl(
             googlePlaceType = googlePlaceType,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VENUE", text = "latitude = $latitude, longitude = $longitude, title = $title, address = $address") }
@@ -838,8 +837,7 @@ class TelegramBotImpl(
         vcard: String?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postJson<SendContact, Message>(
         "sendContact",
@@ -852,8 +850,7 @@ class TelegramBotImpl(
             vcard = vcard,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "CONTACT", text = "phoneNumber = $phoneNumber, firstName = $firstName") }
@@ -875,8 +872,7 @@ class TelegramBotImpl(
         isClosed: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postJson<SendPoll, Message>(
         "sendPoll",
@@ -897,8 +893,7 @@ class TelegramBotImpl(
             isClosed = isClosed,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "POLL", text = question) }
@@ -909,26 +904,31 @@ class TelegramBotImpl(
         emoji: String?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postJson<SendDice, Message>(
         "sendDice",
         SendDice(
-            chatId,
-            messageThreadId,
-            emoji,
-            disableNotification,
-            protectContent,
-            replyToMessageId,
-            allowSendingWithoutReply,
-            replyMarkup
+            chatId = chatId,
+            messageThreadId = messageThreadId,
+            emoji = emoji,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            replyParameters = replyParameters,
+            replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DICE", text = emoji) }
 
     override suspend fun sendChatAction(chatId: String, action: Action, messageThreadId: Long?): Boolean = postJson(
         "sendChatAction", SendChatAction(chatId, action, messageThreadId)
     )
+
+    override suspend fun setMessageReaction(
+        chatId: String,
+        messageId: Long,
+        reaction: Iterable<ReactionType>?,
+        isBig: Boolean?,
+    ): Boolean = postJson("setMessageReaction", SetMessageReaction(chatId, messageId, reaction, isBig))
 
     override suspend fun getUserProfilePhotos(userId: Long, offset: Long?, limit: Long?): UserProfilePhotos = get("getUserProfilePhotos") {
         parameter("user_id", userId)
@@ -1186,6 +1186,14 @@ class TelegramBotImpl(
         cacheTime: Long?,
     ): Boolean = postJson("answerCallbackQuery", AnswerCallbackQuery(callbackQueryId, text, showAlert, url, cacheTime))
 
+    override suspend fun getUserChatBoosts(
+        chatId: String,
+        userId: Long,
+    ): UserChatBoosts = get("getUserChatBoosts") {
+        parameter("chat_id", chatId)
+        parameter("user_id", userId)
+    }
+
     override suspend fun setMyCommands(
         commands: List<BotCommand>, scope: BotCommandScope?, languageCode: String?,
     ): Boolean = postJson("setMyCommands", SetMyCommands(commands, scope, languageCode))
@@ -1243,7 +1251,7 @@ class TelegramBotImpl(
         text: String,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
-        disableWebPagePreview: Boolean?,
+        linkPreviewOptions: LinkPreviewOptions?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson<EditMessageText, Message>(
         "editMessageText",
@@ -1254,7 +1262,7 @@ class TelegramBotImpl(
             text = text,
             parseMode = parseMode,
             entities = entities,
-            disableWebPagePreview = disableWebPagePreview,
+            linkPreviewOptions = linkPreviewOptions,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_TEXT", text = text) }
@@ -1356,6 +1364,10 @@ class TelegramBotImpl(
         "deleteMessage", DeleteMessage(chatId, messageId)
     )
 
+    override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean = postJson(
+        "deleteMessages", DeleteMessages(chatId, messageIds)
+    )
+
     override suspend fun sendSticker(
         chatId: String,
         sticker: NamedContent,
@@ -1363,8 +1375,7 @@ class TelegramBotImpl(
         emoji: String?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: ReplyKeyboard?,
     ): Message = postMultiPart<Message>("sendSticker") {
         append("chat_id", chatId)
@@ -1373,8 +1384,7 @@ class TelegramBotImpl(
         appendIfNotNull("emoji", emoji)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("reply_to_message_id", replyToMessageId)
-        appendIfNotNull("allow_sending_without_reply", allowSendingWithoutReply)
+        appendIfNotNull("reply_parameters", replyParameters?.toJson())
         appendIfNotNull("reply_markup", replyMarkup?.toJson())
     }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "STICKER", text = emoji) }
 
@@ -1508,8 +1518,7 @@ class TelegramBotImpl(
         isFlexible: Boolean?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson<SendInvoice, Message>(
         "sendInvoice",
@@ -1539,8 +1548,7 @@ class TelegramBotImpl(
             isFlexible = isFlexible,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "INVOICE", text = title) }
@@ -1615,8 +1623,7 @@ class TelegramBotImpl(
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-        replyToMessageId: Long?,
-        allowSendingWithoutReply: Boolean?,
+        replyParameters: ReplyParameters?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = postJson<SendGame, Message>(
         "sendGame",
@@ -1626,8 +1633,7 @@ class TelegramBotImpl(
             messageThreadId = messageThreadId,
             disableNotification = disableNotification,
             protectContent = protectContent,
-            replyToMessageId = replyToMessageId,
-            allowSendingWithoutReply = allowSendingWithoutReply,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "GAME", text = gameShortName) }

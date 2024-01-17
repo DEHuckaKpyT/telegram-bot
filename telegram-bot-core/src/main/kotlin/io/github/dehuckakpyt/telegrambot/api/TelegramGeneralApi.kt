@@ -24,11 +24,10 @@ interface TelegramGeneralApi {
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         messageThreadId: Long? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -41,6 +40,15 @@ interface TelegramGeneralApi {
         protectContent: Boolean? = null,
     ): Message
 
+    suspend fun forwardMessages(
+        chatId: String,
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): List<MessageId>
+
     suspend fun copyMessage(
         chatId: String,
         fromChatId: String,
@@ -51,10 +59,19 @@ interface TelegramGeneralApi {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): MessageId
+
+    suspend fun copyMessages(
+        chatId: String,
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        removeCaption: Boolean? = null,
+    ): List<MessageId>
 
     suspend fun sendPhoto(
         chatId: String,
@@ -66,8 +83,7 @@ interface TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -81,8 +97,7 @@ interface TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -99,8 +114,7 @@ interface TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -117,8 +131,7 @@ interface TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -133,8 +146,7 @@ interface TelegramGeneralApi {
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -149,8 +161,7 @@ interface TelegramGeneralApi {
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -169,8 +180,7 @@ interface TelegramGeneralApi {
         supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -189,8 +199,7 @@ interface TelegramGeneralApi {
         supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -208,8 +217,7 @@ interface TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -227,8 +235,7 @@ interface TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -242,8 +249,7 @@ interface TelegramGeneralApi {
         duration: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -257,8 +263,7 @@ interface TelegramGeneralApi {
         duration: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -271,8 +276,7 @@ interface TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -285,8 +289,7 @@ interface TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -296,8 +299,7 @@ interface TelegramGeneralApi {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
     ): ArrayList<Message>
 
     suspend fun sendLocation(
@@ -311,8 +313,7 @@ interface TelegramGeneralApi {
         proximityAlertRadius: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = false,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -329,8 +330,7 @@ interface TelegramGeneralApi {
         googlePlaceType: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -343,8 +343,7 @@ interface TelegramGeneralApi {
         vcard: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -365,8 +364,7 @@ interface TelegramGeneralApi {
         isClosed: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 
@@ -376,8 +374,7 @@ interface TelegramGeneralApi {
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 

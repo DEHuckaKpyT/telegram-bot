@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.internal
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardMarkup
+import io.github.dehuckakpyt.telegrambot.model.type.ReplyParameters
 
 
 /**
@@ -17,9 +18,8 @@ internal class SendGame(
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,
-    @get:JsonProperty("reply_to_message_id") val replyToMessageId: Long? = null,
-    @get:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
-    @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null
+    @get:JsonProperty("reply_parameters") val replyParameters: ReplyParameters? = null,
+    @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
 )
 
 internal class SetGameScore(
@@ -29,7 +29,7 @@ internal class SetGameScore(
     @get:JsonProperty("disable_edit_message") val disableEditMessage: Boolean? = null,
     @get:JsonProperty("chat_id") val chatId: Long? = null,
     @get:JsonProperty("message_id") val messageId: Long? = null,
-    @get:JsonProperty("inline_message_id") val inlineMessageId: String? = null
+    @get:JsonProperty("inline_message_id") val inlineMessageId: String? = null,
 ) {
     init {
         if (chatId == null && messageId == null) {
@@ -51,7 +51,7 @@ internal class GetGameHighScores(
     @get:JsonProperty("user_id") val userId: Long,
     @get:JsonProperty("chat_id") val chatId: String? = null,
     @get:JsonProperty("message_id") val messageId: Long? = null,
-    @get:JsonProperty("inline_message_id") val inlineMessageId: String? = null
+    @get:JsonProperty("inline_message_id") val inlineMessageId: String? = null,
 ) {
     init {
         if (chatId == null && messageId == null) {

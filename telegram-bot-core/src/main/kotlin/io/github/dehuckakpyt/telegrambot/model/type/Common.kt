@@ -40,22 +40,37 @@ public data class User(
     @get:JsonProperty("supports_inline_queries") @param:JsonProperty("supports_inline_queries") val supportsInlineQueries: Boolean? = null,
 )
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "date", defaultImpl = Message::class)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = InaccessibleMessage::class, name = "0"),
+)
+public sealed class MaybeInaccessibleMessage {
+    abstract val date: Long
+
+    abstract val messageId: Long
+    abstract val chat: Chat
+}
+
+@JsonTypeName("0")
+public data class InaccessibleMessage(
+    @param:JsonProperty("chat") override val chat: Chat,
+    @param:JsonProperty("message_id") override val messageId: Long,
+    @param:JsonProperty("date") override val date: Long,
+) : MaybeInaccessibleMessage()
+
 public data class Message(
-    @param:JsonProperty("message_id") val messageId: Long,
+    @param:JsonProperty("message_id") override val messageId: Long,
     @param:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @param:JsonProperty("from") val from: User? = null,
     @param:JsonProperty("sender_chat") val senderChat: Chat? = null,
-    @param:JsonProperty("date") val date: Long,
-    @param:JsonProperty("chat") val chat: Chat,
-    @param:JsonProperty("forward_from") val forwardFrom: User? = null,
-    @param:JsonProperty("forward_from_chat") val forwardFromChat: Chat? = null,
-    @param:JsonProperty("forward_from_message_id") val forwardFromMessageId: Long? = null,
-    @param:JsonProperty("forward_signature") val forwardSignature: String? = null,
-    @param:JsonProperty("forward_sender_name") val forwardSenderName: String? = null,
-    @param:JsonProperty("forward_date") val forwardDate: Long? = null,
+    @param:JsonProperty("date") override val date: Long,
+    @param:JsonProperty("chat") override val chat: Chat,
+    @param:JsonProperty("forward_origin") val forwardOrigin: MessageOrigin? = null,
     @param:JsonProperty("is_topic_message") val isTopicMessage: Boolean? = null,
     @param:JsonProperty("is_automatic_forward") val isAutomaticForward: Boolean? = null,
     @param:JsonProperty("reply_to_message") val replyToMessage: Message? = null,
+    @param:JsonProperty("external_reply") val externalReply: ExternalReplyInfo? = null,
+    @param:JsonProperty("quote") val quote: TextQuote? = null,
     @param:JsonProperty("via_bot") val viaBot: User? = null,
     @param:JsonProperty("edit_date") val editDate: Long? = null,
     @param:JsonProperty("has_protected_content") val hasProtectedContent: Boolean? = null,
@@ -63,6 +78,7 @@ public data class Message(
     @param:JsonProperty("author_signature") val authorSignature: String? = null,
     @param:JsonProperty("text") val text: String? = null,
     @param:JsonProperty("entities") val entities: List<MessageEntity> = emptyList(),
+    @param:JsonProperty("link_preview_options") val linkPreviewOptions: LinkPreviewOptions? = null,
     @param:JsonProperty("animation") val animation: Animation? = null,
     @param:JsonProperty("audio") val audio: Audio? = null,
     @param:JsonProperty("document") val document: Document? = null,
@@ -92,10 +108,10 @@ public data class Message(
     @param:JsonProperty("message_auto_delete_timer_changed") val messageAutoDeleteTimerChanged: MessageAutoDeleteTimerChanged? = null,
     @param:JsonProperty("migrate_to_chat_id") val migrateToString: Long? = null,
     @param:JsonProperty("migrate_from_chat_id") val migrateFromString: Long? = null,
-    @param:JsonProperty("pinned_message") val pinnedMessage: Message? = null,
+    @param:JsonProperty("pinned_message") val pinnedMessage: MaybeInaccessibleMessage? = null,
     @param:JsonProperty("invoice") val invoice: Invoice? = null,
     @param:JsonProperty("successful_payment") val successfulPayment: SuccessfulPayment? = null,
-    @param:JsonProperty("user_shared") val userShared: UserShared? = null,
+    @param:JsonProperty("users_shared") val usersShared: UsersShared? = null,
     @param:JsonProperty("chat_shared") val chatShared: ChatShared? = null,
     @param:JsonProperty("connected_website") val connectedWebsite: String? = null,
     @param:JsonProperty("write_access_allowed") val writeAccessAllowed: WriteAccessAllowed? = null,
@@ -107,13 +123,17 @@ public data class Message(
     @param:JsonProperty("forum_topic_reopened") val forumTopicReopened: ForumTopicReopened? = null,
     @param:JsonProperty("general_forum_topic_hidden") val generalForumTopicHidden: GeneralForumTopicHidden? = null,
     @param:JsonProperty("general_forum_topic_unhidden") val generalForumTopicUnhidden: GeneralForumTopicUnhidden? = null,
+    @param:JsonProperty("giveaway_created") val giveawayCreated: GiveawayCreated? = null,
+    @param:JsonProperty("giveaway") val giveaway: Giveaway? = null,
+    @param:JsonProperty("giveaway_winners") val giveawayWinners: GiveawayWinners? = null,
+    @param:JsonProperty("giveaway_completed") val giveawayCompleted: GiveawayCompleted? = null,
     @param:JsonProperty("video_chat_scheduled") val videoChatScheduled: VideoChatScheduled? = null,
     @param:JsonProperty("video_chat_started") val videoChatStarted: VideoChatStarted? = null,
     @param:JsonProperty("video_chat_ended") val videoChatEnded: VideoChatEnded? = null,
     @param:JsonProperty("video_chat_participants_invited") val voiceChatParticipantsInvited: VoiceChatParticipantsInvited? = null,
     @param:JsonProperty("web_app_data") val webAppData: WebAppData? = null,
     @param:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
-)
+) : MaybeInaccessibleMessage()
 
 public data class MessageId(
     @param:JsonProperty("message_id") val messageId: Long,
@@ -122,7 +142,7 @@ public data class MessageId(
 public data class CallbackQuery(
     @param:JsonProperty("id") val id: String,
     @param:JsonProperty("from") val from: User,
-    @param:JsonProperty("message") val message: Message? = null,
+    @param:JsonProperty("message") val message: MaybeInaccessibleMessage? = null,
     @param:JsonProperty("inline_message_id") val inlineMessageId: String? = null,
     @param:JsonProperty("chat_instance") val chatInstance: String,
     @param:JsonProperty("data") val data: String? = null,
@@ -175,6 +195,9 @@ public data class MessageEntity(
 
         @field:JsonProperty("spoiler")
         SPOILER,
+
+        @field:JsonProperty("blockquote")
+        BLOCKQUOTE,
 
         @field:JsonProperty("code")
         CODE,
@@ -427,9 +450,9 @@ public enum class ParseMode {
     MarkdownV2
 }
 
-public data class UserShared(
+public data class UsersShared(
     @param:JsonProperty("request_id") val requestId: Long,
-    @param:JsonProperty("user_id") val userId: Long,
+    @param:JsonProperty("user_ids") val userIds: List<Long>,
 )
 
 public data class ChatShared(
@@ -482,4 +505,98 @@ public data class BotDescription(
 
 public data class BotShortDescription(
     @param:JsonProperty("short_description") val shortDescription: String,
+)
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes(
+    JsonSubTypes.Type(value = MessageOrigin.MessageOriginUser::class, name = "user"),
+    JsonSubTypes.Type(value = MessageOrigin.MessageOriginHiddenUser::class, name = "hidden_user"),
+    JsonSubTypes.Type(value = MessageOrigin.MessageOriginChat::class, name = "chat"),
+    JsonSubTypes.Type(value = MessageOrigin.MessageOriginChannel::class, name = "channel"),
+)
+public sealed class MessageOrigin {
+
+    public abstract val type: String
+
+    @JsonTypeName("user")
+    public data class MessageOriginUser(
+        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("date") val date: Long,
+        @param:JsonProperty("sender_user") val senderUser: User,
+    ) : MessageOrigin()
+
+    @JsonTypeName("hidden_user")
+    public data class MessageOriginHiddenUser(
+        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("date") val date: Long,
+        @param:JsonProperty("sender_user_name") val senderUserName: String,
+    ) : MessageOrigin()
+
+    @JsonTypeName("chat")
+    public data class MessageOriginChat(
+        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("date") val date: Long,
+        @param:JsonProperty("sender_chat") val senderChat: Chat,
+        @param:JsonProperty("author_signature") val authorSignature: String? = null,
+    ) : MessageOrigin()
+
+    @JsonTypeName("channel")
+    public data class MessageOriginChannel(
+        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("date") val date: Long,
+        @param:JsonProperty("chat") val chat: Chat,
+        @param:JsonProperty("message_id") val messageId: Long,
+        @param:JsonProperty("author_signature") val authorSignature: String? = null,
+    ) : MessageOrigin()
+}
+
+public data class LinkPreviewOptions(
+    @get:JsonProperty("is_disabled") @param:JsonProperty("is_disabled") val isDisabled: Boolean? = null,
+    @get:JsonProperty("url") @param:JsonProperty("url") val url: String? = null,
+    @get:JsonProperty("prefer_small_media") @param:JsonProperty("prefer_small_media") val preferSmallMedia: Boolean? = null,
+    @get:JsonProperty("prefer_large_media") @param:JsonProperty("prefer_large_media") val preferLargeMedia: Boolean? = null,
+    @get:JsonProperty("show_above_text") @param:JsonProperty("show_above_text") val showAboveText: Boolean? = null,
+)
+
+public data class ExternalReplyInfo(
+    @param:JsonProperty("origin") val origin: MessageOrigin,
+    @param:JsonProperty("chat") val chat: Chat? = null,
+    @param:JsonProperty("message_id") val messageId: Long? = null,
+    @param:JsonProperty("link_preview_options") val linkPreviewOptions: LinkPreviewOptions? = null,
+    @param:JsonProperty("animation") val animation: Animation? = null,
+    @param:JsonProperty("audio") val audio: Audio? = null,
+    @param:JsonProperty("document") val document: Document? = null,
+    @param:JsonProperty("photo") val photo: List<PhotoSize>? = null,
+    @param:JsonProperty("sticker") val sticker: Sticker? = null,
+    @param:JsonProperty("story") val story: Story? = null,
+    @param:JsonProperty("video") val video: Video? = null,
+    @param:JsonProperty("video_note") val videoNote: VideoNote? = null,
+    @param:JsonProperty("voice") val voice: Voice? = null,
+    @param:JsonProperty("has_media_spoiler") val hasMediaSpoiler: Boolean? = null,
+    @param:JsonProperty("contact") val contact: Contact? = null,
+    @param:JsonProperty("dice") val dice: Dice? = null,
+    @param:JsonProperty("game") val game: Game? = null,
+    @param:JsonProperty("giveaway") val giveaway: Giveaway? = null,
+    @param:JsonProperty("giveaway_winners") val giveawayWinners: GiveawayWinners? = null,
+    @param:JsonProperty("invoice") val invoice: Invoice? = null,
+    @param:JsonProperty("location") val location: Location? = null,
+    @param:JsonProperty("poll") val poll: Poll? = null,
+    @param:JsonProperty("venue") val venue: Venue? = null,
+)
+
+public data class TextQuote(
+    @param:JsonProperty("text") val text: String,
+    @param:JsonProperty("entities") val entities: List<MessageEntity> = emptyList(),
+    @param:JsonProperty("position") val position: Int,
+    @param:JsonProperty("is_manual") val isManual: Boolean? = null,
+)
+
+public data class ReplyParameters(
+    @param:JsonProperty("message_id") val messageId: Long,
+    @param:JsonProperty("chat_id") val chatId: String? = null,
+    @param:JsonProperty("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
+    @param:JsonProperty("quote") val quote: String? = null,
+    @param:JsonProperty("quote_parse_mode") val quoteParseMode: ParseMode? = null,
+    @param:JsonProperty("quote_entities") val quoteEntities: List<MessageEntity>? = null,
+    @param:JsonProperty("quote_position") val quotePosition: Int? = null,
 )

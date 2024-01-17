@@ -19,11 +19,10 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         messageThreadId: Long? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendMessage(
         chatId = chatId.toString(),
@@ -31,11 +30,10 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         parseMode = parseMode,
         entities = entities,
         messageThreadId = messageThreadId,
-        disableWebPagePreview = disableWebPagePreview,
+        linkPreviewOptions = linkPreviewOptions,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -87,6 +85,54 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         protectContent = protectContent
     )
 
+    suspend fun forwardMessages(
+        chatId: Long,
+        fromChatId: Long,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): List<MessageId> = forwardMessages(
+        chatId = chatId.toString(),
+        fromChatId = fromChatId.toString(),
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent
+    )
+
+    suspend fun forwardMessages(
+        chatId: Long,
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): List<MessageId> = forwardMessages(
+        chatId = chatId.toString(),
+        fromChatId = fromChatId,
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent
+    )
+
+    suspend fun forwardMessages(
+        chatId: String,
+        fromChatId: Long,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): List<MessageId> = forwardMessages(
+        chatId = chatId,
+        fromChatId = fromChatId.toString(),
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent
+    )
+
     suspend fun copyMessage(
         chatId: Long,
         fromChatId: Long,
@@ -97,8 +143,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): MessageId = copyMessage(
         chatId = chatId.toString(),
@@ -110,8 +155,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -125,8 +169,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): MessageId = copyMessage(
         chatId = chatId.toString(),
@@ -138,8 +181,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -153,8 +195,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): MessageId = copyMessage(
         chatId = chatId,
@@ -166,9 +207,62 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
+    )
+
+    suspend fun copyMessages(
+        chatId: Long,
+        fromChatId: Long,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        removeCaption: Boolean? = null,
+    ): List<MessageId> = copyMessages(
+        chatId = chatId.toString(),
+        fromChatId = fromChatId.toString(),
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        removeCaption = removeCaption,
+    )
+
+    suspend fun copyMessages(
+        chatId: Long,
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        removeCaption: Boolean? = null,
+    ): List<MessageId> = copyMessages(
+        chatId = chatId.toString(),
+        fromChatId = fromChatId,
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        removeCaption = removeCaption,
+    )
+
+    suspend fun copyMessages(
+        chatId: String,
+        fromChatId: Long,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        removeCaption: Boolean? = null,
+    ): List<MessageId> = copyMessages(
+        chatId = chatId,
+        fromChatId = fromChatId.toString(),
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        removeCaption = removeCaption,
     )
 
     suspend fun sendPhoto(
@@ -181,8 +275,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendPhoto(
         chatId = chatId.toString(),
@@ -194,8 +287,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -209,8 +301,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendPhoto(
         chatId = chatId.toString(),
@@ -222,8 +313,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -240,8 +330,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendAudio(
         chatId = chatId.toString(),
@@ -256,8 +345,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -274,8 +362,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendAudio(
         chatId = chatId.toString(),
@@ -290,8 +377,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -306,8 +392,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendDocument(
         chatId = chatId.toString(),
@@ -320,8 +405,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -336,8 +420,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendDocument(
         chatId = chatId.toString(),
@@ -350,8 +433,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -370,8 +452,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendVideo(
         chatId = chatId.toString(),
@@ -388,8 +469,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         supportsStreaming = supportsStreaming,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -408,8 +488,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendVideo(
         chatId = chatId.toString(),
@@ -426,8 +505,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         supportsStreaming = supportsStreaming,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -445,8 +523,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendAnimation(
         chatId = chatId.toString(),
@@ -462,8 +539,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -481,8 +557,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendAnimation(
         chatId = chatId.toString(),
@@ -498,8 +573,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -513,8 +587,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendVoice(
         chatId = chatId.toString(),
@@ -526,8 +599,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration = duration,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -541,8 +613,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendVoice(
         chatId = chatId.toString(),
@@ -554,8 +625,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration = duration,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -568,8 +638,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendVideoNote(
         chatId = chatId.toString(),
@@ -580,8 +649,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -594,8 +662,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendVideoNote(
         chatId = chatId.toString(),
@@ -606,8 +673,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -617,16 +683,14 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
     ): ArrayList<Message> = sendMediaGroup(
         chatId = chatId.toString(),
         media = media,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply
+        replyParameters = replyParameters,
     )
 
     suspend fun sendLocation(
@@ -640,8 +704,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         proximityAlertRadius: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = false,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendLocation(
         chatId = chatId.toString(),
@@ -654,8 +717,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         proximityAlertRadius = proximityAlertRadius,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -672,8 +734,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         googlePlaceType: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendVenue(
         chatId = chatId.toString(),
@@ -688,8 +749,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         googlePlaceType = googlePlaceType,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -702,8 +762,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         vcard: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendContact(
         chatId = chatId.toString(),
@@ -714,8 +773,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         vcard = vcard,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -736,8 +794,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         isClosed: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendPoll(
         chatId = chatId.toString(),
@@ -756,8 +813,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         isClosed = isClosed,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -767,8 +823,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendDice(
         chatId = chatId.toString(),
@@ -776,8 +831,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         emoji = emoji,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 

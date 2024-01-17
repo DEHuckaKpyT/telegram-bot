@@ -1,9 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.api
 
-import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardMarkup
-import io.github.dehuckakpyt.telegrambot.model.type.LabeledPrice
-import io.github.dehuckakpyt.telegrambot.model.type.Message
-import io.github.dehuckakpyt.telegrambot.model.type.ShippingOption
+import io.github.dehuckakpyt.telegrambot.model.type.*
 
 
 /**
@@ -40,8 +37,7 @@ interface TelegramPaymentApi {
         isFlexible: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 

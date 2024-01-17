@@ -351,7 +351,7 @@ public data class InputTextMessageContent(
     @get:JsonProperty("message_text") val messageText: String,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
-    @get:JsonProperty("disable_web_page_preview") val disableWebPagePreview: Boolean? = null,
+    @get:JsonProperty("link_preview_options") val linkPreviewOptions: LinkPreviewOptions? = null,
 ) : InputMessageContent()
 
 public data class InputLocationMessageContent(

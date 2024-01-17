@@ -19,7 +19,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text: String,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = editMessageText(
         chatId = chatId?.toString(),
@@ -28,7 +28,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text = text,
         parseMode = parseMode,
         entities = entities,
-        disableWebPagePreview = disableWebPagePreview,
+        linkPreviewOptions = linkPreviewOptions,
         replyMarkup = replyMarkup
     )
 
@@ -38,7 +38,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text: String,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = editMessageText(
         chatId = chatId,
@@ -47,7 +47,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text = text,
         parseMode = parseMode,
         entities = entities,
-        disableWebPagePreview = disableWebPagePreview,
+        linkPreviewOptions = linkPreviewOptions,
         replyMarkup = replyMarkup
     )
 
@@ -57,7 +57,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text: String,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = editMessageText(
         chatId = chatId.toString(),
@@ -66,7 +66,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text = text,
         parseMode = parseMode,
         entities = entities,
-        disableWebPagePreview = disableWebPagePreview,
+        linkPreviewOptions = linkPreviewOptions,
         replyMarkup = replyMarkup
     )
 
@@ -75,7 +75,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text: String,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = editMessageText(
         chatId = null as String?,
@@ -84,7 +84,7 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
         text = text,
         parseMode = parseMode,
         entities = entities,
-        disableWebPagePreview = disableWebPagePreview,
+        linkPreviewOptions = linkPreviewOptions,
         replyMarkup = replyMarkup
     )
 
@@ -268,5 +268,13 @@ interface TelegramUpdatingMessagesExApi : TelegramUpdatingMessagesApi {
     ): Boolean = deleteMessage(
         chatId = chatId.toString(),
         messageId = messageId
+    )
+
+    suspend fun deleteMessages(
+        chatId: Long,
+        messageIds: Iterable<Long>,
+    ): Boolean = deleteMessages(
+        chatId = chatId.toString(),
+        messageIds = messageIds
     )
 }

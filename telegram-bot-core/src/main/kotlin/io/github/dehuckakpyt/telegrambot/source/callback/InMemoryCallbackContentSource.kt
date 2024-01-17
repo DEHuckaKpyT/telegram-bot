@@ -25,7 +25,7 @@ class InMemoryCallbackContentSource : CallbackContentSource {
         return callbackContent
     }
 
-    override suspend fun get(id: UUID): CallbackContent {
-        return contentById[id] ?: throw ChatException("Содержание для callback'а не найдено :(")
+    override suspend fun get(callbackId: UUID): CallbackContent {
+        return contentById[callbackId] ?: throw ChatException("Содержание для callback'а не найдено :(")
     }
 }

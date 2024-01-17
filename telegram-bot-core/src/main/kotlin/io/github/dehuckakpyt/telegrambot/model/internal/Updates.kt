@@ -1,10 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model.internal
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardMarkup
-import io.github.dehuckakpyt.telegrambot.model.type.InputMedia
-import io.github.dehuckakpyt.telegrambot.model.type.MessageEntity
-import io.github.dehuckakpyt.telegrambot.model.type.ParseMode
+import io.github.dehuckakpyt.telegrambot.model.type.*
 
 
 /**
@@ -28,7 +25,7 @@ internal class EditMessageText(
     @get:JsonProperty("text") val text: String,
     @get:JsonProperty("parse_mode") val parseMode: ParseMode? = null,
     @get:JsonProperty("entities") val entities: List<MessageEntity>? = null,
-    @get:JsonProperty("disable_web_page_preview") val disableWebPagePreview: Boolean? = null,
+    @get:JsonProperty("link_preview_options") val linkPreviewOptions: LinkPreviewOptions? = null,
     @get:JsonProperty("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
 ) {
     init {
@@ -126,6 +123,11 @@ internal class StopPoll(
 internal class DeleteMessage(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("message_id") val messageId: Long,
+)
+
+internal class DeleteMessages(
+    @get:JsonProperty("chat_id") val chatId: String,
+    @get:JsonProperty("message_ids") val messageIds: Iterable<Long>,
 )
 
 public enum class AllowedUpdate {

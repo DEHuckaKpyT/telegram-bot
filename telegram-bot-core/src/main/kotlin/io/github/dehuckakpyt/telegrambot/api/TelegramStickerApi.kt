@@ -18,8 +18,7 @@ interface TelegramStickerApi {
         emoji: String?,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message
 

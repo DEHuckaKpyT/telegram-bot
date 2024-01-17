@@ -23,7 +23,7 @@ public data class ReplyKeyboardMarkup(
 
 public data class KeyboardButton(
     @get:JsonProperty("text") val text: String,
-    @get:JsonProperty("request_user") val requestUser: KeyboardButtonRequestUser? = null,
+    @get:JsonProperty("request_users") val requestUsers: KeyboardButtonRequestUsers? = null,
     @get:JsonProperty("request_chat") val requestChat: KeyboardButtonRequestChat? = null,
     @get:JsonProperty("request_contact") val requestContact: Boolean? = null,
     @get:JsonProperty("request_location") val requestLocation: Boolean? = null,
@@ -31,10 +31,11 @@ public data class KeyboardButton(
     @get:JsonProperty("web_app") val webApp: WebAppInfo? = null,
 )
 
-public data class KeyboardButtonRequestUser(
+public data class KeyboardButtonRequestUsers(
     @get:JsonProperty("request_id") val requestId: Int,
     @get:JsonProperty("user_is_bot") val userIsBot: Boolean? = null,
     @get:JsonProperty("user_is_premium") val userIsPremium: Boolean? = null,
+    @get:JsonProperty("max_quantity") val maxQuantity: Int? = null,
 )
 
 public data class KeyboardButtonRequestChat(

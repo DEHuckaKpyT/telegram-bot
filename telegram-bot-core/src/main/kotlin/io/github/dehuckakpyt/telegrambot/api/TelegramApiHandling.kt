@@ -29,11 +29,10 @@ abstract class TelegramApiHandling {
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         messageThreadId: Long? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendMessage(
         chatId = chatId,
@@ -41,11 +40,10 @@ abstract class TelegramApiHandling {
         parseMode = parseMode,
         entities = entities,
         messageThreadId = messageThreadId,
-        disableWebPagePreview = disableWebPagePreview,
+        linkPreviewOptions = linkPreviewOptions,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -64,6 +62,21 @@ abstract class TelegramApiHandling {
         protectContent = protectContent
     )
 
+    suspend fun Argument.forwardMessages(
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): List<MessageId> = bot.forwardMessages(
+        chatId = chatId,
+        fromChatId = fromChatId,
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent
+    )
+
     suspend fun Argument.copyMessage(
         fromChatId: String,
         messageId: Long,
@@ -73,8 +86,7 @@ abstract class TelegramApiHandling {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): MessageId = bot.copyMessage(
         chatId = chatId,
@@ -86,9 +98,25 @@ abstract class TelegramApiHandling {
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
+    )
+
+    suspend fun Argument.copyMessages(
+        fromChatId: String,
+        messageIds: Iterable<Long>,
+        messageThreadId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        removeCaption: Boolean?,
+    ): List<MessageId> = bot.copyMessages(
+        chatId = chatId,
+        fromChatId = fromChatId,
+        messageIds = messageIds,
+        messageThreadId = messageThreadId,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        removeCaption = removeCaption,
     )
 
     suspend fun Argument.sendPhoto(
@@ -100,8 +128,7 @@ abstract class TelegramApiHandling {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendPhoto(
         chatId = chatId,
@@ -113,8 +140,7 @@ abstract class TelegramApiHandling {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -127,8 +153,7 @@ abstract class TelegramApiHandling {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendPhoto(
         chatId = chatId,
@@ -140,8 +165,7 @@ abstract class TelegramApiHandling {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -157,8 +181,7 @@ abstract class TelegramApiHandling {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendAudio(
         chatId = chatId,
@@ -173,8 +196,7 @@ abstract class TelegramApiHandling {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -190,8 +212,7 @@ abstract class TelegramApiHandling {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendAudio(
         chatId = chatId,
@@ -206,8 +227,7 @@ abstract class TelegramApiHandling {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -221,8 +241,7 @@ abstract class TelegramApiHandling {
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendDocument(
         chatId = chatId,
@@ -235,8 +254,7 @@ abstract class TelegramApiHandling {
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -250,8 +268,7 @@ abstract class TelegramApiHandling {
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendDocument(
         chatId = chatId,
@@ -264,8 +281,7 @@ abstract class TelegramApiHandling {
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -283,8 +299,7 @@ abstract class TelegramApiHandling {
         supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVideo(
         chatId = chatId,
@@ -301,8 +316,7 @@ abstract class TelegramApiHandling {
         supportsStreaming = supportsStreaming,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -320,8 +334,7 @@ abstract class TelegramApiHandling {
         supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVideo(
         chatId = chatId,
@@ -338,8 +351,7 @@ abstract class TelegramApiHandling {
         supportsStreaming = supportsStreaming,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -356,8 +368,7 @@ abstract class TelegramApiHandling {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendAnimation(
         chatId = chatId,
@@ -373,8 +384,7 @@ abstract class TelegramApiHandling {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -391,8 +401,7 @@ abstract class TelegramApiHandling {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendAnimation(
         chatId = chatId,
@@ -408,8 +417,7 @@ abstract class TelegramApiHandling {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -422,8 +430,7 @@ abstract class TelegramApiHandling {
         duration: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVoice(
         chatId = chatId,
@@ -435,8 +442,7 @@ abstract class TelegramApiHandling {
         duration = duration,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -449,8 +455,7 @@ abstract class TelegramApiHandling {
         duration: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVoice(
         chatId = chatId,
@@ -462,8 +467,7 @@ abstract class TelegramApiHandling {
         duration = duration,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -475,8 +479,7 @@ abstract class TelegramApiHandling {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVideoNote(
         chatId = chatId,
@@ -487,8 +490,7 @@ abstract class TelegramApiHandling {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -500,8 +502,7 @@ abstract class TelegramApiHandling {
         thumbnail: NamedContent? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVideoNote(
         chatId = chatId,
@@ -512,8 +513,7 @@ abstract class TelegramApiHandling {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -522,16 +522,14 @@ abstract class TelegramApiHandling {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
     ): ArrayList<Message> = bot.sendMediaGroup(
         chatId = chatId,
         media = media,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply
+        replyParameters = replyParameters,
     )
 
     suspend fun Argument.sendLocation(
@@ -544,8 +542,7 @@ abstract class TelegramApiHandling {
         proximityAlertRadius: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendLocation(
         chatId = chatId,
@@ -558,8 +555,7 @@ abstract class TelegramApiHandling {
         proximityAlertRadius = proximityAlertRadius,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -575,8 +571,7 @@ abstract class TelegramApiHandling {
         googlePlaceType: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVenue(
         chatId = chatId,
@@ -591,8 +586,7 @@ abstract class TelegramApiHandling {
         googlePlaceType = googlePlaceType,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -604,8 +598,7 @@ abstract class TelegramApiHandling {
         vcard: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendContact(
         chatId = chatId,
@@ -616,8 +609,7 @@ abstract class TelegramApiHandling {
         vcard = vcard,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -637,8 +629,7 @@ abstract class TelegramApiHandling {
         isClosed: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendPoll(
         chatId = chatId,
@@ -657,8 +648,7 @@ abstract class TelegramApiHandling {
         isClosed = isClosed,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -667,8 +657,7 @@ abstract class TelegramApiHandling {
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendDice(
         chatId = chatId,
@@ -676,8 +665,7 @@ abstract class TelegramApiHandling {
         emoji = emoji,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -961,6 +949,13 @@ abstract class TelegramApiHandling {
         cacheTime = cacheTime
     )
 
+    suspend fun Argument.getUserChatBoosts(
+        userId: Long,
+    ): UserChatBoosts = bot.getUserChatBoosts(
+        chatId = chatId,
+        userId = userId
+    )
+
     suspend fun Argument.setMyCommands(
         commands: List<BotCommand>,
         scope: BotCommandScope? = null,
@@ -1170,8 +1165,7 @@ abstract class TelegramApiHandling {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = bot.sendGame(
         chatId = chatId,
@@ -1179,8 +1173,7 @@ abstract class TelegramApiHandling {
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -1271,8 +1264,7 @@ abstract class TelegramApiHandling {
         isFlexible: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = bot.sendInvoice(
         chatId = chatId,
@@ -1300,8 +1292,7 @@ abstract class TelegramApiHandling {
         isFlexible = isFlexible,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -1377,8 +1368,7 @@ abstract class TelegramApiHandling {
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendSticker(
         chatId = chatId,
@@ -1387,8 +1377,7 @@ abstract class TelegramApiHandling {
         emoji = emoji,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 
@@ -1555,7 +1544,7 @@ abstract class TelegramApiHandling {
         text: String,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = bot.editMessageText(
         chatId = chatId,
@@ -1564,7 +1553,7 @@ abstract class TelegramApiHandling {
         text = text,
         parseMode = parseMode,
         entities = entities,
-        disableWebPagePreview = disableWebPagePreview,
+        linkPreviewOptions = linkPreviewOptions,
         replyMarkup = replyMarkup
     )
 
@@ -1620,6 +1609,13 @@ abstract class TelegramApiHandling {
     ): Boolean = bot.deleteMessage(
         chatId = chatId,
         messageId = messageId
+    )
+
+    suspend fun Argument.deleteMessages(
+        messageIds: Iterable<Long>,
+    ): Boolean = bot.deleteMessages(
+        chatId = chatId,
+        messageIds = messageIds
     )
     //endregion Telegram methods
 }

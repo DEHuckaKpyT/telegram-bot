@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.api
 import io.github.dehuckakpyt.telegrambot.model.type.GameHighScore
 import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardMarkup
 import io.github.dehuckakpyt.telegrambot.model.type.Message
+import io.github.dehuckakpyt.telegrambot.model.type.ReplyParameters
 
 
 /**
@@ -18,8 +19,7 @@ interface TelegramGameApi {
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null
     ): Message
 

@@ -16,6 +16,8 @@ data class UpdateResponse(
     @param:JsonProperty("edited_message") val editedMessage: Message? = null,
     @param:JsonProperty("channel_post") val channelPost: Message? = null,
     @param:JsonProperty("edited_channel_post") val editedChannelPost: Message? = null,
+    @param:JsonProperty("message_reaction") val messageReaction: MessageReactionUpdated? = null,
+    @param:JsonProperty("message_reaction_count ") val messageReactionCount : MessageReactionCountUpdated? = null,
     @param:JsonProperty("inline_query") val inlineQuery: InlineQuery? = null,
     @param:JsonProperty("chosen_inline_result") val chosenInlineResult: ChosenInlineResult? = null,
     @param:JsonProperty("callback_query") val callbackQuery: CallbackQuery? = null,
@@ -26,4 +28,6 @@ data class UpdateResponse(
     @param:JsonProperty("my_chat_member") val myChatMember: ChatMemberUpdated? = null,
     @param:JsonProperty("chat_member") val chatMember: ChatMemberUpdated? = null,
     @param:JsonProperty("chat_join_request") val chatJoinRequest: ChatJoinRequest? = null,
+    @param:JsonProperty("chat_boost") val chatBoost: ChatBoostUpdated? = null,
+    @param:JsonProperty("removed_chat_boost") val removedChatBoost: ChatBoostRemoved? = null,
 )

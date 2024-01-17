@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.api.TelegramPaymentApi
 import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardMarkup
 import io.github.dehuckakpyt.telegrambot.model.type.LabeledPrice
 import io.github.dehuckakpyt.telegrambot.model.type.Message
+import io.github.dehuckakpyt.telegrambot.model.type.ReplyParameters
 
 
 /**
@@ -40,8 +41,7 @@ interface TelegramPaymentExApi : TelegramPaymentApi {
         isFlexible: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = sendInvoice(
         chatId = chatId.toString(),
@@ -69,8 +69,7 @@ interface TelegramPaymentExApi : TelegramPaymentApi {
         isFlexible = isFlexible,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 }

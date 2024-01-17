@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.api.ex
 import io.github.dehuckakpyt.telegrambot.api.TelegramStickerApi
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 import io.github.dehuckakpyt.telegrambot.model.type.ReplyKeyboard
+import io.github.dehuckakpyt.telegrambot.model.type.ReplyParameters
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 
 
@@ -20,8 +21,7 @@ interface TelegramStickerExApi : TelegramStickerApi {
         emoji: String?,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        replyToMessageId: Long? = null,
-        allowSendingWithoutReply: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyKeyboard? = null,
     ): Message = sendSticker(
         chatId = chatId.toString(),
@@ -30,8 +30,7 @@ interface TelegramStickerExApi : TelegramStickerApi {
         emoji = emoji,
         disableNotification = disableNotification,
         protectContent = protectContent,
-        replyToMessageId = replyToMessageId,
-        allowSendingWithoutReply = allowSendingWithoutReply,
+        replyParameters = replyParameters,
         replyMarkup = replyMarkup
     )
 }

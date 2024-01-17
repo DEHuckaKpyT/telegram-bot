@@ -18,7 +18,7 @@ interface TelegramUpdatingMessagesApi {
         text: String,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
-        disableWebPagePreview: Boolean? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
@@ -56,5 +56,10 @@ interface TelegramUpdatingMessagesApi {
     suspend fun deleteMessage(
         chatId: String,
         messageId: Long,
+    ): Boolean
+
+    suspend fun deleteMessages(
+        chatId: String,
+        messageIds: Iterable<Long>,
     ): Boolean
 }
