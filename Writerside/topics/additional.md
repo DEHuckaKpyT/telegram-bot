@@ -1,12 +1,12 @@
 # Additional
 
-## Что обязательно нужно сделать ещё:
-- Доделать несколько оставшихся Telegram Api
-- Добавить тесты
-- Добавить webhook
+## High priority:
+- Add tests.
+- Add webhook.
+- Add documentation to code (classes and methods).
 
-## Фишки, которые хочется сделать:
-- Придумать что-то с обработкой сообщений длиной более 4096 символов
-- Придумать, как реализовать "мультиязычность"
-- Добавить возможность указывать action ('typing..' и т. п.)
-- Сделать отключаемыми методы cleanHtml и escapeHtml в шаблонах
+## Low priority:
+- Figure out how to handle messages longer than 4096 characters.
+- Figure out how to implement "multilingualism".
+- Add ability to specify action ('typing...', etc.).
+- Make cleanHtml and escapeHtml methods disabled in templates.

@@ -1,13 +1,32 @@
 # Kotlin Telegram Bot
 
-Kotlin library for creating Telegram Bots. You can use implementation for [Spring](https://spring.io/), [Ktor](https://ktor.io/)+[Koin](https://insert-koin.io/) or create with you own implementation.
-Now it have possibility to save state in database with [Exposed](https://github.com/JetBrains/Exposed) only.
+Kotlin library for creating Telegram Bots. You can use clean version, with implementation for [Spring](https://spring.io/), [Ktor](https://ktor.io/)+[Koin](https://insert-koin.io/) or create with you own implementation.
+It have also possibility to save state in database with [Spring JPA](https://spring.io/projects/spring-data-jpa/) or [Exposed](https://github.com/JetBrains/Exposed).
 
 Easy to handle dialogs with users.
 Supporting message templates and other helpful features.
 Working on coroutines.
 
 Example of applications in [example-spring](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-spring), [example-ktor](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor), [example-core](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-core) directories. 
+
+## Why this library
+- Focused on building a **dialog with the user** (for example, no need to specify `chatId` in dialog chains).
+- Has **many useful utilities** (such as templating, keyboard and button creating and other).
+- Telegram API methods realization have **overloads** for more comfortable usage (like a `chatId` as `String` or `Long`).
+- Working on **coroutines**.
+- Has **clean** version or with **Spring** or **Ktor+Koin** frameworks.
+- Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
+
+## ⚠️ Caveat (will be resolved) ⚠️
+- Receiving only command. message and callback updates.
+- Spring integration is unstable.
+- Now available only long polling (will be added webhook also).
+
+## Prerequisites
+
+- JDK 17 or higher
+- Kotlin 1.8 or higher
+- Gradle or Maven
 
 ## Simple examples
 
