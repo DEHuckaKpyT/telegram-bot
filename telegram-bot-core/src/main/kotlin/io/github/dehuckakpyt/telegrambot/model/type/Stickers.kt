@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.type
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
 
 /**
@@ -66,5 +66,5 @@ public data class InputSticker private constructor(
         emojiList: Iterable<String>,
         maskPosition: MaskPosition? = null,
         keywords: Iterable<String>? = null,
-    ) : this("attach://${sticker.fileName}", sticker, emojiList, maskPosition, keywords)
+    ) : this("attach://${sticker.name}", sticker, emojiList, maskPosition, keywords)
 }

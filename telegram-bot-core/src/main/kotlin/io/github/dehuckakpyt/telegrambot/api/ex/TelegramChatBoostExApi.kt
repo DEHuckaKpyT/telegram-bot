@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.api.ex
 
-import io.github.dehuckakpyt.telegrambot.TelegramChatBoostApi
+import io.github.dehuckakpyt.telegrambot.api.TelegramChatBoostApi
 import io.github.dehuckakpyt.telegrambot.model.type.UserChatBoosts
 
 

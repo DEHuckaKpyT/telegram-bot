@@ -13,7 +13,8 @@ import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.model.internal.*
 import io.github.dehuckakpyt.telegrambot.model.type.*
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.TelegramResponse
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.client.*
@@ -161,23 +162,23 @@ class TelegramBotImpl(
         append(key, value.toString())
     }
 
-    private fun FormBuilder.appendThumbnailIfNotNull(key: String, value: NamedContent?) {
+    private fun FormBuilder.appendThumbnailIfNotNull(key: String, value: Content?) {
         value ?: return
-        append("attach://$key", value.byteArray, headersOf(ContentDisposition, "filename=\"${value.fileName}\""))
+        append("attach://$key", value.byteArray, headersOf(ContentDisposition, "filename=\"${value.name}\""))
     }
 
-    private fun FormBuilder.appendContentIfNotNull(key: String, value: NamedContent?) {
+    private fun FormBuilder.appendContentIfNotNull(key: String, value: Content?) {
         value ?: return
-        append(key, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.fileName}\""))
+        append(key, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.name}\""))
     }
 
     private fun FormBuilder.appendContentIfNotNull(value: NamedContent?) {
         value ?: return
-        append(value.fileName, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.fileName}\""))
+        append(value.name, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.name}\""))
     }
 
-    private fun FormBuilder.appendContent(key: String, value: NamedContent) {
-        append(key, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.fileName}\""))
+    private fun FormBuilder.appendContent(key: String, value: Content) {
+        append(key, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.name}\""))
     }
 
     private fun Any.toJson(): String = mapper.writeValueAsString(this)
@@ -332,7 +333,7 @@ class TelegramBotImpl(
 
     override suspend fun sendPhoto(
         chatId: String,
-        photo: NamedContent,
+        photo: Content,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -384,7 +385,7 @@ class TelegramBotImpl(
 
     override suspend fun sendAudio(
         chatId: String,
-        audio: NamedContent,
+        audio: Content,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -392,7 +393,7 @@ class TelegramBotImpl(
         duration: Long?,
         performer: String?,
         title: String?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -424,7 +425,7 @@ class TelegramBotImpl(
         duration: Long?,
         performer: String?,
         title: String?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -449,7 +450,7 @@ class TelegramBotImpl(
     override suspend fun sendDocument(
         chatId: String,
         document: NamedContent,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -477,7 +478,7 @@ class TelegramBotImpl(
     override suspend fun sendDocument(
         chatId: String,
         document: String,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -504,11 +505,11 @@ class TelegramBotImpl(
 
     override suspend fun sendVideo(
         chatId: String,
-        video: NamedContent,
+        video: Content,
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -544,7 +545,7 @@ class TelegramBotImpl(
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -576,11 +577,11 @@ class TelegramBotImpl(
 
     override suspend fun sendAnimation(
         chatId: String,
-        animation: NamedContent,
+        animation: Content,
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -614,7 +615,7 @@ class TelegramBotImpl(
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -644,7 +645,7 @@ class TelegramBotImpl(
 
     override suspend fun sendVoice(
         chatId: String,
-        voice: NamedContent,
+        voice: Content,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -696,11 +697,11 @@ class TelegramBotImpl(
 
     override suspend fun sendVideoNote(
         chatId: String,
-        videoNote: NamedContent,
+        videoNote: Content,
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -724,7 +725,7 @@ class TelegramBotImpl(
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -1059,7 +1060,7 @@ class TelegramBotImpl(
         "declineChatJoinRequest", DeclineChatJoinRequest(chatId, userId)
     )
 
-    override suspend fun setChatPhoto(chatId: String, photo: NamedContent): Boolean = postMultiPart("setChatPhoto") {
+    override suspend fun setChatPhoto(chatId: String, photo: Content): Boolean = postMultiPart("setChatPhoto") {
         append("chat_id", chatId)
         appendContent("photo", photo)
     }
@@ -1370,7 +1371,7 @@ class TelegramBotImpl(
 
     override suspend fun sendSticker(
         chatId: String,
-        sticker: NamedContent,
+        sticker: Content,
         messageThreadId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
@@ -1396,7 +1397,7 @@ class TelegramBotImpl(
         "getCustomEmojiStickers", GetCustomEmojiStickers(customEmojiIds)
     )
 
-    override suspend fun uploadStickerFile(userId: Long, sticker: NamedContent, stickerFormat: String): File = postMultiPart("uploadStickerFile") {
+    override suspend fun uploadStickerFile(userId: Long, sticker: Content, stickerFormat: String): File = postMultiPart("uploadStickerFile") {
         append("user_id", userId)
         appendContent("sticker", sticker)
         append("sticker_format", stickerFormat)
@@ -1463,7 +1464,7 @@ class TelegramBotImpl(
     override suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
-        thumbnail: NamedContent?,
+        thumbnail: Content?,
     ): Boolean = postMultiPart("setStickerSetThumbnail") {
         append("name", name)
         append("user_id", userId)

@@ -4,7 +4,8 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.argument.Argument
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
 
 /**
@@ -120,7 +121,7 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.sendPhoto(
-        photo: NamedContent,
+        photo: Content,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -170,7 +171,7 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.sendAudio(
-        audio: NamedContent,
+        audio: Content,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -178,7 +179,7 @@ abstract class TelegramApiHandling {
         duration: Long? = null,
         performer: String? = null,
         title: String? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -209,7 +210,7 @@ abstract class TelegramApiHandling {
         duration: Long? = null,
         performer: String? = null,
         title: String? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -233,7 +234,7 @@ abstract class TelegramApiHandling {
 
     suspend fun Argument.sendDocument(
         document: NamedContent,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -260,7 +261,7 @@ abstract class TelegramApiHandling {
 
     suspend fun Argument.sendDocument(
         document: String,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -286,11 +287,11 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.sendVideo(
-        video: NamedContent,
+        video: Content,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -325,7 +326,7 @@ abstract class TelegramApiHandling {
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -356,11 +357,11 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.sendAnimation(
-        animation: NamedContent,
+        animation: Content,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -393,7 +394,7 @@ abstract class TelegramApiHandling {
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -422,7 +423,7 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.sendVoice(
-        voice: NamedContent,
+        voice: Content,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -472,11 +473,11 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.sendVideoNote(
-        videoNote: NamedContent,
+        videoNote: Content,
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -499,7 +500,7 @@ abstract class TelegramApiHandling {
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -850,7 +851,7 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.setChatPhoto(
-        photo: NamedContent,
+        photo: Content,
     ): Boolean = bot.setChatPhoto(
         chatId = chatId,
         photo = photo
@@ -1363,7 +1364,7 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Argument.sendSticker(
-        sticker: NamedContent,
+        sticker: Content,
         messageThreadId: Long? = null,
         emoji: String? = null,
         disableNotification: Boolean? = null,
@@ -1395,7 +1396,7 @@ abstract class TelegramApiHandling {
 
     suspend fun Argument.uploadStickerFile(
         userId: Long,
-        sticker: NamedContent,
+        sticker: Content,
         stickerFormat: String,
     ): File = bot.uploadStickerFile(
         userId = userId,
@@ -1480,7 +1481,7 @@ abstract class TelegramApiHandling {
     suspend fun Argument.setStickerSetThumbnail(
         name: String,
         userId: Long,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
     ): Boolean = bot.setStickerSetThumbnail(
         name = name,
         userId = userId,

@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.api
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.UpdateResponse
 import io.github.dehuckakpyt.telegrambot.model.type.WebhookInfo
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
 
 /**

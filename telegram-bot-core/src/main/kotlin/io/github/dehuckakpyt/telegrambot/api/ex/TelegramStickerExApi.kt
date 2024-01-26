@@ -4,7 +4,8 @@ import io.github.dehuckakpyt.telegrambot.api.TelegramStickerApi
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 import io.github.dehuckakpyt.telegrambot.model.type.ReplyKeyboard
 import io.github.dehuckakpyt.telegrambot.model.type.ReplyParameters
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
 
 /**
@@ -16,7 +17,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 interface TelegramStickerExApi : TelegramStickerApi {
     suspend fun sendSticker(
         chatId: Long,
-        sticker: NamedContent,
+        sticker: Content,
         messageThreadId: Long? = null,
         emoji: String?,
         disableNotification: Boolean? = null,

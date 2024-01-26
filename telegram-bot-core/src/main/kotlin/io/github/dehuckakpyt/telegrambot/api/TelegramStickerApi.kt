@@ -1,7 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.model.type.*
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
 
 /**
@@ -13,7 +14,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.supplement.NamedContent
 interface TelegramStickerApi {
     suspend fun sendSticker(
         chatId: String,
-        sticker: NamedContent,
+        sticker: Content,
         messageThreadId: Long? = null,
         emoji: String?,
         disableNotification: Boolean? = null,
@@ -28,7 +29,7 @@ interface TelegramStickerApi {
 
     suspend fun uploadStickerFile(
         userId: Long,
-        sticker: NamedContent,
+        sticker: Content,
         stickerFormat: String,
     ): File
 
@@ -78,7 +79,7 @@ interface TelegramStickerApi {
     suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
-        thumbnail: NamedContent? = null,
+        thumbnail: Content? = null,
     ): Boolean
 
     suspend fun setCustomEmojiStickerSetThumbnail(
