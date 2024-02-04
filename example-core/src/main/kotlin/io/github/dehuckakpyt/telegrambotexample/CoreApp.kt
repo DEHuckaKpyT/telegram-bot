@@ -5,6 +5,7 @@ import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handling.exceptionCommand
 import io.github.dehuckakpyt.telegrambotexample.handling.startCommand
+import io.github.dehuckakpyt.telegrambotexample.handling.update.onSomeEvent
 
 /**
  * Created on 13.08.2023.
@@ -14,6 +15,8 @@ import io.github.dehuckakpyt.telegrambotexample.handling.startCommand
  */
 suspend fun main(args: Array<String>): Unit {
     val config = TelegramBotConfig().apply {
+        token = "<>"
+        username = "<>"
 
         templating {
             freemarker {
@@ -32,6 +35,10 @@ suspend fun main(args: Array<String>): Unit {
             handling {
                 startCommand()
                 exceptionCommand()
+            }
+
+            update {
+                onSomeEvent()
             }
         }
     }

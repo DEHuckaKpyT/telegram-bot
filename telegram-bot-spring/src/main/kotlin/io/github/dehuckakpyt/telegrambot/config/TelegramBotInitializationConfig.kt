@@ -1,12 +1,14 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.context.SpringContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
+import io.github.dehuckakpyt.telegrambot.handler.BotHandler
+import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
+import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -58,10 +60,14 @@ class TelegramBotInitializationConfig(
     @Bean(autowireCandidate = false)
     fun botHandling(): BotHandling = botContext.botHandling
 
+    @Bean(autowireCandidate = false)
+    fun botUpdateHandling(): BotUpdateHandling = botContext.botUpdateHandling
+
     @EventListener(ApplicationReadyEvent::class)
     fun startTelegramBot() {
         // initialize all handlers
         applicationContext.getBeansOfType(BotHandler::class.java)
+        applicationContext.getBeansOfType(BotUpdateHandler::class.java)
 
         // start receiving updates
         logger.info("Starting telegram-bot '${botContext.telegramBot.username}'..")

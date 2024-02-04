@@ -22,6 +22,7 @@ internal class LongPollingUpdateReceiver(
 ) : UpdateReceiver {
 
     private val scope = CoroutineScope(Dispatchers.Default)
+    private var lastUpdateId: Int? = null
 
     override fun start(): Unit {
         scope.launch { receiveUpdates() }
@@ -49,10 +50,5 @@ internal class LongPollingUpdateReceiver(
     override fun stop(): Unit {
         bot.stop()
         scope.cancel()
-    }
-
-    private companion object {
-        @Volatile
-        private var lastUpdateId: Int? = null
     }
 }

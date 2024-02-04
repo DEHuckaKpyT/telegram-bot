@@ -1,12 +1,12 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.annotation.HandlerComponent
 import io.github.dehuckakpyt.telegrambot.argument.message.MessageType.CONTACT
 import io.github.dehuckakpyt.telegrambot.argument.message.MessageType.TEXT
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.factory.contactKeyboard
 import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard
+import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambotexample.template.*
 
 

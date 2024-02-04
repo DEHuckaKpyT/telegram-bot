@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
+import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
@@ -32,6 +33,7 @@ data class UpdateReceiverConfig(
     var chainExceptionHandler: (TelegramBotActualConfig.() -> ChainExceptionHandler)? = null,
 ) {
     internal var handling: BotHandling.() -> Unit = {}
+    internal var update: BotUpdateHandling.() -> Unit = {}
     internal var updateReceiver: ((TelegramBot, UpdateResolver) -> UpdateReceiver)? = null
 
     fun longPolling(block: LongPollingConfig.() -> Unit) {
@@ -41,5 +43,9 @@ data class UpdateReceiverConfig(
 
     fun handling(block: BotHandling.() -> Unit) {
         handling = block
+    }
+
+    fun update(block: BotUpdateHandling.() -> Unit) {
+        update = block
     }
 }

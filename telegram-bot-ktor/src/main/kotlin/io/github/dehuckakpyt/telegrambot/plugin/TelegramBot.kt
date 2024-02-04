@@ -1,11 +1,13 @@
 package io.github.dehuckakpyt.telegrambot.plugin
 
-import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
+import io.github.dehuckakpyt.telegrambot.handler.BotHandler
+import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
+import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.ktor.server.application.*
@@ -36,9 +38,11 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     koin.declare<TelegramBot>(telegramBot)
     koin.declare<UpdateReceiver>(updateReceiver)
     koin.declare<BotHandling>(context.botHandling)
+    koin.declare<BotUpdateHandling>(context.botUpdateHandling)
     koin.declare<Templater>(context.templater)
 
     koin.getAll<BotHandler>()
+    koin.getAll<BotUpdateHandler>()
 
     fun startTelegramBot() {
         application.log.info("Starting telegram-bot '${telegramBot.username}'..")

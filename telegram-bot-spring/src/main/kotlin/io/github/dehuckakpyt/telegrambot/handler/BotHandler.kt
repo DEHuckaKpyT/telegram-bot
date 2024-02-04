@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot
+package io.github.dehuckakpyt.telegrambot.handler
 
 import io.github.dehuckakpyt.telegrambot.context.SpringContext.autowired
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling

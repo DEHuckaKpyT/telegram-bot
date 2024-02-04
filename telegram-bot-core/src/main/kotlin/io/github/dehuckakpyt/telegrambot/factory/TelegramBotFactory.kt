@@ -20,9 +20,11 @@ import io.github.dehuckakpyt.telegrambot.ext.empty
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactoryImpl
 import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatterImpl
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
+import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
+import io.github.dehuckakpyt.telegrambot.resolver.EventUpdateResolver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
@@ -95,12 +97,17 @@ object TelegramBotFactory {
             VoiceMessageArgumentFactory(),
         )
         val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
-        val updateResolver = UpdateResolver(dialogUpdateResolver)
+        val eventUpdateResolver = EventUpdateResolver()
 
         val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templating.templater, buttonFactory)
+        val botUpdateHandling = BotUpdateHandling(actual.telegramBot, eventUpdateResolver, actualReceiving.chainSource, actual.templating.templater, buttonFactory)
         handling.invoke(botHandling)
+        update.invoke(botUpdateHandling)
+
+        val updateResolver = UpdateResolver(dialogUpdateResolver, eventUpdateResolver)
 
         context.botHandling = botHandling
+        context.botUpdateHandling = botUpdateHandling
         context.buttonFactory = buttonFactory
         context.updateReceiver = updateReceiver?.invoke(actual.telegramBot, updateResolver) ?: LongPollingUpdateReceiver(actual.telegramBot, updateResolver, LongPollingConfig())
     }

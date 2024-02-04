@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import io.github.dehuckakpyt.telegrambot.BotHandler
+import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedResourceContent
 import kotlinx.coroutines.delay
 import org.koin.core.annotation.Factory

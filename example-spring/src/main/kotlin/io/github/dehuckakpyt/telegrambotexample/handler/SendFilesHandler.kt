@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import io.github.dehuckakpyt.telegrambot.BotHandler
 import io.github.dehuckakpyt.telegrambot.annotation.HandlerComponent
+import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.model.type.InputMediaDocument
 import io.github.dehuckakpyt.telegrambot.model.type.InputMediaPhoto
 import io.github.dehuckakpyt.telegrambot.model.type.InputMediaVideo
