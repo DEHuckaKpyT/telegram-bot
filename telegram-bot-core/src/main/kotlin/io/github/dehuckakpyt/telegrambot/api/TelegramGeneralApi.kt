@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.api
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
+import io.ktor.client.statement.*
 
 
 /**
@@ -611,4 +612,6 @@ interface TelegramGeneralApi {
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
+
+    suspend fun download(filePath: String): HttpResponse
 }

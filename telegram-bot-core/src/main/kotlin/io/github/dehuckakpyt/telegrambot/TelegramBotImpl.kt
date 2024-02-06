@@ -13,9 +13,9 @@ import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.model.internal.*
 import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.TelegramResponse
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.TelegramResponse
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -41,12 +41,12 @@ import java.text.SimpleDateFormat
  * @author Denis Matytsin
  */
 class TelegramBotImpl(
-    token: String,
+    private val token: String,
     override val username: String,
     private val messageSource: MessageSource,
 ) : TelegramBot {
 
-    //region Make requests
+    //region make requests
     private val mapper = jacksonMapperBuilder().apply {
         configure(SerializationFeature.INDENT_OUTPUT, true)
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -185,7 +185,7 @@ class TelegramBotImpl(
 
     override fun stop(): Unit = client.close()
 
-    //endregion Make requests
+    //endregion make requests
 
     override suspend fun getUpdates(
         offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: List<AllowedUpdate>?,
@@ -1671,4 +1671,12 @@ class TelegramBotImpl(
         parameter("message_id", messageId)
         parameter("inline_message_id", inlineMessageId)
     }
+
+    //region helpful features
+
+    override suspend fun download(filePath: String): HttpResponse {
+        return client.get("https://api.telegram.org/file/bot$token/${filePath}")
+    }
+
+    //endregion helpful features
 }
