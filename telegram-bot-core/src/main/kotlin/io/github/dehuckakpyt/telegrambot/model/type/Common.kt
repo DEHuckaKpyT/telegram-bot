@@ -40,7 +40,7 @@ public data class User(
     @get:JsonProperty("supports_inline_queries") @param:JsonProperty("supports_inline_queries") val supportsInlineQueries: Boolean? = null,
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "date", defaultImpl = Message::class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "date", visible = true, defaultImpl = Message::class)
 @JsonSubTypes(
     JsonSubTypes.Type(value = InaccessibleMessage::class, name = "0"),
 )
@@ -376,7 +376,7 @@ public data class VoiceChatParticipantsInvited(
     @param:JsonProperty("users") val users: List<User> = emptyList(),
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
 @JsonSubTypes(
     JsonSubTypes.Type(value = BotCommandScope.BotCommandScopeDefault::class, name = "default"),
     JsonSubTypes.Type(value = BotCommandScope.BotCommandScopeAllPrivateChats::class, name = "all_private_chats"),
@@ -507,7 +507,7 @@ public data class BotShortDescription(
     @param:JsonProperty("short_description") val shortDescription: String,
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
 @JsonSubTypes(
     JsonSubTypes.Type(value = MessageOrigin.MessageOriginUser::class, name = "user"),
     JsonSubTypes.Type(value = MessageOrigin.MessageOriginHiddenUser::class, name = "hidden_user"),
@@ -520,21 +520,21 @@ public sealed class MessageOrigin {
 
     @JsonTypeName("user")
     public data class MessageOriginUser(
-        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("type") override val type: String = "user",
         @param:JsonProperty("date") val date: Long,
         @param:JsonProperty("sender_user") val senderUser: User,
     ) : MessageOrigin()
 
     @JsonTypeName("hidden_user")
     public data class MessageOriginHiddenUser(
-        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("type") override val type: String = "hidden_user",
         @param:JsonProperty("date") val date: Long,
         @param:JsonProperty("sender_user_name") val senderUserName: String,
     ) : MessageOrigin()
 
     @JsonTypeName("chat")
     public data class MessageOriginChat(
-        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("type") override val type: String = "chat",
         @param:JsonProperty("date") val date: Long,
         @param:JsonProperty("sender_chat") val senderChat: Chat,
         @param:JsonProperty("author_signature") val authorSignature: String? = null,
@@ -542,7 +542,7 @@ public sealed class MessageOrigin {
 
     @JsonTypeName("channel")
     public data class MessageOriginChannel(
-        @param:JsonProperty("type") override val type: String,
+        @param:JsonProperty("type") override val type: String = "channel",
         @param:JsonProperty("date") val date: Long,
         @param:JsonProperty("chat") val chat: Chat,
         @param:JsonProperty("message_id") val messageId: Long,

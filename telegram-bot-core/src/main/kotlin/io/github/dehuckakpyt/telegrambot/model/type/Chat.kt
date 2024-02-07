@@ -81,7 +81,7 @@ public data class ChatPhoto(
     @param:JsonProperty("big_file_unique_id") val bigFileUniqueId: String,
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "status")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "status", visible = true)
 @JsonSubTypes(
     JsonSubTypes.Type(value = ChatMember.Owner::class, name = "creator"),
     JsonSubTypes.Type(value = ChatMember.Administrator::class, name = "administrator"),
@@ -97,7 +97,7 @@ public sealed class ChatMember {
 
     @JsonTypeName("creator")
     public data class Owner(
-        @param:JsonProperty("status") override val status: String,
+        @param:JsonProperty("status") override val status: String = "creator",
         @param:JsonProperty("user") override val user: User,
         @param:JsonProperty("is_anonymous") val isAnonymous: Boolean? = null,
         @param:JsonProperty("custom_title") val customTitle: String? = null,
@@ -105,7 +105,7 @@ public sealed class ChatMember {
 
     @JsonTypeName("administrator")
     public data class Administrator(
-        @param:JsonProperty("status") override val status: String,
+        @param:JsonProperty("status") override val status: String = "administrator",
         @param:JsonProperty("user") override val user: User,
         @param:JsonProperty("can_be_edited") val canBeEdited: Boolean,
         @param:JsonProperty("is_anonymous") val isAnonymous: Boolean,
@@ -128,13 +128,13 @@ public sealed class ChatMember {
 
     @JsonTypeName("member")
     public data class Member(
-        @param:JsonProperty("status") override val status: String,
+        @param:JsonProperty("status") override val status: String = "member",
         @param:JsonProperty("user") override val user: User,
     ) : ChatMember()
 
     @JsonTypeName("restricted")
     public data class Restricted(
-        @param:JsonProperty("status") override val status: String,
+        @param:JsonProperty("status") override val status: String = "restricted",
         @param:JsonProperty("user") override val user: User,
         @param:JsonProperty("is_member") val isMember: Boolean,
         @param:JsonProperty("can_send_messages") val canSendMessages: Boolean,
@@ -156,13 +156,13 @@ public sealed class ChatMember {
 
     @JsonTypeName("left")
     public data class Left(
-        @param:JsonProperty("status") override val status: String,
+        @param:JsonProperty("status") override val status: String = "left",
         @param:JsonProperty("user") override val user: User,
     ) : ChatMember()
 
     @JsonTypeName("kicked")
     public data class Banned(
-        @param:JsonProperty("status") override val status: String,
+        @param:JsonProperty("status") override val status: String = "kicked",
         @param:JsonProperty("user") override val user: User,
         @param:JsonProperty("until_date") val untilDate: Int,
     ) : ChatMember()

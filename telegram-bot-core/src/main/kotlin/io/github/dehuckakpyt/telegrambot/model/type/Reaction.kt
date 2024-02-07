@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.model.type
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.annotation.JsonTypeName
 
 
 /**
@@ -11,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
  *
  * @author Denis Matytsin
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
 @JsonSubTypes(
     JsonSubTypes.Type(value = ReactionType.Emoji::class, name = "emoji"),
     JsonSubTypes.Type(value = ReactionType.CustomEmoji::class, name = "custom_emoji"),
@@ -19,12 +20,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 public sealed class ReactionType {
     abstract val type: String
 
+    @JsonTypeName("emoji")
     public data class Emoji(
         @param:JsonProperty("emoji") @get:JsonProperty("emoji") val emoji: String,
     ) : ReactionType() {
         @get:JsonProperty("type") override val type: String = "emoji"
     }
 
+    @JsonTypeName("custom_emoji")
     public data class CustomEmoji(
         @param:JsonProperty("custom_emoji_id") @get:JsonProperty("custom_emoji_id") val customEmojiId: String,
     ) : ReactionType() {

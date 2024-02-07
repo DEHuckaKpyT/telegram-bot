@@ -31,7 +31,7 @@ public data class ChatBoost(
     @param:JsonProperty("source") val source: ChatBoostSource,
 )
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "source")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "source", visible = true)
 @JsonSubTypes(
     JsonSubTypes.Type(value = ChatBoostSource.ChatBoostSourcePremium::class, name = "premium"),
     JsonSubTypes.Type(value = ChatBoostSource.ChatBoostSourceGiftCode::class, name = "gift_code"),
@@ -43,19 +43,19 @@ public sealed class ChatBoostSource {
 
     @JsonTypeName("premium")
     data class ChatBoostSourcePremium(
-        @param:JsonProperty("source") override val source: String,
+        @param:JsonProperty("source") override val source: String = "premium",
         @param:JsonProperty("user") val user: User,
     ) : ChatBoostSource()
 
     @JsonTypeName("gift_code")
     data class ChatBoostSourceGiftCode(
-        @param:JsonProperty("source") override val source: String,
+        @param:JsonProperty("source") override val source: String = "gift_code",
         @param:JsonProperty("user") val user: User,
     ) : ChatBoostSource()
 
     @JsonTypeName("giveaway")
     data class ChatBoostSourceGiveaway(
-        @param:JsonProperty("source") override val source: String,
+        @param:JsonProperty("source") override val source: String = "giveaway",
         @param:JsonProperty("giveaway_message_id") val giveawayMessageId: Long,
         @param:JsonProperty("user") val user: User? = null,
         @param:JsonProperty("is_unclaimed") val isUnclaimed: Boolean? = null,
