@@ -614,4 +614,6 @@ interface TelegramGeneralApi {
     ): Message
 
     suspend fun download(filePath: String): HttpResponse
+
+    suspend fun downloadById(fileId: String): HttpResponse
 }

@@ -1,0 +1,17 @@
+{
+  "update_id": 1,
+  "message": {
+    "message_id": 2,
+    "from": {
+      "id": 123,
+      "is_bot": false,
+      "first_name": "\u0414\u0435\u043d\u0438\u0441ka"
+    },
+    "chat": {
+      "id": 123,
+      "type": "private"
+    },
+    "date": 1707824482,
+    "text": "/start"
+  }
+}

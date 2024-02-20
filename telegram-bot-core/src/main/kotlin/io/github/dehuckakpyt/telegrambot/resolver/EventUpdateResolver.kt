@@ -33,7 +33,7 @@ internal class EventUpdateResolver {
     internal var chatBoost: (suspend ChatBoostUpdated.() -> Unit)? = null
     internal var removedChatBoost: (suspend ChatBoostRemoved.() -> Unit)? = null
 
-    suspend fun processUpdate(update: UpdateResponse): Unit {
+    suspend fun processUpdate(update: Update): Unit {
         try {
             when {
                 update.message != null -> message?.invoke(update.message)

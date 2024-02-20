@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
-import io.github.dehuckakpyt.telegrambot.model.type.UpdateResponse
+import io.github.dehuckakpyt.telegrambot.model.type.Update
 import io.github.dehuckakpyt.telegrambot.model.type.WebhookInfo
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
@@ -18,7 +18,7 @@ interface TelegramUpdatesApi {
         limit: Int? = null,
         timeout: Int? = null,
         allowedUpdates: List<AllowedUpdate>? = null
-    ): List<UpdateResponse>
+    ): List<Update>
 
     suspend fun setWebhook(
         url: String,

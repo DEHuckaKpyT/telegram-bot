@@ -47,34 +47,9 @@ class TelegramBotImpl(
 ) : TelegramBot {
 
     //region make requests
-    private val mapper = jacksonMapperBuilder().apply {
-        configure(SerializationFeature.INDENT_OUTPUT, true)
-        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    }.build().apply {
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
-            indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
-            indentObjectsWith(DefaultIndenter("  ", "\n"))
-        })
-        dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-
-        registerModule(JavaTimeModule())
-
-        registerModule(
-            KotlinModule.Builder()
-                .withReflectionCacheSize(512)
-                .configure(KotlinFeature.NullToEmptyCollection, false)
-                .configure(KotlinFeature.NullToEmptyMap, false)
-                .configure(KotlinFeature.NullIsSameAsDefault, false)
-                .configure(KotlinFeature.SingletonSupport, false)
-                .configure(KotlinFeature.StrictNullChecks, false)
-                .build()
-        )
-    }
-
     private val client = HttpClient(Apache) {
         install(ContentNegotiation) {
-            register(Json, JacksonConverter(mapper))
+            register(Json, JacksonConverter(MAPPER))
         }
         engine {
             socketTimeout = 0
@@ -181,7 +156,7 @@ class TelegramBotImpl(
         append(key, value.byteArray, headersOf(ContentDisposition, "filename=\"${value.name}\""))
     }
 
-    private fun Any.toJson(): String = mapper.writeValueAsString(this)
+    private fun Any.toJson(): String = MAPPER.writeValueAsString(this)
 
     override fun stop(): Unit = client.close()
 
@@ -189,7 +164,7 @@ class TelegramBotImpl(
 
     override suspend fun getUpdates(
         offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: List<AllowedUpdate>?,
-    ): List<UpdateResponse> = postJson("getUpdates", UpdateRequest(offset, limit, timeout, allowedUpdates))
+    ): List<Update> = postJson("getUpdates", UpdateRequest(offset, limit, timeout, allowedUpdates))
 
     override suspend fun setWebhook(
         url: String,
@@ -1678,5 +1653,39 @@ class TelegramBotImpl(
         return client.get("https://api.telegram.org/file/bot$token/${filePath}")
     }
 
+    override suspend fun downloadById(fileId: String): HttpResponse {
+        val fileInfo = getFile(fileId)
+        val filePath = fileInfo.filePath ?: throw IllegalStateException("Failed download file. FilePath is null for file $fileInfo.")
+
+        return download(filePath)
+    }
+
     //endregion helpful features
+
+    companion object {
+        private val MAPPER = jacksonMapperBuilder().apply {
+            configure(SerializationFeature.INDENT_OUTPUT, true)
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        }.build().apply {
+            setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
+                indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
+                indentObjectsWith(DefaultIndenter("  ", "\n"))
+            })
+            dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+
+            registerModule(JavaTimeModule())
+
+            registerModule(
+                KotlinModule.Builder()
+                    .withReflectionCacheSize(512)
+                    .configure(KotlinFeature.NullToEmptyCollection, false)
+                    .configure(KotlinFeature.NullToEmptyMap, false)
+                    .configure(KotlinFeature.NullIsSameAsDefault, false)
+                    .configure(KotlinFeature.SingletonSupport, false)
+                    .configure(KotlinFeature.StrictNullChecks, false)
+                    .build()
+            )
+        }
+    }
 }

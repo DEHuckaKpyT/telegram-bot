@@ -25,7 +25,7 @@ import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
 import io.github.dehuckakpyt.telegrambot.resolver.EventUpdateResolver
-import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
+import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolverImpl
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
@@ -104,7 +104,7 @@ object TelegramBotFactory {
         handling.invoke(botHandling)
         update.invoke(botUpdateHandling)
 
-        val updateResolver = UpdateResolver(dialogUpdateResolver, eventUpdateResolver)
+        val updateResolver = UpdateResolverImpl(dialogUpdateResolver, eventUpdateResolver)
 
         context.botHandling = botHandling
         context.botUpdateHandling = botUpdateHandling

@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import java.util.*
 
 
 /**
@@ -11,3 +12,5 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
  */
 private val translator = PropertyNamingStrategies.KebabCaseStrategy()
 internal fun String.toKebabCase(): String = translator.translate(this)
+
+public fun String.toUUID(): UUID = UUID.fromString(this)

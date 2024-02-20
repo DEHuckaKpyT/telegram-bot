@@ -1507,7 +1507,7 @@ abstract class TelegramApiHandling {
         limit: Int? = null,
         timeout: Int? = null,
         allowedUpdates: List<AllowedUpdate>? = null,
-    ): List<UpdateResponse> = bot.getUpdates(
+    ): List<Update> = bot.getUpdates(
         offset = offset,
         limit = limit,
         timeout = timeout,
