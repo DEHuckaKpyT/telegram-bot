@@ -11,5 +11,5 @@ import kotlin.reflect.KClass
  * @author Denis Matytsin
  */
 
-fun <T : Any> anyConstructed(clazz: KClass<T>): T =
+public fun <T : Any> anyConstructed(clazz: KClass<T>): T =
     MockKGateway.implementation().constructorMockFactory.mockPlaceholder(clazz)

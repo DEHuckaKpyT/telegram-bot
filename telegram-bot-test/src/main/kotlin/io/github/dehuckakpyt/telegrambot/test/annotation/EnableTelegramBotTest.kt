@@ -9,7 +9,7 @@ import io.github.dehuckakpyt.telegrambot.test.TelegramBotUpdateManager
  *
  * @author Denis Matytsin
  */
-annotation class EnableTelegramBotTest {
+public annotation class EnableTelegramBotTest {
     companion object {
         init {
             TelegramBotUpdateManager

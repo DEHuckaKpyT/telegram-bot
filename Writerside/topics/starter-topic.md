@@ -18,8 +18,7 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 - Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
 
 ## ⚠️ Caveat (will be resolved) ⚠️
-- Receiving only command. message and callback updates.
-- Spring integration is unstable.
+- In dialogs you can receive only command, message and callback updates.
 - Now available only long polling (will be added webhook also).
 
 ## Prerequisites

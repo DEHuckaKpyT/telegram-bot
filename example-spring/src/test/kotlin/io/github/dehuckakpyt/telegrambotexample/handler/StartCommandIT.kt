@@ -10,8 +10,8 @@ import io.mockk.coVerify
 import org.springframework.boot.test.context.SpringBootTest
 
 
-@EnableTelegramBotTest
 @SpringBootTest
+@EnableTelegramBotTest
 class StartCommandIT(
     private val bot: TelegramBot,
 ) : FreeSpec({

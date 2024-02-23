@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  *
  * @author Denis Matytsin
  */
-class MockUpdateReceiver(
+internal class MockUpdateReceiver(
     private val updateResolver: UpdateResolver,
 ) : UpdateReceiver {
     private val scope = CoroutineScope(Dispatchers.Default)
