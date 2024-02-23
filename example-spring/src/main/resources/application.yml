@@ -1,0 +1,22 @@
+dollar: $
+telegram-bot:
+  token: ${TELEGRAM_BOT_TOKEN}
+  username: ${TELEGRAM_BOT_USERNAME}
+  template:
+    start: "Стартовая команда."
+
+    chain: "Давай поиграем. Напиши любое целое положительное число."
+    chain-start-sum: "Теперь я буду складывать введённые числа, пока сумма их не станет больше или равна ${dollar}{target}."
+    chain-one-more: "Текущая сумма равна ${dollar}{sum}. Цель: ${dollar}{target}."
+    chain-end: "Цель ${dollar}{target} достигнута! Набрана сумма ${dollar}{sum}."
+
+    register: "Для регистрации введите номер или поделитесь своим контактом."
+    register-contact-button: "Поделиться контактом"
+    register-complete: "${dollar}{firstName}, Вы успешно зарегистрировались по номеру ${dollar}{phoneNumber}!"
+    register-wrong-phone-format: "Неверный формат номера телефона."
+    register-get-firstname: "Напишите, как к Вам обращаться."
+
+    template-example: "formatted text: ${dollar}{cleanHtml(param)}"
+    template-escaped-example: "formatted text: ${dollar}{escapeHtml(param)}"
+
+    runner-notify-when-started: "Бот <b><u>${dollar}{botUsername}</u></b> запущен!"

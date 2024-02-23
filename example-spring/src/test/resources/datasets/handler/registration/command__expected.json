@@ -1,0 +1,10 @@
+{
+  "chain": [
+    {
+      "chat_id": 1001,
+      "from_id": 1001,
+      "step": "get_contact",
+      "content": null
+    }
+  ]
+}
