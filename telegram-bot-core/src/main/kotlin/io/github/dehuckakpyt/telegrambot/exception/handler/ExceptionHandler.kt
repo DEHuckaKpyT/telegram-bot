@@ -3,11 +3,18 @@ package io.github.dehuckakpyt.telegrambot.exception.handler
 
 /**
  * Created on 23.11.2023.
- *<p>
+ *
+ * Handler for catching all exceptions in BotHandler actions.
  *
  * @author Denis Matytsin
  */
-abstract class ExceptionHandler {
-    abstract suspend fun execute(chatId: Long, block: suspend () -> Unit): Unit
-    protected abstract suspend fun caught(chatId: Long, ex: Throwable): Unit
+interface ExceptionHandler {
+
+    /**
+     * Execute handler action with exceptions handling.
+     *
+     * @param chatId in which chat may be thrown exception
+     * @param block handler action for invoke
+     */
+    suspend fun execute(chatId: Long, block: suspend () -> Unit): Unit
 }

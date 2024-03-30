@@ -34,3 +34,12 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.9")
     //endregion test
 }
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    jvmArgs(
+        // чтобы работали моки https://mockk.io/doc/md/jdk16-access-exceptions.html
+        "--add-opens", "java.base/java.time=ALL-UNNAMED",
+        "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED"
+    )
+}

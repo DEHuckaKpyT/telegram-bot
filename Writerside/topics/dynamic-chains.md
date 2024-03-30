@@ -58,7 +58,7 @@ fun BotHandling.fillFormHandler() {
 }
 ```
 
-If you need to break the chain, you can use the method `finalizeChain()`:
+If you need to break the chain, you can use `next(null)`:
 
 ```kotlin
 fun BotHandling.fillFormHandler() {
@@ -71,7 +71,7 @@ fun BotHandling.fillFormHandler() {
         val age = text.toIntOrNull() ?: throw ChatException("An integer is expected")
         
         if (age < 18) {
-            finalizeChain()
+            next(null)
             sendMessage("I'm sorry, you're not a match :-(")
             return@step
         }

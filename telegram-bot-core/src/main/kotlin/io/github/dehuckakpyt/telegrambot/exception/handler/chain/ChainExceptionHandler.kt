@@ -3,7 +3,8 @@ package io.github.dehuckakpyt.telegrambot.exception.handler.chain
 
 /**
  * Created on 23.11.2023.
- *<p>
+ *
+ * Handler for internal exceptions with chain resolving.
  *
  * @author Denis Matytsin
  */

@@ -3,7 +3,9 @@ package io.github.dehuckakpyt.telegrambot.template
 
 /**
  * Created on 21.08.2023.
- *<p>
+ *
+ * Templates with messages about exceptions.
+ * This messages will be shown to user.
  *
  * @author Denis Matytsin
  */

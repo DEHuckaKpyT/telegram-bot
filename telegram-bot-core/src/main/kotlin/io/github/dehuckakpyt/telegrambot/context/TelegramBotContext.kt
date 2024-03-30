@@ -10,15 +10,30 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
 
 /**
  * Created on 27.12.2023.
- *<p>
+ *
+ * Isolated context for telegram bot instance.
+ *
+ * Isolated means that you can create few contexts and use them independently of each other.
  *
  * @author Denis Matytsin
  */
 interface TelegramBotContext {
+
+    /** Telegram bot for making requests. */
     val telegramBot: TelegramBot
+
+    /** Updates receiver for react to users actions. */
     val updateReceiver: UpdateReceiver
+
+    /** Handler for declare dialog actions to react on updates. */
     val botHandling: BotHandling
+
+    /** Handler for declare actions to react on updates. */
     val botUpdateHandling: BotUpdateHandling
+
+    /** Factory for make text by template. */
     val templater: Templater
+
+    /** Factory for creating buttons. */
     val buttonFactory: ButtonFactory
 }

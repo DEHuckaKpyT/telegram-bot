@@ -23,11 +23,14 @@ class SimpleCallbackSerializer(
 ) : CallbackSerializer {
 
     /**
-     * @param chatId
-     * @param fromId
+     * Serialize string to callback.data.
+     *
+     * @param chatId for which chat
+     * @param fromId for which user (in private chats equals to chatId)
      * @param next name of the next step for chatId and fromId
      * @param instance an object for transfer to the next step
-     * @return callback.data for chatId and fromId
+     *
+     * @return callback.data
      */
     override suspend fun toCallback(chatId: Long, fromId: Long, next: String, instance: Any?): String {
         instance ?: return next
@@ -47,7 +50,10 @@ class SimpleCallbackSerializer(
     }
 
     /**
+     * Deserialize callback.data to string.
+     *
      * @param callbackData incoming string from callback.data
+     *
      * @return step name and nullable object
      */
     override suspend fun fromCallback(callbackData: String): CallbackDataInfo {
@@ -60,6 +66,14 @@ class SimpleCallbackSerializer(
         return CallbackDataInfo(next, content)
     }
 
+    /**
+     * Check that callback name is valid.
+     * In this implementation callback name must not contain delimiter from config (default special symbol is '|').
+     *
+     * @param name name of the callback in handler
+     *
+     * @throws exception if name is not valid
+     */
     override fun validateCallbackName(name: String) {
         if (name.contains(delimiter)) throw IllegalArgumentException("Char \"$delimiter\" was used for split callback data. Please, change symbol in TelegramBotConfig.callbackDataDelimiter or rename callback step.")
     }

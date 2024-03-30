@@ -10,7 +10,12 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
 
 /**
  * Created on 31.01.2024.
- *<p>
+ *
+ * Class for creating handlers on any update.
+ *
+ * This handlers will be invoked before dialog handlers (BotHandling).
+ *
+ * @see io.github.dehuckakpyt.telegrambot.handling.BotHandling
  *
  * @author Denis Matytsin
  */
@@ -95,10 +100,29 @@ class BotUpdateHandling internal constructor(
         resolver.removedChatBoost = block
     }
 
+    /**
+     * Set the next step in the dialog.
+     *
+     * @param userId which user in chat to set step (in private chats equals to chatId)
+     * @param step name of the next step for selected dialog
+     * @param content stringified object for transfer (defaults json from JsonContentConverter)
+     *
+     * @see io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
+     */
     suspend fun next(userId: Long, step: String?, content: String? = null): Unit {
         chainSource.save(userId, userId, step, content)
     }
 
+    /**
+     * Set the next step in the dialog.
+     *
+     * @param chatId which chat to set step
+     * @param userId which user in chat to set step (in private chats equals to chatId)
+     * @param step name of the next step for selected dialog
+     * @param content stringified object for transfer (defaults json from JsonContentConverter)
+     *
+     * @see io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
+     */
     suspend fun next(chatId: Long, userId: Long, step: String?, content: String? = null): Unit {
         chainSource.save(chatId, userId, step, content)
     }

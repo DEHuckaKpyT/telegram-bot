@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory
 
 /**
  * Created on 23.11.2023.
- *<p>
+ *
+ * Handler for catching all exceptions in BotHandler actions.
  *
  * @author Denis Matytsin
  */
@@ -18,10 +19,16 @@ open class ExceptionHandlerImpl(
     protected val bot: TelegramBot,
     protected val template: MessageTemplate,
     templater: Templater,
-) : ExceptionHandler(), Templater by templater {
+) : ExceptionHandler, Templater by templater {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
+    /**
+     * Execute handler action with exceptions handling.
+     *
+     * @param chatId in which chat may be thrown exception
+     * @param block handler action for invoke
+     */
     override suspend fun execute(chatId: Long, block: suspend () -> Unit): Unit {
         try {
             block()
@@ -30,14 +37,21 @@ open class ExceptionHandlerImpl(
         }
     }
 
-    override suspend fun caught(chatId: Long, ex: Throwable) {
+    /**
+     * Execute handler action with exceptions handling.
+     *
+     * @param chatId in which chat was thrown exception
+     * @param ex exception info
+     */
+    open suspend fun caught(chatId: Long, ex: Throwable): Unit {
         when (ex) {
             is PrivateChatException -> {
                 if (chatId < 0) return // у личных чатов положительный id
                 bot.sendMessage(chatId, template.whenKnownException with ("message" to ex.localizedMessage))
             }
 
-            is ChatException -> bot.sendMessage(chatId, template.whenKnownException with ("message" to ex.localizedMessage))
+            is ChatException -> bot.sendMessage(chatId,
+                template.whenKnownException with ("message" to ex.localizedMessage))
 
             else -> {
                 logger.error("Unexpected error while handling message in chat $chatId", ex)

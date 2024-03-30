@@ -14,7 +14,10 @@ import kotlin.reflect.KClass
 
 /**
  * Created on 12.11.2023.
- *<p>
+ *
+ * Resolver for chain actions.
+ *
+ * Here you can add and retrieve actions for commands, steps and callbacks.
  *
  * @author Denis Matytsin
  */
@@ -26,18 +29,31 @@ internal class ChainResolver(
 ) {
 
     private val actionByCommand: MutableMap<String, suspend CommandArgument.() -> Unit> = hashMapOf()
-    private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageArgument>, suspend MessageArgument.() -> Unit>> =
-        hashMapOf()
+    private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageArgument>, suspend MessageArgument.() -> Unit>> = hashMapOf()
     private val actionByCallback: MutableMap<String, suspend CallbackArgument.() -> Unit> = hashMapOf()
+    private val asd = 1
 
+    /**
+     * Add command handler.
+     *
+     * @param command name of the command, started with the '/' (for example, '/start', '/help')
+     * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param action lambda, which will be invoked
+     */
     fun addCommand(command: String, next: String? = null, action: suspend CommandArgument.() -> Unit) {
-        actionByCommand[command] = {
-            this.nextStep = next
-            action()
-            saveNextStepInChain()
-        }
+        actionByCommand[command] = wrapAction(next, action)
     }
 
+    /**
+     * Add step handler.
+     *
+     * @param step name of the step (for example, 'get_name', 'get_phone')
+     * @param type class of the MessageArgument (for example, TEXT, DOCUMENT) (see MessageType)
+     * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param action lambda, which will be invoked
+     *
+     * @see io.github.dehuckakpyt.telegrambot.argument.message.MessageType
+     */
     @Suppress("UNCHECKED_CAST")
     fun <T : MessageArgument> addStep(
         step: String,
@@ -47,40 +63,92 @@ internal class ChainResolver(
     ) {
         val actionByType = actionByStep.getOrPut(step) { hashMapOf() }
 
-        actionByType[type] = {
-            this.nextStep = next
-            (action as suspend MessageArgument.() -> Unit)(this)
-            saveNextStepInChain()
-        }
+        actionByType[type] = wrapAction(next, action as suspend MessageArgument.() -> Unit)
     }
 
+    /**
+     * Add callback handler.
+     *
+     * @param callback callback name (sets in ButtonFactory.callbackButton())
+     * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param action lambda, which will be invoked
+     *
+     * @see io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
+     */
     fun addCallback(callback: String, next: String? = null, action: suspend CallbackArgument.() -> Unit) {
         callbackSerializer.validateCallbackName(callback)
 
-        actionByCallback[callback] = {
-            this.nextStep = next
-            action()
-            saveNextStepInChain()
-        }
+        actionByCallback[callback] = wrapAction(next, action)
     }
 
+    /**
+     * Get command handler.
+     *
+     * @param command name of the command, started with the '/' (for example, '/start', '/help')
+     */
     fun getCommand(command: String): suspend CommandArgument.() -> Unit {
         return actionByCommand[command] ?: chainExceptionHandler.whenCommandNotFound(command)
     }
 
-    fun getStep(step: String?, messageType: KClass<out MessageArgument>): suspend MessageArgument.() -> Unit {
+    /**
+     * Get step handler.
+     *
+     * @param step name of the step (for example, 'get_name', 'get_phone')
+     * @param type class of the MessageArgument (for example, TEXT, DOCUMENT) (see MessageType)
+     *
+     * @see io.github.dehuckakpyt.telegrambot.argument.message.MessageType
+     */
+    fun getStep(step: String?, type: KClass<out MessageArgument>): suspend MessageArgument.() -> Unit {
         val actionByMessageType = step?.let(actionByStep::get) ?: chainExceptionHandler.whenStepNotFound()
 
-        return actionByMessageType[messageType] ?: chainExceptionHandler.whenUnexpectedMessageType()
+        return actionByMessageType[type] ?: chainExceptionHandler.whenUnexpectedMessageType()
     }
 
+    /**
+     * Get callback handler.
+     *
+     * @param callback callback name (sets in ButtonFactory.callbackButton())
+     *
+     * @see io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
+     */
     fun getCallback(callback: String): (suspend CallbackArgument.() -> Unit)? {
         return actionByCallback[callback]
     }
 
+    /**
+     * Wrap chain action.
+     *
+     * The lambda needs to be wrapped with additional actions to make the dynamic chains work.
+     *
+     * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param action action needed to wrap
+     *
+     * @return lambda with applied dynamic step
+     */
+    private fun <T : Argument> wrapAction(next: String?, action: suspend T.() -> Unit): suspend T.() -> Unit = {
+        // First, set name ot the next step from static param.
+        this.nextStep = next
+        // Invoke action, which can change next step.
+        this.action()
+        // Save name ot the next step and transferred object.
+        this.saveNextStepInChain()
+    }
+
+    /**
+     * Save state of the current chain.
+     *
+     * Will be saved name of the next step and transferred object.
+     */
     private suspend fun Argument.saveNextStepInChain() {
         chainSource.save(chatId, from.id, nextStep, nextStepInstance.toContent())
     }
 
+    /**
+     * Convert transferred object to string.
+     *
+     * @return stringified object (defaults json from JsonContentConverter)
+     *
+     * @see io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
+     */
     private fun Any?.toContent(): String? = contentConverter.toContentOrNull(this)
 }

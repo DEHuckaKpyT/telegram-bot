@@ -5,6 +5,14 @@ import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 
+
+/**
+ * Created on 23.11.2023.
+ *
+ * Handler for internal exceptions with chain resolving.
+ *
+ * @author Denis Matytsin
+ */
 open class ChainExceptionHandlerImpl(
     protected val template: MessageTemplate,
     templater: Templater,

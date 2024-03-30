@@ -6,7 +6,7 @@ import io.github.dehuckakpyt.telegrambot.argument.message.factory.*
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
-import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverActualConfigImpl
+import io.github.dehuckakpyt.telegrambot.config.receiver.TelegramBotReceiverActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingConfig
@@ -36,15 +36,36 @@ import io.github.dehuckakpyt.telegrambot.template.TemplaterImpl
 
 /**
  * Created on 23.11.2023.
- *<p>
+ *
+ * Factory for creating telegram bot instances and contexts.
  *
  * @author Denis Matytsin
  */
 object TelegramBotFactory {
 
+    /**
+     * Create telegram bot instance only.
+     *
+     * You can create instance for making requests only. Without anything context. Requests only.
+     *
+     * @param token telegram bot token
+     * @param username telegram bot username
+     * @param messageSource source for saving sent messages
+     *
+     * @return telegram bot instance for making requests
+     */
     fun createTelegramBot(token: String, username: String, messageSource: MessageSource = MessageSource.empty): TelegramBot =
         TelegramBotImpl(token, username, messageSource)
 
+    /**
+     * Create telegram bot with related isolated context.
+     *
+     * Isolated means that you can create few contexts and use them independently of each other.
+     *
+     * @param config configuration for context instance
+     *
+     * @return telegram bot context
+     */
     fun createTelegramBotContext(config: TelegramBotConfig): TelegramBotContext {
         val actual = TelegramBotActualConfigImpl()
         val context = TelegramBotContextImpl()
@@ -76,7 +97,7 @@ object TelegramBotFactory {
     private fun buildReceiving(config: TelegramBotConfig, actual: TelegramBotActualConfigImpl, context: TelegramBotContextImpl) = with(UpdateReceiverConfig()) {
         config.receiving.invoke(this)
 
-        val actualReceiving = UpdateReceiverActualConfigImpl()
+        val actualReceiving = TelegramBotReceiverActualConfigImpl()
         actual.receiving = actualReceiving
         actualReceiving.messageTemplate = messageTemplate?.invoke(actual) ?: MessageTemplate()
         actualReceiving.contentConverter = contentConverter?.invoke(actual) ?: JsonContentConverter()

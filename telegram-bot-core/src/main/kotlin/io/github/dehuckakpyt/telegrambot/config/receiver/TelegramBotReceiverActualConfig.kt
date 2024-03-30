@@ -15,7 +15,7 @@ import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
  *
  * @author Denis Matytsin
  */
-interface UpdateReceiverActualConfig {
+interface TelegramBotReceiverActualConfig {
     val callbackContentSource: CallbackContentSource
     val chainSource: ChainSource
     val contentConverter: ContentConverter

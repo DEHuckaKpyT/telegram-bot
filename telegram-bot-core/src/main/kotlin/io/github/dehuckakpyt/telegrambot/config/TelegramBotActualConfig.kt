@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverActualConfig
+import io.github.dehuckakpyt.telegrambot.config.receiver.TelegramBotReceiverActualConfig
 import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingActualConfig
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 
@@ -18,5 +18,5 @@ interface TelegramBotActualConfig {
     val messageSource: MessageSource
     val telegramBot: TelegramBot
     val templating: TelegramBotTemplatingActualConfig
-    val receiving: UpdateReceiverActualConfig
+    val receiving: TelegramBotReceiverActualConfig
 }

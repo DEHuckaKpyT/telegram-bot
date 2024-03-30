@@ -3,7 +3,8 @@ package io.github.dehuckakpyt.telegrambot.source.message
 
 /**
  * Created on 21.08.2023.
- *<p>
+ *
+ * Implementation for ignoring saving messages.
  *
  * @author Denis Matytsin
  */
