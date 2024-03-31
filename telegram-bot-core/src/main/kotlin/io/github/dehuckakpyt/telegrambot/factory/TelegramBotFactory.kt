@@ -75,6 +75,7 @@ object TelegramBotFactory {
         actual.messageSource = config.messageSource?.invoke(actual) ?: EmptyMessageSource()
         actual.telegramBot = TelegramBotImpl(actual.token, actual.username, actual.messageSource)
 
+        context.messageSource = actual.messageSource
         context.telegramBot = actual.telegramBot
 
         buildTemplating(config, actual, context)
@@ -127,6 +128,8 @@ object TelegramBotFactory {
 
         val updateResolver = UpdateResolverImpl(dialogUpdateResolver, eventUpdateResolver)
 
+        context.callbackContentSource = actualReceiving.callbackContentSource
+        context.chainSource = actualReceiving.chainSource
         context.botHandling = botHandling
         context.botUpdateHandling = botUpdateHandling
         context.buttonFactory = buttonFactory

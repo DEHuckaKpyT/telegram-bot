@@ -9,6 +9,9 @@ import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
+import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -56,6 +59,15 @@ class TelegramBotInitializationConfig(
 
     @Bean
     fun buttonFactory(): ButtonFactory = botContext.buttonFactory
+
+    @Bean
+    fun messageSource(): MessageSource = botContext.messageSource
+
+    @Bean
+    fun chainSource(): ChainSource = botContext.chainSource
+
+    @Bean
+    fun callbackContentSource(): CallbackContentSource = botContext.callbackContentSource
 
     @Bean(autowireCandidate = false)
     fun botHandling(): BotHandling = botContext.botHandling
