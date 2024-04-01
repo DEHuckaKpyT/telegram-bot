@@ -15,7 +15,7 @@ internal class UpdateRequest(
     @get:JsonProperty("offset") val offset: Int? = null,
     @get:JsonProperty("limit") val limit: Int? = null,
     @get:JsonProperty("timeout") val timeout: Int? = null,
-    @get:JsonProperty("allowed_updates") val allowedUpdates: List<AllowedUpdate>? = null,
+    @get:JsonProperty("allowed_updates") val allowedUpdates: Iterable<AllowedUpdate>? = null,
 )
 
 internal class EditMessageText(
@@ -143,6 +143,12 @@ public enum class AllowedUpdate {
     @field:JsonProperty("edited_channel_post")
     EditedChannelPost,
 
+    @field:JsonProperty("message_reaction")
+    MessageReaction,
+
+    @field:JsonProperty("message_reaction_count")
+    MessageReactionCount,
+
     @field:JsonProperty("inline_query")
     InlineQuery,
 
@@ -172,4 +178,10 @@ public enum class AllowedUpdate {
 
     @field:JsonProperty("chat_join_request")
     ChatJoinRequest,
+
+    @field:JsonProperty("chat_boost")
+    ChatBoost,
+
+    @field:JsonProperty("removed_chat_boost")
+    RemovedChatBoost,
 }

@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.argument.message.MessageArgument
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
+import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import kotlin.collections.set
 import kotlin.reflect.KClass
@@ -31,7 +32,6 @@ internal class ChainResolver(
     private val actionByCommand: MutableMap<String, suspend CommandArgument.() -> Unit> = hashMapOf()
     private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageArgument>, suspend MessageArgument.() -> Unit>> = hashMapOf()
     private val actionByCallback: MutableMap<String, suspend CallbackArgument.() -> Unit> = hashMapOf()
-    private val asd = 1
 
     /**
      * Add command handler.
@@ -114,6 +114,12 @@ internal class ChainResolver(
     fun getCallback(callback: String): (suspend CallbackArgument.() -> Unit)? {
         return actionByCallback[callback]
     }
+
+    internal val allowedUpdates: Set<AllowedUpdate>
+        get() = buildSet {
+            if (actionByCommand.isNotEmpty() || actionByStep.isNotEmpty()) add(AllowedUpdate.Message)
+            if (actionByCallback.isNotEmpty()) add(AllowedUpdate.CallbackQuery)
+        }
 
     /**
      * Wrap chain action.

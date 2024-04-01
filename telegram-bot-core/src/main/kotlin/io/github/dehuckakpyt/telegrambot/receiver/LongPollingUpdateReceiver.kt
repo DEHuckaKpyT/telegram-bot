@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.receiver
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
+import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,12 +30,14 @@ internal class LongPollingUpdateReceiver(
     }
 
     private suspend fun receiveUpdates() {
+        val allowedUpdates: Set<AllowedUpdate> = updateResolver.allowedUpdates
+
         while (true) {
             val offset = lastUpdateId?.inc()
 
             val updates = bot.getUpdates(
                 offset = offset,
-                allowedUpdates = null,
+                allowedUpdates = allowedUpdates,
                 timeout = config.timeout,
                 limit = config.limit
             )

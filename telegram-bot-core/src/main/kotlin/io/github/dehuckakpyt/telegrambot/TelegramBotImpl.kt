@@ -163,7 +163,7 @@ class TelegramBotImpl(
     //endregion make requests
 
     override suspend fun getUpdates(
-        offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: List<AllowedUpdate>?,
+        offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: Iterable<AllowedUpdate>?,
     ): List<Update> = postJson("getUpdates", UpdateRequest(offset, limit, timeout, allowedUpdates))
 
     override suspend fun setWebhook(

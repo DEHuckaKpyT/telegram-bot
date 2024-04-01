@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.source.message
 import io.github.dehuckakpyt.telegrambot.model.message.DatabaseTelegramMessage
 import io.github.dehuckakpyt.telegrambot.repository.message.DatabaseTelegramMessageRepository
 
-class DatabaseTelegramMessageSource(
+open class DatabaseTelegramMessageSource(
     private val repository: DatabaseTelegramMessageRepository,
 ) : MessageSource {
 

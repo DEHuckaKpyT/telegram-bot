@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
+import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -59,7 +60,12 @@ internal class DialogUpdateResolver(
         val chain = chainSource.get(chatId, from!!.id)
         val factory = message.messageArgumentFactory
 
-        messageSource.save(chatId, from.id, messageId, factory.messageType, chain?.step, factory.getMessageText(message))
+        messageSource.save(chatId,
+            from.id,
+            messageId,
+            factory.messageType,
+            chain?.step,
+            factory.getMessageText(message))
 
         val action = chainResolver.getStep(chain?.step, factory.type)
 
@@ -77,6 +83,8 @@ internal class DialogUpdateResolver(
             )
         }
     }
+
+    internal val allowedUpdates: Set<AllowedUpdate> get() = chainResolver.allowedUpdates
 
     private val Message.messageArgumentFactory: MessageArgumentFactory
         get() = messageArgumentFactories.firstOrNull { it.matches(this) }

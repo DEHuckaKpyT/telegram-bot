@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.*
 
-class DatabaseCallbackContentSource(
+open class DatabaseCallbackContentSource(
     private val repository: DatabaseCallbackContentRepository,
     private val maxCallbackContentsPerUser: Long = MAX_CALLBACK_CONTENTS_PER_USER,
 ) : CallbackContentSource {

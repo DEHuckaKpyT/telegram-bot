@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
+import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.Update
 
 
@@ -22,4 +23,10 @@ internal class UpdateResolverImpl(
             callbackQuery != null -> dialogUpdateResolver.processCallback(callbackQuery)
         }
     }
+
+    override val allowedUpdates: Set<AllowedUpdate>
+        get() = buildSet {
+            addAll(eventUpdateResolver.allowedUpdates)
+            addAll(dialogUpdateResolver.allowedUpdates)
+        }
 }

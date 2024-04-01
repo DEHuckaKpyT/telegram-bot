@@ -22,7 +22,7 @@ internal class MockTelegramBot : TelegramBot {
     override fun stop() {}
 
     override suspend fun getUpdates(
-        offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: List<AllowedUpdate>?,
+        offset: Int?, limit: Int?, timeout: Int?, allowedUpdates: Iterable<AllowedUpdate>?,
     ): List<Update> = mockk()
 
     override suspend fun setWebhook(

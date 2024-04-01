@@ -17,7 +17,7 @@ interface TelegramUpdatesApi {
         offset: Int? = null,
         limit: Int? = null,
         timeout: Int? = null,
-        allowedUpdates: List<AllowedUpdate>? = null
+        allowedUpdates: Iterable<AllowedUpdate>? = null
     ): List<Update>
 
     suspend fun setWebhook(

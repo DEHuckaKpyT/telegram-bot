@@ -4,7 +4,7 @@ import io.github.dehuckakpyt.telegrambot.model.chain.DatabaseChain
 import io.github.dehuckakpyt.telegrambot.repository.chain.DatabaseChainRepository
 import org.springframework.transaction.annotation.Transactional
 
-internal class DatabaseChainSource(
+open class DatabaseChainSource(
     private val repository: DatabaseChainRepository,
 ) : ChainSource {
 

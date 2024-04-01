@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
+import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import org.slf4j.LoggerFactory
 
@@ -59,4 +60,26 @@ internal class EventUpdateResolver {
             logger.error("Failed to handle update.", throwable)
         }
     }
+
+    internal val allowedUpdates: Set<AllowedUpdate>
+        get() = buildSet {
+            if (message != null) add(AllowedUpdate.Message)
+            if (editedMessage != null) add(AllowedUpdate.EditedMessage)
+            if (channelPost != null) add(AllowedUpdate.ChannelPost)
+            if (editedChannelPost != null) add(AllowedUpdate.EditedChannelPost)
+            if (messageReaction != null) add(AllowedUpdate.MessageReaction)
+            if (messageReactionCount != null) add(AllowedUpdate.MessageReactionCount)
+            if (inlineQuery != null) add(AllowedUpdate.InlineQuery)
+            if (chosenInlineResult != null) add(AllowedUpdate.ChosenInlineQuery)
+            if (callbackQuery != null) add(AllowedUpdate.CallbackQuery)
+            if (shippingQuery != null) add(AllowedUpdate.ShippingQuery)
+            if (preCheckoutQuery != null) add(AllowedUpdate.PreCheckoutQuery)
+            if (poll != null) add(AllowedUpdate.Poll)
+            if (pollAnswer != null) add(AllowedUpdate.PollAnswer)
+            if (myChatMember != null) add(AllowedUpdate.MyChatMember)
+            if (chatMember != null) add(AllowedUpdate.ChatMember)
+            if (chatJoinRequest != null) add(AllowedUpdate.ChatJoinRequest)
+            if (chatBoost != null) add(AllowedUpdate.ChatBoost)
+            if (removedChatBoost != null) add(AllowedUpdate.RemovedChatBoost)
+        }
 }

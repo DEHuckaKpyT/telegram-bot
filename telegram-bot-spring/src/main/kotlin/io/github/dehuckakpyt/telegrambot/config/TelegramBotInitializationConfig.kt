@@ -61,7 +61,7 @@ class TelegramBotInitializationConfig(
     fun buttonFactory(): ButtonFactory = botContext.buttonFactory
 
     @Bean
-    fun messageSource(): MessageSource = botContext.messageSource
+    fun messageTelegramBotSource(): MessageSource = botContext.messageSource
 
     @Bean
     fun chainSource(): ChainSource = botContext.chainSource
