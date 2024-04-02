@@ -14,4 +14,5 @@ object MessageType {
     val VOICE = VoiceMessageArgument::class
     val CONTACT = ContactMessageArgument::class
     val DOCUMENT = DocumentMessageArgument::class
+    val LOCATION = LocationMessageArgument::class
 }

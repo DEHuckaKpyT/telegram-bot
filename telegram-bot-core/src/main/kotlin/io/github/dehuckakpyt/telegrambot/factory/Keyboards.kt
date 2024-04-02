@@ -23,4 +23,8 @@ fun contactKeyboard(text: String): ReplyKeyboard {
     return ReplyKeyboardMarkup(listOf(listOf(KeyboardButton(text, requestContact = true))))
 }
 
+fun locationKeyboard(text: String): ReplyKeyboard {
+    return ReplyKeyboardMarkup(listOf(listOf(KeyboardButton(text, requestLocation = true))))
+}
+
 fun removeKeyboard(): ReplyKeyboard = removeKeyboard
