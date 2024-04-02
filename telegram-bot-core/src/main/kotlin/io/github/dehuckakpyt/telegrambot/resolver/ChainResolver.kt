@@ -98,8 +98,8 @@ internal class ChainResolver(
      *
      * @see io.github.dehuckakpyt.telegrambot.argument.message.MessageType
      */
-    fun getStep(step: String?, type: KClass<out MessageArgument>): suspend MessageArgument.() -> Unit {
-        val actionByMessageType = step?.let(actionByStep::get) ?: chainExceptionHandler.whenStepNotFound()
+    fun getStep(step: String, type: KClass<out MessageArgument>): (suspend MessageArgument.() -> Unit)? {
+        val actionByMessageType = step.let(actionByStep::get) ?: return null
 
         return actionByMessageType[type] ?: chainExceptionHandler.whenUnexpectedMessageType()
     }

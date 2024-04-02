@@ -1,5 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.exception.handler
 
+import io.github.dehuckakpyt.telegrambot.model.type.Chat
+
 
 /**
  * Created on 23.11.2023.
@@ -13,8 +15,8 @@ interface ExceptionHandler {
     /**
      * Execute handler action with exceptions handling.
      *
-     * @param chatId in which chat may be thrown exception
+     * @param chat in which chat may be thrown exception
      * @param block handler action for invoke
      */
-    suspend fun execute(chatId: Long, block: suspend () -> Unit): Unit
+    suspend fun execute(chat: Chat, block: suspend () -> Unit): Unit
 }

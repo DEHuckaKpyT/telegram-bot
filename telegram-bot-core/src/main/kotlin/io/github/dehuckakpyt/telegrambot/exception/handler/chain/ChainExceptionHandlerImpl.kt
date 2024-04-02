@@ -1,7 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.exception.handler.chain
 
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 
@@ -23,7 +22,7 @@ open class ChainExceptionHandlerImpl(
     }
 
     override fun whenStepNotFound(): Nothing {
-        throw PrivateChatException(template.whenStepNotFound)
+        throw ChatException(template.whenStepNotFound)
     }
 
     override fun whenUnexpectedMessageType(): Nothing {

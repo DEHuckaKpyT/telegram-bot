@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.argument.message.factory.MessageArgumen
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
+import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
@@ -26,6 +27,7 @@ internal class DialogUpdateResolver(
     private val chainSource: ChainSource,
     private val chainResolver: ChainResolver,
     private val exceptionHandler: ExceptionHandler,
+    private val chainExceptionHandler: ChainExceptionHandler,
     private val messageArgumentFactories: List<MessageArgumentFactory>,
     private val messageSource: MessageSource,
     private val username: String,
@@ -36,14 +38,14 @@ internal class DialogUpdateResolver(
     suspend fun processMessage(message: Message): Unit {
         val from = message.from
         val text = message.text
-        val chatId = message.chatId
+        val chat = message.chat
 
         if (from == null) {
-            logger.warn("Don't expect message without fromId.\nchatId = '$chatId'\ntext = $text")
+            logger.warn("Don't expect message without fromId.\nchatId = '${chat.id}'\ntext = $text")
             return
         }
 
-        exceptionHandler.execute(chatId) {
+        exceptionHandler.execute(message.chat) {
             fetchCommand(text)?.let {
                 processCommandMessage(it, message)
             } ?: processGeneralMessage(message)
@@ -67,15 +69,20 @@ internal class DialogUpdateResolver(
             chain?.step,
             factory.getMessageText(message))
 
-        val action = chainResolver.getStep(chain?.step, factory.type)
+        val action = chain?.step?.let { chainResolver.getStep(it, factory.type) }
 
-        action.invoke(factory.create(chatId, message, chain!!.content))
+        if (action == null) {
+            if (chat.type == "private") chainExceptionHandler.whenStepNotFound() else return
+        }
+
+        action.invoke(factory.create(chatId, message, chain.content))
     }
 
     suspend fun processCallback(callback: CallbackQuery): Unit = with(callback) {
         val data = data ?: return
+        if (message !is Message) return
 
-        exceptionHandler.execute(chatId) {
+        exceptionHandler.execute(message.chat) {
             val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
             chainResolver.getCallback(callbackName)?.invoke(

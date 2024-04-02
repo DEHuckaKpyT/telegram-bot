@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambot.exception.handler
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.exception.chat.PrivateChatException
+import io.github.dehuckakpyt.telegrambot.model.type.Chat
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
@@ -26,36 +26,32 @@ open class ExceptionHandlerImpl(
     /**
      * Execute handler action with exceptions handling.
      *
-     * @param chatId in which chat may be thrown exception
+     * @param chat in which chat may be thrown exception
      * @param block handler action for invoke
      */
-    override suspend fun execute(chatId: Long, block: suspend () -> Unit): Unit {
+    override suspend fun execute(chat: Chat, block: suspend () -> Unit): Unit {
         try {
             block()
         } catch (throwable: Throwable) {
-            caught(chatId, throwable)
+            caught(chat, throwable)
         }
     }
 
     /**
      * Execute handler action with exceptions handling.
      *
-     * @param chatId in which chat was thrown exception
+     * @param chat in which chat was thrown exception
      * @param ex exception info
      */
-    open suspend fun caught(chatId: Long, ex: Throwable): Unit {
+    open suspend fun caught(chat: Chat, ex: Throwable): Unit {
         when (ex) {
-            is PrivateChatException -> {
-                if (chatId < 0) return // у личных чатов положительный id
-                bot.sendMessage(chatId, template.whenKnownException with ("message" to ex.localizedMessage))
+            is ChatException -> {
+                bot.sendMessage(chat.id, template.whenKnownException with ("message" to ex.localizedMessage))
             }
 
-            is ChatException -> bot.sendMessage(chatId,
-                template.whenKnownException with ("message" to ex.localizedMessage))
-
             else -> {
-                logger.error("Unexpected error while handling message in chat $chatId", ex)
-                bot.sendMessage(chatId, template.whenUnknownException)
+                logger.error("Unexpected error while handling message in chat ${chat.id}", ex)
+                bot.sendMessage(chat.id, template.whenUnknownException)
             }
         }
     }

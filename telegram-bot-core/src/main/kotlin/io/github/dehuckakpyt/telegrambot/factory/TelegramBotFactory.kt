@@ -118,7 +118,7 @@ object TelegramBotFactory {
             TextMessageArgumentFactory(),
             VoiceMessageArgumentFactory(),
         )
-        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
+        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
         val eventUpdateResolver = EventUpdateResolver()
 
         val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templating.templater, buttonFactory)
