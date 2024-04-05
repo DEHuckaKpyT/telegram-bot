@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.factory
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.TelegramBotImpl
-import io.github.dehuckakpyt.telegrambot.argument.message.factory.*
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
@@ -10,6 +9,7 @@ import io.github.dehuckakpyt.telegrambot.config.receiver.TelegramBotReceiverActu
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingConfig
+import io.github.dehuckakpyt.telegrambot.container.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContextImpl
 import io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
@@ -110,14 +110,14 @@ object TelegramBotFactory {
         actualReceiving.chainExceptionHandler = chainExceptionHandler?.invoke(actual) ?: ChainExceptionHandlerImpl(actualReceiving.messageTemplate, actual.templating.templater)
 
         val chainResolver = ChainResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, actualReceiving.chainExceptionHandler, actualReceiving.contentConverter)
-        val messageArgumentFactories: List<MessageArgumentFactory> = listOf(
-            AudioMessageArgumentFactory(),
-            ContactMessageArgumentFactory(),
-            DocumentMessageArgumentFactory(),
-            PhotoMessageArgumentFactory(),
-            TextMessageArgumentFactory(),
-            VoiceMessageArgumentFactory(),
-            LocationMessageArgumentFactory(),
+        val messageArgumentFactories: List<MessageContainerFactory> = listOf(
+            AudioMessageContainerFactory(),
+            ContactMessageContainerFactory(),
+            DocumentMessageContainerFactory(),
+            PhotoMessageContainerFactory(),
+            TextMessageContainerFactory(),
+            VoiceMessageContainerFactory(),
+            LocationMessageContainerFactory(),
         )
         val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
         val eventUpdateResolver = EventUpdateResolver()

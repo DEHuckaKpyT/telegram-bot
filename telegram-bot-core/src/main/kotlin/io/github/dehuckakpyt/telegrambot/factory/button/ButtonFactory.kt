@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.factory.button
 
-import io.github.dehuckakpyt.telegrambot.argument.Argument
+import io.github.dehuckakpyt.telegrambot.container.Container
 import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardButton
 import io.github.dehuckakpyt.telegrambot.model.type.KeyboardButton
 
@@ -33,7 +33,7 @@ interface ButtonFactory {
      *
      * @return inline button
      */
-    suspend fun Argument.callbackButton(text: String, next: String, content: Any): InlineKeyboardButton =
+    suspend fun Container.callbackButton(text: String, next: String, content: Any): InlineKeyboardButton =
         callbackButton(chatId, from.id, text, next, content)
 
     /**

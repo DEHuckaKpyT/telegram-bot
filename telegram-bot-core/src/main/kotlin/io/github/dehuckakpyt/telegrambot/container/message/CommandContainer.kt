@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.argument.message
+package io.github.dehuckakpyt.telegrambot.container.message
 
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 
@@ -9,8 +9,8 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-class CommandArgument(chatId: Long, message: Message) :
-    TextMessageArgument(chatId, message, content = null) {
+class CommandContainer(chatId: Long, message: Message) :
+    TextMessageContainer(chatId, message, content = null) {
 
     val commandPathParam: String? get() = commandPathParamRegex.find(text)?.groupValues?.get(1)
     val commandArgument: String? get() = commandArgumentRegex.find(text)?.groupValues?.get(1)

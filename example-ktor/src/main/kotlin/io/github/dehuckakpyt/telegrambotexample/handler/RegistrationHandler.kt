@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import io.github.dehuckakpyt.telegrambot.argument.message.MessageType.CONTACT
-import io.github.dehuckakpyt.telegrambot.argument.message.MessageType.TEXT
+import io.github.dehuckakpyt.telegrambot.container.message.MessageType.CONTACT
+import io.github.dehuckakpyt.telegrambot.container.message.MessageType.TEXT
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.factory.contactKeyboard
 import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard

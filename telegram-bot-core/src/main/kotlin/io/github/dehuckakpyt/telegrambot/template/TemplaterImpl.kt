@@ -30,6 +30,7 @@ class TemplaterImpl(
 ) : Templater {
     private val cleanHtmlMethod = CleanHtmlMethod(htmlFormatter)
     private val escapeHtmlMethod = EscapeHtmlMethod(htmlFormatter)
+
     private val mapper = jacksonMapperBuilder().run {
         configure(MapperFeature.USE_ANNOTATIONS, false)
         configure(SerializationFeature.INDENT_OUTPUT, true)

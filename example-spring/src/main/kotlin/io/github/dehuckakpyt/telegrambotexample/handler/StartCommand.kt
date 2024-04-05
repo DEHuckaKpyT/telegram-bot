@@ -6,6 +6,6 @@ import io.github.dehuckakpyt.telegrambotexample.template.start
 fun BotHandling.startCommand() {
     command("/start") {
         sendMessage(start)
-        sendMessage("Привет, меня зовут ${bot.username} :-)")
+        sendMessage("Hello! My name is ${bot.username} :-)")
     }
 }

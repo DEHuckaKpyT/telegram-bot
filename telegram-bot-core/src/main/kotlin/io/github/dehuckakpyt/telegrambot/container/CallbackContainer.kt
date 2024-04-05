@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.argument
+package io.github.dehuckakpyt.telegrambot.container
 
 import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.type.MaybeInaccessibleMessage
@@ -11,11 +11,11 @@ import io.github.dehuckakpyt.telegrambot.model.type.User
  *
  * @author Denis Matytsin
  */
-class CallbackArgument(
+class CallbackContainer(
     chatId: Long,
     public val query: CallbackQuery,
     content: String?,
-) : Argument(chatId, content) {
+) : Container(chatId, content) {
 
     override val from: User get() = query.from
     val message: MaybeInaccessibleMessage? get() = query.message

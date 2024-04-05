@@ -1,10 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
-import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.factory.MessageArgumentFactory
+import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
+import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
+import io.github.dehuckakpyt.telegrambot.container.message.factory.MessageContainerFactory
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
-import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
@@ -28,7 +27,7 @@ internal class DialogUpdateResolver(
     private val chainResolver: ChainResolver,
     private val exceptionHandler: ExceptionHandler,
     private val chainExceptionHandler: ChainExceptionHandler,
-    private val messageArgumentFactories: List<MessageArgumentFactory>,
+    private val messageArgumentFactories: List<MessageContainerFactory>,
     private val messageSource: MessageSource,
     private val username: String,
 ) {
@@ -55,12 +54,12 @@ internal class DialogUpdateResolver(
     private suspend fun processCommandMessage(command: String, message: Message): Unit = with(message) {
         messageSource.save(chatId, from!!.id, messageId, type = "COMMAND", text = text)
 
-        chainResolver.getCommand(command).invoke(CommandArgument(chatId, message))
+        chainResolver.getCommand(command).invoke(CommandContainer(chatId, message))
     }
 
     private suspend fun processGeneralMessage(message: Message): Unit = with(message) {
         val chain = chainSource.get(chatId, from!!.id)
-        val factory = message.messageArgumentFactory
+        val factory = message.messageContainerFactory
 
         messageSource.save(chatId,
             from.id,
@@ -86,16 +85,16 @@ internal class DialogUpdateResolver(
             val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
             chainResolver.getCallback(callbackName)?.invoke(
-                CallbackArgument(chatId, callback, callbackContent)
+                CallbackContainer(chatId, callback, callbackContent)
             )
         }
     }
 
     internal val allowedUpdates: Set<AllowedUpdate> get() = chainResolver.allowedUpdates
 
-    private val Message.messageArgumentFactory: MessageArgumentFactory
+    private val Message.messageContainerFactory: MessageContainerFactory
         get() = messageArgumentFactories.firstOrNull { it.matches(this) }
-            ?: throw ChatException("Такой тип сообщения ещё не поддерживается.")
+            ?: throw RuntimeException("Not found factory for received argument type.")
 
     private fun fetchCommand(input: String?): String? {
         input ?: return null

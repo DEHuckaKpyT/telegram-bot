@@ -9,6 +9,8 @@ Tests are an important part of the application. And testing a bot can be extreme
     }
 ```
 
+[Example in code](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example-spring/src/test/kotlin/io/github/dehuckakpyt/telegrambotexample/handler/RegistrationHandlerIT.kt) with database storing.
+
 Examples:
 
 <tabs id="bot-testing" group="telegram-bot-test-code">
@@ -31,7 +33,7 @@ Examples:
                     // Arrange
                     coEvery { bot.sendMessage(1_001, any(), replyMarkup = any()) } returns mockk()
                     // Act
-                    sendUpdate(resourceAsString("/json/handler/registration/command-update.json"))
+                    sendUpdateAsync(resourceAsString("/json/handler/registration/command-update.json"))
                     // Assert
                     coVerify(timeout = 3000) {
                         bot.sendMessage(1_001, "Please, share your phone number.", replyMarkup = isNull(inverse = true))
@@ -77,7 +79,7 @@ Examples:
                     // Act
                     sendUpdate(resourceAsString("/json/handler/start/update.json"))
                     // Assert
-                    coVerify(timeout = 3000) {
+                    coVerify {
                         bot.sendMessage(123, "Start command.")
                         bot.sendMessage(123, "Hello, my name is mock_bot :-)")
                     }

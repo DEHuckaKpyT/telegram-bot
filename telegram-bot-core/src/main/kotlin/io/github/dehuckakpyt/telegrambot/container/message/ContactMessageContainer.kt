@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.argument.message
+package io.github.dehuckakpyt.telegrambot.container.message
 
 import io.github.dehuckakpyt.telegrambot.model.type.Contact
 import io.github.dehuckakpyt.telegrambot.model.type.Message
@@ -10,8 +10,8 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-class ContactMessageArgument(chatId: Long, message: Message, content: String?) :
-    MessageArgument(chatId, message, content) {
+class ContactMessageContainer(chatId: Long, message: Message, content: String?) :
+    MessageContainer(chatId, message, content) {
 
     val contact: Contact get() = message.contact!!
 }

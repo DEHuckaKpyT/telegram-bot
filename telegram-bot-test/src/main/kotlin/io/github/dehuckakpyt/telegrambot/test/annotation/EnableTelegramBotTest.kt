@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.test.annotation
 
 import io.github.dehuckakpyt.telegrambot.test.TelegramBotUpdateManager
+import java.lang.annotation.Inherited
 
 
 /**
@@ -9,6 +10,10 @@ import io.github.dehuckakpyt.telegrambot.test.TelegramBotUpdateManager
  *
  * @author Denis Matytsin
  */
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@MustBeDocumented
+@Inherited
 public annotation class EnableTelegramBotTest {
     companion object {
         init {

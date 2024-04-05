@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambotexample.handler
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.test.annotation.EnableTelegramBotTest
-import io.github.dehuckakpyt.telegrambot.test.sendUpdate
+import io.github.dehuckakpyt.telegrambot.test.sendUpdateAsync
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.resource.resourceAsString
 import io.mockk.clearAllMocks
@@ -22,12 +22,12 @@ class StartCommandIT(
 
     "start command" {
         // Act
-        sendUpdate(resourceAsString("/json/handler/start/update.json"))
+        sendUpdateAsync(resourceAsString("/json/handler/start/update.json"))
 
         // Assert
         coVerify(timeout = 3000) {
-            bot.sendMessage(123, "Стартовая команда.")
-            bot.sendMessage(123, "Привет, меня зовут mock_bot :-)")
+            bot.sendMessage(123, "Start command.")
+            bot.sendMessage(123, "Hello! My name is mock_bot :-)")
         }
     }
 })

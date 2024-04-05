@@ -12,6 +12,9 @@
       "type": "private"
     },
     "date": 1707824482,
-    "text": "/register"
+    "contact": {
+      "phone_number": "+79991234567",
+      "first_name": "Den"
+    }
   }
 }

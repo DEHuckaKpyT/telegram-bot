@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.argument.message
+package io.github.dehuckakpyt.telegrambot.container.message
 
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 import io.github.dehuckakpyt.telegrambot.model.type.PhotoSize
@@ -10,11 +10,11 @@ import io.github.dehuckakpyt.telegrambot.model.type.PhotoSize
  *
  * @author Denis Matytsin
  */
-class PhotoMessageArgument(
+class PhotoMessageContainer(
     chatId: Long,
     message: Message,
     content: String?,
-) : MessageArgument(chatId, message, content) {
+) : MessageContainer(chatId, message, content) {
 
     val caption: String? get() = message.caption
     val photos: List<PhotoSize> get() = message.photo

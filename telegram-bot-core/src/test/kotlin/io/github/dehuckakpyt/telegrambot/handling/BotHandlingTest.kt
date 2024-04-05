@@ -1,10 +1,10 @@
 package io.github.dehuckakpyt.telegrambot.handling
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.AudioMessageArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.TextMessageArgument
+import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
+import io.github.dehuckakpyt.telegrambot.container.message.AudioMessageContainer
+import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
+import io.github.dehuckakpyt.telegrambot.container.message.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
@@ -29,7 +29,7 @@ class BotHandlingTest : FreeSpec({
         // Arrange
         val command = "/command_name"
         val next = "next_step_name"
-        val action = mockk<suspend CommandArgument.() -> Unit>()
+        val action = mockk<suspend CommandContainer.() -> Unit>()
 
         every { chainResolver.addCommand(command, next, action) } just runs
 
@@ -45,23 +45,23 @@ class BotHandlingTest : FreeSpec({
             // Arrange
             val step = "step_name"
             val next = "next_step_name"
-            val action = mockk<suspend TextMessageArgument.() -> Unit>()
+            val action = mockk<suspend TextMessageContainer.() -> Unit>()
 
-            every { chainResolver.addStep(step, TextMessageArgument::class, next, action) } just runs
+            every { chainResolver.addStep(step, TextMessageContainer::class, next, action) } just runs
 
             // Act
             handling.step(step, next, action)
 
             // Assert
-            verify { chainResolver.addStep(step, TextMessageArgument::class, next, action) }
+            verify { chainResolver.addStep(step, TextMessageContainer::class, next, action) }
         }
 
         "with other type" {
             // Arrange
             val step = "step_name"
-            val type = AudioMessageArgument::class
+            val type = AudioMessageContainer::class
             val next = "next_step_name"
-            val action = mockk<suspend AudioMessageArgument.() -> Unit>()
+            val action = mockk<suspend AudioMessageContainer.() -> Unit>()
 
             every { chainResolver.addStep(step, type, next, action) } just runs
 
@@ -77,7 +77,7 @@ class BotHandlingTest : FreeSpec({
         // Arrange
         val callback = "callback_name"
         val next = "next_step_name"
-        val action = mockk<suspend CallbackArgument.() -> Unit>()
+        val action = mockk<suspend CallbackContainer.() -> Unit>()
 
         every { chainResolver.addCallback(callback, next, action) } just runs
 

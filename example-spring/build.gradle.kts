@@ -17,6 +17,7 @@ dependencies {
     //region other
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("org.postgresql:postgresql:42.7.1")
+    implementation("org.hibernate:hibernate-core:6.4.1.Final")
     //endregion other
 
     //region test
@@ -27,6 +28,7 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("org.testcontainers:postgresql:1.19.3")
     //endregion test
 }
 

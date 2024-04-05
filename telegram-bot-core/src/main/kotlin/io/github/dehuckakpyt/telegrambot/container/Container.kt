@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.argument
+package io.github.dehuckakpyt.telegrambot.container
 
 import io.github.dehuckakpyt.telegrambot.model.type.User
 
@@ -9,9 +9,9 @@ import io.github.dehuckakpyt.telegrambot.model.type.User
  *
  * @author Denis Matytsin
  */
-abstract class Argument(
+abstract class Container(
     val chatId: Long,
-    internal val content: String?
+    internal val content: String?,
 ) {
     abstract val from: User
 

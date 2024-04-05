@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.argument.message
+package io.github.dehuckakpyt.telegrambot.container.message
 
 import io.github.dehuckakpyt.telegrambot.model.type.Document
 import io.github.dehuckakpyt.telegrambot.model.type.Message
@@ -10,8 +10,8 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-class DocumentMessageArgument(chatId: Long, message: Message, content: String?) :
-    MessageArgument(chatId, message, content) {
+class DocumentMessageContainer(chatId: Long, message: Message, content: String?) :
+    MessageContainer(chatId, message, content) {
 
     val caption: String? get() = message.caption
     val document: Document get() = message.document!!

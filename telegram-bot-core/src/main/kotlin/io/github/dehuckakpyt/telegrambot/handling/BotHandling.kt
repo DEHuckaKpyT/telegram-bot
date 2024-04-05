@@ -2,12 +2,12 @@ package io.github.dehuckakpyt.telegrambot.handling
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.api.TelegramApiHandling
-import io.github.dehuckakpyt.telegrambot.argument.Argument
-import io.github.dehuckakpyt.telegrambot.argument.CallbackArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.CommandArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.MessageArgument
-import io.github.dehuckakpyt.telegrambot.argument.message.MessageType.TEXT
-import io.github.dehuckakpyt.telegrambot.argument.message.TextMessageArgument
+import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
+import io.github.dehuckakpyt.telegrambot.container.Container
+import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
+import io.github.dehuckakpyt.telegrambot.container.message.MessageContainer
+import io.github.dehuckakpyt.telegrambot.container.message.MessageType.TEXT
+import io.github.dehuckakpyt.telegrambot.container.message.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
@@ -41,7 +41,7 @@ class BotHandling internal constructor(
      * @param next name of the next step (for example, 'get_name', 'get_phone')
      * @param action lambda, which will be invoked
      */
-    fun command(command: String, next: String? = null, action: suspend CommandArgument.() -> Unit) {
+    fun command(command: String, next: String? = null, action: suspend CommandContainer.() -> Unit) {
         chainResolver.addCommand(command, next, action)
     }
 
@@ -55,7 +55,7 @@ class BotHandling internal constructor(
      * @param next name of the next step (for example, 'get_name', 'get_phone')
      * @param action lambda, which will be invoked
      */
-    fun step(step: String, next: String? = null, action: suspend TextMessageArgument.() -> Unit) {
+    fun step(step: String, next: String? = null, action: suspend TextMessageContainer.() -> Unit) {
         chainResolver.addStep(step, TEXT, next, action)
     }
 
@@ -67,9 +67,9 @@ class BotHandling internal constructor(
      * @param next name of the next step (for example, 'get_name', 'get_phone')
      * @param action lambda, which will be invoked
      *
-     * @see io.github.dehuckakpyt.telegrambot.argument.message.MessageType
+     * @see io.github.dehuckakpyt.telegrambot.container.message.MessageType
      */
-    fun <T : MessageArgument> step(
+    fun <T : MessageContainer> step(
         step: String,
         type: KClass<out T>,
         next: String? = null,
@@ -87,7 +87,7 @@ class BotHandling internal constructor(
      *
      * @see io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
      */
-    fun callback(callback: String, next: String? = null, action: suspend CallbackArgument.() -> Unit) {
+    fun callback(callback: String, next: String? = null, action: suspend CallbackContainer.() -> Unit) {
         chainResolver.addCallback(callback, next, action)
     }
 
@@ -96,7 +96,7 @@ class BotHandling internal constructor(
      *
      * @param step name of the next step
      */
-    fun Argument.next(step: String?) {
+    fun Container.next(step: String?) {
         nextStep = step
     }
 
@@ -108,7 +108,7 @@ class BotHandling internal constructor(
      * @param step name of the next step
      * @param instance object for transfer
      */
-    fun Argument.next(step: String, instance: Any) {
+    fun Container.next(step: String, instance: Any) {
         nextStep = step
         nextStepInstance = instance
     }
@@ -118,7 +118,7 @@ class BotHandling internal constructor(
      *
      * @param instance any object
      */
-    fun Argument.transfer(instance: Any) {
+    fun Container.transfer(instance: Any) {
         nextStepInstance = instance
     }
 
@@ -127,9 +127,9 @@ class BotHandling internal constructor(
      *
      * @return object of selected class
      */
-    inline fun <reified T> Argument.transferred(): T {
+    inline fun <reified T> Container.transferred(): T {
         return transferredOrNull()
-            ?: throw RuntimeException("Ожидается экземпляр класса ${T::class.simpleName}, но в chainSource.content ничего не сохранено.")
+            ?: throw RuntimeException("An instance of class ${T::class.simpleName} is expected, but nothing is stored in chainSource.content.")
     }
 
     /**
@@ -137,7 +137,7 @@ class BotHandling internal constructor(
      *
      * @return if exists then object of selected class else null
      */
-    inline fun <reified T : Any> Argument.transferredOrNull(): T? = transferredOrNull(T::class)
+    inline fun <reified T : Any> Container.transferredOrNull(): T? = transferredOrNull(T::class)
 
     /**
      * Get saved object in the previous step.
@@ -146,5 +146,5 @@ class BotHandling internal constructor(
      *
      * @return if exists then object of selected class else null
      */
-    fun <T : Any> Argument.transferredOrNull(clazz: KClass<T>): T? = contentConverter.fromContentOrNull(content, clazz)
+    fun <T : Any> Container.transferredOrNull(clazz: KClass<T>): T? = contentConverter.fromContentOrNull(content, clazz)
 }

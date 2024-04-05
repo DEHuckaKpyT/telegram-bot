@@ -24,6 +24,7 @@ import kotlinx.coroutines.channels.Channel
  */
 internal object TelegramBotUpdateManager {
     internal val updatesChannel = Channel<List<Update>>()
+    internal lateinit var updateResolver: UpdateResolver
     internal val objectMapper = TelegramBotImpl::class.java.getDeclaredField("MAPPER").apply { isAccessible = true }.get(null) as JsonMapper
 
     init {
@@ -33,7 +34,10 @@ internal object TelegramBotUpdateManager {
         every { anyConstructed(telegramBotActualConfigClass) getProperty "telegramBot" } returns mockTelegramBot
 
         mockkConstructor(UpdateReceiverConfig::class)
-        val mockUpdateReceiver: ((TelegramBot, UpdateResolver) -> UpdateReceiver) = { _, resolver -> MockUpdateReceiver(resolver) }
+        val mockUpdateReceiver: ((TelegramBot, UpdateResolver) -> UpdateReceiver) = { _, resolver ->
+            updateResolver = resolver
+            MockUpdateReceiver(resolver)
+        }
         every { anyConstructed<UpdateReceiverConfig>() getProperty "updateReceiver" } returns mockUpdateReceiver
     }
 }

@@ -1,6 +1,5 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
-import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContentImpl
 import java.util.*
@@ -26,6 +25,6 @@ class InMemoryCallbackContentSource : CallbackContentSource {
     }
 
     override suspend fun get(callbackId: UUID): CallbackContent {
-        return contentById[callbackId] ?: throw ChatException("Содержание для callback'а не найдено :(")
+        return contentById[callbackId] ?: throw RuntimeException("No content was found for the callback :( Нou might have forgotten that restarting the program erases all callbacks. Recommended to use the implementation with the database.")
     }
 }
