@@ -31,9 +31,6 @@ data class UpdateReceiverConfig(
     /** Source for saving chain state */
     var chainSource: (TelegramBotActualConfig.() -> ChainSource)? = null,
 
-    /** Delimiter for separate data in callback.data */
-    var callbackDataDelimiter: Char = '|',
-
     /** Converter from object to string and back */
     var contentConverter: (TelegramBotActualConfig.() -> ContentConverter)? = null,
 

@@ -9,6 +9,7 @@ import io.github.dehuckakpyt.telegrambot.container.message.MessageContainer
 import io.github.dehuckakpyt.telegrambot.container.message.MessageType.TEXT
 import io.github.dehuckakpyt.telegrambot.container.message.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
+import io.github.dehuckakpyt.telegrambot.converter.fromContentOrNull
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.template.Templater

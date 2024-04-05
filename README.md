@@ -20,9 +20,9 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 - Working on **coroutines**.
 - Has **clean** version or with **Spring** or **Ktor+Koin** frameworks.
 - Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
+- Easy to **write tests** for your bot.
 
 ## ⚠️ Caveat at this moment (will be resolved) ⚠️
-- In dialogs you can receive only command, message and callback updates.
 - Now available only long polling (will be added webhook also).
 
 ## Prerequisites
@@ -43,6 +43,9 @@ dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
 }
 ```
+
+### Core version
+
 `com/example/myproject/App.kt`
 ```kotlin
 fun main(args: Array<String>): Unit {
@@ -80,3 +83,7 @@ fun BotHandling.startCommand() {
     }
 }
 ```
+
+### Spring and Ktor+Koin
+
+Get started in [documentation](https://dehuckakpyt.github.io/telegram-bot/get-started.html).

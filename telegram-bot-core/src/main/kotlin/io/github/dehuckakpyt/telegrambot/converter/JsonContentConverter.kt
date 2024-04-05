@@ -10,6 +10,20 @@ import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import java.text.SimpleDateFormat
 import kotlin.reflect.KClass
 
+/**
+ * Created on 04.10.2023.
+ *
+ * Simple implementation for serialization and deserialization for objects.
+ *
+ * It used in methods transfer() and transferred(). Also used in serializing in callbacks.
+ *
+ * @see io.github.dehuckakpyt.telegrambot.handling.BotHandling.transfer
+ * @see io.github.dehuckakpyt.telegrambot.handling.BotHandling.transferredOrNull
+ * @see io.github.dehuckakpyt.telegrambot.handling.BotHandling.transferred
+ * @see io.github.dehuckakpyt.telegrambot.handling.BotHandling.transferredOrNull
+ *
+ * @author Denis Matytsin
+ */
 class JsonContentConverter : ContentConverter {
 
     private val shortMapper = jacksonMapperBuilder().run {
@@ -33,20 +47,23 @@ class JsonContentConverter : ContentConverter {
         )
     }
 
+    /**
+     * Serialize object to string for store in source.
+     *
+     * @param instance object to store
+     *
+     * @return json of object
+     */
     override fun toContent(instance: Any): String = shortMapper.writeValueAsString(instance)
 
+    /**
+     * Deserialize object from string.
+     *
+     * @param content json of object
+     * @param clazz class of object
+     *
+     * @return deserialized object
+     */
     override fun <T : Any> fromContent(content: String, clazz: KClass<T>): T =
         shortMapper.readValue(content, clazz.java)
-
-    override fun toContentOrNull(instance: Any?): String? {
-        instance ?: return null
-
-        return shortMapper.writeValueAsString(instance)
-    }
-
-    override fun <T : Any> fromContentOrNull(content: String?, clazz: KClass<T>): T? {
-        content ?: return null
-
-        return shortMapper.readValue(content, clazz.java)
-    }
 }

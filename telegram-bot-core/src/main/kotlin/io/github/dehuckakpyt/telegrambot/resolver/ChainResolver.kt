@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
 import io.github.dehuckakpyt.telegrambot.container.message.MessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
+import io.github.dehuckakpyt.telegrambot.converter.toContentOrNull
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource

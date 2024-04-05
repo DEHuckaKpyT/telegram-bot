@@ -19,7 +19,8 @@ import java.util.*
 class SimpleCallbackSerializer(
     private val callbackContentSource: CallbackContentSource,
     private val dataConverter: ContentConverter,
-    private val delimiter: Char,
+    /** Delimiter for separate data in callback.data */
+    private val delimiter: Char = '|',
 ) : CallbackSerializer {
 
     /**

@@ -104,7 +104,7 @@ object TelegramBotFactory {
         actualReceiving.contentConverter = contentConverter?.invoke(actual) ?: JsonContentConverter()
         actualReceiving.callbackContentSource = callbackContentSource?.invoke(actual) ?: InMemoryCallbackContentSource()
         actualReceiving.chainSource = chainSource?.invoke(actual) ?: InMemoryChainSource()
-        actualReceiving.callbackSerializer = callbackSerializer?.invoke(actual) ?: SimpleCallbackSerializer(actualReceiving.callbackContentSource, actualReceiving.contentConverter, callbackDataDelimiter)
+        actualReceiving.callbackSerializer = callbackSerializer?.invoke(actual) ?: SimpleCallbackSerializer(actualReceiving.callbackContentSource, actualReceiving.contentConverter)
         val buttonFactory = ButtonFactoryImpl(actualReceiving.callbackSerializer)
         actualReceiving.exceptionHandler = exceptionHandler?.invoke(actual) ?: ExceptionHandlerImpl(actual.telegramBot, actualReceiving.messageTemplate, actual.templating.templater)
         actualReceiving.chainExceptionHandler = chainExceptionHandler?.invoke(actual) ?: ChainExceptionHandlerImpl(actualReceiving.messageTemplate, actual.templating.templater)

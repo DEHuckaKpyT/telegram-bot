@@ -16,9 +16,9 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 - Working on **coroutines**.
 - Has **clean** version or with **Spring** or **Ktor+Koin** frameworks.
 - Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
+- Easy to **write tests** for your bot.
 
 ## ⚠️ Caveat (will be resolved) ⚠️
-- In dialogs you can receive only command, message and callback updates.
 - Now available only long polling (will be added webhook also).
 
 ## Prerequisites
