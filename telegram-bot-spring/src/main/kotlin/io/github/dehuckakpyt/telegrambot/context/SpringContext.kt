@@ -11,6 +11,7 @@ import kotlin.reflect.KProperty
  *
  * @author Denis Matytsin
  */
+//TODO remove this bad code
 object SpringContext {
     lateinit var context: ApplicationContext
 

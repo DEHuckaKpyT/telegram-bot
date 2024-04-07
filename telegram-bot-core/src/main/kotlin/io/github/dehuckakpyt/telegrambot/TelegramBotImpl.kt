@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat
  *
  * @author Denis Matytsin
  */
+//TODO move code with HttpClient to other file
 class TelegramBotImpl(
     private val token: String,
     override val username: String,
@@ -201,6 +202,7 @@ class TelegramBotImpl(
         text: String,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         linkPreviewOptions: LinkPreviewOptions?,
         disableNotification: Boolean?,
@@ -214,6 +216,7 @@ class TelegramBotImpl(
             parseMode = parseMode,
             entities = entities,
             messageThreadId = messageThreadId,
+            businessConnectionId = businessConnectionId,
             linkPreviewOptions = linkPreviewOptions,
             disableNotification = disableNotification,
             protectContent = protectContent,
@@ -312,6 +315,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -324,6 +328,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
@@ -338,6 +343,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -350,6 +356,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
@@ -364,6 +371,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         performer: String?,
@@ -379,6 +387,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("performer", performer)
@@ -396,6 +405,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         performer: String?,
@@ -411,6 +421,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("performer", performer)
@@ -429,6 +440,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableContentTypeDetection: Boolean?,
         disableNotification: Boolean?,
@@ -442,6 +454,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("disable_content_type_detection", disableContentTypeDetection)
         appendIfNotNull("disable_notification", disableNotification)
@@ -457,6 +470,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableContentTypeDetection: Boolean?,
         disableNotification: Boolean?,
@@ -470,6 +484,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("disable_content_type_detection", disableContentTypeDetection)
         appendIfNotNull("disable_notification", disableNotification)
@@ -488,6 +503,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         supportsStreaming: Boolean?,
@@ -505,6 +521,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("supports_streaming", supportsStreaming)
@@ -524,6 +541,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         supportsStreaming: Boolean?,
@@ -541,6 +559,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("supports_streaming", supportsStreaming)
@@ -560,6 +579,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -576,6 +596,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
@@ -594,6 +615,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -610,6 +632,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("has_spoiler", hasSpoiler)
         appendIfNotNull("disable_notification", disableNotification)
@@ -624,6 +647,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         disableNotification: Boolean?,
@@ -636,6 +660,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("disable_notification", disableNotification)
@@ -650,6 +675,7 @@ class TelegramBotImpl(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         disableNotification: Boolean?,
@@ -662,6 +688,7 @@ class TelegramBotImpl(
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode?.toString())
         appendIfNotNull("caption_entities", captionEntities?.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("disable_notification", disableNotification)
@@ -673,6 +700,7 @@ class TelegramBotImpl(
     override suspend fun sendVideoNote(
         chatId: String,
         videoNote: Content,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
@@ -684,6 +712,7 @@ class TelegramBotImpl(
     ): Message = postMultiPart<Message>("sendVideoNote") {
         append("chat_id", chatId)
         appendContent("video_note", videoNote)
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("length", length)
@@ -697,6 +726,7 @@ class TelegramBotImpl(
     override suspend fun sendVideoNote(
         chatId: String,
         videoNote: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
@@ -708,6 +738,7 @@ class TelegramBotImpl(
     ): Message = postMultiPart<Message>("sendVideoNote") {
         append("chat_id", chatId)
         append("video_note", videoNote)
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("length", length)
@@ -721,6 +752,7 @@ class TelegramBotImpl(
     override suspend fun sendMediaGroup(
         chatId: String,
         media: Iterable<InputMedia>,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
@@ -728,6 +760,7 @@ class TelegramBotImpl(
     ): ArrayList<Message> = postMultiPart("sendMediaGroup") {
         append("chat_id", chatId)
         append("media", media.toJson())
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", replyParameters?.toJson())
@@ -742,6 +775,7 @@ class TelegramBotImpl(
         chatId: String,
         latitude: Float,
         longitude: Float,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         horizontalAccuracy: Float?,
         livePeriod: Long?,
@@ -757,6 +791,7 @@ class TelegramBotImpl(
             chatId = chatId,
             latitude = latitude,
             longitude = longitude,
+            businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             horizontalAccuracy = horizontalAccuracy,
             livePeriod = livePeriod,
@@ -775,6 +810,7 @@ class TelegramBotImpl(
         longitude: Float,
         title: String,
         address: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         foursquareId: String?,
         foursquareType: String?,
@@ -792,6 +828,7 @@ class TelegramBotImpl(
             longitude = longitude,
             title = title,
             address = address,
+            businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             foursquareId = foursquareId,
             foursquareType = foursquareType,
@@ -808,6 +845,7 @@ class TelegramBotImpl(
         chatId: String,
         phoneNumber: String,
         firstName: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         lastName: String?,
         vcard: String?,
@@ -821,6 +859,7 @@ class TelegramBotImpl(
             chatId = chatId,
             phone = phoneNumber,
             firstName = firstName,
+            businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             lastName = lastName,
             vcard = vcard,
@@ -835,6 +874,7 @@ class TelegramBotImpl(
         chatId: String,
         question: String,
         options: List<String>,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         isAnonymous: Boolean?,
         type: String?,
@@ -856,6 +896,7 @@ class TelegramBotImpl(
             chatId = chatId,
             question = question,
             options = options,
+            businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             isAnonymous = isAnonymous,
             type = type,
@@ -876,6 +917,7 @@ class TelegramBotImpl(
 
     override suspend fun sendDice(
         chatId: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
@@ -886,6 +928,7 @@ class TelegramBotImpl(
         "sendDice",
         SendDice(
             chatId = chatId,
+            businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             emoji = emoji,
             disableNotification = disableNotification,
@@ -895,8 +938,19 @@ class TelegramBotImpl(
         )
     ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DICE", text = emoji) }
 
-    override suspend fun sendChatAction(chatId: String, action: Action, messageThreadId: Long?): Boolean = postJson(
-        "sendChatAction", SendChatAction(chatId, action, messageThreadId)
+    override suspend fun sendChatAction(
+        chatId: String,
+        action: Action,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+    ): Boolean = postJson(
+        "sendChatAction",
+        SendChatAction(
+            chatId = chatId,
+            action = action,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId
+        )
     )
 
     override suspend fun setMessageReaction(
@@ -1170,6 +1224,10 @@ class TelegramBotImpl(
         parameter("user_id", userId)
     }
 
+    override suspend fun getBusinessConnection(businessConnectionId: String): BusinessConnection = get("getBusinessConnection") {
+        parameter("business_connection_id", businessConnectionId)
+    }
+
     override suspend fun setMyCommands(
         commands: List<BotCommand>, scope: BotCommandScope?, languageCode: String?,
     ): Boolean = postJson("setMyCommands", SetMyCommands(commands, scope, languageCode))
@@ -1347,6 +1405,7 @@ class TelegramBotImpl(
     override suspend fun sendSticker(
         chatId: String,
         sticker: Content,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
@@ -1356,6 +1415,7 @@ class TelegramBotImpl(
     ): Message = postMultiPart<Message>("sendSticker") {
         append("chat_id", chatId)
         appendContent("sticker", sticker)
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
         appendIfNotNull("emoji", emoji)
         appendIfNotNull("disable_notification", disableNotification)
@@ -1383,7 +1443,6 @@ class TelegramBotImpl(
         name: String,
         title: String,
         stickers: Iterable<InputSticker>,
-        stickerFormat: String,
         stickerType: String?,
         needsRepainting: Boolean?,
     ): Boolean = postMultiPart("createNewStickerSet") {
@@ -1391,7 +1450,6 @@ class TelegramBotImpl(
         append("name", name)
         append("title", title)
         append("stickers", stickers.toJson())
-        append("sticker_format", stickerFormat)
         appendIfNotNull("sticker_type", stickerType)
         appendIfNotNull("needs_repainting", needsRepainting)
 
@@ -1420,6 +1478,20 @@ class TelegramBotImpl(
         "deleteStickerFromSet", DeleteStickerFromSet(sticker)
     )
 
+    override suspend fun replaceStickerInSet(
+        userId: Long,
+        name: String,
+        oldSticker: String,
+        sticker: InputSticker,
+    ): Boolean = postMultiPart("replaceStickerInSet") {
+        append("user_id", userId)
+        append("name", name)
+        append("old_sticker", oldSticker)
+        append("sticker", sticker.toJson())
+
+        appendContentIfNotNull(sticker.stickerContent)
+    }
+
     override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean = postJson(
         "setStickerEmojiList", SetStickerEmojiList(sticker, emojiList)
     )
@@ -1439,10 +1511,12 @@ class TelegramBotImpl(
     override suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
+        format: String,
         thumbnail: Content?,
     ): Boolean = postMultiPart("setStickerSetThumbnail") {
         append("name", name)
         append("user_id", userId)
+        append("format", format)
 
         appendContentIfNotNull("thumbnail", thumbnail)
     }
@@ -1596,6 +1670,7 @@ class TelegramBotImpl(
     override suspend fun sendGame(
         chatId: Long,
         gameShortName: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
@@ -1606,6 +1681,7 @@ class TelegramBotImpl(
         SendGame(
             chatId = chatId,
             gameShortName = gameShortName,
+            businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             disableNotification = disableNotification,
             protectContent = protectContent,

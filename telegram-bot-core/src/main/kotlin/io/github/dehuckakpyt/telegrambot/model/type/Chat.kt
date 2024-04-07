@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 
 /**
  * Created on 03.12.2023.
- *<p>
  *
  * @author Elbek Djuraev
  * @author Denis Matytsin
@@ -23,6 +22,11 @@ public data class Chat(
     @param:JsonProperty("is_forum") val isForum: Boolean? = null,
     @param:JsonProperty("photo") val photo: ChatPhoto? = null,
     @param:JsonProperty("active_usernames") val activeUsernames: List<String>? = null,
+    @param:JsonProperty("birthdate") val birthdate: Birthdate? = null,
+    @param:JsonProperty("business_intro") val businessIntro: BusinessIntro? = null,
+    @param:JsonProperty("business_location") val businessLocation: BusinessLocation? = null,
+    @param:JsonProperty("business_opening_hours") val businessOpeningHours: BusinessOpeningHours? = null,
+    @param:JsonProperty("personal_chat") val personalChat: Chat? = null,
     @param:JsonProperty("available_reactions") val availableReactions: List<ReactionType>? = null,
     @param:JsonProperty("accent_color_id") val accentColorId: Int? = null,
     @param:JsonProperty("background_custom_emoji_id") val backgroundCustomEmojiId: String? = null,
@@ -40,6 +44,7 @@ public data class Chat(
     @param:JsonProperty("pinned_message") val pinnedMessage: Message? = null,
     @param:JsonProperty("permissions") val permissions: ChatPermissions? = null,
     @param:JsonProperty("slow_mode_delay") val slowModeDelay: Boolean? = null,
+    @param:JsonProperty("unrestrict_boost_count") val unrestrictBoostCount: Int? = null,
     @param:JsonProperty("message_auto_delete_time") val messageAutoDeleteTime: Int? = null,
     @param:JsonProperty("has_aggressive_anti_spam_enabled") val hasAggressiveAntiSpamEnabled: Boolean? = null,
     @param:JsonProperty("has_hidden_members") val hasHiddenMembers: Boolean? = null,
@@ -47,7 +52,8 @@ public data class Chat(
     @param:JsonProperty("has_visible_history") val hasVisibleHistory: Boolean? = null,
     @param:JsonProperty("sticker_set_name") val stickerSetName: String? = null,
     @param:JsonProperty("can_set_sticker_set") val canSetStickerSet: Boolean? = null,
-    @param:JsonProperty("linked_chat_id") val linkedString: Int? = null,
+    @param:JsonProperty("custom_emoji_sticker_set_name") val customEmojiStickerSetName: String? = null,
+    @param:JsonProperty("linked_chat_id") val linkedChatId: Long? = null,
     @param:JsonProperty("location") val location: ChatLocation? = null,
 )
 

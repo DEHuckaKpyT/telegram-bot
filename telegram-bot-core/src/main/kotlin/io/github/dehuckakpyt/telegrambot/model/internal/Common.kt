@@ -14,6 +14,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.*
 internal class SendMessage(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("text") val text: String,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("parse_mode") val parseMode: ParseMode? = null,
     @get:JsonProperty("entities") val entities: List<MessageEntity>? = null,
@@ -70,6 +71,7 @@ internal class SendLocation(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("latitude") val latitude: Float,
     @get:JsonProperty("longitude") val longitude: Float,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("horizontal_accuracy") val horizontalAccuracy: Float? = null,
     @get:JsonProperty("live_period") val livePeriod: Long? = null,
@@ -136,6 +138,7 @@ internal class SendVenue(
     @get:JsonProperty("longitude") val longitude: Float,
     @get:JsonProperty("title") val title: String,
     @get:JsonProperty("address") val address: String,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("foursquare_id") val foursquareId: String? = null,
     @get:JsonProperty("foursquare_type") val foursquareType: String? = null,
@@ -151,6 +154,7 @@ internal class SendContact(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("phone_number") val phone: String,
     @get:JsonProperty("first_name") val firstName: String,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("last_name") val lastName: String? = null,
     @get:JsonProperty("vcard") val vcard: String? = null,
@@ -163,7 +167,8 @@ internal class SendContact(
 internal class SendChatAction(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("action") val action: Action,
-    @get:JsonProperty("message_thread_id") val messageThreadId: Long?,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
+    @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
 )
 
 internal class BanChatSenderChat(
@@ -180,6 +185,7 @@ internal class SendPoll(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("question") val question: String,
     @get:JsonProperty("options") val options: List<String>,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("is_anonymous") val isAnonymous: Boolean? = null,
     @get:JsonProperty("type") val type: String? = null,
@@ -205,6 +211,7 @@ internal class SendPoll(
 
 internal class SendDice(
     @get:JsonProperty("chat_id") val chatId: String,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("emoji") val emoji: String? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,

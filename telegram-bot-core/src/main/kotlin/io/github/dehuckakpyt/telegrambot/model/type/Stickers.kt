@@ -33,8 +33,6 @@ public data class StickerSet(
     @get:JsonProperty("name") @param:JsonProperty("name") val name: String,
     @get:JsonProperty("title") @param:JsonProperty("title") val title: String,
     @get:JsonProperty("sticker_type") @param:JsonProperty("sticker_type") val stickerType: String,
-    @get:JsonProperty("is_animated") @param:JsonProperty("is_animated") val isAnimated: Boolean,
-    @get:JsonProperty("is_video") @param:JsonProperty("is_video") val isVideo: Boolean,
     @get:JsonProperty("stickers") @param:JsonProperty("stickers") val stickers: List<Sticker>,
     @get:JsonProperty("thumbnail") @param:JsonProperty("thumbnail") val thumbnail: PhotoSize? = null,
 )
@@ -48,6 +46,7 @@ public data class MaskPosition(
 
 public data class InputSticker private constructor(
     @get:JsonProperty("sticker") val sticker: String,
+    @get:JsonProperty("format") val format: String,
     @get:JsonIgnore val stickerContent: NamedContent?,
     @get:JsonProperty("emoji_list") val emojiList: Iterable<String>,
     @get:JsonProperty("mask_position") val maskPosition: MaskPosition?,
@@ -56,15 +55,17 @@ public data class InputSticker private constructor(
 
     public constructor(
         sticker: String,
+        format: String,
         emojiList: Iterable<String>,
         maskPosition: MaskPosition? = null,
         keywords: Iterable<String>? = null,
-    ) : this(sticker, null, emojiList, maskPosition, keywords)
+    ) : this(sticker, format, null, emojiList, maskPosition, keywords)
 
     public constructor(
         sticker: NamedContent,
+        format: String,
         emojiList: Iterable<String>,
         maskPosition: MaskPosition? = null,
         keywords: Iterable<String>? = null,
-    ) : this("attach://${sticker.name}", sticker, emojiList, maskPosition, keywords)
+    ) : this("attach://${sticker.name}", format, sticker, emojiList, maskPosition, keywords)
 }

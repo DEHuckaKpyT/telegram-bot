@@ -36,6 +36,9 @@ public data class KeyboardButtonRequestUsers(
     @get:JsonProperty("user_is_bot") val userIsBot: Boolean? = null,
     @get:JsonProperty("user_is_premium") val userIsPremium: Boolean? = null,
     @get:JsonProperty("max_quantity") val maxQuantity: Int? = null,
+    @get:JsonProperty("request_name") val requestName: Boolean? = null,
+    @get:JsonProperty("request_username") val requestUsername: Boolean? = null,
+    @get:JsonProperty("request_photo") val requestPhoto: Boolean? = null,
 )
 
 public data class KeyboardButtonRequestChat(
@@ -47,6 +50,9 @@ public data class KeyboardButtonRequestChat(
     @get:JsonProperty("user_administrator_rights") val userAdministratorRights: ChatAdministratorRights? = null,
     @get:JsonProperty("bot_administrator_rights") val botAdministratorRights: ChatAdministratorRights? = null,
     @get:JsonProperty("bot_is_member") val botIsMember: Boolean? = null,
+    @get:JsonProperty("request_title") val requestTitle: Boolean? = null,
+    @get:JsonProperty("request_username") val requestUsername: Boolean? = null,
+    @get:JsonProperty("request_photo") val requestPhoto: Boolean? = null,
 )
 
 public class KeyboardButtonPollType(

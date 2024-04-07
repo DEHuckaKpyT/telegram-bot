@@ -29,6 +29,7 @@ abstract class TelegramApiHandling {
         text: String,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
         disableNotification: Boolean? = null,
@@ -40,6 +41,7 @@ abstract class TelegramApiHandling {
         text = text,
         parseMode = parseMode,
         entities = entities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         linkPreviewOptions = linkPreviewOptions,
         disableNotification = disableNotification,
@@ -126,6 +128,7 @@ abstract class TelegramApiHandling {
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         messageThreadId: Long? = null,
+        businessConnectionId: String? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -137,6 +140,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
@@ -150,6 +154,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -162,6 +167,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
@@ -175,6 +181,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         duration: Long? = null,
         performer: String? = null,
@@ -190,6 +197,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         duration = duration,
         performer = performer,
@@ -206,6 +214,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         duration: Long? = null,
         performer: String? = null,
@@ -221,6 +230,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         duration = duration,
         performer = performer,
@@ -238,6 +248,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -251,6 +262,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
@@ -265,6 +277,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -278,6 +291,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
@@ -295,6 +309,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         supportsStreaming: Boolean? = null,
@@ -312,6 +327,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         supportsStreaming = supportsStreaming,
@@ -330,6 +346,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         supportsStreaming: Boolean? = null,
@@ -347,6 +364,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         supportsStreaming = supportsStreaming,
@@ -365,6 +383,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -381,6 +400,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
@@ -398,6 +418,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
@@ -414,6 +435,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
@@ -427,6 +449,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         duration: Long? = null,
         disableNotification: Boolean? = null,
@@ -439,6 +462,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         duration = duration,
         disableNotification = disableNotification,
@@ -452,6 +476,7 @@ abstract class TelegramApiHandling {
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         duration: Long? = null,
         disableNotification: Boolean? = null,
@@ -464,6 +489,7 @@ abstract class TelegramApiHandling {
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         duration = duration,
         disableNotification = disableNotification,
@@ -474,6 +500,7 @@ abstract class TelegramApiHandling {
 
     suspend fun Container.sendVideoNote(
         videoNote: Content,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
@@ -484,6 +511,7 @@ abstract class TelegramApiHandling {
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVideoNote(
         chatId = chatId,
+        businessConnectionId = businessConnectionId,
         videoNote = videoNote,
         messageThreadId = messageThreadId,
         duration = duration,
@@ -497,6 +525,7 @@ abstract class TelegramApiHandling {
 
     suspend fun Container.sendVideoNote(
         videoNote: String,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
@@ -507,6 +536,7 @@ abstract class TelegramApiHandling {
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendVideoNote(
         chatId = chatId,
+        businessConnectionId = businessConnectionId,
         videoNote = videoNote,
         messageThreadId = messageThreadId,
         duration = duration,
@@ -520,12 +550,14 @@ abstract class TelegramApiHandling {
 
     suspend fun Container.sendMediaGroup(
         media: Iterable<InputMedia>,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
     ): ArrayList<Message> = bot.sendMediaGroup(
         chatId = chatId,
+        businessConnectionId = businessConnectionId,
         media = media,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
@@ -536,6 +568,7 @@ abstract class TelegramApiHandling {
     suspend fun Container.sendLocation(
         latitude: Float,
         longitude: Float,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         horizontalAccuracy: Float? = null,
         livePeriod: Long? = null,
@@ -549,6 +582,7 @@ abstract class TelegramApiHandling {
         chatId = chatId,
         latitude = latitude,
         longitude = longitude,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         horizontalAccuracy = horizontalAccuracy,
         livePeriod = livePeriod,
@@ -565,6 +599,7 @@ abstract class TelegramApiHandling {
         longitude: Float,
         title: String,
         address: String,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         foursquareId: String? = null,
         foursquareType: String? = null,
@@ -580,6 +615,7 @@ abstract class TelegramApiHandling {
         longitude = longitude,
         title = title,
         address = address,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         foursquareId = foursquareId,
         foursquareType = foursquareType,
@@ -594,6 +630,7 @@ abstract class TelegramApiHandling {
     suspend fun Container.sendContact(
         phoneNumber: String,
         firstName: String,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         lastName: String? = null,
         vcard: String? = null,
@@ -605,6 +642,7 @@ abstract class TelegramApiHandling {
         chatId = chatId,
         phoneNumber = phoneNumber,
         firstName = firstName,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         lastName = lastName,
         vcard = vcard,
@@ -617,6 +655,7 @@ abstract class TelegramApiHandling {
     suspend fun Container.sendPoll(
         question: String,
         options: List<String>,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         isAnonymous: Boolean? = null,
         type: String? = null,
@@ -636,6 +675,7 @@ abstract class TelegramApiHandling {
         chatId = chatId,
         question = question,
         options = options,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         isAnonymous = isAnonymous,
         type = type,
@@ -654,6 +694,7 @@ abstract class TelegramApiHandling {
     )
 
     suspend fun Container.sendDice(
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         emoji: String? = null,
         disableNotification: Boolean? = null,
@@ -662,6 +703,7 @@ abstract class TelegramApiHandling {
         replyMarkup: ReplyKeyboard? = null,
     ): Message = bot.sendDice(
         chatId = chatId,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         emoji = emoji,
         disableNotification = disableNotification,
@@ -672,10 +714,12 @@ abstract class TelegramApiHandling {
 
     suspend fun Container.sendChatAction(
         action: Action,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
     ): Boolean = bot.sendChatAction(
         chatId = chatId,
         action = action,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId
     )
 
@@ -957,6 +1001,12 @@ abstract class TelegramApiHandling {
         userId = userId
     )
 
+    suspend fun Container.getBusinessConnection(
+        businessConnectionId: String,
+    ): BusinessConnection = bot.getBusinessConnection(
+        businessConnectionId = businessConnectionId
+    )
+
     suspend fun Container.setMyCommands(
         commands: List<BotCommand>,
         scope: BotCommandScope? = null,
@@ -1163,6 +1213,7 @@ abstract class TelegramApiHandling {
 
     suspend fun Container.sendGame(
         gameShortName: String,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -1171,6 +1222,7 @@ abstract class TelegramApiHandling {
     ): Message = bot.sendGame(
         chatId = chatId,
         gameShortName = gameShortName,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         disableNotification = disableNotification,
         protectContent = protectContent,
@@ -1365,6 +1417,7 @@ abstract class TelegramApiHandling {
 
     suspend fun Container.sendSticker(
         sticker: Content,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         emoji: String? = null,
         disableNotification: Boolean? = null,
@@ -1374,6 +1427,7 @@ abstract class TelegramApiHandling {
     ): Message = bot.sendSticker(
         chatId = chatId,
         sticker = sticker,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         emoji = emoji,
         disableNotification = disableNotification,
@@ -1409,7 +1463,6 @@ abstract class TelegramApiHandling {
         name: String,
         title: String,
         stickers: Iterable<InputSticker>,
-        stickerFormat: String,
         stickerType: String? = null,
         needsRepainting: Boolean? = null,
     ): Boolean = bot.createNewStickerSet(
@@ -1417,7 +1470,6 @@ abstract class TelegramApiHandling {
         name = name,
         title = title,
         stickers = stickers,
-        stickerFormat = stickerFormat,
         stickerType = stickerType,
         needsRepainting = needsRepainting
     )
@@ -1443,6 +1495,18 @@ abstract class TelegramApiHandling {
     suspend fun Container.deleteStickerFromSet(
         sticker: String,
     ): Boolean = bot.deleteStickerFromSet(
+        sticker = sticker
+    )
+
+    suspend fun Container.replaceStickerInSet(
+        userId: Long,
+        name: String,
+        oldSticker: String,
+        sticker: InputSticker,
+    ): Boolean = bot.replaceStickerInSet(
+        userId = userId,
+        name = name,
+        oldSticker = oldSticker,
         sticker = sticker
     )
 
@@ -1481,10 +1545,12 @@ abstract class TelegramApiHandling {
     suspend fun Container.setStickerSetThumbnail(
         name: String,
         userId: Long,
+        format: String,
         thumbnail: Content? = null,
     ): Boolean = bot.setStickerSetThumbnail(
         name = name,
         userId = userId,
+        format = format,
         thumbnail = thumbnail
     )
 

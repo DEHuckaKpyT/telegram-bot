@@ -10,6 +10,7 @@ import io.github.dehuckakpyt.telegrambot.handling.BotHandling
  *
  * @author Denis Matytsin
  */
+//TODO remake to spring @Autowired and @PostConstruct (or any better solution)
 abstract class BotHandler(block: BotHandling.() -> Unit) {
     init {
         autowired<BotHandling>().block()

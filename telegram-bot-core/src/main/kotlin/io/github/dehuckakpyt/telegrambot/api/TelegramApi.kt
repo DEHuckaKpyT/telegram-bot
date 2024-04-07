@@ -20,4 +20,5 @@ interface TelegramApi :
     TelegramUpdatesApi,
     TelegramChatExApi,
     TelegramReactionExApi,
-    TelegramChatBoostExApi
+    TelegramChatBoostExApi,
+    TelegramBusinessApi

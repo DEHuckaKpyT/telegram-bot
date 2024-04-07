@@ -16,6 +16,7 @@ interface TelegramGameApi {
     suspend fun sendGame(
         chatId: Long,
         gameShortName: String,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,

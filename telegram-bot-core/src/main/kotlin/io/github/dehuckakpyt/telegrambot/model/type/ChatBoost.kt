@@ -65,3 +65,7 @@ public sealed class ChatBoostSource {
 public data class UserChatBoosts(
     @param:JsonProperty("boosts") val boosts: List<ChatBoost>,
 )
+
+public data class ChatBoostAdded(
+    @param:JsonProperty("boost_count") val boostCount: Int,
+)

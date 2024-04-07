@@ -38,6 +38,7 @@ public data class User(
     @get:JsonProperty("can_join_groups") @param:JsonProperty("can_join_groups") val canJoinGroups: Boolean? = null,
     @get:JsonProperty("can_read_all_group_messages") @param:JsonProperty("can_read_all_group_messages") val canReadAllGroupMessages: Boolean? = null,
     @get:JsonProperty("supports_inline_queries") @param:JsonProperty("supports_inline_queries") val supportsInlineQueries: Boolean? = null,
+    @get:JsonProperty("can_connect_to_business") @param:JsonProperty("can_connect_to_business") val canConnectToBusiness: Boolean? = null,
 )
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "date", visible = true, defaultImpl = Message::class)
@@ -63,7 +64,10 @@ public data class Message(
     @param:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @param:JsonProperty("from") val from: User? = null,
     @param:JsonProperty("sender_chat") val senderChat: Chat? = null,
+    @param:JsonProperty("sender_boost_count") val senderBoostCount: Int? = null,
+    @param:JsonProperty("sender_business_bot") val senderBusinessBot: User? = null,
     @param:JsonProperty("date") override val date: Long,
+    @param:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @param:JsonProperty("chat") override val chat: Chat,
     @param:JsonProperty("forward_origin") val forwardOrigin: MessageOrigin? = null,
     @param:JsonProperty("is_topic_message") val isTopicMessage: Boolean? = null,
@@ -71,9 +75,11 @@ public data class Message(
     @param:JsonProperty("reply_to_message") val replyToMessage: Message? = null,
     @param:JsonProperty("external_reply") val externalReply: ExternalReplyInfo? = null,
     @param:JsonProperty("quote") val quote: TextQuote? = null,
+    @param:JsonProperty("reply_to_story") val replyToStory: Story? = null,
     @param:JsonProperty("via_bot") val viaBot: User? = null,
     @param:JsonProperty("edit_date") val editDate: Long? = null,
     @param:JsonProperty("has_protected_content") val hasProtectedContent: Boolean? = null,
+    @param:JsonProperty("is_from_offline") val isFromOffline: Boolean? = null,
     @param:JsonProperty("media_group_id") val mediaGroupId: String? = null,
     @param:JsonProperty("author_signature") val authorSignature: String? = null,
     @param:JsonProperty("text") val text: String? = null,
@@ -117,6 +123,7 @@ public data class Message(
     @param:JsonProperty("write_access_allowed") val writeAccessAllowed: WriteAccessAllowed? = null,
     @param:JsonProperty("passport_data") val passportData: PassportData? = null,
     @param:JsonProperty("proximity_alert_triggered") val proximityAlertTriggered: ProximityAlertTriggered? = null,
+    @param:JsonProperty("boost_added") val boostAdded: ChatBoostAdded? = null,
     @param:JsonProperty("forum_topic_created") val forumTopicCreated: ForumTopicCreated? = null,
     @param:JsonProperty("forum_topic_edited") val forumTopicEdited: ForumTopicEdited? = null,
     @param:JsonProperty("forum_topic_closed") val forumTopicClosed: ForumTopicClosed? = null,
@@ -245,7 +252,10 @@ public data class Document(
     @param:JsonProperty("file_size") val fileSize: Long? = null,
 )
 
-public class Story
+public class Story(
+    @param:JsonProperty("chat") val chat: Chat,
+    @param:JsonProperty("id") val id: Long,
+)
 
 public data class Video(
     @param:JsonProperty("file_id") val fileId: String,
@@ -452,12 +462,23 @@ public enum class ParseMode {
 
 public data class UsersShared(
     @param:JsonProperty("request_id") val requestId: Long,
-    @param:JsonProperty("user_ids") val userIds: List<Long>,
+    @param:JsonProperty("users") val users: List<SharedUser>,
+)
+
+public data class SharedUser(
+    @param:JsonProperty("user_id") val userId: Long,
+    @param:JsonProperty("first_name") val firstName: String? = null,
+    @param:JsonProperty("last_name") val lastName: String? = null,
+    @param:JsonProperty("username") val username: String? = null,
+    @param:JsonProperty("photo") val photo: List<PhotoSize> = emptyList(),
 )
 
 public data class ChatShared(
     @param:JsonProperty("request_id") val requestId: Long,
     @param:JsonProperty("chat_id") val chatId: Long,
+    @param:JsonProperty("title") val title: String? = null,
+    @param:JsonProperty("username") val username: String? = null,
+    @param:JsonProperty("photo") val photo: List<PhotoSize> = emptyList(),
 )
 
 public enum class Action {
@@ -599,4 +620,10 @@ public data class ReplyParameters(
     @param:JsonProperty("quote_parse_mode") val quoteParseMode: ParseMode? = null,
     @param:JsonProperty("quote_entities") val quoteEntities: List<MessageEntity>? = null,
     @param:JsonProperty("quote_position") val quotePosition: Int? = null,
+)
+
+public data class Birthdate(
+    @param:JsonProperty("day") val day: Int,
+    @param:JsonProperty("month") val month: Int,
+    @param:JsonProperty("year") val year: Int? = null,
 )

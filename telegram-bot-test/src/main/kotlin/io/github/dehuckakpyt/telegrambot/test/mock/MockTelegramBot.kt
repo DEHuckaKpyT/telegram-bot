@@ -50,6 +50,7 @@ internal class MockTelegramBot : TelegramBot {
         text: String,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         linkPreviewOptions: LinkPreviewOptions?,
         disableNotification: Boolean?,
@@ -106,6 +107,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -120,6 +122,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -134,6 +137,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         performer: String?,
@@ -151,6 +155,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         performer: String?,
@@ -169,6 +174,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableContentTypeDetection: Boolean?,
         disableNotification: Boolean?,
@@ -184,6 +190,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableContentTypeDetection: Boolean?,
         disableNotification: Boolean?,
@@ -202,6 +209,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         supportsStreaming: Boolean?,
@@ -221,6 +229,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         supportsStreaming: Boolean?,
@@ -240,6 +249,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -258,6 +268,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         hasSpoiler: Boolean?,
         disableNotification: Boolean?,
@@ -272,6 +283,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         disableNotification: Boolean?,
@@ -286,6 +298,7 @@ internal class MockTelegramBot : TelegramBot {
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         disableNotification: Boolean?,
@@ -297,6 +310,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendVideoNote(
         chatId: String,
         videoNote: Content,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
@@ -310,6 +324,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendVideoNote(
         chatId: String,
         videoNote: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
@@ -323,6 +338,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendMediaGroup(
         chatId: String,
         media: Iterable<InputMedia>,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
@@ -333,6 +349,7 @@ internal class MockTelegramBot : TelegramBot {
         chatId: String,
         latitude: Float,
         longitude: Float,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         horizontalAccuracy: Float?,
         livePeriod: Long?,
@@ -350,6 +367,7 @@ internal class MockTelegramBot : TelegramBot {
         longitude: Float,
         title: String,
         address: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         foursquareId: String?,
         foursquareType: String?,
@@ -365,6 +383,7 @@ internal class MockTelegramBot : TelegramBot {
         chatId: String,
         phoneNumber: String,
         firstName: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         lastName: String?,
         vcard: String?,
@@ -378,6 +397,7 @@ internal class MockTelegramBot : TelegramBot {
         chatId: String,
         question: String,
         options: List<String>,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         isAnonymous: Boolean?,
         type: String?,
@@ -397,6 +417,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendDice(
         chatId: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
@@ -405,7 +426,12 @@ internal class MockTelegramBot : TelegramBot {
         replyMarkup: ReplyKeyboard?,
     ): Message = mockk()
 
-    override suspend fun sendChatAction(chatId: String, action: Action, messageThreadId: Long?): Boolean = mockk()
+    override suspend fun sendChatAction(
+        chatId: String,
+        action: Action,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+    ): Boolean = mockk()
 
     override suspend fun setMessageReaction(
         chatId: String,
@@ -571,6 +597,8 @@ internal class MockTelegramBot : TelegramBot {
         userId: Long,
     ): UserChatBoosts = mockk()
 
+    override suspend fun getBusinessConnection(businessConnectionId: String): BusinessConnection = mockk()
+
     override suspend fun setMyCommands(
         commands: List<BotCommand>, scope: BotCommandScope?, languageCode: String?,
     ): Boolean = mockk()
@@ -663,6 +691,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendSticker(
         chatId: String,
         sticker: Content,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
@@ -682,7 +711,6 @@ internal class MockTelegramBot : TelegramBot {
         name: String,
         title: String,
         stickers: Iterable<InputSticker>,
-        stickerFormat: String,
         stickerType: String?,
         needsRepainting: Boolean?,
     ): Boolean = mockk()
@@ -696,6 +724,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun setStickerPositionInSet(sticker: String, position: Int): Boolean = mockk()
 
     override suspend fun deleteStickerFromSet(sticker: String): Boolean = mockk()
+    override suspend fun replaceStickerInSet(userId: Long, name: String, oldSticker: String, sticker: InputSticker): Boolean = mockk()
 
     override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean = mockk()
 
@@ -708,6 +737,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
+        format: String,
         thumbnail: Content?,
     ): Boolean = mockk()
 
@@ -797,6 +827,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendGame(
         chatId: Long,
         gameShortName: String,
+        businessConnectionId: String?,
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,

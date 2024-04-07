@@ -15,6 +15,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.ReplyParameters
 internal class SendGame(
     @get:JsonProperty("chat_id") val chatId: Long,
     @get:JsonProperty("game_short_name") val gameShortName: String,
+    @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("disable_notification") val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content") val protectContent: Boolean? = null,

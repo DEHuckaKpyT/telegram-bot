@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
 
 /**
@@ -15,6 +14,7 @@ interface TelegramStickerApi {
     suspend fun sendSticker(
         chatId: String,
         sticker: Content,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         emoji: String?,
         disableNotification: Boolean? = null,
@@ -38,7 +38,6 @@ interface TelegramStickerApi {
         name: String,
         title: String,
         stickers: Iterable<InputSticker>,
-        stickerFormat: String,
         stickerType: String? = null,
         needsRepainting: Boolean? = null,
     ): Boolean
@@ -55,6 +54,12 @@ interface TelegramStickerApi {
     ): Boolean
 
     suspend fun deleteStickerFromSet(sticker: String): Boolean
+    suspend fun replaceStickerInSet(
+        userId: Long,
+        name: String,
+        oldSticker: String,
+        sticker: InputSticker,
+    ): Boolean
 
     suspend fun setStickerEmojiList(
         sticker: String,
@@ -79,6 +84,7 @@ interface TelegramStickerApi {
     suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
+        format: String,
         thumbnail: Content? = null,
     ): Boolean
 

@@ -18,6 +18,7 @@ interface TelegramStickerExApi : TelegramStickerApi {
     suspend fun sendSticker(
         chatId: Long,
         sticker: Content,
+        businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         emoji: String?,
         disableNotification: Boolean? = null,
@@ -27,6 +28,7 @@ interface TelegramStickerExApi : TelegramStickerApi {
     ): Message = sendSticker(
         chatId = chatId.toString(),
         sticker = sticker,
+        businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         emoji = emoji,
         disableNotification = disableNotification,
