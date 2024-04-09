@@ -217,9 +217,9 @@ public data class ChatAdministratorRights(
     @get:JsonProperty("can_post_messages") @param:JsonProperty("can_post_messages") val canPostMessages: Boolean? = null,
     @get:JsonProperty("can_edit_messages") @param:JsonProperty("can_edit_messages") val canEditMessages: Boolean? = null,
     @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_pin_messages") val canPinMessages: Boolean? = null,
-    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_post_stories") val canPostStories: Boolean? = null,
-    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_edit_stories") val canEditStories: Boolean? = null,
-    @get:JsonProperty("can_pin_messages") @param:JsonProperty("can_delete_stories") val canDeleteStories: Boolean? = null,
+    @get:JsonProperty("can_post_stories") @param:JsonProperty("can_post_stories") val canPostStories: Boolean? = null,
+    @get:JsonProperty("can_edit_stories") @param:JsonProperty("can_edit_stories") val canEditStories: Boolean? = null,
+    @get:JsonProperty("can_delete_stories") @param:JsonProperty("can_delete_stories") val canDeleteStories: Boolean? = null,
     @get:JsonProperty("can_manage_topics") @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
 )
 
