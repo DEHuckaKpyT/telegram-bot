@@ -302,7 +302,7 @@ public data class Contact(
     @param:JsonProperty("phone_number") val phoneNumber: String,
     @param:JsonProperty("first_name") val firstName: String,
     @param:JsonProperty("last_name") val lastName: String? = null,
-    @param:JsonProperty("user_id") val userId: Int? = null,
+    @param:JsonProperty("user_id") val userId: Long? = null,
     @param:JsonProperty("vcard") val vcard: String? = null,
 )
 
