@@ -29,5 +29,5 @@
         <toc-element topic="spring-jpa.md"/>
         <toc-element topic="exposed.md"/>
     </toc-element>
-    <toc-element topic="additional.md"/>
+    <toc-element topic="todo.md"/>
 </instance-profile>
