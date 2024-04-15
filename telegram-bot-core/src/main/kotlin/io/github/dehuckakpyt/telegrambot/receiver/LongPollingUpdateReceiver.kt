@@ -4,10 +4,8 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import org.slf4j.LoggerFactory
 
 
 /**
@@ -23,13 +21,28 @@ internal class LongPollingUpdateReceiver(
 ) : UpdateReceiver {
 
     private val scope = CoroutineScope(Dispatchers.Default)
+    private val logger = LoggerFactory.getLogger(javaClass)
+    private val delayBetweenTries = 5000L
     private var lastUpdateId: Int? = null
 
     override fun start(): Unit {
-        scope.launch { receiveUpdates() }
+        scope.launch { retryingReceiveUpdates() }
+    }
+
+    private suspend fun retryingReceiveUpdates() {
+        while (true) {
+            try {
+                receiveUpdates()
+            } catch (throwable: Throwable) {
+                logger.error("Internal error. Receiving updates will be resumed after $delayBetweenTries milliseconds.", throwable)
+                delay(delayBetweenTries)
+            }
+        }
     }
 
     private suspend fun receiveUpdates() {
+        logger.info("Started update receiver")
+
         val allowedUpdates: Set<AllowedUpdate> = updateResolver.allowedUpdates
 
         while (true) {
