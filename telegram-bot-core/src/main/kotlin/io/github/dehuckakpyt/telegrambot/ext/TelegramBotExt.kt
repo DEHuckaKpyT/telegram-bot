@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
-import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
-import io.github.dehuckakpyt.telegrambot.model.type.Message
+import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.ktor.client.statement.*
 
 
 /**
@@ -10,8 +10,9 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-val Message.chatId: Long
-    get() = chat.id
-val CallbackQuery.chatId: Long
-    get() = message?.chat?.id ?: from.id
+suspend fun TelegramBot.downloadById(fileId: String): HttpResponse {
+    val fileInfo = getFile(fileId)
+    val filePath = fileInfo.filePath ?: throw IllegalStateException("Failed download file. FilePath is null for file $fileInfo.")
 
+    return download(filePath)
+}

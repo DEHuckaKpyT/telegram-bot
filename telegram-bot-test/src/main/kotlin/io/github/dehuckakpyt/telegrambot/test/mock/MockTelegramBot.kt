@@ -852,9 +852,5 @@ internal class MockTelegramBot : TelegramBot {
         inlineMessageId: String?,
     ): List<GameHighScore> = mockk()
 
-    //region helpful features
-
     override suspend fun download(filePath: String): HttpResponse = mockk()
-
-    override suspend fun downloadById(fileId: String): HttpResponse = mockk()
 }

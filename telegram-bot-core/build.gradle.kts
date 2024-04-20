@@ -13,9 +13,9 @@ dependencies {
     //endregion jackson
 
     //region ktor
-    api("io.ktor:ktor-client-apache-jvm:$ktor_version")
-    api("io.ktor:ktor-serialization-jackson-jvm:$ktor_version")
+    api("io.ktor:ktor-client-apache5:$ktor_version")
     api("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    api("io.ktor:ktor-serialization-jackson-jvm:$ktor_version")
     //endregion ktor
 
     //region other
@@ -37,8 +37,9 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+
     jvmArgs(
-        // чтобы работали моки https://mockk.io/doc/md/jdk16-access-exceptions.html
+        // https://mockk.io/doc/md/jdk16-access-exceptions.html
         "--add-opens", "java.base/java.time=ALL-UNNAMED",
         "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED"
     )

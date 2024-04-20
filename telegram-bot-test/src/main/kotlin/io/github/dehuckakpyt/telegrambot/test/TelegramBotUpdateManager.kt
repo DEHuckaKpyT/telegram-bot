@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.test
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.TelegramBotImpl
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.model.type.Update
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
@@ -25,7 +24,10 @@ import kotlinx.coroutines.channels.Channel
 internal object TelegramBotUpdateManager {
     internal val updatesChannel = Channel<List<Update>>()
     internal lateinit var updateResolver: UpdateResolver
-    internal val objectMapper = TelegramBotImpl::class.java.getDeclaredField("MAPPER").apply { isAccessible = true }.get(null) as JsonMapper
+    internal val objectMapper = Class.forName("io.github.dehuckakpyt.telegrambot.client.TelegramApiClient")
+        .getDeclaredField("MAPPER")
+        .apply { isAccessible = true }
+        .get(null) as JsonMapper
 
     init {
         val telegramBotActualConfigClass = Class.forName("io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfigImpl").kotlin

@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot
 
 import io.github.dehuckakpyt.telegrambot.api.TelegramApi
+import io.github.dehuckakpyt.telegrambot.api.util.TelegramUtilApi
 
 
 /**
@@ -9,9 +10,10 @@ import io.github.dehuckakpyt.telegrambot.api.TelegramApi
  *
  * @author Denis Matytsin
  */
-interface TelegramBot : TelegramApi {
+interface TelegramBot : TelegramApi, TelegramUtilApi {
 
     val username: String
-
     fun stop(): Unit
+
+    companion object
 }
