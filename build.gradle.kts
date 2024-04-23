@@ -33,7 +33,7 @@ nexusPublishing {
     }
 }
 
-configure(subprojects.filter { it.path.startsWith(":example").not() }) {
+configure(subprojects.filter { it.path.startsWith(":example").not() && it.path.startsWith(":kscripts").not() }) {
 //    kotlin {
 //        explicitApi()
 //    }
