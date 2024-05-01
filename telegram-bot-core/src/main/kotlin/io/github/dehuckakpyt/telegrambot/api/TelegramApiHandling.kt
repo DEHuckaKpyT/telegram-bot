@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.Container
+import io.github.dehuckakpyt.telegrambot.ext.container.chatId
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content

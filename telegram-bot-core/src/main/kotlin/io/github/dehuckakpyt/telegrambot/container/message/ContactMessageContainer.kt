@@ -10,8 +10,10 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-class ContactMessageContainer(chatId: Long, message: Message, content: String?) :
-    MessageContainer(chatId, message, content) {
+class ContactMessageContainer(message: Message, step: String?, content: String?) :
+    MessageContainer(message, step, content) {
 
     val contact: Contact get() = message.contact!!
+
+    override val type: String = "CONTACT"
 }

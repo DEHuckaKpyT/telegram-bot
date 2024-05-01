@@ -19,8 +19,8 @@ internal class VoiceMessageContainerFactory : MessageContainerFactory {
         return voice != null
     }
 
-    override fun create(chatId: Long, message: Message, content: String?): MessageContainer =
-        VoiceMessageContainer(chatId, message, content)
+    override fun create(message: Message, step: String?, content: String?): MessageContainer =
+        VoiceMessageContainer(message, step, content)
 
     override fun getMessageText(message: Message): String? = message.caption
 

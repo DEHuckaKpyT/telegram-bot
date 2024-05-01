@@ -1,20 +1,17 @@
 package io.github.dehuckakpyt.telegrambot.container
 
+import io.github.dehuckakpyt.telegrambot.model.type.Chat
 import io.github.dehuckakpyt.telegrambot.model.type.User
 
 
 /**
- * Created on 13.08.2023.
- *<p>
+ * Created on 01.05.2024.
  *
  * @author Denis Matytsin
  */
-abstract class Container(
-    val chatId: Long,
-    internal val content: String?,
-) {
-    abstract val from: User
-
-    internal var nextStep: String? = null
-    internal var nextStepInstance: Any? = null
+interface Container {
+    val chat: Chat
+    val from: User
+    val step: String?
+    val type: String
 }

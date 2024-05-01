@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.handling
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.api.TelegramApiHandling
 import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
-import io.github.dehuckakpyt.telegrambot.container.Container
+import io.github.dehuckakpyt.telegrambot.container.GeneralContainer
 import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
 import io.github.dehuckakpyt.telegrambot.container.message.MessageContainer
 import io.github.dehuckakpyt.telegrambot.container.message.MessageType.TEXT
@@ -97,7 +97,7 @@ class BotHandling internal constructor(
      *
      * @param step name of the next step
      */
-    fun Container.next(step: String?) {
+    fun GeneralContainer.next(step: String?) {
         nextStep = step
     }
 
@@ -109,7 +109,7 @@ class BotHandling internal constructor(
      * @param step name of the next step
      * @param instance object for transfer
      */
-    fun Container.next(step: String, instance: Any) {
+    fun GeneralContainer.next(step: String, instance: Any) {
         nextStep = step
         nextStepInstance = instance
     }
@@ -119,7 +119,7 @@ class BotHandling internal constructor(
      *
      * @param instance any object
      */
-    fun Container.transfer(instance: Any) {
+    fun GeneralContainer.transfer(instance: Any) {
         nextStepInstance = instance
     }
 
@@ -128,7 +128,7 @@ class BotHandling internal constructor(
      *
      * @return object of selected class
      */
-    inline fun <reified T> Container.transferred(): T {
+    inline fun <reified T> GeneralContainer.transferred(): T {
         return transferredOrNull()
             ?: throw RuntimeException("An instance of class ${T::class.simpleName} is expected, but nothing is stored in chainSource.content.")
     }
@@ -138,7 +138,7 @@ class BotHandling internal constructor(
      *
      * @return if exists then object of selected class else null
      */
-    inline fun <reified T : Any> Container.transferredOrNull(): T? = transferredOrNull(T::class)
+    inline fun <reified T : Any> GeneralContainer.transferredOrNull(): T? = transferredOrNull(T::class)
 
     /**
      * Get saved object in the previous step.
@@ -147,5 +147,5 @@ class BotHandling internal constructor(
      *
      * @return if exists then object of selected class else null
      */
-    fun <T : Any> Container.transferredOrNull(clazz: KClass<T>): T? = contentConverter.fromContentOrNull(content, clazz)
+    fun <T : Any> GeneralContainer.transferredOrNull(clazz: KClass<T>): T? = contentConverter.fromContentOrNull(content, clazz)
 }

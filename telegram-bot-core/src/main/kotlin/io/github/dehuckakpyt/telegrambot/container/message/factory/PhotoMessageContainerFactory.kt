@@ -19,8 +19,8 @@ internal class PhotoMessageContainerFactory : MessageContainerFactory {
         return photo.isNotEmpty()
     }
 
-    override fun create(chatId: Long, message: Message, content: String?): MessageContainer =
-        PhotoMessageContainer(chatId, message, content)
+    override fun create(message: Message, step: String?, content: String?): MessageContainer =
+        PhotoMessageContainer(message, step, content)
 
     override fun getMessageText(message: Message): String? = message.caption
 

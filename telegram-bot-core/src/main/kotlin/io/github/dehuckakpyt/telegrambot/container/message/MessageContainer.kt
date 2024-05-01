@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.container.message
 
-import io.github.dehuckakpyt.telegrambot.container.Container
+import io.github.dehuckakpyt.telegrambot.container.GeneralContainer
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 
 
@@ -10,13 +10,10 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-abstract class MessageContainer(
-    chatId: Long,
-    val message: Message,
-    content: String?,
-) : Container(chatId, content) {
+abstract class MessageContainer(val message: Message, step: String?, content: String?) :
+    GeneralContainer(step, content) {
 
-    override val from = message.from!!
     val messageId get() = message.messageId
-    val chat get() = message.chat
+    override val from get() = message.from!!
+    override val chat get() = message.chat
 }

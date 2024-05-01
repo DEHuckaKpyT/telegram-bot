@@ -25,12 +25,17 @@ class DatabaseTelegramMessage(
     override val fromId: Long,
 
     @Column(nullable = false)
+    override val fromBot: Boolean,
+
+    @Column(nullable = false)
     override val messageId: Long,
 
     @Column(nullable = false)
     override val type: String,
 
     override val step: String?,
+
+    override val stepContainerType: String?,
 
     @Column(columnDefinition = "text")
     override val text: String?,

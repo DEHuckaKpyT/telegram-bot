@@ -10,9 +10,11 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-class DocumentMessageContainer(chatId: Long, message: Message, content: String?) :
-    MessageContainer(chatId, message, content) {
+class DocumentMessageContainer(message: Message, step: String?, content: String?) :
+    MessageContainer(message, step, content) {
 
     val caption: String? get() = message.caption
     val document: Document get() = message.document!!
+
+    override val type: String = "DOCUMENT"
 }

@@ -10,9 +10,11 @@ import io.github.dehuckakpyt.telegrambot.model.type.MessageEntity
  *
  * @author Denis Matytsin
  */
-open class TextMessageContainer(chatId: Long, message: Message, content: String?) :
-    MessageContainer(chatId, message, content) {
+open class TextMessageContainer(message: Message, step: String?, content: String?) :
+    MessageContainer(message, step, content) {
 
     val text: String get() = message.text!!
     val entities: List<MessageEntity> get() = message.entities
+
+    override val type: String = "TEXT"
 }

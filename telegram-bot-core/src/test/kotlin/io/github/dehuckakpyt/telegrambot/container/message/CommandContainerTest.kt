@@ -12,7 +12,7 @@ import io.mockk.mockk
 class CommandContainerTest : FreeSpec({
 
     val message = mockk<Message>(relaxed = true)
-    val container = CommandContainer(1_001, message)
+    val container = CommandContainer(message, step = "/start")
 
     "only command" {
         // Arrange
