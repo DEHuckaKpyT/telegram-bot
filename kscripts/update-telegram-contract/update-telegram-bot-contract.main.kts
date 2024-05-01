@@ -11,15 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.engine.apache5.*
 import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.request.*
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.serialization.jackson.*
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +31,7 @@ import kotlin.io.path.Path
 
 val objectsPath = Path("./../../telegram-bot-core/src/main/kotlin")
 val objectsPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram"
+val contentClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.content"
 val todayFormattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))!!
 val classDocumentation = "Created on $todayFormattedDate.\n\n%s\n\n@author KScript"
 //val ignoreClassNames = listOf("InputFile")
@@ -40,12 +39,38 @@ val classDocumentation = "Created on $todayFormattedDate.\n\n%s\n\n@author KScri
 
 val client = HttpClient(Apache5) {
     install(ContentNegotiation) {
-        register(Json, JacksonConverter(jacksonObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)))
+        register(Json, JacksonConverter(jacksonObjectMapper()))
     }
 }
 
 runBlocking {
-    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").body<Contract>()
+//    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").body<Contract>()
+    val contract = Path("./custom_v2.json").let { jacksonObjectMapper().readValue<Contract>(it.toFile()) }
+    contract.replaceTypes()
+
+//    val flux = FunSpec.constructorBuilder()
+//        .addParameter("asd", Int::class)
+//        .addParameter("zxc", String::class)
+//        .callThisConstructor("asd.toString()")
+//        .callThisConstructor("zxc")
+//        .build()
+//    val constructor = FunSpec.constructorBuilder().apply {
+//        addParameter("greeting", String::class)
+//        addParameter("hello", String::class)
+//    }.build()
+//
+//    val file = FileSpec.builder(objectsPackageName, "HelloWorld")
+//        .addType(TypeSpec.classBuilder("HelloWorld")
+//            .primaryConstructor(constructor)
+//            .addProperty("greeting", String::class, KModifier.PRIVATE)
+//            .addProperty("hello", String::class, KModifier.PRIVATE)
+//            .addFunction(flux)
+//            .build())
+//        .build()
+//
+//    withContext(Dispatchers.IO) {
+//        file.writeTo(objectsPath)
+//    }
     println("Generating telegram bot api contracts...")
     println("Version: ${contract.version.major}.${contract.version.minor}.${contract.version.patch}")
     println("Recent changes: ${contract.recentChanges.year}-${contract.recentChanges.month}-${contract.recentChanges.day}")
@@ -54,19 +79,68 @@ runBlocking {
 }
 
 suspend fun createObjects(objects: List<Object>) = objects.forEach { currentObject ->
-//    if (ignoreClassNames.contains(currentObject.name)) return@forEach
+    if (currentObject.name == "InputFile") return@forEach
 
     if (currentObject is PropertiesObject) createPropertiesObject(currentObject)
     if (currentObject is UnknownObject) createUnknownObject(currentObject)
 }
 
 suspend fun createPropertiesObject(obj: PropertiesObject) {
-    if (obj.properties.any { it.typeInfo is AnyOfType }) return
-    val parameters = obj.properties.map { it.toParameter() }
-    val properties = obj.properties.map { it.toProperty() }
+    if (obj.properties.any { it.typeInfo is AnyOfType }) {
+        createMultiTypePropertiesObject(obj)
+    } else {
+        createSimplePropertiesObject(obj)
+    }
+}
+
+suspend fun createMultiTypePropertiesObject(obj: PropertiesObject) {
+    if (obj.properties.any { it.typeInfo.isMultiPropertyIntLongAndString }) {
+        createMultiTypeIntLongAndStringPropertiesObject(obj)
+    } else println("WARN $obj")
+}
+
+suspend fun createMultiTypeIntLongAndStringPropertiesObject(obj: PropertiesObject) {
+    val primaryConstructorBuilder = FunSpec.constructorBuilder()
+    val secondaryConstructorBuilder = FunSpec.constructorBuilder()
+    val properties = mutableListOf<PropertySpec>()
+    val callThisConstructorArgs = mutableListOf<String>()
+
+    obj.properties.forEach { property ->
+        if (property.typeInfo !is AnyOfType) {
+            primaryConstructorBuilder.addParameter(property.toParameterSpec())
+            secondaryConstructorBuilder.addParameter(property.toParameterSpec())
+            properties.add(property.toPropertySpec())
+            callThisConstructorArgs.add(property.nameCamelCase)
+        } else {
+            primaryConstructorBuilder.addParameter(property.toParameterSpec(String::class.asClassName()))
+            secondaryConstructorBuilder.addParameter(property.toParameterSpec(property.typeInfo.anyOf.first { it.type != "string" }.toTypeName()))
+            properties.add(property.toPropertySpec(String::class.asClassName()))
+            callThisConstructorArgs.add(property.nameCamelCase + ".toString()")
+        }
+    }
+
+    val file = FileSpec.builder(objectsPackageName, obj.name)
+        .addType(
+            TypeSpec.classBuilder(obj.name)
+                .addKdoc(classDocumentation.format("@see [${obj.name}](${obj.documentationLink})"))
+                .primaryConstructor(primaryConstructorBuilder.build())
+                .addFunction(secondaryConstructorBuilder.callThisConstructor(*callThisConstructorArgs.toTypedArray()).build())
+                .addProperties(properties)
+                .build()
+        )
+        .build()
+
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(objectsPath)
+    }
+}
+
+suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
+    val parameters = obj.properties.map { it.toParameterSpec() }
+    val properties = obj.properties.map { it.toPropertySpec() }
     val constructor = FunSpec.constructorBuilder().apply {
         addParameters(parameters)
-//        addModifiers(INTERNAL)
     }.build()
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
@@ -84,23 +158,24 @@ suspend fun createPropertiesObject(obj: PropertiesObject) {
     }
 }
 
-fun Property.toParameter(): ParameterSpec = ParameterSpec.builder(
+fun Property.toParameterSpec(type: TypeName? = null): ParameterSpec = ParameterSpec.builder(
     name = nameCamelCase,
-    type = typeInfo.toTypeName().copy(nullable = required.not())
+    type = (type ?: typeInfo.toTypeName()).copy(nullable = required.not())
 ).build()
 
-fun Property.toProperty(): PropertySpec = PropertySpec.builder(
+fun Property.toPropertySpec(type: TypeName? = null): PropertySpec = PropertySpec.builder(
     name = nameCamelCase,
-    type = typeInfo.toTypeName().copy(nullable = required.not())
-).initializer(name.toCamelCase()).build()
+    type = (type ?: typeInfo.toTypeName()).copy(nullable = required.not())
+).initializer(nameCamelCase).build()
 
 fun Type.toTypeName(): TypeName = when (this) {
-    is IntegerType -> ClassName("", "Int")
-    is StringType -> ClassName("", "String")
-    is BooleanType -> ClassName("", "Boolean")
-    is FloatType -> ClassName("", "Double")
+    is IntegerType -> Int::class.asClassName()
+    is LongType -> Long::class.asClassName()
+    is StringType -> String::class.asClassName()
+    is BooleanType -> Boolean::class.asClassName()
+    is FloatType -> Double::class.asClassName()
     is AnyOfType -> throw RuntimeException("Unexpected type $this")
-    is ReferenceType -> ClassName(objectsPackageName, reference)
+    is ReferenceType -> if (reference == "InputFile") ClassName(contentClassPackageName, "Content") else ClassName(objectsPackageName, reference)
     is ArrayType -> List::class.asClassName().parameterizedBy(array.toTypeName())
     else -> throw RuntimeException("Unexpected type $this")
 }
@@ -120,7 +195,61 @@ suspend fun createUnknownObject(obj: UnknownObject) {
     }
 }
 
-fun String.toCamelCase(): String = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, this);
+val Type.isMultiPropertyIntLongAndString: Boolean
+    get() {
+        if (this !is AnyOfType) return false
+        if (anyOf.size != 2) return false
+        if (!anyOf.any { it.type == "string" }) return false
+        if (!anyOf.any { it.type == "integer" || it.type == "long" }) return false
+        return true
+    }
+
+val Property.nameCamelCase get() = name.toCamelCase()
+
+fun String.toCamelCase(): String = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, this)
+
+
+fun Contract.replaceTypes() {
+    objects.forEach { obj ->
+        if (obj !is PropertiesObject) return@forEach
+
+        val properties = obj.properties
+        for ((i, property) in properties.withIndex()) {
+            var _property = property
+            // thumbnail's you can upload only
+            if (_property.name == "thumbnail" && _property.description.contains("Thumbnails can't be reused and can be only uploaded as a new file")) {
+                properties[i] = _property.copy(typeInfo = ReferenceType("reference", "InputFile"))
+                _property = properties[i]
+            }
+            if (_property.name == "id" || _property.name.endsWith("_id") || _property.description.contains("may have more than 32 significant bits")) {
+                if (_property.typeInfo is IntegerType) {
+                    val typeInfo = _property.typeInfo
+                    properties[i] = _property.copy(typeInfo = (typeInfo as IntegerType).toLongType())
+                    _property = properties[i]
+                }
+                if (_property.typeInfo is AnyOfType) {
+                    for ((index, typeAnyOf) in (_property.typeInfo as AnyOfType).anyOf.withIndex()) {
+                        if (typeAnyOf !is IntegerType) continue
+                        (_property.typeInfo as AnyOfType).anyOf[index] = typeAnyOf.toLongType()
+                    }
+                }
+            }
+            if (_property.name.endsWith("_ids") || _property.description.contains("may have more than 32 significant bits")) {
+                if (_property.typeInfo is ArrayType && _property.typeInfo.type == "integer") {
+                    properties[i] = _property.copy(typeInfo = ArrayType(_property.typeInfo.type, ((_property.typeInfo as ArrayType).array as IntegerType).toLongType()))
+                    _property = properties[i]
+                }
+            }
+//            if (_property.typeInfo is ReferenceType && (_property.typeInfo as ReferenceType).reference == "InputFile") {
+//                properties[i] = _property.copy(typeInfo = ReferenceType("reference", "Content"))
+//                _property = properties[i]
+//            }
+        }
+    }
+}
+
+fun IntegerType.toLongType(): LongType = LongType(default?.toLong(), min?.toLong(), min?.toLong(), enumeration.map { it.toLong() })
+
 
 //region model
 data class Contract(
@@ -174,6 +303,16 @@ abstract class Type {
     abstract val type: String
 }
 
+// custom type for internal replacing
+data class LongType(
+    val default: Long?,
+    val min: Long?,
+    val max: Long?,
+    val enumeration: List<Long>,
+) : Type() {
+    override val type: String = "long"
+}
+
 @JsonTypeName("integer")
 data class IntegerType(
     override val type: String,
@@ -206,7 +345,7 @@ data class FloatType(
 @JsonTypeName("any_of")
 data class AnyOfType(
     override val type: String,
-    @param:JsonProperty("any_of") val anyOf: List<Type>,
+    @param:JsonProperty("any_of") val anyOf: MutableList<Type>,
 ) : Type()
 
 @JsonTypeName("reference")
@@ -226,7 +365,7 @@ data class PropertiesObject(
     override val type: String,
     override val name: String,
     override val description: String,
-    val properties: List<Property>,
+    val properties: MutableList<Property>,
     @param:JsonProperty("documentation_link") val documentationLink: String,
 ) : Object()
 
@@ -252,7 +391,6 @@ data class Property(
     val description: String,
     val required: Boolean,
     @param:JsonProperty("type_info") val typeInfo: Type,
-) {
-    val nameCamelCase = name.toCamelCase()
-}
+)
+
 //endregion model
