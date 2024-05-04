@@ -2,8 +2,8 @@ package io.github.dehuckakpyt.telegrambot.api.ex
 
 import io.github.dehuckakpyt.telegrambot.api.TelegramGeneralApi
 import io.github.dehuckakpyt.telegrambot.model.type.*
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.ContentInput
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
 
 
 /**
@@ -270,7 +270,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendPhoto(
         chatId: Long,
-        photo: Content,
+        photo: ContentInput,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -326,7 +326,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendAudio(
         chatId: Long,
-        audio: Content,
+        audio: ContentInput,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -335,7 +335,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration: Long? = null,
         performer: String? = null,
         title: String? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -369,7 +369,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration: Long? = null,
         performer: String? = null,
         title: String? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -394,8 +394,8 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendDocument(
         chatId: Long,
-        document: NamedContent,
-        thumbnail: Content? = null,
+        document: NamedContentInput,
+        thumbnail: ContentInput? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -425,7 +425,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
     suspend fun sendDocument(
         chatId: Long,
         document: String,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -454,11 +454,11 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendVideo(
         chatId: Long,
-        video: Content,
+        video: ContentInput,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -496,7 +496,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -530,11 +530,11 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendAnimation(
         chatId: Long,
-        animation: Content,
+        animation: ContentInput,
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -570,7 +570,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         duration: Long? = null,
         width: Long? = null,
         height: Long? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -602,7 +602,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendVoice(
         chatId: Long,
-        voice: Content,
+        voice: ContentInput,
         caption: String? = null,
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -658,12 +658,12 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun sendVideoNote(
         chatId: Long,
-        videoNote: Content,
+        videoNote: ContentInput,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -689,7 +689,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageThreadId: Long? = null,
         duration: Long? = null,
         length: Long? = null,
-        thumbnail: Content? = null,
+        thumbnail: ContentInput? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         replyParameters: ReplyParameters? = null,
@@ -1062,7 +1062,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun setChatPhoto(
         chatId: Long,
-        photo: Content,
+        photo: ContentInput,
     ): Boolean = setChatPhoto(
         chatId = chatId.toString(),
         photo = photo

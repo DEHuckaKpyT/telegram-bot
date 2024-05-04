@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.type
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
 
 
 /**
@@ -15,14 +15,14 @@ import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedCont
 public sealed class InputMedia {
     public abstract val type: String
     public abstract val media: String
-    public abstract val mediaContent: NamedContent?
+    public abstract val mediaContent: NamedContentInput?
     public abstract val thumbnail: String?
-    public abstract val thumbnailContent: NamedContent?
+    public abstract val thumbnailContent: NamedContentInput?
 }
 
 public data class InputMediaPhoto private constructor(
     @get:JsonProperty("media") override val media: String,
-    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonIgnore override val mediaContent: NamedContentInput? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -38,7 +38,7 @@ public data class InputMediaPhoto private constructor(
     ) : this(media, null, caption, parseMode, captionEntities, hasSpoiler)
 
     public constructor(
-        media: NamedContent,
+        media: NamedContentInput,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -49,7 +49,7 @@ public data class InputMediaPhoto private constructor(
     override val thumbnail: String? = null
 
     @get:JsonIgnore
-    override val thumbnailContent: NamedContent? = null
+    override val thumbnailContent: NamedContentInput? = null
 
     @get:JsonProperty("type")
     override val type: String = "photo"
@@ -57,9 +57,9 @@ public data class InputMediaPhoto private constructor(
 
 public data class InputMediaVideo private constructor(
     @get:JsonProperty("media") override val media: String,
-    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonIgnore override val mediaContent: NamedContentInput? = null,
     @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
-    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContentInput? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -72,7 +72,7 @@ public data class InputMediaVideo private constructor(
 
     public constructor(
         media: String,
-        thumbnail: NamedContent? = null,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -84,8 +84,8 @@ public data class InputMediaVideo private constructor(
     ) : this(media, null, thumbnail?.let { "attach://${thumbnail.name}" }, thumbnail, caption, parseMode, captionEntities, width, height, duration, supportsStreaming, hasSpoiler)
 
     public constructor(
-        media: NamedContent,
-        thumbnail: NamedContent? = null,
+        media: NamedContentInput,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -102,9 +102,9 @@ public data class InputMediaVideo private constructor(
 
 public data class InputMediaAnimation private constructor(
     @get:JsonProperty("media") override val media: String,
-    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonIgnore override val mediaContent: NamedContentInput? = null,
     @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
-    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContentInput? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -116,7 +116,7 @@ public data class InputMediaAnimation private constructor(
 
     public constructor(
         media: String,
-        thumbnail: NamedContent? = null,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -127,8 +127,8 @@ public data class InputMediaAnimation private constructor(
     ) : this(media, null, thumbnail?.let { "attach://${thumbnail.name}" }, thumbnail, caption, parseMode, captionEntities, width, height, duration, hasSpoiler)
 
     public constructor(
-        media: NamedContent,
-        thumbnail: NamedContent? = null,
+        media: NamedContentInput,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -144,9 +144,9 @@ public data class InputMediaAnimation private constructor(
 
 public data class InputMediaAudio private constructor(
     @get:JsonProperty("media") override val media: String,
-    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonIgnore override val mediaContent: NamedContentInput? = null,
     @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
-    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContentInput? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -157,7 +157,7 @@ public data class InputMediaAudio private constructor(
 
     public constructor(
         media: String,
-        thumbnail: NamedContent? = null,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -167,8 +167,8 @@ public data class InputMediaAudio private constructor(
     ) : this(media, null, thumbnail?.let { "attach://${thumbnail.name}" }, thumbnail, caption, parseMode, captionEntities, duration, performer, title)
 
     public constructor(
-        media: NamedContent,
-        thumbnail: NamedContent? = null,
+        media: NamedContentInput,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -183,9 +183,9 @@ public data class InputMediaAudio private constructor(
 
 public data class InputMediaDocument private constructor(
     @get:JsonProperty("media") override val media: String,
-    @get:JsonIgnore override val mediaContent: NamedContent? = null,
+    @get:JsonIgnore override val mediaContent: NamedContentInput? = null,
     @get:JsonProperty("thumbnail") override val thumbnail: String? = null,
-    @get:JsonIgnore override val thumbnailContent: NamedContent? = null,
+    @get:JsonIgnore override val thumbnailContent: NamedContentInput? = null,
     @get:JsonProperty("caption") val caption: String? = null,
     @get:JsonProperty("parse_mode") val parseMode: String? = null,
     @get:JsonProperty("caption_entities") val captionEntities: List<MessageEntity>? = null,
@@ -194,7 +194,7 @@ public data class InputMediaDocument private constructor(
 
     public constructor(
         media: String,
-        thumbnail: NamedContent? = null,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -202,8 +202,8 @@ public data class InputMediaDocument private constructor(
     ) : this(media, null, thumbnail?.let { "attach://${thumbnail.name}" }, thumbnail, caption, parseMode, captionEntities, disableContentTypeDetection)
 
     public constructor(
-        media: NamedContent,
-        thumbnail: NamedContent? = null,
+        media: NamedContentInput,
+        thumbnail: NamedContentInput? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,

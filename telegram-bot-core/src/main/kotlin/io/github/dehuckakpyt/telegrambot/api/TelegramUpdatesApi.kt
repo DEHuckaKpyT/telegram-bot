@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.api
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.Update
 import io.github.dehuckakpyt.telegrambot.model.type.WebhookInfo
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
 
 
 /**
@@ -22,7 +22,7 @@ interface TelegramUpdatesApi {
 
     suspend fun setWebhook(
         url: String,
-        certificate: NamedContent? = null,
+        certificate: NamedContentInput? = null,
         ipAddress: String? = null,
         maxConnections: Int? = null,
         allowedUpdates: List<AllowedUpdate>? = null,

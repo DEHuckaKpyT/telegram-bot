@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.type
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
 
 
 /**
@@ -47,7 +47,7 @@ public data class MaskPosition(
 public data class InputSticker private constructor(
     @get:JsonProperty("sticker") val sticker: String,
     @get:JsonProperty("format") val format: String,
-    @get:JsonIgnore val stickerContent: NamedContent?,
+    @get:JsonIgnore val stickerContent: NamedContentInput?,
     @get:JsonProperty("emoji_list") val emojiList: Iterable<String>,
     @get:JsonProperty("mask_position") val maskPosition: MaskPosition?,
     @get:JsonProperty("keywords") val keywords: Iterable<String>?,
@@ -62,7 +62,7 @@ public data class InputSticker private constructor(
     ) : this(sticker, format, null, emojiList, maskPosition, keywords)
 
     public constructor(
-        sticker: NamedContent,
+        sticker: NamedContentInput,
         format: String,
         emojiList: Iterable<String>,
         maskPosition: MaskPosition? = null,

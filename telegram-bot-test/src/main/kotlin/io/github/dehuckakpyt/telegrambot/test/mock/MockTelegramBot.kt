@@ -3,8 +3,8 @@ package io.github.dehuckakpyt.telegrambot.test.mock
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.ContentInput
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
 import io.ktor.client.statement.*
 import io.mockk.mockk
 
@@ -27,7 +27,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun setWebhook(
         url: String,
-        certificate: NamedContent?,
+        certificate: NamedContentInput?,
         ipAddress: String?,
         maxConnections: Int?,
         allowedUpdates: List<AllowedUpdate>?,
@@ -103,7 +103,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendPhoto(
         chatId: String,
-        photo: Content,
+        photo: ContentInput,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -133,7 +133,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendAudio(
         chatId: String,
-        audio: Content,
+        audio: ContentInput,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -142,7 +142,7 @@ internal class MockTelegramBot : TelegramBot {
         duration: Long?,
         performer: String?,
         title: String?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -160,7 +160,7 @@ internal class MockTelegramBot : TelegramBot {
         duration: Long?,
         performer: String?,
         title: String?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -169,8 +169,8 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendDocument(
         chatId: String,
-        document: NamedContent,
-        thumbnail: Content?,
+        document: NamedContentInput,
+        thumbnail: ContentInput?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -186,7 +186,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendDocument(
         chatId: String,
         document: String,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -201,11 +201,11 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendVideo(
         chatId: String,
-        video: Content,
+        video: ContentInput,
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -225,7 +225,7 @@ internal class MockTelegramBot : TelegramBot {
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -241,11 +241,11 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendAnimation(
         chatId: String,
-        animation: Content,
+        animation: ContentInput,
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -264,7 +264,7 @@ internal class MockTelegramBot : TelegramBot {
         duration: Long?,
         width: Long?,
         height: Long?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -279,7 +279,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendVoice(
         chatId: String,
-        voice: Content,
+        voice: ContentInput,
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
@@ -309,12 +309,12 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendVideoNote(
         chatId: String,
-        videoNote: Content,
+        videoNote: ContentInput,
         businessConnectionId: String?,
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -328,7 +328,7 @@ internal class MockTelegramBot : TelegramBot {
         messageThreadId: Long?,
         duration: Long?,
         length: Long?,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         replyParameters: ReplyParameters?,
@@ -518,7 +518,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun declineChatJoinRequest(chatId: String, userId: Long): Boolean = mockk()
 
-    override suspend fun setChatPhoto(chatId: String, photo: Content): Boolean = mockk()
+    override suspend fun setChatPhoto(chatId: String, photo: ContentInput): Boolean = mockk()
 
     override suspend fun setChatPhoto(chatId: String, photo: String): Boolean = mockk()
 
@@ -690,7 +690,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun sendSticker(
         chatId: String,
-        sticker: Content,
+        sticker: ContentInput,
         businessConnectionId: String?,
         messageThreadId: Long?,
         emoji: String?,
@@ -704,7 +704,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun getCustomEmojiStickers(customEmojiIds: List<String>): List<Sticker> = mockk()
 
-    override suspend fun uploadStickerFile(userId: Long, sticker: Content, stickerFormat: String): File = mockk()
+    override suspend fun uploadStickerFile(userId: Long, sticker: ContentInput, stickerFormat: String): File = mockk()
 
     override suspend fun createNewStickerSet(
         userId: Long,
@@ -738,7 +738,7 @@ internal class MockTelegramBot : TelegramBot {
         name: String,
         userId: Long,
         format: String,
-        thumbnail: Content?,
+        thumbnail: ContentInput?,
     ): Boolean = mockk()
 
     override suspend fun setCustomEmojiStickerSetThumbnail(name: String, customEmojiId: String?): Boolean = mockk()

@@ -5,7 +5,7 @@ import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.model.type.InputMediaDocument
 import io.github.dehuckakpyt.telegrambot.model.type.InputMediaPhoto
 import io.github.dehuckakpyt.telegrambot.model.type.InputMediaVideo
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.ContentFactory.content
+import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.content
 import java.io.File
 
 
