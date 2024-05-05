@@ -13,8 +13,8 @@ import org.koin.core.annotation.Factory
  * @author Denis Matytsin
  */
 @Factory
-class SendPhotosHandler : BotHandler({
-    command("/photos") {
+class SendPhotoHandler : BotHandler({
+    command("/photo") {
         val message = sendPhoto(NamedResourceContent("Hello.jpg", "/images/cat.jpg"))
         val fileId = message.photo[0].fileId
 

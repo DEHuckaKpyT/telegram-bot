@@ -9,7 +9,7 @@ open class DatabaseTelegramMessageSource(
     private val repository: DatabaseTelegramMessageRepository,
 ) : MessageSource {
 
-    override suspend fun save(chatId: Long, fromId: Long, fromBot: Boolean, messageId: Long, type: String, step: String?, stepContainerType: String?, text: String?): Unit = withContext(Dispatchers.IO) {
+    override suspend fun save(chatId: Long, fromId: Long, fromBot: Boolean, messageId: Long, type: String, step: String?, stepContainerType: String?, text: String?, fileIds: List<String>?): Unit = withContext(Dispatchers.IO) {
         repository.save(
             DatabaseTelegramMessage(
                 chatId = chatId,
@@ -20,6 +20,7 @@ open class DatabaseTelegramMessageSource(
                 step = step,
                 stepContainerType = stepContainerType,
                 text = text,
+                fileIds = fileIds,
             )
         )
     }

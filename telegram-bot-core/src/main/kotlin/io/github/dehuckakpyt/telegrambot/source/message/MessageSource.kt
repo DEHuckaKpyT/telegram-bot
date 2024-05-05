@@ -41,6 +41,7 @@ interface MessageSource {
         step: String? = null,
         stepContainerType: String? = null,
         text: String? = null,
+        fileIds: List<String>? = null,
     )
 
     /**
@@ -64,6 +65,7 @@ interface MessageSource {
         messageId: Long,
         type: String,
         text: String? = null,
+        fileIds: List<String>? = null,
     ) {
         val currentContainer = currentContainerContextOrNull()
 
@@ -75,7 +77,8 @@ interface MessageSource {
             type = type,
             step = currentContainer?.step,
             stepContainerType = currentContainer?.type,
-            text = text
+            text = text,
+            fileIds = fileIds
         )
     }
 

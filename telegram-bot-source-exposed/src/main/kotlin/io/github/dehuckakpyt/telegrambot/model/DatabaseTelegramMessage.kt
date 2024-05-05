@@ -5,6 +5,7 @@ import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.TextColumnType
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
 import org.jetbrains.exposed.sql.javatime.datetime
 import java.util.*
@@ -26,6 +27,7 @@ object TelegramMessages : UUIDTable("telegram_message") {
     val step = varchar("step", 255).nullable()
     val stepContainerType = varchar("step_container_type", 255).nullable()
     val text = text("text").nullable()
+    val fileIds = array<String>("file_ids", TextColumnType(), maximumCardinality = 10).nullable()
     val createdDate = datetime("created_date").defaultExpression(CurrentDateTime)
 }
 
@@ -40,5 +42,6 @@ class DatabaseTelegramMessage(id: EntityID<UUID>) : UUIDEntity(id), TelegramMess
     override var step by TelegramMessages.step
     override var stepContainerType by TelegramMessages.stepContainerType
     override var text by TelegramMessages.text
+    override var fileIds by TelegramMessages.fileIds
     override val createDate by TelegramMessages.createdDate
 }

@@ -40,6 +40,9 @@ interface TelegramMessage {
     /** Content of the message. */
     val text: String?
 
+    /** File ids which are sent. */
+    val fileIds: List<String>?
+
     /** Date/time when message was sent. */
     val createDate: LocalDateTime
 }
