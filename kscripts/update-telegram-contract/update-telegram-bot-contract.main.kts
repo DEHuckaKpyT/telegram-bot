@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.KModifier.DATA
 import com.squareup.kotlinpoet.KModifier.SEALED
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.ktor.client.*
@@ -37,7 +38,6 @@ val objectsPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram"
 val contentInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
 val stringInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
 val todayFormattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))!!
-val classDocumentation = "Created on $todayFormattedDate.\n\n%s\n\n@author KScript"
 //val ignoreClassNames = listOf("InputFile")
 
 
@@ -52,29 +52,6 @@ runBlocking {
     val contract = Path("./custom_v2.json").let { jacksonObjectMapper().readValue<Contract>(it.toFile()) }
     contract.replaceTypes()
 
-//    val flux = FunSpec.constructorBuilder()
-//        .addParameter("asd", Int::class)
-//        .addParameter("zxc", String::class)
-//        .callThisConstructor("asd.toString()")
-//        .callThisConstructor("zxc")
-//        .build()
-//    val constructor = FunSpec.constructorBuilder().apply {
-//        addParameter("greeting", String::class)
-//        addParameter("hello", String::class)
-//    }.build()
-//
-//    val file = FileSpec.builder(objectsPackageName, "HelloWorld")
-//        .addType(TypeSpec.classBuilder("HelloWorld")
-//            .primaryConstructor(constructor)
-//            .addProperty("greeting", String::class, KModifier.PRIVATE)
-//            .addProperty("hello", String::class, KModifier.PRIVATE)
-//            .addFunction(flux)
-//            .build())
-//        .build()
-//
-//    withContext(Dispatchers.IO) {
-//        file.writeTo(objectsPath)
-//    }
     println("Generating telegram bot api contracts...")
     println("Version: ${contract.version.major}.${contract.version.minor}.${contract.version.patch}")
     println("Recent changes: ${contract.recentChanges.year}-${contract.recentChanges.month}-${contract.recentChanges.day}")
@@ -120,9 +97,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
     if (typePropertyName == null) {
         val file = FileSpec.builder(objectsPackageName, obj.name)
             .addType(
-                TypeSpec.interfaceBuilder(obj.name)
-                    .addKdoc(classDocumentation.format("@see [${obj.name}] (${obj.documentationLink})"))
-                    .addModifiers(SEALED)
+                TypeSpec.defaultInterfaceBuilder(obj)
                     .build()
             )
             .build()
@@ -157,11 +132,9 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
         .addType(
-            TypeSpec.interfaceBuilder(obj.name)
-                .addKdoc(classDocumentation.format("@see [${obj.name}] (${obj.documentationLink})"))
+            TypeSpec.defaultInterfaceBuilder(obj)
                 .addAnnotation(jsonTypeInfo)
                 .addAnnotation(jsonSubTypes)
-                .addModifiers(SEALED)
                 .build()
         )
         .build()
@@ -195,12 +168,10 @@ suspend fun createMultiTypeIntLongAndStringPropertiesObject(obj: PropertiesObjec
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
         .addType(
-            TypeSpec.classBuilder(obj.name)
-                .addKdoc(classDocumentation.format("@see [${obj.name}] (${obj.documentationLink})"))
+            TypeSpec.defaultClassBuilder(obj)
                 .primaryConstructor(primaryConstructorBuilder.build())
                 .addFunction(secondaryConstructorBuilder.callThisConstructor(*callThisConstructorArgs.toTypedArray()).build())
                 .addProperties(properties)
-                .also { if (obj.parentName != null) it.addSuperinterface(ClassName(objectsPackageName, obj.parentName!!)) }
                 .build()
         )
         .build()
@@ -235,12 +206,10 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
     val file = FileSpec.builder(objectsPackageName, obj.name)
         .addImport(stringInputClassPackageName, "StringInput")
         .addType(
-            TypeSpec.classBuilder(obj.name)
-                .addKdoc(classDocumentation.format("@see [${obj.name}] (${obj.documentationLink})"))
+            TypeSpec.defaultClassBuilder(obj)
                 .primaryConstructor(primaryConstructorBuilder.build())
                 .addFunction(secondaryConstructorBuilder.callThisConstructor(*callThisConstructorArgs.toTypedArray()).build())
                 .addProperties(properties)
-                .also { if (obj.parentName != null) it.addSuperinterface(ClassName(objectsPackageName, obj.parentName!!)) }
                 .build()
         )
         .build()
@@ -259,11 +228,22 @@ suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
         .addType(
-            TypeSpec.classBuilder(obj.name)
-                .addKdoc(classDocumentation.format("@see [${obj.name}] (${obj.documentationLink})"))
+            TypeSpec.defaultClassBuilder(obj)
                 .primaryConstructor(constructor)
                 .addProperties(properties)
-                .also { if (obj.parentName != null) it.addSuperinterface(ClassName(objectsPackageName, obj.parentName!!)) }
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(objectsPath)
+    }
+}
+
+suspend fun createUnknownObject(obj: UnknownObject) {
+    val file = FileSpec.builder(objectsPackageName, obj.name)
+        .addType(
+            TypeSpec.defaultClassBuilder(obj)
                 .build()
         )
         .build()
@@ -276,12 +256,61 @@ suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
 fun Property.toParameterSpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): ParameterSpec = ParameterSpec.builder(
     name = name,
     type = (type ?: typeInfo.toTypeName()).copy(nullable = nullable)
-).build()
+).also {
+    if (nullable) {
+        it.defaultValue("null")
+    }
+}.addKdoc("%L", description).build()
 
 fun Property.toPropertySpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): PropertySpec = PropertySpec.builder(
     name = name,
     type = (type ?: typeInfo.toTypeName()).copy(nullable = nullable),
-).initializer(if (typeInfo.constValue != null) "\"${typeInfo.constValue}\"" else name).build()
+).initializer(
+    if (typeInfo.constValue != null) "\"${typeInfo.constValue}\"" else name
+).addAnnotation(
+    AnnotationSpec.builder(JsonProperty::class)
+        .addMember("\"${this.name}\"")
+        .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+        .build()
+).also {
+    if (this.typeInfo.constValue == null) {
+        it.addAnnotation(
+            AnnotationSpec.builder(JsonProperty::class)
+                .addMember("\"${this.name}\"")
+                .useSiteTarget(AnnotationSpec.UseSiteTarget.PARAM)
+                .build()
+        )
+    }
+}.build()
+
+fun TypeSpec.Companion.defaultClassBuilder(obj: Object): TypeSpec.Builder = classBuilder(obj.name).apply {
+    addKdoc(
+        CodeBlock.builder()
+            .add("Created on $todayFormattedDate.")
+            .also { if (obj.description != null) it.add("\n\n%L", obj.description!!) }
+            .add("\n\n@see [%L] (%L)", obj.name, obj.documentationLink)
+            .add("\n\n@author KScript")
+            .build()
+    )
+    if (obj.parentName != null) addSuperinterface(ClassName(objectsPackageName, obj.parentName!!))
+    if (obj is PropertiesObject) {
+        var size = obj.properties.size
+        size -= obj.properties.count { it.typeInfo.constValue != null }
+        if (size > 0) addModifiers(DATA)
+    }
+}
+
+fun TypeSpec.Companion.defaultInterfaceBuilder(obj: Object): TypeSpec.Builder = interfaceBuilder(obj.name).apply {
+    addKdoc(
+        CodeBlock.builder()
+            .add("Created on $todayFormattedDate.")
+            .also { if (obj.description != null) it.add("\n\n%L", obj.description!!) }
+            .add("\n\n@see [%L] (%L)", obj.name, obj.documentationLink)
+            .add("\n\n@author KScript")
+            .build()
+    )
+    addModifiers(SEALED)
+}
 
 fun Type.toTypeName(): TypeName = when (this) {
     is IntegerType -> Int::class.asClassName()
@@ -293,21 +322,6 @@ fun Type.toTypeName(): TypeName = when (this) {
     is ReferenceType -> if (reference == "InputFile") ClassName(contentInputClassPackageName, "ContentInput") else ClassName(objectsPackageName, reference)
     is ArrayType -> List::class.asClassName().parameterizedBy(array.toTypeName())
     else -> throw RuntimeException("Unexpected type $this")
-}
-
-
-suspend fun createUnknownObject(obj: UnknownObject) {
-    val file = FileSpec.builder(objectsPackageName, obj.name)
-        .addType(
-            TypeSpec.classBuilder(obj.name)
-                .addKdoc(classDocumentation.format("@see [${obj.name}] (${obj.documentationLink})"))
-                .build()
-        )
-        .build()
-
-    withContext(Dispatchers.IO) {
-        file.writeTo(objectsPath)
-    }
 }
 
 val Type.isMultiPropertyIntLongAndString: Boolean
@@ -342,7 +356,7 @@ fun Contract.replaceTypes() {
                 _property = properties[i]
             }
             // all ids can be greater than Int.MAX
-            if (_property.name == "id" || _property.name.endsWith("_id") || _property.name.endsWith("date") || _property.description.contains("may have more than 32 significant bits")) {
+            if (_property.name == "id" || _property.name.endsWith("_id") || _property.name.endsWith("date") || _property.description.contains("may have more than 32 significant bits") || _property.description.contains("can be bigger than 2^31")) {
                 if (_property.typeInfo is IntegerType) {
                     val typeInfo = _property.typeInfo
                     properties[i] = _property.copy(typeInfo = (typeInfo as IntegerType).toLongType())
@@ -355,7 +369,7 @@ fun Contract.replaceTypes() {
                     }
                 }
             }
-            if (_property.name.endsWith("_ids") || _property.description.contains("may have more than 32 significant bits")) {
+            if (_property.name.endsWith("_ids") || _property.description.contains("may have more than 32 significant bits") || _property.description.contains("can be bigger than 2^31")) {
                 if (_property.typeInfo is ArrayType && _property.typeInfo.type == "integer") {
                     properties[i] = _property.copy(typeInfo = ArrayType(_property.typeInfo.type, ((_property.typeInfo as ArrayType).array as IntegerType).toLongType()))
                     _property = properties[i]
@@ -419,7 +433,8 @@ data class Method(
 abstract class Object {
     abstract val type: String
     abstract val name: String
-    abstract val description: String
+    abstract val description: String?
+    abstract val documentationLink: String
     var parentName: String? = null
 }
 
@@ -508,9 +523,9 @@ data class ArrayType(
 data class PropertiesObject(
     override val type: String,
     override val name: String,
-    override val description: String,
+    override val description: String? = null,
     val properties: MutableList<Property>,
-    @param:JsonProperty("documentation_link") val documentationLink: String,
+    @param:JsonProperty("documentation_link") override val documentationLink: String,
     // will be store for creating @JsonTypeInfo
     var typePropertyName: String? = null,
     // will be store for creating @JsonSubTypes
@@ -521,17 +536,17 @@ data class PropertiesObject(
 data class AnyOfObject(
     override val type: String,
     override val name: String,
-    override val description: String,
+    override val description: String? = null,
     @param:JsonProperty("any_of") val anyOf: List<Type>,
-    @param:JsonProperty("documentation_link") val documentationLink: String,
+    @param:JsonProperty("documentation_link") override val documentationLink: String,
 ) : Object()
 
 @JsonTypeName("unknown")
 data class UnknownObject(
     override val type: String,
     override val name: String,
-    override val description: String,
-    @param:JsonProperty("documentation_link") val documentationLink: String,
+    override val description: String? = null,
+    @param:JsonProperty("documentation_link") override val documentationLink: String,
 ) : Object()
 
 data class Property(
