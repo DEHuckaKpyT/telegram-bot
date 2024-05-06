@@ -26,6 +26,8 @@ internal class LocationMessageContainerFactory : MessageContainerFactory {
         return "longitude = ${message.location!!.longitude}, latitude = ${message.location.latitude}"
     }
 
+    override fun getMessageFileIds(message: Message): List<String>? = null
+
     override val type: KClass<out MessageContainer> = MessageType.LOCATION
 
     override val messageType: String = "LOCATION"

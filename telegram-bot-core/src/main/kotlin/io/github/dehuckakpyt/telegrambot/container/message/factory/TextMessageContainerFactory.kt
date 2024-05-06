@@ -24,6 +24,8 @@ internal class TextMessageContainerFactory : MessageContainerFactory {
 
     override fun getMessageText(message: Message): String? = message.text
 
+    override fun getMessageFileIds(message: Message): List<String>? = null
+
     override val type: KClass<out MessageContainer> = MessageType.TEXT
 
     override val messageType: String = "TEXT"

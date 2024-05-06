@@ -24,6 +24,8 @@ internal class VoiceMessageContainerFactory : MessageContainerFactory {
 
     override fun getMessageText(message: Message): String? = message.caption
 
+    override fun getMessageFileIds(message: Message): List<String> = listOf(message.voice!!.fileId)
+
     override val type: KClass<out MessageContainer> = MessageType.VOICE
 
     override val messageType: String = "VOICE"

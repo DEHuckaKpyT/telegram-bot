@@ -26,6 +26,8 @@ internal class ContactMessageContainerFactory : MessageContainerFactory {
         return "phoneNumber = ${message.contact!!.phoneNumber}, firstName = ${message.contact.firstName}"
     }
 
+    override fun getMessageFileIds(message: Message): List<String>? = null
+
     override val type: KClass<out MessageContainer> = MessageType.CONTACT
 
     override val messageType: String = "CONTACT"

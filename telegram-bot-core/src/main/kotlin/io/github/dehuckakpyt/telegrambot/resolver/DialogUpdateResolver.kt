@@ -14,7 +14,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 
@@ -84,7 +83,8 @@ internal class DialogUpdateResolver(
             type = factory.messageType,
             step = chain?.step,
             stepContainerType = factory.messageType,
-            text = factory.getMessageText(message)
+            text = factory.getMessageText(message),
+            fileIds = factory.getMessageFileIds(message)
         )
 
         val action = chain?.step?.let { chainResolver.getStep(it, factory.type) }
@@ -130,7 +130,7 @@ internal class DialogUpdateResolver(
     }
 
     private suspend fun <T : Container> invokeWithContainerContext(container: T, action: suspend T.() -> Unit) =
-        withContext(currentCoroutineContext() + ContainerCoroutineContext(container)) {
+        withContext(ContainerCoroutineContext(container)) {
             action.invoke(container)
         }
 

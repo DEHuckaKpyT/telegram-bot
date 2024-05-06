@@ -24,6 +24,8 @@ internal class AudioMessageContainerFactory : MessageContainerFactory {
 
     override fun getMessageText(message: Message): String? = message.caption
 
+    override fun getMessageFileIds(message: Message): List<String> = listOf(message.audio!!.fileId)
+
     override val type: KClass<out MessageContainer> = MessageType.AUDIO
 
     override val messageType: String = "AUDIO"

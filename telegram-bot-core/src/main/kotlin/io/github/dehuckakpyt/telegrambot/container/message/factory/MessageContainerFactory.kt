@@ -19,6 +19,8 @@ internal interface MessageContainerFactory {
 
     fun getMessageText(message: Message): String?
 
+    fun getMessageFileIds(message: Message): List<String>?
+
     val type: KClass<out MessageContainer>
 
     val messageType: String

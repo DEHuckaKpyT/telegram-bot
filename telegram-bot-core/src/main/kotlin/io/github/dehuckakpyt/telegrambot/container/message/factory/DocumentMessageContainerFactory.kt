@@ -24,6 +24,8 @@ internal class DocumentMessageContainerFactory : MessageContainerFactory {
 
     override fun getMessageText(message: Message): String? = message.caption
 
+    override fun getMessageFileIds(message: Message): List<String> = listOf(message.document!!.fileId)
+
     override val type: KClass<out MessageContainer> = MessageType.DOCUMENT
 
     override val messageType: String = "DOCUMENT"
