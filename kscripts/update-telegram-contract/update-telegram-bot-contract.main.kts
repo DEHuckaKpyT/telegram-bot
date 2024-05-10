@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.squareup.kotlinpoet.*
-import com.squareup.kotlinpoet.KModifier.DATA
-import com.squareup.kotlinpoet.KModifier.SEALED
+import com.squareup.kotlinpoet.KModifier.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.ktor.client.*
 import io.ktor.client.engine.apache5.*
@@ -33,12 +32,12 @@ import kotlin.io.path.Path
 
 val getDefaultValueFromDescriptionRegex = Regex("^(?:Always (.+)\\..+)|(?:.+, always “([a-z0-9_]+)”)$")
 val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*?$")
-val objectsPath = Path("./../../telegram-bot-core/src/main/kotlin")
+val modulePath = Path("./../../telegram-bot-core/src/main/kotlin")
 val objectsPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram"
+val telegramBotClassPackageName = "io.github.dehuckakpyt.telegrambot.temp"
 val contentInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
 val stringInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
 val todayFormattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))!!
-//val ignoreClassNames = listOf("InputFile")
 
 
 val client = HttpClient(Apache5) {
@@ -50,14 +49,80 @@ val client = HttpClient(Apache5) {
 runBlocking {
 //    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").body<Contract>()
     val contract = Path("./custom_v2.json").let { jacksonObjectMapper().readValue<Contract>(it.toFile()) }
-    contract.replaceTypes()
+    contract.replaceObjectTypes()
+    contract.replaceMethodTypes()
+    contract.methodsWithOverloadsByName = contract.splitMethodsToOverloads()
 
     println("Generating telegram bot api contracts...")
     println("Version: ${contract.version.major}.${contract.version.minor}.${contract.version.patch}")
     println("Recent changes: ${contract.recentChanges.year}-${contract.recentChanges.month}-${contract.recentChanges.day}")
 
-    createObjects(contract.objects)
+//    createObjects(contract.objects)
+    createMethods(contract.methodsWithOverloadsByName)
 }
+
+suspend fun createMethods(methods: List<List<Method>>) {
+
+
+    val file = FileSpec.builder(telegramBotClassPackageName, "TelegramBot")
+        .indent("    ")
+        .addType(
+            TypeSpec.interfaceBuilder("TelegramBot")
+                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addTelegramBotMethods(methods)
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(modulePath)
+    }
+}
+
+fun TypeSpec.Builder.addTelegramBotMethods(groupedMethods: List<List<Method>>) = apply {
+    groupedMethods.forEach { methods ->
+        val mainMethod = methods.first()
+        addFunction(
+            FunSpec.builder(mainMethod.name)
+                .addModifiers(ABSTRACT)
+                .addParameters(mainMethod.arguments)
+                .returns(mainMethod.returnType.toClassTypeName())
+                .build()
+        )
+//        methods.drop(1).forEach { method ->
+//            addFunction(
+//                FunSpec.builder(method.name)
+//                    .addParameters(method.arguments)
+//                    .build()
+//            )
+//        }
+    }
+}
+
+fun FunSpec.Builder.addParameters(arguments: List<Argument>) = apply {
+    arguments.forEach { argument ->
+        addParameter(argument.toParameter())
+
+    }
+}
+
+fun Argument.toParameter(): ParameterSpec = ParameterSpec.builder(nameCamelCase, typeInfo.toMethodTypeName().copy(nullable = required.not()))
+    .also { if (required.not()) it.defaultValue("null") }
+    .build()
+
+
+fun Type.toMethodTypeName(): TypeName = when (this) {
+    is IntegerType -> Int::class.asClassName()
+    is LongType -> Long::class.asClassName()
+    is StringType -> String::class.asClassName()
+    is BooleanType -> Boolean::class.asClassName()
+    is FloatType -> Double::class.asClassName()
+    is AnyOfType -> throw RuntimeException("Unexpected type $this")
+    is ReferenceType -> if (reference == "InputFile") ClassName(contentInputClassPackageName, "ContentInput") else ClassName(objectsPackageName, reference)
+    is ArrayType -> Iterable::class.asClassName().parameterizedBy(array.toMethodTypeName())
+    else -> throw RuntimeException("Unexpected type $this")
+}
+
 
 suspend fun createObjects(objects: List<Object>) {
     val objectsByName = objects.associateBy { it.name }
@@ -90,12 +155,14 @@ suspend fun createMultiTypePropertiesObject(obj: PropertiesObject) {
 
 suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Object>) {
     var referenceObjects = obj.anyOf.map { objectsByName[(it as ReferenceType).reference]!! as PropertiesObject }
-    referenceObjects.forEach { it.parentName = obj.name }
+    //TODO remove
+//    referenceObjects.forEach { it.parentName = obj.name }
 
 
     val typePropertyName = referenceObjects.firstOrNull { it.typePropertyName != null }?.typePropertyName
     if (typePropertyName == null) {
         val file = FileSpec.builder(objectsPackageName, obj.name)
+            .indent("    ")
             .addType(
                 TypeSpec.defaultInterfaceBuilder(obj)
                     .build()
@@ -103,7 +170,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
             .build()
 
         withContext(Dispatchers.IO) {
-            file.writeTo(objectsPath)
+            file.writeTo(modulePath)
         }
         return
     }
@@ -131,6 +198,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
         .build()
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
+        .indent("    ")
         .addType(
             TypeSpec.defaultInterfaceBuilder(obj)
                 .addAnnotation(jsonTypeInfo)
@@ -140,7 +208,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(objectsPath)
+        file.writeTo(modulePath)
     }
 }
 
@@ -160,13 +228,14 @@ suspend fun createMultiTypeIntLongAndStringPropertiesObject(obj: PropertiesObjec
             properties.add(property.toPropertySpec())
         } else {
             primaryConstructorBuilder.addParameter(property.toParameterSpec(String::class.asClassName()))
-            secondaryConstructorBuilder.addParameter(property.toParameterSpec(property.typeInfo.anyOf.first { it.type != "string" }.toTypeName()))
+            secondaryConstructorBuilder.addParameter(property.toParameterSpec(property.typeInfo.anyOf.first { it.type != "string" }.toClassTypeName()))
             properties.add(property.toPropertySpec(String::class.asClassName()))
             callThisConstructorArgs.add(property.nameCamelCase + ".toString()")
         }
     }
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
+        .indent("    ")
         .addType(
             TypeSpec.defaultClassBuilder(obj)
                 .primaryConstructor(primaryConstructorBuilder.build())
@@ -177,7 +246,7 @@ suspend fun createMultiTypeIntLongAndStringPropertiesObject(obj: PropertiesObjec
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(objectsPath)
+        file.writeTo(modulePath)
     }
 }
 
@@ -204,6 +273,7 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
     }
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
+        .indent("    ")
         .addImport(stringInputClassPackageName, "StringInput")
         .addType(
             TypeSpec.defaultClassBuilder(obj)
@@ -215,7 +285,7 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(objectsPath)
+        file.writeTo(modulePath)
     }
 }
 
@@ -227,6 +297,7 @@ suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
     }.build()
 
     val file = FileSpec.builder(objectsPackageName, obj.name)
+        .indent("    ")
         .addType(
             TypeSpec.defaultClassBuilder(obj)
                 .primaryConstructor(constructor)
@@ -236,12 +307,13 @@ suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(objectsPath)
+        file.writeTo(modulePath)
     }
 }
 
 suspend fun createUnknownObject(obj: UnknownObject) {
     val file = FileSpec.builder(objectsPackageName, obj.name)
+        .indent("    ")
         .addType(
             TypeSpec.defaultClassBuilder(obj)
                 .build()
@@ -249,13 +321,13 @@ suspend fun createUnknownObject(obj: UnknownObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(objectsPath)
+        file.writeTo(modulePath)
     }
 }
 
 fun Property.toParameterSpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): ParameterSpec = ParameterSpec.builder(
     name = name,
-    type = (type ?: typeInfo.toTypeName()).copy(nullable = nullable)
+    type = (type ?: typeInfo.toClassTypeName()).copy(nullable = nullable)
 ).also {
     if (nullable) {
         it.defaultValue("null")
@@ -264,7 +336,7 @@ fun Property.toParameterSpec(type: TypeName? = null, name: String = nameCamelCas
 
 fun Property.toPropertySpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): PropertySpec = PropertySpec.builder(
     name = name,
-    type = (type ?: typeInfo.toTypeName()).copy(nullable = nullable),
+    type = (type ?: typeInfo.toClassTypeName()).copy(nullable = nullable),
 ).initializer(
     if (typeInfo.constValue != null) "\"${typeInfo.constValue}\"" else name
 ).addAnnotation(
@@ -312,7 +384,7 @@ fun TypeSpec.Companion.defaultInterfaceBuilder(obj: Object): TypeSpec.Builder = 
     addModifiers(SEALED)
 }
 
-fun Type.toTypeName(): TypeName = when (this) {
+fun Type.toClassTypeName(): TypeName = when (this) {
     is IntegerType -> Int::class.asClassName()
     is LongType -> Long::class.asClassName()
     is StringType -> String::class.asClassName()
@@ -320,7 +392,7 @@ fun Type.toTypeName(): TypeName = when (this) {
     is FloatType -> Double::class.asClassName()
     is AnyOfType -> throw RuntimeException("Unexpected type $this")
     is ReferenceType -> if (reference == "InputFile") ClassName(contentInputClassPackageName, "ContentInput") else ClassName(objectsPackageName, reference)
-    is ArrayType -> List::class.asClassName().parameterizedBy(array.toTypeName())
+    is ArrayType -> List::class.asClassName().parameterizedBy(array.toClassTypeName())
     else -> throw RuntimeException("Unexpected type $this")
 }
 
@@ -334,11 +406,133 @@ val Type.isMultiPropertyIntLongAndString: Boolean
     }
 
 val Property.nameCamelCase get() = name.toCamelCase()
+val Argument.nameCamelCase get() = name.toCamelCase()
 
 fun String.toCamelCase(): String = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, this)
 
+suspend fun Contract.replaceMethodTypes() {
+    val objectsByName = objects.associateBy(Object::name)
 
-fun Contract.replaceTypes() {
+    methods.forEach { method ->
+        val arguments = method.arguments
+        for ((i, argument) in arguments.withIndex()) {
+//            var _argument = argument
+            // means that you can download file by this field
+            if (argument.description.contains("exists on the Telegram servers")) {
+                arguments[i] = argument.copy(typeInfo = AnyOfType("any_of", mutableListOf(StringType("string"), ReferenceType("reference", "InputFile"))))
+            }
+            // thumbnail's you can upload only
+            if (argument.name == "thumbnail" && argument.description.contains("Thumbnails can't be reused and can be only uploaded as a new file")) {
+                arguments[i] = argument.copy(typeInfo = ReferenceType("reference", "InputFile"))
+            }
+            // all ids can be greater than Int.MAX
+            if (argument.name == "id" || argument.name.endsWith("_id") || argument.name.endsWith("date") || argument.description.contains("may have more than 32 significant bits") || argument.description.contains("can be bigger than 2^31")) {
+                if (argument.typeInfo is IntegerType) {
+                    val typeInfo = argument.typeInfo
+                    arguments[i] = argument.copy(typeInfo = (typeInfo as IntegerType).toLongType())
+                }
+                if (argument.typeInfo is AnyOfType) {
+                    for ((index, typeAnyOf) in (argument.typeInfo as AnyOfType).anyOf.withIndex()) {
+                        if (typeAnyOf !is IntegerType) continue
+                        (argument.typeInfo as AnyOfType).anyOf[index] = typeAnyOf.toLongType()
+                    }
+                }
+            }
+            if (argument.name.endsWith("_ids") || argument.description.contains("may have more than 32 significant bits") || argument.description.contains("can be bigger than 2^31")) {
+                if (argument.typeInfo is ArrayType && argument.typeInfo.type == "integer") {
+                    arguments[i] = argument.copy(typeInfo = ArrayType(argument.typeInfo.type, ((argument.typeInfo as ArrayType).array as IntegerType).toLongType()))
+                }
+            }
+
+            if (argument.typeInfo is AnyOfType && (argument.typeInfo as AnyOfType).anyOf.all { it is ReferenceType }) {
+                val interfaceName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, argument.name)
+                if ((argument.typeInfo as AnyOfType).anyOf.any { objectsByName[(it as ReferenceType).reference]!!.parentName == null }) {
+                    (argument.typeInfo as AnyOfType).anyOf.forEach { objectsByName[(it as ReferenceType).reference]!!.parentName = interfaceName }
+                    val file = FileSpec.builder(objectsPackageName, interfaceName)
+                        .indent("    ")
+                        .addType(TypeSpec.interfaceBuilder(interfaceName)
+                            .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                            .build())
+                        .build()
+
+                    withContext(Dispatchers.IO) {
+                        file.writeTo(modulePath)
+                    }
+                }
+                argument.typeInfo = ReferenceType("reference", interfaceName)
+            }
+
+            if ((argument.typeInfo is ArrayType) && ((argument.typeInfo as ArrayType).array is AnyOfType) && (((argument.typeInfo as ArrayType).array as AnyOfType).anyOf.first() is ReferenceType)) {
+                val objectWithParent = objectsByName[(((argument.typeInfo as ArrayType).array as AnyOfType).anyOf.first() as ReferenceType).reference]
+                argument.typeInfo = ArrayType("array", array = ReferenceType("reference", objectWithParent!!.parentName!!))
+            }
+        }
+    }
+
+    methods.filter { it.returnType is AnyOfType }.forEach { method ->
+        // split methods, which returns Message or Boolean type like https://core.telegram.org/bots/api#editmessagetext
+        if (method.description.contains("[Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned.") && method.description.contains("not an inline message")) {
+
+            method.arguments.forEach { if (it.name == "chat_id" || it.name == "message_id" || it.name == "inline_message_id") it.required = true }
+            val otherwiseMethod = method.copy(arguments = method.arguments.toMutableList())
+            method.returnType = ReferenceType("reference", "Message")
+            method.arguments = method.arguments.filter { it.name != "inline_message_id" }.toMutableList()
+//            method.arguments.forEach { if (it.name == "chat_id" || it.name == "message_id") it.required = true }
+            otherwiseMethod.returnType = BooleanType("bool")
+            otherwiseMethod.arguments = otherwiseMethod.arguments.filter { it.name != "chat_id" && it.name != "message_id" }.toMutableList()
+//            otherwiseMethod.arguments.forEach { if (it.name == "inline_message_id") it.required = true }
+            methods.add(otherwiseMethod)
+        }
+    }
+    methods.filter { it.returnType is AnyOfType }.forEach { method ->
+        method.arguments = method.arguments.sortedWith(compareBy(Argument::required).reversed()).toMutableList()
+    }
+}
+
+fun Contract.splitMethodsToOverloads(): List<List<Method>> = buildList {
+    for (method in methods) {
+        val groupedMethods = mutableListOf(method)
+
+        var point = groupedMethods.nextMultipleType
+        while (point != null) {
+            val (mIndex, aIndex) = point
+            val arguments = groupedMethods[mIndex].arguments
+            val argument = arguments[aIndex]
+            val (mainType, secondaryType) = argument.typeInfo.destructedTypes
+            arguments[aIndex] = argument.copy(typeInfo = mainType)
+            groupedMethods.add(groupedMethods[mIndex].copy(arguments = arguments.toMutableList().also { it[aIndex] = argument.copy(typeInfo = secondaryType) }))
+
+            point = groupedMethods.nextMultipleType
+        }
+
+        add(groupedMethods)
+    }
+}
+
+val List<Method>.nextMultipleType: Pair<Int, Int>?
+    get() {
+        withIndex().forEach { (mIndex, method) ->
+            method.arguments.withIndex().forEach { (aIndex, arg) ->
+                if (arg.typeInfo is AnyOfType) return mIndex to aIndex
+            }
+        }
+
+        return null
+    }
+val Type.destructedTypes: Pair<Type, Type>
+    get() {
+        if (this !is AnyOfType) throw IllegalArgumentException("Nothing to destruct")
+        val (first, second) = this.anyOf
+        if (first is StringType && second is LongType) return first to second
+        if (first is LongType && second is StringType) return second to first
+        if (first is StringType && second is ReferenceType) return second to first
+        if (first is ReferenceType && second is StringType) return first to second
+
+        throw RuntimeException("Cant to destruct types of $anyOf")
+    }
+
+fun Contract.replaceObjectTypes() {
+    val objectsByName = objects.associateBy(Object::name)
     objects.forEach { obj ->
         if (obj !is PropertiesObject) return@forEach
 
@@ -400,6 +594,13 @@ fun Contract.replaceTypes() {
             }
         }
     }
+
+    objects.forEach { obj ->
+        if (obj !is AnyOfObject) return@forEach
+
+        val referenceObjects = obj.anyOf.map { objectsByName[(it as ReferenceType).reference]!! as PropertiesObject }
+        referenceObjects.forEach { it.parentName = obj.name }
+    }
 }
 
 fun IntegerType.toLongType(): LongType = LongType(default?.toLong(), min?.toLong(), min?.toLong(), enumeration.map { it.toLong() })
@@ -409,8 +610,10 @@ fun IntegerType.toLongType(): LongType = LongType(default?.toLong(), min?.toLong
 data class Contract(
     val version: Version,
     @param:JsonProperty("recent_changes") val recentChanges: RecentChanges,
-    val methods: List<Method>,
+    val methods: MutableList<Method>,
     val objects: List<Object>,
+
+    var methodsWithOverloadsByName: List<List<Method>> = listOf(),
 )
 
 data class Version(val major: Int, val minor: Int, val patch: Int)
@@ -418,9 +621,9 @@ data class RecentChanges(val year: Int, val month: Int, val day: Int)
 data class Method(
     val name: String,
     val description: String,
-    val arguments: List<Argument>,
+    var arguments: MutableList<Argument>,
     @param:JsonProperty("maybe_multipart") val maybeMultipart: Boolean,
-    @param:JsonProperty("return_type") val returnType: Type,
+    @param:JsonProperty("return_type") var returnType: Type,
     @param:JsonProperty("documentation_link") val documentationLink: String,
 )
 
@@ -441,8 +644,8 @@ abstract class Object {
 data class Argument(
     val name: String,
     val description: String,
-    val required: Boolean,
-    @param:JsonProperty("type_info") val typeInfo: Type,
+    var required: Boolean,
+    @param:JsonProperty("type_info") var typeInfo: Type,
 )
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
@@ -493,7 +696,7 @@ data class StringType(
 @JsonTypeName("bool")
 data class BooleanType(
     override val type: String,
-    val default: Boolean?,
+    val default: Boolean? = null,
 ) : Type()
 
 @JsonTypeName("float")
