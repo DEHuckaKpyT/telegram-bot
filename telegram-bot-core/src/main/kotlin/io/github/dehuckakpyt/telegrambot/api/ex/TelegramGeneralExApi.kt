@@ -5,7 +5,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
-
 /**
  * Created on 18.12.2023.
  *<p>
@@ -13,7 +12,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedCont
  * @author Denis Matytsin
  */
 interface TelegramGeneralExApi : TelegramGeneralApi {
-
     suspend fun sendMessage(
         chatId: Long,
         text: String,
@@ -819,7 +817,9 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
     suspend fun sendPoll(
         chatId: Long,
         question: String,
-        options: List<String>,
+        options: List<InputPollOption>,
+        questionParseMode: String? = null,
+        questionEntities: List<MessageEntity>? = null,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         isAnonymous: Boolean? = null,
@@ -840,6 +840,8 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         chatId = chatId.toString(),
         question = question,
         options = options,
+        questionParseMode = questionParseMode,
+        questionEntities = questionEntities,
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         isAnonymous = isAnonymous,
@@ -1130,7 +1132,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
 
     suspend fun getChat(
         chatId: Long,
-    ): Chat = getChat(
+    ): ChatFullInfo = getChat(
         chatId = chatId.toString()
     )
 
@@ -1171,6 +1173,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
     suspend fun editMessageLiveLocation(
         latitude: Float,
         longitude: Float,
+        livePeriod: Int? = null,
         horizontalAccuracy: Float? = null,
         heading: Long? = null,
         proximityAlertRadius: Long? = null,
@@ -1181,6 +1184,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
     ): Message = editMessageLiveLocation(
         latitude = latitude,
         longitude = longitude,
+        livePeriod = livePeriod,
         horizontalAccuracy = horizontalAccuracy,
         heading = heading,
         proximityAlertRadius = proximityAlertRadius,
@@ -1195,6 +1199,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageId: Long,
         latitude: Float,
         longitude: Float,
+        livePeriod: Int? = null,
         horizontalAccuracy: Float? = null,
         heading: Long? = null,
         proximityAlertRadius: Long? = null,
@@ -1202,6 +1207,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
     ): Message = editMessageLiveLocation(
         latitude = latitude,
         longitude = longitude,
+        livePeriod = livePeriod,
         horizontalAccuracy = horizontalAccuracy,
         heading = heading,
         proximityAlertRadius = proximityAlertRadius,
@@ -1216,6 +1222,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         messageId: Long,
         latitude: Float,
         longitude: Float,
+        livePeriod: Int? = null,
         horizontalAccuracy: Float? = null,
         heading: Long? = null,
         proximityAlertRadius: Long? = null,
@@ -1223,6 +1230,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
     ): Message = editMessageLiveLocation(
         latitude = latitude,
         longitude = longitude,
+        livePeriod = livePeriod,
         horizontalAccuracy = horizontalAccuracy,
         heading = heading,
         proximityAlertRadius = proximityAlertRadius,
@@ -1236,6 +1244,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
         inlineMessageId: String,
         latitude: Float,
         longitude: Float,
+        livePeriod: Int? = null,
         horizontalAccuracy: Float? = null,
         heading: Long? = null,
         proximityAlertRadius: Long? = null,
@@ -1243,6 +1252,7 @@ interface TelegramGeneralExApi : TelegramGeneralApi {
     ): Message = editMessageLiveLocation(
         latitude = latitude,
         longitude = longitude,
+        livePeriod = livePeriod,
         horizontalAccuracy = horizontalAccuracy,
         heading = heading,
         proximityAlertRadius = proximityAlertRadius,

@@ -4,7 +4,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.Content
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedContent
 
-
 /**
  * Created on 03.12.2023.
  *<p>
@@ -12,7 +11,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedCont
  * @author Elbek Djuraev
  */
 interface TelegramGeneralApi {
-
     suspend fun getMe(): User
 
     suspend fun logOut(): Boolean
@@ -370,7 +368,9 @@ interface TelegramGeneralApi {
     suspend fun sendPoll(
         chatId: String,
         question: String,
-        options: List<String>,
+        options: List<InputPollOption>,
+        questionParseMode: String? = null,
+        questionEntities: List<MessageEntity>? = null,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         isAnonymous: Boolean? = null,
@@ -546,7 +546,7 @@ interface TelegramGeneralApi {
 
     suspend fun leaveChat(chatId: String): Boolean
 
-    suspend fun getChat(chatId: String): Chat
+    suspend fun getChat(chatId: String): ChatFullInfo
 
     suspend fun getChatAdministrators(chatId: String): ArrayList<ChatMember>
 
@@ -618,6 +618,7 @@ interface TelegramGeneralApi {
     suspend fun editMessageLiveLocation(
         latitude: Float,
         longitude: Float,
+        livePeriod: Int? = null,
         horizontalAccuracy: Float? = null,
         heading: Long? = null,
         proximityAlertRadius: Long? = null,

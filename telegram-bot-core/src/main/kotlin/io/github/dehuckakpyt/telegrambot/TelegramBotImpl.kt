@@ -10,7 +10,6 @@ import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 
-
 /**
  * Created on 05.12.2023.
  *<p>
@@ -735,7 +734,9 @@ class TelegramBotImpl(
     override suspend fun sendPoll(
         chatId: String,
         question: String,
-        options: List<String>,
+        options: List<InputPollOption>,
+        questionParseMode: String?,
+        questionEntities: List<MessageEntity>?,
         businessConnectionId: String?,
         messageThreadId: Long?,
         isAnonymous: Boolean?,
@@ -758,6 +759,8 @@ class TelegramBotImpl(
             chatId = chatId,
             question = question,
             options = options,
+            questionParseMode = questionParseMode,
+            questionEntities = questionEntities,
             businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             isAnonymous = isAnonymous,
@@ -989,7 +992,7 @@ class TelegramBotImpl(
         "leaveChat", LeaveChat(chatId)
     )
 
-    override suspend fun getChat(chatId: String): Chat = client.get("getChat") {
+    override suspend fun getChat(chatId: String): ChatFullInfo = client.get("getChat") {
         parameter("chat_id", chatId)
     }
 
@@ -1201,6 +1204,7 @@ class TelegramBotImpl(
     override suspend fun editMessageLiveLocation(
         latitude: Float,
         longitude: Float,
+        livePeriod: Int?,
         horizontalAccuracy: Float?,
         heading: Long?,
         proximityAlertRadius: Long?,
@@ -1215,6 +1219,7 @@ class TelegramBotImpl(
             inlineMessageId = inlineMessageId,
             latitude = latitude,
             longitude = longitude,
+            livePeriod = livePeriod,
             horizontalAccuracy = horizontalAccuracy,
             heading = heading,
             proximityAlertRadius = proximityAlertRadius,

@@ -8,7 +8,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.supplement.content.NamedCont
 import io.ktor.client.statement.*
 import io.mockk.mockk
 
-
 /**
  * Created on 19.02.2024.
  *<p>
@@ -16,7 +15,6 @@ import io.mockk.mockk
  * @author Denis Matytsin
  */
 internal class MockTelegramBot : TelegramBot {
-
     override val username: String = "mock_bot"
 
     override fun stop() {}
@@ -396,7 +394,9 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendPoll(
         chatId: String,
         question: String,
-        options: List<String>,
+        options: List<InputPollOption>,
+        questionParseMode: String?,
+        questionEntities: List<MessageEntity>?,
         businessConnectionId: String?,
         messageThreadId: Long?,
         isAnonymous: Boolean?,
@@ -536,7 +536,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun leaveChat(chatId: String): Boolean = mockk()
 
-    override suspend fun getChat(chatId: String): Chat = mockk()
+    override suspend fun getChat(chatId: String): ChatFullInfo = mockk()
 
     override suspend fun getChatAdministrators(chatId: String): ArrayList<ChatMember> = mockk()
 
@@ -659,6 +659,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun editMessageLiveLocation(
         latitude: Float,
         longitude: Float,
+        livePeriod: Int?,
         horizontalAccuracy: Float?,
         heading: Long?,
         proximityAlertRadius: Long?,

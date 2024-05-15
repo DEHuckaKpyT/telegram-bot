@@ -3,7 +3,6 @@ package io.github.dehuckakpyt.telegrambot.model.internal
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.github.dehuckakpyt.telegrambot.model.type.*
 
-
 /**
  * Created on 03.12.2023.
  *<p>
@@ -89,6 +88,7 @@ internal class EditMessageLiveLocation(
     @get:JsonProperty("inline_message_id") val inlineMessageId: String? = null,
     @get:JsonProperty("latitude") val latitude: Float,
     @get:JsonProperty("longitude") val longitude: Float,
+    @get:JsonProperty("live_period") val livePeriod: Int? = null,
     @get:JsonProperty("horizontal_accuracy") val horizontalAccuracy: Float? = null,
     @get:JsonProperty("heading") val heading: Long? = null,
     @get:JsonProperty("proximity_alert_radius") val proximityAlertRadius: Long? = null,
@@ -184,7 +184,9 @@ internal class UnbanChatSenderChat(
 internal class SendPoll(
     @get:JsonProperty("chat_id") val chatId: String,
     @get:JsonProperty("question") val question: String,
-    @get:JsonProperty("options") val options: List<String>,
+    @get:JsonProperty("options") val options: List<InputPollOption>,
+    @get:JsonProperty("question_parse_mode") val questionParseMode: String? = null,
+    @get:JsonProperty("question_entities") val questionEntities: List<MessageEntity>? = null,
     @get:JsonProperty("business_connection_id") val businessConnectionId: String? = null,
     @get:JsonProperty("message_thread_id") val messageThreadId: Long? = null,
     @get:JsonProperty("is_anonymous") val isAnonymous: Boolean? = null,

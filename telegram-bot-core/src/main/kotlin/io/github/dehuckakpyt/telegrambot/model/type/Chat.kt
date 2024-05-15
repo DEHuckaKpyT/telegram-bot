@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
 
-
 /**
  * Created on 03.12.2023.
  *
@@ -20,6 +19,17 @@ public data class Chat(
     @param:JsonProperty("first_name") val firstName: String? = null,
     @param:JsonProperty("last_name") val lastName: String? = null,
     @param:JsonProperty("is_forum") val isForum: Boolean? = null,
+)
+
+public data class ChatFullInfo(
+    @param:JsonProperty("id") val id: Long,
+    @param:JsonProperty("type") val type: String,
+    @param:JsonProperty("title") val title: String? = null,
+    @param:JsonProperty("username") val username: String? = null,
+    @param:JsonProperty("first_name") val firstName: String? = null,
+    @param:JsonProperty("last_name") val lastName: String? = null,
+    @param:JsonProperty("is_forum") val isForum: Boolean? = null,
+    @param:JsonProperty("max_reaction_count") val maxReactionCount: Int,
     @param:JsonProperty("photo") val photo: ChatPhoto? = null,
     @param:JsonProperty("active_usernames") val activeUsernames: List<String>? = null,
     @param:JsonProperty("birthdate") val birthdate: Birthdate? = null,
@@ -79,7 +89,6 @@ public data class ChatPermissions(
     @get:JsonProperty("can_manage_topics") @param:JsonProperty("can_manage_topics") val canManageTopics: Boolean? = null,
 )
 
-
 public data class ChatPhoto(
     @param:JsonProperty("small_file_id") val smallFileId: String,
     @param:JsonProperty("small_file_unique_id") val smallFileUniqueId: String,
@@ -97,7 +106,6 @@ public data class ChatPhoto(
     JsonSubTypes.Type(value = ChatMember.Banned::class, name = "kicked"),
 )
 public sealed class ChatMember {
-
     public abstract val status: String
     public abstract val user: User
 
@@ -181,6 +189,7 @@ public data class ChatMemberUpdated(
     @param:JsonProperty("old_chat_member") val oldChatMember: ChatMember,
     @param:JsonProperty("new_chat_member") val newChatMember: ChatMember,
     @param:JsonProperty("invite_link") val inviteLink: ChatInviteLink? = null,
+    @param:JsonProperty("via_join_request") val viaJoinRequest: Boolean? = null,
     @param:JsonProperty("via_chat_folder_invite_link") val viaChatFolderInviteLink: Boolean? = null,
 )
 
@@ -244,3 +253,80 @@ public class WriteAccessAllowed(
     @param:JsonProperty("web_app_name") val webAppName: String? = null,
     @param:JsonProperty("from_attachment_menu") val fromAttachmentMenu: Boolean? = null,
 )
+
+public data class ChatBackground(
+    @get:JsonProperty("type") @param:JsonProperty("type") val type: BackgroundType? = null,
+)
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = BackgroundFillSolid::class, name = "fill"),
+    JsonSubTypes.Type(value = BackgroundFillGradient::class, name = "gradient"),
+    JsonSubTypes.Type(value = BackgroundFillFreeformGradient::class, name = "freeform_gradient"),
+)
+public sealed class BackgroundFill {
+    abstract val type: String
+}
+
+@JsonTypeName("solid")
+public data class BackgroundFillSolid(
+    @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+    @get:JsonProperty("color") @param:JsonProperty("color") val color: Int,
+) : BackgroundFill()
+
+@JsonTypeName("gradient")
+public data class BackgroundFillGradient(
+    @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+    @get:JsonProperty("top_color") @param:JsonProperty("top_color") val topColor: Int,
+    @get:JsonProperty("bottom_color") @param:JsonProperty("bottom_color") val bottomColor: Int,
+    @get:JsonProperty("rotation_angle") @param:JsonProperty("rotation_angle") val rotationAngle: Int,
+) : BackgroundFill()
+
+@JsonTypeName("freeform_gradient")
+public data class BackgroundFillFreeformGradient(
+    @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+    @get:JsonProperty("colors") @param:JsonProperty("colors") val colors: List<Int>,
+) : BackgroundFill()
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = BackgroundTypeFill::class, name = "fill"),
+    JsonSubTypes.Type(value = BackgroundTypeWallpaper::class, name = "wallpaper"),
+    JsonSubTypes.Type(value = BackgroundTypePattern::class, name = "pattern"),
+    JsonSubTypes.Type(value = BackgroundTypeChatTheme::class, name = "chat_theme"),
+)
+public sealed class BackgroundType {
+    abstract val type: String
+}
+
+@JsonTypeName("fill")
+public data class BackgroundTypeFill(
+    @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+    @get:JsonProperty("fill") @param:JsonProperty("fill") val fill: BackgroundFill,
+    @get:JsonProperty("dark_theme_dimming") @param:JsonProperty("dark_theme_dimming") val darkThemeDimming: Int,
+) : BackgroundType()
+
+@JsonTypeName("wallpaper")
+public data class BackgroundTypeWallpaper(
+    @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+    @get:JsonProperty("document") @param:JsonProperty("document") val document: Document,
+    @get:JsonProperty("dark_theme_dimming") @param:JsonProperty("dark_theme_dimming") val darkThemeDimming: Int,
+    @get:JsonProperty("is_blurred") @param:JsonProperty("is_blurred") val isBlurred: Boolean? = null,
+    @get:JsonProperty("is_moving") @param:JsonProperty("is_moving") val isMoving: Boolean? = null,
+) : BackgroundType()
+
+@JsonTypeName("pattern")
+public data class BackgroundTypePattern(
+    @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+    @get:JsonProperty("document") @param:JsonProperty("document") val document: Document,
+    @get:JsonProperty("fill") @param:JsonProperty("fill") val fill: BackgroundFill,
+    @get:JsonProperty("intensity") @param:JsonProperty("intensity") val intensity: Int,
+    @get:JsonProperty("is_inverted") @param:JsonProperty("is_inverted") val isInverted: Boolean? = null,
+    @get:JsonProperty("is_moving") @param:JsonProperty("is_moving") val isMoving: Boolean? = null,
+) : BackgroundType()
+
+@JsonTypeName("chat_theme")
+public data class BackgroundTypeChatTheme(
+    @get:JsonProperty("type") @param:JsonProperty("type") override val type: String,
+    @get:JsonProperty("theme_name") @param:JsonProperty("theme_name") val themeName: String,
+) : BackgroundType()
