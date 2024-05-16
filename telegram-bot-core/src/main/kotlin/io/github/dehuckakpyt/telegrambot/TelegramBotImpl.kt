@@ -10,7 +10,6 @@ import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 
-
 /**
  * Created on 05.12.2023.
  *<p>
@@ -85,7 +84,7 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "TEXT", text = text) }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "TEXT", text = text) }
 
     override suspend fun forwardMessage(
         chatId: String,
@@ -197,7 +196,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "PHOTO", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "PHOTO", text = caption, fileIds = it.photo.map(PhotoSize::fileId)) }
 
     override suspend fun sendPhoto(
         chatId: String,
@@ -225,7 +224,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "PHOTO", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "PHOTO", text = caption, fileIds = it.photo.map(PhotoSize::fileId)) }
 
     override suspend fun sendAudio(
         chatId: String,
@@ -259,7 +258,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "AUDIO", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "AUDIO", text = caption, fileIds = listOf(it.audio!!.fileId)) }
 
     override suspend fun sendAudio(
         chatId: String,
@@ -293,7 +292,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "AUDIO", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "AUDIO", text = caption, fileIds = listOf(it.audio!!.fileId)) }
 
     override suspend fun sendDocument(
         chatId: String,
@@ -323,7 +322,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DOCUMENT", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "DOCUMENT", text = caption, fileIds = listOf(it.document!!.fileId)) }
 
     override suspend fun sendDocument(
         chatId: String,
@@ -353,7 +352,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DOCUMENT", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "DOCUMENT", text = caption, fileIds = listOf(it.document!!.fileId)) }
 
     override suspend fun sendVideo(
         chatId: String,
@@ -391,7 +390,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "VIDEO", text = caption, fileIds = listOf(it.video!!.fileId)) }
 
     override suspend fun sendVideo(
         chatId: String,
@@ -429,7 +428,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "VIDEO", text = caption, fileIds = listOf(it.video!!.fileId)) }
 
     override suspend fun sendAnimation(
         chatId: String,
@@ -465,7 +464,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "ANIMATION", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "ANIMATION", text = caption, fileIds = listOf(it.animation!!.fileId)) }
 
     override suspend fun sendAnimation(
         chatId: String,
@@ -501,7 +500,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "ANIMATION", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "ANIMATION", text = caption, fileIds = listOf(it.animation!!.fileId)) }
 
     override suspend fun sendVoice(
         chatId: String,
@@ -529,7 +528,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VOICE", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "VOICE", text = caption, fileIds = listOf(it.voice!!.fileId)) }
 
     override suspend fun sendVoice(
         chatId: String,
@@ -557,7 +556,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VOICE", text = caption) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "VOICE", text = caption, fileIds = listOf(it.voice!!.fileId)) }
 
     override suspend fun sendVideoNote(
         chatId: String,
@@ -583,7 +582,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO_NOTE") }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "VIDEO_NOTE", fileIds = listOf(it.videoNote!!.fileId)) }
 
     override suspend fun sendVideoNote(
         chatId: String,
@@ -609,7 +608,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VIDEO_NOTE") }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "VIDEO_NOTE", fileIds = listOf(it.videoNote!!.fileId)) }
 
     override suspend fun sendMediaGroup(
         chatId: String,
@@ -664,7 +663,7 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "LOCATION", text = "latitude = $latitude, longitude = $longitude") }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "LOCATION", text = "latitude = $latitude, longitude = $longitude") }
 
     override suspend fun sendVenue(
         chatId: String,
@@ -701,7 +700,7 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "VENUE", text = "latitude = $latitude, longitude = $longitude, title = $title, address = $address") }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "VENUE", text = "latitude = $latitude, longitude = $longitude, title = $title, address = $address") }
 
     override suspend fun sendContact(
         chatId: String,
@@ -730,12 +729,14 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "CONTACT", text = "phoneNumber = $phoneNumber, firstName = $firstName") }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "CONTACT", text = "phoneNumber = $phoneNumber, firstName = $firstName") }
 
     override suspend fun sendPoll(
         chatId: String,
         question: String,
-        options: List<String>,
+        options: List<InputPollOption>,
+        questionParseMode: String?,
+        questionEntities: List<MessageEntity>?,
         businessConnectionId: String?,
         messageThreadId: Long?,
         isAnonymous: Boolean?,
@@ -758,6 +759,8 @@ class TelegramBotImpl(
             chatId = chatId,
             question = question,
             options = options,
+            questionParseMode = questionParseMode,
+            questionEntities = questionEntities,
             businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
             isAnonymous = isAnonymous,
@@ -775,7 +778,7 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "POLL", text = question) }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "POLL", text = question) }
 
     override suspend fun sendDice(
         chatId: String,
@@ -798,7 +801,7 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "DICE", text = emoji) }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "DICE", text = emoji) }
 
     override suspend fun sendChatAction(
         chatId: String,
@@ -989,7 +992,7 @@ class TelegramBotImpl(
         "leaveChat", LeaveChat(chatId)
     )
 
-    override suspend fun getChat(chatId: String): Chat = client.get("getChat") {
+    override suspend fun getChat(chatId: String): ChatFullInfo = client.get("getChat") {
         parameter("chat_id", chatId)
     }
 
@@ -1161,7 +1164,7 @@ class TelegramBotImpl(
             linkPreviewOptions = linkPreviewOptions,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_TEXT", text = text) }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "EDIT_TEXT", text = text) }
 
     override suspend fun editMessageCaption(
         chatId: String?,
@@ -1182,7 +1185,7 @@ class TelegramBotImpl(
             captionEntities = captionEntities,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_CAPTION", text = caption) }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "EDIT_CAPTION", text = caption) }
 
     override suspend fun editMessageMedia(
         chatId: String?,
@@ -1196,11 +1199,12 @@ class TelegramBotImpl(
         appendIfNotNull("inline_message_id", inlineMessageId)
         append("media", client.toJson(media))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_MEDIA", media.media) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "EDIT_MEDIA", text = media.media) }
 
     override suspend fun editMessageLiveLocation(
         latitude: Float,
         longitude: Float,
+        livePeriod: Int?,
         horizontalAccuracy: Float?,
         heading: Long?,
         proximityAlertRadius: Long?,
@@ -1215,12 +1219,13 @@ class TelegramBotImpl(
             inlineMessageId = inlineMessageId,
             latitude = latitude,
             longitude = longitude,
+            livePeriod = livePeriod,
             horizontalAccuracy = horizontalAccuracy,
             heading = heading,
             proximityAlertRadius = proximityAlertRadius,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_LIVE_LOCATION", text = "latitude = $latitude, longitude = $longitude") }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "EDIT_LIVE_LOCATION", text = "latitude = $latitude, longitude = $longitude") }
 
     override suspend fun stopMessageLiveLocation(
         chatId: String?,
@@ -1235,7 +1240,7 @@ class TelegramBotImpl(
             inlineMessageId = inlineMessageId,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "STOP_LIVE_LOCATION") }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "STOP_LIVE_LOCATION") }
 
     override suspend fun editMessageReplyMarkup(
         chatId: String?,
@@ -1250,7 +1255,7 @@ class TelegramBotImpl(
             inlineMessageId,
             replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "EDIT_REPLY_MARKUP") }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "EDIT_REPLY_MARKUP") }
 
     override suspend fun stopPoll(chatId: String, messageId: Long, replyMarkup: InlineKeyboardMarkup?): Poll = client.postJson(
         "stopPoll", StopPoll(chatId, messageId, replyMarkup)
@@ -1284,7 +1289,7 @@ class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "STICKER", text = emoji) }
+    }.also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "STICKER", text = emoji) }
 
     override suspend fun getStickerSet(name: String): StickerSet = client.get("getStickerSet") {
         parameter("name", name)
@@ -1463,7 +1468,7 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "INVOICE", text = title) }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "INVOICE", text = title) }
 
     override suspend fun createInvoiceLink(
         title: String,
@@ -1550,7 +1555,7 @@ class TelegramBotImpl(
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "GAME", text = gameShortName) }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "GAME", text = gameShortName) }
 
     override suspend fun setGameScore(
         userId: Long,
@@ -1571,7 +1576,7 @@ class TelegramBotImpl(
             messageId = messageId,
             inlineMessageId = inlineMessageId
         )
-    ).also { messageSource.save(it.chatId, it.from!!.id, it.messageId, type = "GAME_SCORE", text = "userId = $userId, score = $score") }
+    ).also { messageSource.save(it.chatId, it.from!!.id, true, it.messageId, type = "GAME_SCORE", text = "userId = $userId, score = $score") }
 
     override suspend fun getGameHighScores(
         userId: Long,

@@ -13,8 +13,8 @@ dependencies {
     //endregion jackson
 
     //region ktor
-    api("io.ktor:ktor-client-apache5:$ktor_version")
-    api("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    api("io.ktor:ktor-client-apache-jvm:$ktor_version")
+    api("io.ktor:ktor-client-content-negotiation-jvm:$ktor_version")
     api("io.ktor:ktor-serialization-jackson-jvm:$ktor_version")
     //endregion ktor
 

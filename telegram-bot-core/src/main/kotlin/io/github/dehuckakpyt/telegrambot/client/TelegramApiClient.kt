@@ -14,7 +14,7 @@ import io.github.dehuckakpyt.telegrambot.ext.toJson
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.TelegramResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.apache5.*
+import io.ktor.client.engine.apache.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -34,7 +34,7 @@ internal class TelegramApiClient(
     private val token: String,
 ) {
 
-    val client = HttpClient(Apache5) {
+    val client = HttpClient(Apache) {
         install(ContentNegotiation) {
             register(Json, JacksonConverter(MAPPER))
         }
@@ -50,9 +50,9 @@ internal class TelegramApiClient(
         }
     }
 
-    suspend fun <R : Any> get(method: String): R = handleRequest(client.get(method))
+    suspend inline fun <reified R : Any> get(method: String): R = handleRequest(client.get(method))
 
-    suspend fun <R> get(method: String, block: HttpRequestBuilder.() -> Unit): R =
+    suspend inline fun <reified R> get(method: String, block: HttpRequestBuilder.() -> Unit): R =
         handleRequest(client.get(method, block))
 
     suspend inline fun <reified R : Any> postMultiPart(method: String, noinline block: FormBuilder.() -> Unit): R =
@@ -72,7 +72,7 @@ internal class TelegramApiClient(
         return telegramResponse.result!!
     }
 
-    private suspend fun <R : Any> handleRequest(response: HttpResponse): R {
+    private suspend inline fun <reified R : Any> handleRequest(response: HttpResponse): R {
         val telegramResponse = response.body<TelegramResponse<R>>()
 
         if (!telegramResponse.ok) throwException(response, telegramResponse)

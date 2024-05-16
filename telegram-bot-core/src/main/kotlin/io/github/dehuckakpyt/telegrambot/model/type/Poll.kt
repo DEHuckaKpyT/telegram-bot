@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.model.type
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-
 /**
  * Created on 03.12.2023.
  *<p>
@@ -19,6 +18,7 @@ public data class Poll(
     @param:JsonProperty("is_anonymous") val isAnonymous: Boolean,
     @param:JsonProperty("type") val type: String,
     @param:JsonProperty("allows_multiple_answers") val allowsMultipleAnswers: Boolean,
+    @param:JsonProperty("question_entities") val questionEntities: List<MessageEntity>? = null,
     @param:JsonProperty("correct_option_id") val correctOptionId: Int? = null,
     @param:JsonProperty("explanation") val explanation: String? = null,
     @param:JsonProperty("explanation_entities") val explanationEntities: List<MessageEntity>? = null,
@@ -28,6 +28,7 @@ public data class Poll(
 
 public data class PollOption(
     @get:JsonProperty("text") @param:JsonProperty("text") val text: String,
+    @get:JsonProperty("text_entities") @param:JsonProperty("text_entities") val textEntities: List<MessageEntity>? = null,
     @get:JsonProperty("voter_count") @param:JsonProperty("voter_count") val voterCount: Int,
 )
 
@@ -36,4 +37,10 @@ public data class PollAnswer(
     @param:JsonProperty("voter_chat") val chat: Chat? = null,
     @param:JsonProperty("user") val user: User? = null,
     @param:JsonProperty("option_ids") val optionIds: List<Int>,
+)
+
+public data class InputPollOption(
+    @get:JsonProperty("text") @param:JsonProperty("text") val text: String,
+    @get:JsonProperty("text_parse_mode") @param:JsonProperty("text_parse_mode") val textParseMode: ParseMode? = null,
+    @get:JsonProperty("text_entities") @param:JsonProperty("text_entities") val textEntities: List<MessageEntity>? = null,
 )

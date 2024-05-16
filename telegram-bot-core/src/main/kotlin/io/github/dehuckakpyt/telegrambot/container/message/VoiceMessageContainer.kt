@@ -10,12 +10,11 @@ import io.github.dehuckakpyt.telegrambot.model.type.Voice
  *
  * @author Denis Matytsin
  */
-class VoiceMessageContainer(
-    chatId: Long,
-    message: Message,
-    content: String?,
-) : MessageContainer(chatId, message, content) {
+class VoiceMessageContainer(message: Message, step: String?, content: String?) :
+    MessageContainer(message, step, content) {
 
     val caption: String? get() = message.caption
     val voice: Voice get() = message.voice!!
+
+    override val type: String = "VOICE"
 }

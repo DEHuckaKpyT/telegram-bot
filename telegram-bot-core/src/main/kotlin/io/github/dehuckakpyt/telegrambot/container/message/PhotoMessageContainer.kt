@@ -10,12 +10,11 @@ import io.github.dehuckakpyt.telegrambot.model.type.PhotoSize
  *
  * @author Denis Matytsin
  */
-class PhotoMessageContainer(
-    chatId: Long,
-    message: Message,
-    content: String?,
-) : MessageContainer(chatId, message, content) {
+class PhotoMessageContainer(message: Message, step: String?, content: String?) :
+    MessageContainer(message, step, content) {
 
     val caption: String? get() = message.caption
     val photos: List<PhotoSize> get() = message.photo
+
+    override val type: String = "PHOTO"
 }

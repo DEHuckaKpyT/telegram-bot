@@ -18,6 +18,9 @@ interface TelegramMessage {
     /** Who was sent message. */
     val fromId: Long
 
+    /** True if bot sent message. */
+    val fromBot: Boolean
+
     /** Message id. */
     val messageId: Long
 
@@ -31,8 +34,14 @@ interface TelegramMessage {
     /** The step when the message saving. */
     val step: String?
 
+    /** Type of the container, which process user message. */
+    val stepContainerType: String?
+
     /** Content of the message. */
     val text: String?
+
+    /** File ids which are sent. */
+    val fileIds: List<String>?
 
     /** Date/time when message was sent. */
     val createDate: LocalDateTime

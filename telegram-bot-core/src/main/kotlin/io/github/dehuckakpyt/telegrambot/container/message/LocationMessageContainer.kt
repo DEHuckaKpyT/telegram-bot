@@ -10,8 +10,10 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-class LocationMessageContainer(chatId: Long, message: Message, content: String?) :
-    MessageContainer(chatId, message, content) {
+class LocationMessageContainer(message: Message, step: String?, content: String?) :
+    MessageContainer(message, step, content) {
 
     val location: Location get() = message.location!!
+
+    override val type: String = "LOCATION"
 }

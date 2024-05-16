@@ -19,10 +19,12 @@ internal class AudioMessageContainerFactory : MessageContainerFactory {
         return audio != null
     }
 
-    override fun create(chatId: Long, message: Message, content: String?): MessageContainer =
-        AudioMessageContainer(chatId, message, content)
+    override fun create(message: Message, step: String?, content: String?): MessageContainer =
+        AudioMessageContainer(message, step, content)
 
     override fun getMessageText(message: Message): String? = message.caption
+
+    override fun getMessageFileIds(message: Message): List<String> = listOf(message.audio!!.fileId)
 
     override val type: KClass<out MessageContainer> = MessageType.AUDIO
 

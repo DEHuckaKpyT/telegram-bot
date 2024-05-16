@@ -19,10 +19,12 @@ internal class DocumentMessageContainerFactory : MessageContainerFactory {
         return document != null
     }
 
-    override fun create(chatId: Long, message: Message, content: String?): MessageContainer =
-        DocumentMessageContainer(chatId, message, content)
+    override fun create(message: Message, step: String?, content: String?): MessageContainer =
+        DocumentMessageContainer(message, step, content)
 
     override fun getMessageText(message: Message): String? = message.caption
+
+    override fun getMessageFileIds(message: Message): List<String> = listOf(message.document!!.fileId)
 
     override val type: KClass<out MessageContainer> = MessageType.DOCUMENT
 

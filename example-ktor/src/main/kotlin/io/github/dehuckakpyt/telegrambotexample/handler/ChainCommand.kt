@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
+import io.github.dehuckakpyt.telegrambot.ext.container.chatId
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambotexample.template.chain
 import io.github.dehuckakpyt.telegrambotexample.template.chainEnd

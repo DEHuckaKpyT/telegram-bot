@@ -10,9 +10,11 @@ import io.github.dehuckakpyt.telegrambot.model.type.Message
  *
  * @author Denis Matytsin
  */
-class AudioMessageContainer(chatId: Long, message: Message, content: String?) :
-    MessageContainer(chatId, message, content) {
+class AudioMessageContainer(message: Message, step: String?, content: String?) :
+    MessageContainer(message, step, content) {
 
     val caption: String? get() = message.caption
     val audio: Audio get() = message.audio!!
+
+    override val type: String = "AUDIO"
 }

@@ -1,8 +1,10 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
 import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
+import io.github.dehuckakpyt.telegrambot.container.Container
 import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
 import io.github.dehuckakpyt.telegrambot.container.message.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.context.container.ContainerCoroutineContext
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
@@ -12,6 +14,7 @@ import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.type.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 
 
@@ -52,21 +55,37 @@ internal class DialogUpdateResolver(
     }
 
     private suspend fun processCommandMessage(command: String, message: Message): Unit = with(message) {
-        messageSource.save(chatId, from!!.id, messageId, type = "COMMAND", text = text)
+        messageSource.save(
+            chatId = chatId,
+            fromId = from!!.id,
+            fromBot = false,
+            messageId = messageId,
+            type = "COMMAND",
+            step = command,
+            stepContainerType = "COMMAND",
+            text = text
+        )
 
-        chainResolver.getCommand(command).invoke(CommandContainer(chatId, message))
+        chainResolver.getCommand(command).let { action ->
+            invokeWithContainerContext(CommandContainer(message, step = command), action)
+        }
     }
 
     private suspend fun processGeneralMessage(message: Message): Unit = with(message) {
         val chain = chainSource.get(chatId, from!!.id)
         val factory = message.messageContainerFactory
 
-        messageSource.save(chatId,
-            from.id,
-            messageId,
-            factory.messageType,
-            chain?.step,
-            factory.getMessageText(message))
+        messageSource.save(
+            chatId = chatId,
+            fromId = from.id,
+            fromBot = false,
+            messageId = messageId,
+            type = factory.messageType,
+            step = chain?.step,
+            stepContainerType = factory.messageType,
+            text = factory.getMessageText(message),
+            fileIds = factory.getMessageFileIds(message)
+        )
 
         val action = chain?.step?.let { chainResolver.getStep(it, factory.type) }
 
@@ -74,7 +93,7 @@ internal class DialogUpdateResolver(
             if (chat.type == "private") chainExceptionHandler.whenStepNotFound() else return
         }
 
-        action.invoke(factory.create(chatId, message, chain.content))
+        invokeWithContainerContext(factory.create(message, chain.step, chain.content), action)
     }
 
     suspend fun processCallback(callback: CallbackQuery): Unit = with(callback) {
@@ -84,9 +103,9 @@ internal class DialogUpdateResolver(
         exceptionHandler.execute(message.chat) {
             val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
-            chainResolver.getCallback(callbackName)?.invoke(
-                CallbackContainer(chatId, callback, callbackContent)
-            )
+            chainResolver.getCallback(callbackName)?.let { action ->
+                invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), action)
+            }
         }
     }
 
@@ -109,6 +128,11 @@ internal class DialogUpdateResolver(
 
         return command
     }
+
+    private suspend fun <T : Container> invokeWithContainerContext(container: T, action: suspend T.() -> Unit) =
+        withContext(ContainerCoroutineContext(container)) {
+            action.invoke(container)
+        }
 
     companion object {
         private val commandRegex = Regex("^(/[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")

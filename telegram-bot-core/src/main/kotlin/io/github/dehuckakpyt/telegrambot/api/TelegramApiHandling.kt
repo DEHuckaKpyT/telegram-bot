@@ -2,11 +2,11 @@ package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.Container
+import io.github.dehuckakpyt.telegrambot.ext.container.chatId
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
-
 
 /**
  * Created on 02.12.2023.
@@ -15,7 +15,6 @@ import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedConten
  * @author Denis Matytsin
  */
 abstract class TelegramApiHandling {
-
     protected abstract val bot: TelegramBot
 
     //region Telegram methods
@@ -654,7 +653,9 @@ abstract class TelegramApiHandling {
 
     suspend fun Container.sendPoll(
         question: String,
-        options: List<String>,
+        options: List<InputPollOption>,
+        questionParseMode: String? = null,
+        questionEntities: List<MessageEntity>? = null,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         isAnonymous: Boolean? = null,
@@ -675,6 +676,8 @@ abstract class TelegramApiHandling {
         chatId = chatId,
         question = question,
         options = options,
+        questionParseMode = questionParseMode,
+        questionEntities = questionEntities,
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
         isAnonymous = isAnonymous,
@@ -950,7 +953,7 @@ abstract class TelegramApiHandling {
         chatId = chatId
     )
 
-    suspend fun Container.getChat(): Chat = bot.getChat(
+    suspend fun Container.getChat(): ChatFullInfo = bot.getChat(
         chatId = chatId
     )
 
@@ -1078,6 +1081,7 @@ abstract class TelegramApiHandling {
         messageId: Long,
         latitude: Float,
         longitude: Float,
+        livePeriod: Int? = null,
         horizontalAccuracy: Float? = null,
         heading: Long? = null,
         proximityAlertRadius: Long? = null,
@@ -1085,6 +1089,7 @@ abstract class TelegramApiHandling {
     ): Message = bot.editMessageLiveLocation(
         latitude = latitude,
         longitude = longitude,
+        livePeriod = livePeriod,
         horizontalAccuracy = horizontalAccuracy,
         heading = heading,
         proximityAlertRadius = proximityAlertRadius,

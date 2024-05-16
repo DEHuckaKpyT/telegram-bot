@@ -19,12 +19,14 @@ internal class ContactMessageContainerFactory : MessageContainerFactory {
         return contact != null
     }
 
-    override fun create(chatId: Long, message: Message, content: String?): MessageContainer =
-        ContactMessageContainer(chatId, message, content)
+    override fun create(message: Message, step: String?, content: String?): MessageContainer =
+        ContactMessageContainer(message, step, content)
 
     override fun getMessageText(message: Message): String {
         return "phoneNumber = ${message.contact!!.phoneNumber}, firstName = ${message.contact.firstName}"
     }
+
+    override fun getMessageFileIds(message: Message): List<String>? = null
 
     override val type: KClass<out MessageContainer> = MessageType.CONTACT
 

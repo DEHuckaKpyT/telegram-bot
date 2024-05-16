@@ -19,10 +19,12 @@ internal class TextMessageContainerFactory : MessageContainerFactory {
         return text != null
     }
 
-    override fun create(chatId: Long, message: Message, content: String?): MessageContainer =
-        TextMessageContainer(chatId, message, content)
+    override fun create(message: Message, step: String?, content: String?): MessageContainer =
+        TextMessageContainer(message, step, content)
 
     override fun getMessageText(message: Message): String? = message.text
+
+    override fun getMessageFileIds(message: Message): List<String>? = null
 
     override val type: KClass<out MessageContainer> = MessageType.TEXT
 

@@ -15,6 +15,10 @@ dependencies {
     //region springframework
     api("org.springframework.boot:spring-boot-starter-data-jpa:$spring2_version")
     //endregion springframework
+
+    //region database
+    api("io.hypersistence:hypersistence-utils-hibernate-55:3.7.5")
+    //endregion database
 }
 
 allOpen {

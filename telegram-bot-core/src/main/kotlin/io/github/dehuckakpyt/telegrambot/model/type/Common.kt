@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 
-
 /**
  * Created on 03.12.2023.
  *<p>
@@ -47,7 +46,6 @@ public data class User(
 )
 public sealed class MaybeInaccessibleMessage {
     abstract val date: Long
-
     abstract val messageId: Long
     abstract val chat: Chat
 }
@@ -124,6 +122,7 @@ public data class Message(
     @param:JsonProperty("passport_data") val passportData: PassportData? = null,
     @param:JsonProperty("proximity_alert_triggered") val proximityAlertTriggered: ProximityAlertTriggered? = null,
     @param:JsonProperty("boost_added") val boostAdded: ChatBoostAdded? = null,
+    @param:JsonProperty("chat_background_set") val chatBackgroundSet: ChatBackground? = null,
     @param:JsonProperty("forum_topic_created") val forumTopicCreated: ForumTopicCreated? = null,
     @param:JsonProperty("forum_topic_edited") val forumTopicEdited: ForumTopicEdited? = null,
     @param:JsonProperty("forum_topic_closed") val forumTopicClosed: ForumTopicClosed? = null,
@@ -165,7 +164,6 @@ public data class MessageEntity(
     @get:JsonProperty("language") @param:JsonProperty("language") val language: String? = null,
     @get:JsonProperty("custom_emoji_id") @param:JsonProperty("custom_emoji_id") val customEmojiId: String? = null,
 ) {
-
     public enum class Type {
         @field:JsonProperty("mention")
         MENTION,
@@ -399,7 +397,6 @@ public data class VoiceChatParticipantsInvited(
     JsonSubTypes.Type(value = BotCommandScope.BotCommandScopeChatMember::class, name = "chat_member"),
 )
 public sealed class BotCommandScope {
-
     public abstract val type: String
 
     @JsonTypeName("default")
@@ -449,7 +446,6 @@ public data class LoginUrl(
 )
 
 public enum class ParseMode {
-
     @field:JsonProperty("HTML")
     HTML,
 
@@ -536,7 +532,6 @@ public data class BotShortDescription(
     JsonSubTypes.Type(value = MessageOrigin.MessageOriginChannel::class, name = "channel"),
 )
 public sealed class MessageOrigin {
-
     public abstract val type: String
 
     @JsonTypeName("user")

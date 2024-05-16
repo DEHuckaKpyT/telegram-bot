@@ -15,9 +15,11 @@ internal interface MessageContainerFactory {
 
     fun matches(message: Message): Boolean
 
-    fun create(chatId: Long, message: Message, content: String?): MessageContainer
+    fun create(message: Message, step: String?, content: String?): MessageContainer
 
     fun getMessageText(message: Message): String?
+
+    fun getMessageFileIds(message: Message): List<String>?
 
     val type: KClass<out MessageContainer>
 

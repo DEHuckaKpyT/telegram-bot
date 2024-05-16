@@ -19,12 +19,14 @@ internal class LocationMessageContainerFactory : MessageContainerFactory {
         return location != null
     }
 
-    override fun create(chatId: Long, message: Message, content: String?): MessageContainer =
-        LocationMessageContainer(chatId, message, content)
+    override fun create(message: Message, step: String?, content: String?): MessageContainer =
+        LocationMessageContainer(message, step, content)
 
     override fun getMessageText(message: Message): String {
         return "longitude = ${message.location!!.longitude}, latitude = ${message.location.latitude}"
     }
+
+    override fun getMessageFileIds(message: Message): List<String>? = null
 
     override val type: KClass<out MessageContainer> = MessageType.LOCATION
 

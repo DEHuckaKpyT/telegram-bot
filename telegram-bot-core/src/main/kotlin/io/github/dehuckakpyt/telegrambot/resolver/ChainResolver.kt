@@ -1,13 +1,14 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
 import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
-import io.github.dehuckakpyt.telegrambot.container.Container
+import io.github.dehuckakpyt.telegrambot.container.GeneralContainer
 import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
 import io.github.dehuckakpyt.telegrambot.container.message.MessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.toContentOrNull
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
+import io.github.dehuckakpyt.telegrambot.ext.container.chatId
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import kotlin.collections.set
@@ -132,7 +133,7 @@ internal class ChainResolver(
      *
      * @return lambda with applied dynamic step
      */
-    private fun <T : Container> wrapAction(next: String?, action: suspend T.() -> Unit): suspend T.() -> Unit = {
+    private fun <T : GeneralContainer> wrapAction(next: String?, action: suspend T.() -> Unit): suspend T.() -> Unit = {
         // First, set name ot the next step from static param.
         this.nextStep = next
         // Invoke action, which can change next step.
@@ -146,7 +147,7 @@ internal class ChainResolver(
      *
      * Will be saved name of the next step and transferred object.
      */
-    private suspend fun Container.saveNextStepInChain() {
+    private suspend fun GeneralContainer.saveNextStepInChain() {
         chainSource.save(chatId, from.id, nextStep, nextStepInstance.toContent())
     }
 
