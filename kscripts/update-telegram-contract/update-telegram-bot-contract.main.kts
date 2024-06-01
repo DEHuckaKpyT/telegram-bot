@@ -35,8 +35,7 @@ val modulePath = Path("./../../telegram-bot-core/src/main/kotlin")
 val objectsPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram"
 val objectsInternalPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram.internal"
 val telegramBotClassPackageName = "io.github.dehuckakpyt.telegrambot.temp"
-val contentInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
-val stringInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
+val inputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
 val todayFormattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))!!
 val client = HttpClient(Apache5) {
     install(ContentNegotiation) {
@@ -54,7 +53,7 @@ runBlocking {
     println("Generating telegram bot api contracts...")
     println("Version: ${contract.version.major}.${contract.version.minor}.${contract.version.patch}")
     println("Recent changes: ${contract.recentChanges.year}-${contract.recentChanges.month}-${contract.recentChanges.day}")
-//    createObjects(contract.objects)
+    createObjects(contract.objects)
     createMethods(contract.methodsWithOverloadsByName)
 }
 
@@ -73,6 +72,9 @@ suspend fun createMethods(methods: List<List<Method>>) {
     val file2 = FileSpec.builder(telegramBotClassPackageName, "TelegramBotImpl")
         .indent("    ")
         .addInternalImports(methods)
+        .addImport("io.github.dehuckakpyt.telegrambot.ext", "appendContent", "appendContentIfNotNull", "appendIfNotNull")
+        .addImport(inputClassPackageName, "StringInput")
+        .addImport("io.github.dehuckakpyt.telegrambot.ext", "toJson")
         .addType(
             TypeSpec.classBuilder("TelegramBotImpl")
                 .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
@@ -111,7 +113,7 @@ fun FileSpec.Builder.addInternalImports(groupedMethods: List<List<Method>>) = ap
         if (mainMethod.arguments.size == 0) return@forEach
 
         if (mainMethod.maybeMultipart.not()) {
-            addImport(objectsInternalPackageName, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, mainMethod.name))
+            addImport(objectsInternalPackageName, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, mainMethod.name) + (mainMethod.postJsonClassNamePostfix ?: ""))
         }
     }
 }
@@ -140,6 +142,7 @@ suspend fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List
                 .returns(method.returnType.toClassTypeName())
                 .addGetMethodIfNecessary(method)
                 .addPostMethodJsonIfNecessary(method)
+                .addPostMethodMultipartIfNecessary(method)
                 .build()
         )
     }
@@ -161,8 +164,44 @@ suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpe
 
     addStatement("return client.postJson(\"${method.name}\", ${obj.name}(" + obj.properties.joinToString { "\n        ${it.nameCamelCase} = ${it.nameCamelCase}" } + "\n    )\n)")
 
+    return this
+}
+
+fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method): FunSpec.Builder {
+    if (method.arguments.size == 0 || method.maybeMultipart.not()) return this
+
+    val statement = StringBuilder("return client.postMultiPart(\"${method.name}\") {").also { builder ->
+        method.arguments.forEach { arg -> builder.append("\n    ").append(arg.toAppendStatement()) }
+    }.also { builder ->
+        builder.append("\n}")
+    }.toString()
+
+    addStatement(statement)
 
     return this
+}
+
+val Boolean.appendMethodName get(): String = if (this) "append" else "appendIfNotNull"
+val Boolean.appendContentMethodName get(): String = if (this) "appendContent" else "appendContentIfNotNull"
+
+fun Argument.toAppendStatement(): String = when {
+    (typeInfo.type in setOf("integer", "string", "bool", "float", "long")) -> {
+        "${required.appendMethodName}(\"$name\", $nameCamelCase)"
+    }
+
+    (typeInfo is ReferenceType && (typeInfo as ReferenceType).reference in setOf("InputFile", "Input", "ContentInput")) -> {
+        when ((typeInfo as ReferenceType).reference) {
+            "InputFile", "Input" -> "if ($nameCamelCase is ContentInput)\n        ${required.appendContentMethodName}(\"$name\", $nameCamelCase)\n    else\n        ${required.appendMethodName}(\"$name\", ($nameCamelCase as StringInput).fileId)"
+            "ContentInput" -> "${required.appendContentMethodName}(\"$name\", $nameCamelCase)"
+            else -> throw RuntimeException("Failed to convert argument to appendContent statement")
+        }
+    }
+
+    (typeInfo.type in setOf("reference", "array")) -> {
+        "${required.appendMethodName}(\"$name\", client.toJson($nameCamelCase))"
+    }
+
+    else -> throw RuntimeException("Failed to convert argument to append statement")
 }
 
 suspend fun createInternalPropertiesObject(obj: PropertiesObject) {
@@ -189,7 +228,7 @@ suspend fun createInternalPropertiesObject(obj: PropertiesObject) {
 }
 
 fun Method.toPropertiesObject(): PropertiesObject = PropertiesObject(
-    name = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, this.name),
+    name = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, this.name) + (postJsonClassNamePostfix ?: ""),
     properties = arguments.mapTo(mutableListOf()) { it.toProperty() },
     type = "property",
     documentationLink = documentationLink
@@ -232,8 +271,8 @@ fun Type.toMethodTypeName(): TypeName = when (this) {
     is FloatType -> Double::class.asClassName()
     is AnyOfType -> throw RuntimeException("Unexpected type $this")
     is ReferenceType -> when (reference) {
-        "InputFile", "Input" -> ClassName(contentInputClassPackageName, "Input")
-        "ContentInput" -> ClassName(contentInputClassPackageName, "ContentInput")
+        "InputFile", "Input" -> ClassName(inputClassPackageName, "Input")
+        "ContentInput" -> ClassName(inputClassPackageName, "ContentInput")
         else -> ClassName(objectsPackageName, reference)
     }
 
@@ -373,15 +412,15 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
             }
             properties.add(property.toPropertySpec())
         } else {
-            primaryConstructorBuilder.addParameter(property.toParameterSpec(ClassName(contentInputClassPackageName, "Input")))
+            primaryConstructorBuilder.addParameter(property.toParameterSpec(ClassName(inputClassPackageName, "Input")))
             secondaryConstructorBuilder.addParameter(property.toParameterSpec(String::class.asClassName()))
-            properties.add(property.toPropertySpec(ClassName(contentInputClassPackageName, "Input")))
+            properties.add(property.toPropertySpec(ClassName(inputClassPackageName, "Input")))
             callThisConstructorArgs.add("StringInput(${property.nameCamelCase})")
         }
     }
     val file = FileSpec.builder(objectsPackageName, obj.name)
         .indent("    ")
-        .addImport(stringInputClassPackageName, "StringInput")
+        .addImport(inputClassPackageName, "StringInput")
         .addType(
             TypeSpec.defaultClassBuilder(obj)
                 .primaryConstructor(primaryConstructorBuilder.build())
@@ -515,8 +554,8 @@ fun Type.toClassTypeName(): TypeName = when (this) {
     is FloatType -> Double::class.asClassName()
     is AnyOfType -> throw RuntimeException("Unexpected type $this")
     is ReferenceType -> when (reference) {
-        "InputFile", "Input" -> ClassName(contentInputClassPackageName, "Input")
-        "ContentInput" -> ClassName(contentInputClassPackageName, "ContentInput")
+        "InputFile", "Input" -> ClassName(inputClassPackageName, "Input")
+        "ContentInput" -> ClassName(inputClassPackageName, "ContentInput")
         else -> ClassName(objectsPackageName, reference)
     }
 
@@ -548,13 +587,16 @@ suspend fun Contract.replaceMethodTypes() {
     methods.forEach { method ->
         val arguments = method.arguments
         for ((i, argument) in arguments.withIndex()) {
-//            var _argument = argument
             // means that you can download file by this field
             if (argument.description.contains("exists on the Telegram servers")) {
                 arguments[i] = argument.copy(typeInfo = AnyOfType("any_of", mutableListOf(StringType("string"), ReferenceType("reference", "Input"))))
             }
-            // thumbnail's you can upload only
+            // thumbnails you can upload only
             if (argument.name == "thumbnail" && argument.description.contains("Thumbnails can't be reused and can be only uploaded as a new file")) {
+                arguments[i] = argument.copy(typeInfo = ReferenceType("reference", "ContentInput"))
+            }
+            // certificates you can upload only
+            if (argument.name == "certificate" && argument.typeInfo is ReferenceType && (argument.typeInfo as ReferenceType).reference == "InputFile") {
                 arguments[i] = argument.copy(typeInfo = ReferenceType("reference", "ContentInput"))
             }
             // all ids can be greater than Int.MAX
@@ -608,11 +650,12 @@ suspend fun Contract.replaceMethodTypes() {
             val otherwiseMethod = method.copy(arguments = method.arguments.toMutableList())
             method.returnType = ReferenceType("reference", "Message")
             method.arguments = method.arguments.filter { it.name != "inline_message_id" }.toMutableList()
-//            method.arguments.forEach { if (it.name == "chat_id" || it.name == "message_id") it.required = true }
             otherwiseMethod.returnType = BooleanType("bool")
             otherwiseMethod.arguments = otherwiseMethod.arguments.filter { it.name != "chat_id" && it.name != "message_id" }.toMutableList()
-//            otherwiseMethod.arguments.forEach { if (it.name == "inline_message_id") it.required = true }
             methods.add(otherwiseMethod)
+
+            method.postJsonClassNamePostfix = "ByChatIdAndMessageId"
+            otherwiseMethod.postJsonClassNamePostfix = "ByInlineMessageId"
         }
     }
     methods.forEach { method ->
@@ -751,6 +794,7 @@ data class Method(
     @param:JsonProperty("maybe_multipart") val maybeMultipart: Boolean,
     @param:JsonProperty("return_type") var returnType: Type,
     @param:JsonProperty("documentation_link") val documentationLink: String,
+    var postJsonClassNamePostfix: String? = null,
 )
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
