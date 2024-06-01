@@ -33,6 +33,7 @@ val getDefaultValueFromDescriptionRegex = Regex("^(?:Always (.+)\\..+)|(?:.+, al
 val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*?$")
 val modulePath = Path("./../../telegram-bot-core/src/main/kotlin")
 val objectsPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram"
+val objectsInternalPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram.internal"
 val telegramBotClassPackageName = "io.github.dehuckakpyt.telegrambot.temp"
 val contentInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
 val stringInputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
@@ -63,15 +64,36 @@ suspend fun createMethods(methods: List<List<Method>>) {
         .addType(
             TypeSpec.interfaceBuilder("TelegramBot")
                 .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addProperty("username", String::class)
                 .addTelegramBotMethods(methods)
                 .build()
         )
         .build()
-    val file2 = FileSpec.builder(telegramBotClassPackageName, "TelegramBot")
+
+    val file2 = FileSpec.builder(telegramBotClassPackageName, "TelegramBotImpl")
         .indent("    ")
+        .addInternalImports(methods)
         .addType(
-            TypeSpec.interfaceBuilder("TelegramBot")
+            TypeSpec.classBuilder("TelegramBotImpl")
                 .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addSuperinterface(ClassName(telegramBotClassPackageName, "TelegramBot"))
+                .primaryConstructor(FunSpec.constructorBuilder()
+                    .addParameter("token", String::class)
+                    .addParameter("username", String::class)
+                    .addParameter("messageSource", ClassName("io.github.dehuckakpyt.telegrambot.source.message", "MessageSource"))
+                    .build())
+                .addProperty(PropertySpec.builder("token", String::class, PRIVATE)
+                    .initializer("token")
+                    .build())
+                .addProperty(PropertySpec.builder("username", String::class, OVERRIDE)
+                    .initializer("username")
+                    .build())
+                .addProperty(PropertySpec.builder("messageSource", ClassName("io.github.dehuckakpyt.telegrambot.source.message", "MessageSource"), PRIVATE)
+                    .initializer("messageSource")
+                    .build())
+                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"), PRIVATE)
+                    .initializer("TelegramApiClient(token)")
+                    .build())
                 .addTelegramBotImplMethods(methods)
                 .build()
         )
@@ -83,12 +105,23 @@ suspend fun createMethods(methods: List<List<Method>>) {
     }
 }
 
+fun FileSpec.Builder.addInternalImports(groupedMethods: List<List<Method>>) = apply {
+    groupedMethods.forEach { methods ->
+        val mainMethod = methods.first()
+        if (mainMethod.arguments.size == 0) return@forEach
+
+        if (mainMethod.maybeMultipart.not()) {
+            addImport(objectsInternalPackageName, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, mainMethod.name))
+        }
+    }
+}
+
 fun TypeSpec.Builder.addTelegramBotMethods(groupedMethods: List<List<Method>>) = apply {
     groupedMethods.forEach { methods ->
         val mainMethod = methods.first()
         addFunction(
             FunSpec.builder(mainMethod.name)
-                .addModifiers(ABSTRACT)
+                .addModifiers(ABSTRACT, SUSPEND)
                 .addParameters(mainMethod.arguments)
                 .returns(mainMethod.returnType.toClassTypeName())
                 .build()
@@ -96,33 +129,99 @@ fun TypeSpec.Builder.addTelegramBotMethods(groupedMethods: List<List<Method>>) =
     }
 }
 
-fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List<Method>>) = apply {
+suspend fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List<Method>>) = apply {
     groupedMethods.forEach { methods ->
-        val mainMethod = methods.first()
-        val getOrPost = if (mainMethod.arguments.size == 0) "get" else "post"
+        val method = methods.first()
 
         addFunction(
-            FunSpec.builder(mainMethod.name)
-                .addModifiers(OVERRIDE)
-                .addParameters(mainMethod.arguments)
-                .returns(mainMethod.returnType.toClassTypeName())
-                .addStatement("client.")
-                .also {
-
-                }
+            FunSpec.builder(method.name)
+                .addModifiers(OVERRIDE, SUSPEND)
+                .addParameters(method.arguments, specifyNull = false)
+                .returns(method.returnType.toClassTypeName())
+                .addGetMethodIfNecessary(method)
+                .addPostMethodJsonIfNecessary(method)
                 .build()
         )
     }
 }
 
-fun FunSpec.Builder.addParameters(arguments: List<Argument>) = apply {
-    arguments.forEach { argument ->
-        addParameter(argument.toParameter())
+fun FunSpec.Builder.addGetMethodIfNecessary(method: Method): FunSpec.Builder {
+    if (method.arguments.size != 0) return this
+
+    addStatement("return client.get(\"${method.name}\")")
+
+    return this
+}
+
+suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpec.Builder {
+    if (method.arguments.size == 0 || method.maybeMultipart) return this
+
+    val obj = method.toPropertiesObject()
+    createInternalPropertiesObject(obj)
+
+    addStatement("return client.postJson(\"${method.name}\", ${obj.name}(" + obj.properties.joinToString { "\n        ${it.nameCamelCase} = ${it.nameCamelCase}" } + "\n    )\n)")
+
+
+    return this
+}
+
+suspend fun createInternalPropertiesObject(obj: PropertiesObject) {
+    val parameters = obj.properties.map { it.toInternalParameterSpec() }
+    val properties = obj.properties.map { it.toInternalPropertySpec() }
+    val constructor = FunSpec.constructorBuilder().apply {
+        addParameters(parameters)
+    }.build()
+    val file = FileSpec.builder(objectsInternalPackageName, obj.name)
+        .indent("    ")
+        .addType(
+            TypeSpec.classBuilder(obj.name)
+                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addModifiers(DATA, INTERNAL)
+                .primaryConstructor(constructor)
+                .addProperties(properties)
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(modulePath)
     }
 }
 
-fun Argument.toParameter(): ParameterSpec = ParameterSpec.builder(nameCamelCase, typeInfo.toMethodTypeName().copy(nullable = required.not()))
-    .also { if (required.not()) it.defaultValue("null") }
+fun Method.toPropertiesObject(): PropertiesObject = PropertiesObject(
+    name = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, this.name),
+    properties = arguments.mapTo(mutableListOf()) { it.toProperty() },
+    type = "property",
+    documentationLink = documentationLink
+)
+
+fun Argument.toProperty(): Property = Property(
+    name = name,
+    description = description,
+    required = required,
+    typeInfo = typeInfo
+)
+
+inline fun <T> T.alsoIf(predicate: (T) -> Boolean, block: (T) -> Unit): T {
+    if (predicate(this).not()) return this
+
+    return this.also(block)
+}
+
+inline fun <T> T.alsoIf(condition: Boolean, block: (T) -> Unit): T {
+    if (condition.not()) return this
+
+    return this.also(block)
+}
+
+fun FunSpec.Builder.addParameters(arguments: List<Argument>, specifyNull: Boolean = true) = apply {
+    arguments.forEach { argument ->
+        addParameter(argument.toParameter(specifyNull))
+    }
+}
+
+fun Argument.toParameter(specifyNull: Boolean = true): ParameterSpec = ParameterSpec.builder(nameCamelCase, typeInfo.toMethodTypeName().copy(nullable = required.not()))
+    .also { if (specifyNull && required.not()) it.defaultValue("null") }
     .build()
 
 fun Type.toMethodTypeName(): TypeName = when (this) {
@@ -173,8 +272,6 @@ suspend fun createMultiTypePropertiesObject(obj: PropertiesObject) {
 
 suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Object>) {
     var referenceObjects = obj.anyOf.map { objectsByName[(it as ReferenceType).reference]!! as PropertiesObject }
-    //TODO remove
-//    referenceObjects.forEach { it.parentName = obj.name }
     val typePropertyName = referenceObjects.firstOrNull { it.typePropertyName != null }?.typePropertyName
     if (typePropertyName == null) {
         val file = FileSpec.builder(objectsPackageName, obj.name)
@@ -334,6 +431,13 @@ suspend fun createUnknownObject(obj: UnknownObject) {
     }
 }
 
+fun Property.toInternalParameterSpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): ParameterSpec = ParameterSpec.builder(
+    name = name,
+    type = (type ?: typeInfo.toInternalClassTypeName()).copy(nullable = nullable)
+).alsoIf(nullable) {
+    it.defaultValue("null")
+}.build()
+
 fun Property.toParameterSpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): ParameterSpec = ParameterSpec.builder(
     name = name,
     type = (type ?: typeInfo.toClassTypeName()).copy(nullable = nullable)
@@ -363,6 +467,16 @@ fun Property.toPropertySpec(type: TypeName? = null, name: String = nameCamelCase
         )
     }
 }.build()
+
+fun Property.toInternalPropertySpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): PropertySpec = PropertySpec.builder(
+    name = name,
+    type = (type ?: typeInfo.toInternalClassTypeName()).copy(nullable = nullable),
+).initializer(name).addAnnotation(
+    AnnotationSpec.builder(JsonProperty::class)
+        .addMember("\"${this.name}\"")
+        .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+        .build()
+).build()
 
 fun TypeSpec.Companion.defaultClassBuilder(obj: Object): TypeSpec.Builder = classBuilder(obj.name).apply {
     addKdoc(
@@ -409,6 +523,11 @@ fun Type.toClassTypeName(): TypeName = when (this) {
     is ArrayType -> List::class.asClassName().parameterizedBy(array.toClassTypeName())
     else -> throw RuntimeException("Unexpected type $this")
 }
+
+fun Type.toInternalClassTypeName(): TypeName =
+    if (this is ArrayType) Iterable::class.asClassName().parameterizedBy(array.toClassTypeName())
+    else toClassTypeName()
+
 
 val Type.isMultiPropertyIntLongAndString: Boolean
     get() {

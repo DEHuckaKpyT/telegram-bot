@@ -363,7 +363,7 @@ public data class MessageAutoDeleteTimerChanged(
 public data class ForumTopicCreated(
     @param:JsonProperty("name") val name: String,
     @param:JsonProperty("icon_color") val iconColor: Int,
-    @param:JsonProperty("icon_custom_emoji_id") val iconCustomEmojiId: Int?,
+    @param:JsonProperty("icon_custom_emoji_id") val iconCustomEmojiId: String? = null,
 )
 
 public class ForumTopicClosed
