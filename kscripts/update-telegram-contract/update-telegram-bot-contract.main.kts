@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.com.google.common.base.CaseFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.Path
+import kotlin.io.path.readText
 
 val getDefaultValueFromDescriptionRegex = Regex("^(?:Always (.+)\\..+)|(?:.+, always “([a-z0-9_]+)”)$")
 val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*?$")
@@ -42,7 +43,12 @@ val client = HttpClient(Apache5) {
 
 runBlocking {
 //    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").body<Contract>()
-    val contract = Path("./custom_v2.json").let { jacksonObjectMapper().readValue<Contract>(it.toFile()) }
+    val contract = Path("./custom_v2.json").readText()
+        .replace("\\\\_", "_")
+        .replace("\\'", "'")
+        .replace("»", "")
+        .replace(Regex("\n$"), "")
+        .let { jacksonObjectMapper().readValue<Contract>(it) }
     contract.replaceObjectTypes()
     contract.replaceMethodTypes()
     contract.methodsWithOverloadsByName = contract.splitMethodsToOverloads()
@@ -121,8 +127,9 @@ fun TypeSpec.Builder.addTelegramBotMethods(groupedMethods: List<List<Method>>) =
         val mainMethod = methods.first()
         addFunction(
             FunSpec.builder(mainMethod.name)
+                .addKdoc(mainMethod.description)
                 .addModifiers(ABSTRACT, SUSPEND)
-                .addParameters(mainMethod.arguments)
+                .addParameters(mainMethod.arguments, withDoc = true)
                 .returns(mainMethod.returnType.toClassTypeName())
                 .build()
         )
@@ -367,14 +374,15 @@ inline fun <T> T.alsoIf(condition: Boolean, block: (T) -> Unit): T {
     return this.also(block)
 }
 
-fun FunSpec.Builder.addParameters(arguments: List<Argument>, specifyNull: Boolean = true) = apply {
+fun FunSpec.Builder.addParameters(arguments: List<Argument>, specifyNull: Boolean = true, withDoc: Boolean = false) = apply {
     arguments.forEach { argument ->
-        addParameter(argument.toParameter(specifyNull))
+        addParameter(argument.toParameter(specifyNull, withDoc))
     }
 }
 
-fun Argument.toParameter(specifyNull: Boolean = true): ParameterSpec = ParameterSpec.builder(nameCamelCase, typeInfo.toMethodTypeName().copy(nullable = required.not()))
+fun Argument.toParameter(specifyNull: Boolean = true, withDoc: Boolean = false): ParameterSpec = ParameterSpec.builder(nameCamelCase, typeInfo.toMethodTypeName().copy(nullable = required.not()))
     .also { if (specifyNull && required.not()) it.defaultValue("null") }
+    .alsoIf(withDoc) { it.addKdoc(description) }
     .build()
 
 fun Type.toMethodTypeName(): TypeName = when (this) {
