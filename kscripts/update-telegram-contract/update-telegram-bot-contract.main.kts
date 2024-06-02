@@ -7,10 +7,7 @@
 @file:DependsOn("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
 @file:DependsOn("com.squareup:kotlinpoet-jvm:1.16.0")
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.fasterxml.jackson.annotation.JsonTypeName
+import com.fasterxml.jackson.annotation.*
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.squareup.kotlinpoet.*
@@ -196,30 +193,103 @@ fun Argument.toAppendContentInsideObjectsStatements(objectsByName: Map<String, O
 
         return paths
     }
+
+    if (typeInfo is ArrayType) {
+        val array = (typeInfo as ArrayType).array
+        if (array !is ReferenceType) return null
+        val reference = array.reference
+        if (reference in setOf("Input", "InputFile", "ContentInput", "ReplyMarkup")) return null
+
+        val paths = mutableListOf<String>()
+        evaluateInputPathsInside("$nameCamelCase.forEach { $nameCamelCase -> $nameCamelCase", reference, objectsByName, paths)
+
+        return paths
+    }
     return null
 }
 
 fun evaluateInputPathsInside(path: String, currentObjectName: String, objectsByName: Map<String, Object>, paths: MutableList<String>): Unit {
     val currentObject = objectsByName[currentObjectName]!!
-    if (currentObject !is PropertiesObject) return
-
-    for (property in currentObject.properties) {
-        if (property.typeInfo.isCommon) continue
-        if (property.typeInfo is ReferenceType) {
-            val dot = if (property.required.not() || path.contains('?')) "?." else "."
-            val currentPath = "$path$dot${property.nameCamelCase}"
-            if (property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
-                paths.add("${property.required.appendContentMethodName}($currentPath)")
-            } else {
-                evaluateInputPathsInside(currentPath, property.typeInfo.reference, objectsByName, paths)
+    if (currentObject is PropertiesObject) {
+        for (property in currentObject.properties) {
+            if (property.typeInfo.isCommon) continue
+            if (property.typeInfo is ReferenceType) {
+                val currentPath = "$path.${property.nameCamelCase}"
+                if (property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
+                    paths.add("${property.required.appendContentMethodName}($currentPath)")
+                } else {
+                    evaluateInputPathsInside(currentPath, property.typeInfo.reference, objectsByName, paths)
+                }
             }
+            if (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { it is StringType } && property.typeInfo.anyOf.any { it is ReferenceType && it.reference in setOf("Input", "InputFile", "ContentInput") }) {
+                val nullable = property.required.not() || path.contains('?')
+                val appendContentMethodName = if (nullable) "appendContentIfNotNull" else "appendContent"
+                if (!path.contains("forEach")) {
+                    val currentPath = "$path.${property.nameCamelCase}"
+                    paths.add("\n    $appendContentMethodName($currentPath)")
+                } else {
+                    val (firstPart, secondPart) = path.split(" -> ")
+                    paths.add("\n    $firstPart ->\n        $appendContentMethodName($secondPart.${property.nameCamelCase})\n    }")
+                }
+            }
+//        if (property.typeInfo is ArrayType && property.typeInfo.array is ReferenceType) {
+//            val dot = if (property.required.not() || path.contains('?')) "?." else "."
+//            val currentPath = "$path${dot}forEach { ${property.nameCamelCase} -> ${property.nameCamelCase}"
+//            if (property.typeInfo.array.reference in setOf("Input", "InputFile", "ContentInput")) {
+//                throw RuntimeException("Unexpected property type")
+//            } else {
+//                evaluateInputPathsInside(currentPath, property.typeInfo.array.reference, objectsByName, paths)
+//            }
+//        }
+//        if (property.typeInfo is ArrayType && property.typeInfo.array is AnyOfType) {
+//            val type = property.typeInfo.array.anyOf.first()
+//            if (type !is ReferenceType) throw RuntimeException("Unexpected property type")
+//            val nextObject = objectsByName[type.reference]!!
+//            val dot = if (property.required.not() || path.contains('?')) "?." else "."
+//            val currentPath = "$path${dot}forEach { ${property.nameCamelCase} -> ${property.nameCamelCase}"
+//            evaluateInputPathsInside(currentPath, nextObject.parentName!!, objectsByName, paths)
+//        }
         }
-        if (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { it is StringType } && property.typeInfo.anyOf.any { it is ReferenceType && it.reference in setOf("Input", "InputFile", "ContentInput") }) {
-            val nullable = property.required.not() || path.contains('?')
-            val appendContentMethodName = if (nullable) "appendContentIfNotNull" else "appendContent"
-            val dot = if (nullable) "?." else "."
-            val currentPath = "$path$dot${property.nameCamelCase}"
-            paths.add("\n    if ($currentPath is ContentInput)\n        $appendContentMethodName($currentPath.name, $currentPath)")
+    }
+    if (currentObject is AnyOfObject) {
+        for (property in currentObject.properties!!) {
+            if (property.typeInfo.isCommon) continue
+            if (property.typeInfo is ReferenceType) {
+                val currentPath = "$path.${property.nameCamelCase}"
+                if (property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
+                    paths.add("${property.required.appendContentMethodName}($currentPath)")
+                } else {
+                    evaluateInputPathsInside(currentPath, property.typeInfo.reference, objectsByName, paths)
+                }
+            }
+            if (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { it is StringType } && property.typeInfo.anyOf.any { it is ReferenceType && it.reference in setOf("Input", "InputFile", "ContentInput") }) {
+                val nullable = property.required.not() || path.contains('?')
+                val appendContentMethodName = if (nullable) "appendContentIfNotNull" else "appendContent"
+                if (!path.contains("forEach")) {
+                    val currentPath = "$path.${property.nameCamelCase}"
+                    paths.add("\n    $appendContentMethodName($currentPath)")
+                } else {
+                    val (firstPart, secondPart) = path.split(" -> ")
+                    paths.add("\n    $firstPart ->\n        $appendContentMethodName($secondPart.${property.nameCamelCase})\n    }")
+                }
+            }
+//        if (property.typeInfo is ArrayType && property.typeInfo.array is ReferenceType) {
+//            val dot = if (property.required.not() || path.contains('?')) "?." else "."
+//            val currentPath = "$path${dot}forEach { ${property.nameCamelCase} -> ${property.nameCamelCase}"
+//            if (property.typeInfo.array.reference in setOf("Input", "InputFile", "ContentInput")) {
+//                throw RuntimeException("Unexpected property type")
+//            } else {
+//                evaluateInputPathsInside(currentPath, property.typeInfo.array.reference, objectsByName, paths)
+//            }
+//        }
+//        if (property.typeInfo is ArrayType && property.typeInfo.array is AnyOfType) {
+//            val type = property.typeInfo.array.anyOf.first()
+//            if (type !is ReferenceType) throw RuntimeException("Unexpected property type")
+//            val nextObject = objectsByName[type.reference]!!
+//            val dot = if (property.required.not() || path.contains('?')) "?." else "."
+//            val currentPath = "$path${dot}forEach { ${property.nameCamelCase} -> ${property.nameCamelCase}"
+//            evaluateInputPathsInside(currentPath, nextObject.parentName!!, objectsByName, paths)
+//        }
         }
     }
 }
@@ -235,7 +305,7 @@ fun Argument.toAppendStatement(): String = when {
 
     (typeInfo is ReferenceType && (typeInfo as ReferenceType).reference in setOf("InputFile", "Input", "ContentInput")) -> {
         when ((typeInfo as ReferenceType).reference) {
-            "InputFile", "Input" -> "if ($nameCamelCase is ContentInput)\n        ${required.appendContentMethodName}(\"$name\", $nameCamelCase)\n    else\n        ${required.appendMethodName}(\"$name\", ($nameCamelCase as StringInput).fileId)"
+            "InputFile", "Input" -> "${required.appendContentMethodName}(\"$name\", $nameCamelCase)"
             "ContentInput" -> "${required.appendContentMethodName}(\"$name\", $nameCamelCase)"
             else -> throw RuntimeException("Failed to convert argument to appendContent statement")
         }
@@ -422,17 +492,19 @@ suspend fun createMultiTypeIntLongAndStringPropertiesObject(obj: PropertiesObjec
 
     obj.properties.forEach { property ->
         if (property.typeInfo !is AnyOfType) {
-            if (property.typeInfo.constValue == null) {
+            if (property.typeInfo.constValue == null && property.alwaysNull != true) {
                 primaryConstructorBuilder.addParameter(property.toParameterSpec())
                 secondaryConstructorBuilder.addParameter(property.toParameterSpec())
                 callThisConstructorArgs.add(property.nameCamelCase)
             }
             properties.add(property.toPropertySpec())
         } else {
-            primaryConstructorBuilder.addParameter(property.toParameterSpec(String::class.asClassName()))
-            secondaryConstructorBuilder.addParameter(property.toParameterSpec(property.typeInfo.anyOf.first { it.type != "string" }.toClassTypeName()))
+            if (property.alwaysNull != true) {
+                primaryConstructorBuilder.addParameter(property.toParameterSpec(String::class.asClassName()))
+                secondaryConstructorBuilder.addParameter(property.toParameterSpec(property.typeInfo.anyOf.first { it.type != "string" }.toClassTypeName()))
+                callThisConstructorArgs.add(property.nameCamelCase + ".toString()")
+            }
             properties.add(property.toPropertySpec(String::class.asClassName()))
-            callThisConstructorArgs.add(property.nameCamelCase + ".toString()")
         }
     }
     val file = FileSpec.builder(objectsPackageName, obj.name)
@@ -459,17 +531,19 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
 
     obj.properties.forEach { property ->
         if (property.typeInfo !is AnyOfType) {
-            if (property.typeInfo.constValue == null) {
+            if (property.typeInfo.constValue == null && property.alwaysNull != true) {
                 primaryConstructorBuilder.addParameter(property.toParameterSpec())
                 secondaryConstructorBuilder.addParameter(property.toParameterSpec())
                 callThisConstructorArgs.add(property.nameCamelCase)
             }
             properties.add(property.toPropertySpec())
         } else {
-            primaryConstructorBuilder.addParameter(property.toParameterSpec(ClassName(inputClassPackageName, "Input")))
-            secondaryConstructorBuilder.addParameter(property.toParameterSpec(String::class.asClassName()))
+            if (property.alwaysNull != true) {
+                primaryConstructorBuilder.addParameter(property.toParameterSpec(ClassName(inputClassPackageName, "Input")))
+                secondaryConstructorBuilder.addParameter(property.toParameterSpec(String::class.asClassName()))
+                callThisConstructorArgs.add("StringInput(${property.nameCamelCase})")
+            }
             properties.add(property.toPropertySpec(ClassName(inputClassPackageName, "Input")))
-            callThisConstructorArgs.add("StringInput(${property.nameCamelCase})")
         }
     }
     val file = FileSpec.builder(objectsPackageName, obj.name)
@@ -490,7 +564,7 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
 }
 
 suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
-    val parameters = obj.properties.filter { it.typeInfo.constValue == null }.map { it.toParameterSpec() }
+    val parameters = obj.properties.filter { it.typeInfo.constValue == null && it.alwaysNull != true }.map { it.toParameterSpec() }
     val properties = obj.properties.map { it.toPropertySpec() }
     val constructor = FunSpec.constructorBuilder().apply {
         addParameters(parameters)
@@ -545,13 +619,19 @@ fun Property.toPropertySpec(type: TypeName? = null, name: String = nameCamelCase
     type = (type ?: typeInfo.toClassTypeName()).copy(nullable = nullable),
     modifiers = modifiers.let { mods -> return@let if (needBeOverridden != null && needBeOverridden!!) mods.toMutableSet().also { modsSet -> modsSet.add(OVERRIDE) } else mods }
 ).initializer(
-    if (typeInfo.constValue != null) "\"${typeInfo.constValue}\"" else name
-).addAnnotation(
-    AnnotationSpec.builder(JsonProperty::class)
-        .addMember("\"${this.name}\"")
-        .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
-        .build()
-).also {
+    when {
+        typeInfo.constValue != null -> "\"${typeInfo.constValue}\""
+        alwaysNull == true -> "null"
+        else -> name
+    }
+//    if (typeInfo.constValue != null) "\"${typeInfo.constValue}\"" else name
+).alsoIf(alwaysNull != true) {
+    it.addAnnotation(
+        AnnotationSpec.builder(JsonProperty::class)
+            .addMember("\"${this.name}\"")
+            .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+            .build()
+    )
     if (this.typeInfo.constValue == null) {
         it.addAnnotation(
             AnnotationSpec.builder(JsonProperty::class)
@@ -560,6 +640,12 @@ fun Property.toPropertySpec(type: TypeName? = null, name: String = nameCamelCase
                 .build()
         )
     }
+}.alsoIf(alwaysNull == true) {
+    it.addAnnotation(
+        AnnotationSpec.builder(JsonIgnore::class)
+            .useSiteTarget(AnnotationSpec.UseSiteTarget.GET)
+            .build()
+    )
 }.build()
 
 fun Property.toInternalPropertySpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): PropertySpec = PropertySpec.builder(
@@ -850,6 +936,37 @@ fun Contract.replaceObjectTypes() {
             obj.properties!!.add(parentProperty)
             properties.forEach { it.needBeOverridden = true }
         }
+
+        for ((propertyName, properties) in propertiesByName) {
+            if (properties.size == referenceObjects.size) continue
+            if (!properties.any { property ->
+                    (property.typeInfo is ReferenceType && property.typeInfo.reference in setOf("InputFile", "Input"))
+                            || (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { type -> type is StringType } && property.typeInfo.anyOf.any { type -> type is ReferenceType && type.reference in setOf("InputFile", "Input") })
+                }) continue
+
+            if (obj.properties == null) obj.properties = mutableListOf()
+            val parentProperty = Property(
+                name = propertyName,
+                description = "",
+                required = false,
+                typeInfo = AnyOfType("any_of", mutableListOf(StringType("string"), ReferenceType("reference", "Input")))
+            )
+            obj.properties!!.add(parentProperty)
+            properties.forEach { it.needBeOverridden = true }
+
+            for (referenceObject in referenceObjects) {
+                if (referenceObject.properties.any { properties.contains(it) }) continue
+
+                referenceObject.properties.add(Property(
+                    name = propertyName,
+                    description = "",
+                    required = false,
+                    typeInfo = ReferenceType("reference", "Input"),
+                    alwaysNull = true,
+                    needBeOverridden = true
+                ))
+            }
+        }
     }
 }
 
@@ -1008,5 +1125,6 @@ data class Property(
     val required: Boolean,
     @param:JsonProperty("type_info") val typeInfo: Type,
     var needBeOverridden: Boolean? = null,
+    var alwaysNull: Boolean? = null,
 )
 //endregion model
