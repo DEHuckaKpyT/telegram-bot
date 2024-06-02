@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.ktor.client.statement.*
 
 
@@ -10,9 +11,13 @@ import io.ktor.client.statement.*
  *
  * @author Denis Matytsin
  */
+suspend fun TelegramBot.downloadByPath(filePath: String): HttpResponse {
+    return client.getFileApi(filePath)
+}
+
 suspend fun TelegramBot.downloadById(fileId: String): HttpResponse {
     val fileInfo = getFile(fileId)
-    val filePath = fileInfo.filePath ?: throw IllegalStateException("Failed download file. FilePath is null for file $fileInfo.")
+    val filePath = fileInfo.filePath ?: throw TelegramBotApiException("Failed download file. FilePath is null for file $fileInfo.")
 
-    return download(filePath)
+    return downloadByPath(filePath)
 }

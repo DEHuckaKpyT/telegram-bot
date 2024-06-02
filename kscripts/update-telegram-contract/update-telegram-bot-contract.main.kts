@@ -32,8 +32,9 @@ val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*
 val modulePath = Path("./../../telegram-bot-core/src/main/kotlin")
 val objectsPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram"
 val objectsInternalPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram.internal"
-val telegramBotClassPackageName = "io.github.dehuckakpyt.telegrambot.temp"
-val inputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.type.supplement.input"
+val telegramBotClassPackageName = "io.github.dehuckakpyt.telegrambot"
+val inputClassPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram.input"
+val apiPackageName = "io.github.dehuckakpyt.telegrambot.api"
 val todayFormattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))!!
 val client = HttpClient(Apache5) {
     install(ContentNegotiation) {
@@ -46,6 +47,7 @@ runBlocking {
     val contract = Path("./custom_v2.json").readText()
         .replace("\\\\_", "_")
         .replace("\\'", "'")
+        .replace("\\\\-", "-")
         .replace("»", "")
         .replace(Regex("\n$"), "")
         .let { jacksonObjectMapper().readValue<Contract>(it) }
@@ -58,6 +60,80 @@ runBlocking {
     println("Recent changes: ${contract.recentChanges.year}-${contract.recentChanges.month}-${contract.recentChanges.day}")
     createObjects(contract.objects)
     createMethods(contract.methodsWithOverloadsByName, contract.objects)
+    createExtensionApiMethods(contract.methodsWithOverloadsByName)
+    createApiMethods(contract.methodsWithOverloadsByName)
+}
+
+suspend fun createApiMethods(methods: List<List<Method>>) {
+    val file = FileSpec.builder(apiPackageName, "TelegramBotApi")
+        .indent("    ")
+        .addType(
+            TypeSpec.interfaceBuilder("TelegramBotApi")
+                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addTelegramBotMethods(methods)
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(modulePath)
+    }
+}
+
+suspend fun createExtensionApiMethods(methods: List<List<Method>>) {
+    fun convertArgumentStatement(argName: String, from: Type, to: Type): String {
+        if (from is LongType && to is StringType) return "$argName.toString()"
+        if (from is StringType && to is ReferenceType && to.reference == "Input") return "StringInput($argName)"
+        throw RuntimeException("Unexpected types to convert")
+    }
+
+    fun TypeSpec.Builder.addFunctions(): TypeSpec.Builder {
+
+        methods.forEach { allMethods ->
+            val mainMethod = allMethods.first()
+            allMethods.drop(1).forEach { method ->
+                var statement = "return ${method.name}("
+                for ((i, argument) in method.arguments.withIndex()) {
+                    if (argument.typeInfo == mainMethod.arguments[i].typeInfo) {
+                        statement += "\n    ${argument.nameCamelCase} = ${argument.nameCamelCase},"
+                    } else {
+                        if (argument.required) {
+                            statement += "\n    ${argument.nameCamelCase} = ${convertArgumentStatement(argument.nameCamelCase, argument.typeInfo, mainMethod.arguments[i].typeInfo)},"
+                        } else {
+                            statement += "\n    ${argument.nameCamelCase} = ${argument.nameCamelCase}?.let { ${convertArgumentStatement(argument.nameCamelCase, argument.typeInfo, mainMethod.arguments[i].typeInfo)} },"
+                        }
+                    }
+                }
+                statement += "\n)"
+
+                addFunction(FunSpec.builder(method.name)
+                    .addModifiers(SUSPEND)
+                    .addKdoc(method.description)
+                    .apply { method.arguments.forEach { addParameter(it.toParameter(withDoc = true)) } }
+                    .addStatement(statement)
+                    .returns(method.returnType.toClassTypeName())
+                    .build())
+            }
+        }
+
+        return this
+    }
+
+    val file = FileSpec.builder(apiPackageName, "TelegramBotApiExt")
+        .indent("    ")
+        .addImport(inputClassPackageName, "StringInput")
+        .addType(
+            TypeSpec.interfaceBuilder("TelegramBotApiExt")
+                .addSuperinterface(ClassName(apiPackageName, "TelegramBotApi"))
+                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addFunctions()
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(modulePath)
+    }
 }
 
 suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
@@ -67,8 +143,9 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
         .addType(
             TypeSpec.interfaceBuilder("TelegramBot")
                 .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addSuperinterface(ClassName(apiPackageName, "TelegramBotApiExt"))
                 .addProperty("username", String::class)
-                .addTelegramBotMethods(methods)
+                .addProperty("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"))
                 .build()
         )
         .build()
@@ -77,7 +154,6 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
         .indent("    ")
         .addInternalImports(methods)
         .addImport("io.github.dehuckakpyt.telegrambot.ext", "appendContent", "appendContentIfNotNull", "appendIfNotNull")
-        .addImport(inputClassPackageName, "StringInput")
         .addImport("io.github.dehuckakpyt.telegrambot.ext", "toJson")
         .addType(
             TypeSpec.classBuilder("TelegramBotImpl")
@@ -97,7 +173,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                 .addProperty(PropertySpec.builder("messageSource", ClassName("io.github.dehuckakpyt.telegrambot.source.message", "MessageSource"), PRIVATE)
                     .initializer("messageSource")
                     .build())
-                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"), PRIVATE)
+                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"), OVERRIDE)
                     .initializer("TelegramApiClient(token)")
                     .build())
                 .addTelegramBotImplMethods(methods, objectsByName)

@@ -1,19 +1,16 @@
 package io.github.dehuckakpyt.telegrambot
 
-import io.github.dehuckakpyt.telegrambot.api.TelegramApi
-import io.github.dehuckakpyt.telegrambot.api.util.TelegramUtilApi
-
+import io.github.dehuckakpyt.telegrambot.api.TelegramBotApiExt
+import io.github.dehuckakpyt.telegrambot.client.TelegramApiClient
+import kotlin.String
 
 /**
- * Created on 20.07.2023.
- *<p>
+ * Created on 02.06.2024.
  *
- * @author Denis Matytsin
+ * @author KScript
  */
-interface TelegramBot : TelegramApi, TelegramUtilApi {
+public interface TelegramBot : TelegramBotApiExt {
+    public val username: String
 
-    val username: String
-    fun stop(): Unit
-
-    companion object
+    public val client: TelegramApiClient
 }

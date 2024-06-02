@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.client
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -11,7 +12,6 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.github.dehuckakpyt.telegrambot.ext.toJson
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.TelegramResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat
  *
  * @author Denis Matytsin
  */
-internal class TelegramApiClient(
+public class TelegramApiClient(
     private val token: String,
 ) {
 
@@ -72,7 +72,7 @@ internal class TelegramApiClient(
         return telegramResponse.result!!
     }
 
-    private suspend inline fun <reified R : Any> handleRequest(response: HttpResponse): R {
+    suspend inline fun <reified R : Any> handleRequest(response: HttpResponse): R {
         val telegramResponse = response.body<TelegramResponse<R>>()
 
         if (!telegramResponse.ok) throwException(response, telegramResponse)
@@ -80,7 +80,7 @@ internal class TelegramApiClient(
         return telegramResponse.result!!
     }
 
-    private fun throwException(response: HttpResponse, telegramResponse: TelegramResponse<*>, body: Any? = null) {
+    fun throwException(response: HttpResponse, telegramResponse: TelegramResponse<*>, body: Any? = null) {
         throw TelegramBotApiException(
             """Request to Telegram Error. 
         Request
@@ -94,6 +94,10 @@ internal class TelegramApiClient(
         Code: ${telegramResponse.errorCode}. 
         Description: ${telegramResponse.description}"""
         )
+    }
+
+    suspend fun getFileApi(path: String): HttpResponse {
+        return client.get("https://api.telegram.org/file/bot$token/${path}")
     }
 
     fun toJson(any: Any): String = MAPPER.writeValueAsString(any)
@@ -126,4 +130,11 @@ internal class TelegramApiClient(
             )
         }
     }
+
+    data class TelegramResponse<T>(
+        @param:JsonProperty("ok") val ok: Boolean,
+        @param:JsonProperty("result") val result: T?,
+        @param:JsonProperty("error_code") val errorCode: Int?,
+        @param:JsonProperty("description") val description: String?,
+    )
 }

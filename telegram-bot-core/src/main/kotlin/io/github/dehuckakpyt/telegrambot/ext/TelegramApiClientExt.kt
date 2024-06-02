@@ -1,10 +1,10 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
 import io.github.dehuckakpyt.telegrambot.client.TelegramApiClient
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.ContentInput
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.Input
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.StringInput
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.NamedContentInput
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 

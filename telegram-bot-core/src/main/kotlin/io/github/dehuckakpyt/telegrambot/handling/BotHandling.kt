@@ -11,7 +11,7 @@ import io.github.dehuckakpyt.telegrambot.container.message.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.fromContentOrNull
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.ContentFactory
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import kotlin.reflect.KClass

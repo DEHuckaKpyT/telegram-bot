@@ -3,8 +3,8 @@ package io.github.dehuckakpyt.telegrambot.test.mock
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.model.type.*
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.ContentInput
-import io.github.dehuckakpyt.telegrambot.model.type.supplement.input.NamedContentInput
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.NamedContentInput
 import io.ktor.client.statement.*
 import io.mockk.mockk
 
