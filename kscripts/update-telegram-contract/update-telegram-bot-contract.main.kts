@@ -54,10 +54,11 @@ runBlocking {
     println("Version: ${contract.version.major}.${contract.version.minor}.${contract.version.patch}")
     println("Recent changes: ${contract.recentChanges.year}-${contract.recentChanges.month}-${contract.recentChanges.day}")
     createObjects(contract.objects)
-    createMethods(contract.methodsWithOverloadsByName)
+    createMethods(contract.methodsWithOverloadsByName, contract.objects)
 }
 
-suspend fun createMethods(methods: List<List<Method>>) {
+suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
+    val objectsByName = objects.associateBy { it.name }
     val file1 = FileSpec.builder(telegramBotClassPackageName, "TelegramBot")
         .indent("    ")
         .addType(
@@ -96,7 +97,7 @@ suspend fun createMethods(methods: List<List<Method>>) {
                 .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"), PRIVATE)
                     .initializer("TelegramApiClient(token)")
                     .build())
-                .addTelegramBotImplMethods(methods)
+                .addTelegramBotImplMethods(methods, objectsByName)
                 .build()
         )
         .build()
@@ -131,7 +132,7 @@ fun TypeSpec.Builder.addTelegramBotMethods(groupedMethods: List<List<Method>>) =
     }
 }
 
-suspend fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List<Method>>) = apply {
+suspend fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List<Method>>, objectsByName: Map<String, Object>) = apply {
     groupedMethods.forEach { methods ->
         val method = methods.first()
 
@@ -142,7 +143,7 @@ suspend fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List
                 .returns(method.returnType.toClassTypeName())
                 .addGetMethodIfNecessary(method)
                 .addPostMethodJsonIfNecessary(method)
-                .addPostMethodMultipartIfNecessary(method)
+                .addPostMethodMultipartIfNecessary(method, objectsByName)
                 .build()
         )
     }
@@ -167,11 +168,13 @@ suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpe
     return this
 }
 
-fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method): FunSpec.Builder {
+fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method, objectsByName: Map<String, Object>): FunSpec.Builder {
     if (method.arguments.size == 0 || method.maybeMultipart.not()) return this
 
     val statement = StringBuilder("return client.postMultiPart(\"${method.name}\") {").also { builder ->
         method.arguments.forEach { arg -> builder.append("\n    ").append(arg.toAppendStatement()) }
+    }.also { builder ->
+        method.arguments.forEach { arg -> arg.toAppendContentInsideObjectsStatements(objectsByName)?.let { statements -> statements.forEach { statement -> builder.append("\n    ").append(statement) } } }
     }.also { builder ->
         builder.append("\n}")
     }.toString()
@@ -181,11 +184,52 @@ fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method): FunSpec.B
     return this
 }
 
+fun Argument.toAppendContentInsideObjectsStatements(objectsByName: Map<String, Object>): List<String>? {
+    if (typeInfo !is ReferenceType && typeInfo !is ArrayType) return null
+
+    if (typeInfo is ReferenceType) {
+        val reference = (typeInfo as ReferenceType).reference
+        if (reference in setOf("Input", "InputFile", "ContentInput", "ReplyMarkup")) return null
+
+        val paths = mutableListOf<String>()
+        evaluateInputPathsInside(nameCamelCase, reference, objectsByName, paths)
+
+        return paths
+    }
+    return null
+}
+
+fun evaluateInputPathsInside(path: String, currentObjectName: String, objectsByName: Map<String, Object>, paths: MutableList<String>): Unit {
+    val currentObject = objectsByName[currentObjectName]!!
+    if (currentObject !is PropertiesObject) return
+
+    for (property in currentObject.properties) {
+        if (property.typeInfo.isCommon) continue
+        if (property.typeInfo is ReferenceType) {
+            val dot = if (property.required.not() || path.contains('?')) "?." else "."
+            val currentPath = "$path$dot${property.nameCamelCase}"
+            if (property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
+                paths.add("${property.required.appendContentMethodName}($currentPath)")
+            } else {
+                evaluateInputPathsInside(currentPath, property.typeInfo.reference, objectsByName, paths)
+            }
+        }
+        if (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { it is StringType } && property.typeInfo.anyOf.any { it is ReferenceType && it.reference in setOf("Input", "InputFile", "ContentInput") }) {
+            val nullable = property.required.not() || path.contains('?')
+            val appendContentMethodName = if (nullable) "appendContentIfNotNull" else "appendContent"
+            val dot = if (nullable) "?." else "."
+            val currentPath = "$path$dot${property.nameCamelCase}"
+            paths.add("\n    if ($currentPath is ContentInput)\n        $appendContentMethodName($currentPath.name, $currentPath)")
+        }
+    }
+}
+
 val Boolean.appendMethodName get(): String = if (this) "append" else "appendIfNotNull"
 val Boolean.appendContentMethodName get(): String = if (this) "appendContent" else "appendContentIfNotNull"
+val Type.isCommon: Boolean get() = type in setOf("integer", "string", "bool", "float", "long")
 
 fun Argument.toAppendStatement(): String = when {
-    (typeInfo.type in setOf("integer", "string", "bool", "float", "long")) -> {
+    (typeInfo.isCommon) -> {
         "${required.appendMethodName}(\"$name\", $nameCamelCase)"
     }
 
@@ -317,6 +361,11 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
             .indent("    ")
             .addType(
                 TypeSpec.defaultInterfaceBuilder(obj)
+                    .alsoIf(obj.properties != null) { typeSpec ->
+                        obj.properties!!.forEach { property ->
+                            typeSpec.addProperty(PropertySpec.builder(property.nameCamelCase, property.typeInfo.toClassTypeName().copy(nullable = property.required.not()), ABSTRACT).build())
+                        }
+                    }
                     .build()
             )
             .build()
@@ -349,6 +398,11 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
         .indent("    ")
         .addType(
             TypeSpec.defaultInterfaceBuilder(obj)
+                .alsoIf(obj.properties != null) { typeSpec ->
+                    obj.properties!!.forEach { property ->
+                        typeSpec.addProperty(PropertySpec.builder(property.nameCamelCase, property.typeInfo.toClassTypeName().copy(nullable = property.required.not()), ABSTRACT).build())
+                    }
+                }
                 .addAnnotation(jsonTypeInfo)
                 .addAnnotation(jsonSubTypes)
                 .build()
@@ -486,9 +540,10 @@ fun Property.toParameterSpec(type: TypeName? = null, name: String = nameCamelCas
     }
 }.addKdoc("%L", description).build()
 
-fun Property.toPropertySpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not()): PropertySpec = PropertySpec.builder(
+fun Property.toPropertySpec(type: TypeName? = null, name: String = nameCamelCase, nullable: Boolean = required.not(), modifiers: Iterable<KModifier> = emptySet()): PropertySpec = PropertySpec.builder(
     name = name,
     type = (type ?: typeInfo.toClassTypeName()).copy(nullable = nullable),
+    modifiers = modifiers.let { mods -> return@let if (needBeOverridden != null && needBeOverridden!!) mods.toMutableSet().also { modsSet -> modsSet.add(OVERRIDE) } else mods }
 ).initializer(
     if (typeInfo.constValue != null) "\"${typeInfo.constValue}\"" else name
 ).addAnnotation(
@@ -552,7 +607,7 @@ fun Type.toClassTypeName(): TypeName = when (this) {
     is StringType -> String::class.asClassName()
     is BooleanType -> Boolean::class.asClassName()
     is FloatType -> Double::class.asClassName()
-    is AnyOfType -> throw RuntimeException("Unexpected type $this")
+    is AnyOfType -> tryToClassTypeNameFromAnyOfType()
     is ReferenceType -> when (reference) {
         "InputFile", "Input" -> ClassName(inputClassPackageName, "Input")
         "ContentInput" -> ClassName(inputClassPackageName, "ContentInput")
@@ -561,6 +616,14 @@ fun Type.toClassTypeName(): TypeName = when (this) {
 
     is ArrayType -> List::class.asClassName().parameterizedBy(array.toClassTypeName())
     else -> throw RuntimeException("Unexpected type $this")
+}
+
+fun AnyOfType.tryToClassTypeNameFromAnyOfType(): TypeName {
+    if (anyOf.size == 2 && anyOf.any { it is StringType } && anyOf.any { it is ReferenceType && it.reference in setOf("InputFile", "Input") }) {
+        return ClassName(inputClassPackageName, "Input")
+    }
+
+    throw RuntimeException("Unexpected type $this")
 }
 
 fun Type.toInternalClassTypeName(): TypeName =
@@ -771,6 +834,22 @@ fun Contract.replaceObjectTypes() {
         if (obj !is AnyOfObject) return@forEach
         val referenceObjects = obj.anyOf.map { objectsByName[(it as ReferenceType).reference]!! as PropertiesObject }
         referenceObjects.forEach { it.parentName = obj.name }
+
+        val propertiesByName = referenceObjects.flatMap { it.properties }.groupBy { it.name }
+
+        for ((propertyName, properties) in propertiesByName) {
+            if (properties.size != referenceObjects.size) continue
+
+            if (obj.properties == null) obj.properties = mutableListOf()
+            val parentProperty = Property(
+                name = propertyName,
+                description = "",
+                required = properties.all { it.required },
+                typeInfo = properties.first().typeInfo
+            )
+            obj.properties!!.add(parentProperty)
+            properties.forEach { it.needBeOverridden = true }
+        }
     }
 }
 
@@ -912,6 +991,7 @@ data class AnyOfObject(
     override val description: String? = null,
     @param:JsonProperty("any_of") val anyOf: List<Type>,
     @param:JsonProperty("documentation_link") override val documentationLink: String,
+    var properties: MutableList<Property>? = null,
 ) : Object()
 
 @JsonTypeName("unknown")
@@ -927,5 +1007,6 @@ data class Property(
     val description: String,
     val required: Boolean,
     @param:JsonProperty("type_info") val typeInfo: Type,
+    var needBeOverridden: Boolean? = null,
 )
 //endregion model
