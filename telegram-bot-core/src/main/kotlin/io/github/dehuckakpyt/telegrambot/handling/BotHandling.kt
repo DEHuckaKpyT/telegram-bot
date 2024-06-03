@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.handling
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.api.TelegramApiHandling
+import io.github.dehuckakpyt.telegrambot.api.TelegramBotApiExtHandling
 import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
 import io.github.dehuckakpyt.telegrambot.container.GeneralContainer
 import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
@@ -11,7 +11,7 @@ import io.github.dehuckakpyt.telegrambot.container.message.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.fromContentOrNull
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
-import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentFactory
+import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import kotlin.reflect.KClass
@@ -32,8 +32,8 @@ class BotHandling internal constructor(
     private val contentConverter: ContentConverter,
     templater: Templater,
     buttonFactory: ButtonFactory,
-) : TelegramApiHandling(),
-    ContentFactory,
+) : TelegramBotApiExtHandling(),
+    InputFactory,
     Templater by templater,
     ButtonFactory by buttonFactory {
 

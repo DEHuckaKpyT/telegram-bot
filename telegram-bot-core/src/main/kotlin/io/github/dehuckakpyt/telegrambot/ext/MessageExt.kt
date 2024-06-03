@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
-import io.github.dehuckakpyt.telegrambot.model.type.Message
+import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 
 
 /**

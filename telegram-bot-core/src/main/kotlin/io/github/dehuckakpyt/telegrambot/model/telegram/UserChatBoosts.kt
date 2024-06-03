@@ -4,7 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.collections.List
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object represents a list of boosts added to a chat by a user.
  *

@@ -5,7 +5,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ChatAdministratorRights
 import kotlin.Boolean
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * @author KScript
  */

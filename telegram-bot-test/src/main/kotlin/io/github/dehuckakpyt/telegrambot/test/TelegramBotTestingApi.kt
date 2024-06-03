@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.test
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.github.dehuckakpyt.telegrambot.model.type.Update
+import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 import io.github.dehuckakpyt.telegrambot.test.TelegramBotUpdateManager.objectMapper
 import io.github.dehuckakpyt.telegrambot.test.TelegramBotUpdateManager.updateResolver
 import io.github.dehuckakpyt.telegrambot.test.TelegramBotUpdateManager.updatesChannel

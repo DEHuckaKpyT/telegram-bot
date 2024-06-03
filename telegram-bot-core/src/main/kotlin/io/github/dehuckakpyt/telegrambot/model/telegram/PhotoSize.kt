@@ -5,7 +5,7 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object represents one size of a photo or a
  * [file](https://core.telegram.org/bots/api/#document) /

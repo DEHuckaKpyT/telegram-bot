@@ -5,7 +5,7 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object represents the content of a media message to be sent. It should be one of
  *

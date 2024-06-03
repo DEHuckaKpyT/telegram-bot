@@ -4,7 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * The boost was obtained by subscribing to Telegram Premium or by gifting a Telegram Premium
  * subscription to another user.

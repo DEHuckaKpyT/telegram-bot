@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.model.telegram
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object represents one result of an inline query. Telegram clients currently support results
  * of the following 20 types:

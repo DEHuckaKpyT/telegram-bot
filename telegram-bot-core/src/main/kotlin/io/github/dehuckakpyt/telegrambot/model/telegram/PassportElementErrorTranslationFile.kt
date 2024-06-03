@@ -4,7 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * Represents an issue with one of the files that constitute the translation of a document. The
  * error is considered resolved when the file changes.

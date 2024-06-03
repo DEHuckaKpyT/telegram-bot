@@ -6,7 +6,7 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * Describes the connection of the bot with a business account.
  *

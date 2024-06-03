@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.temp
 //import io.github.dehuckakpyt.telegrambot.client.TelegramApiClient
 //import io.github.dehuckakpyt.telegrambot.ext.*
 //import io.github.dehuckakpyt.telegrambot.model.internal.*
-//import io.github.dehuckakpyt.telegrambot.model.type.*
+//import io.github.dehuckakpyt.telegrambot.model.telegram.*
 //import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 //import io.github.dehuckakpyt.telegrambot.model.telegram.input.NamedContentInput
 //import io.github.dehuckakpyt.telegrambot.source.message.MessageSource

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.`annotation`.JsonTypeInfo
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object describes the source of a chat boost. It can be one of
  *

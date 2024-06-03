@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.factory
 
-import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.telegram.*
 
 
 /**
@@ -11,20 +11,20 @@ import io.github.dehuckakpyt.telegrambot.model.type.*
  */
 private val removeKeyboard = ReplyKeyboardRemove(true)
 
-fun inlineKeyboard(button: InlineKeyboardButton): ReplyKeyboard {
+fun inlineKeyboard(button: InlineKeyboardButton): InlineKeyboardMarkup {
     return InlineKeyboardMarkup(listOf(listOf(button)))
 }
 
-fun inlineKeyboard(vararg buttons: InlineKeyboardButton): ReplyKeyboard {
+fun inlineKeyboard(vararg buttons: InlineKeyboardButton): InlineKeyboardMarkup {
     return buttons.map(::listOf).run(::InlineKeyboardMarkup)
 }
 
-fun contactKeyboard(text: String): ReplyKeyboard {
+fun contactKeyboard(text: String): ReplyKeyboardMarkup {
     return ReplyKeyboardMarkup(listOf(listOf(KeyboardButton(text, requestContact = true))))
 }
 
-fun locationKeyboard(text: String): ReplyKeyboard {
+fun locationKeyboard(text: String): ReplyKeyboardMarkup {
     return ReplyKeyboardMarkup(listOf(listOf(KeyboardButton(text, requestLocation = true))))
 }
 
-fun removeKeyboard(): ReplyKeyboard = removeKeyboard
+fun removeKeyboard(): ReplyKeyboardRemove = removeKeyboard

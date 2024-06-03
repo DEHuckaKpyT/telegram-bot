@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.factory.button
 
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
-import io.github.dehuckakpyt.telegrambot.model.type.InlineKeyboardButton
-import io.github.dehuckakpyt.telegrambot.model.type.LoginUrl
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.LoginUrl
 
 
 /**

@@ -1,9 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.container
 
-import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
-import io.github.dehuckakpyt.telegrambot.model.type.Chat
-import io.github.dehuckakpyt.telegrambot.model.type.MaybeInaccessibleMessage
-import io.github.dehuckakpyt.telegrambot.model.type.User
+import io.github.dehuckakpyt.telegrambot.model.telegram.CallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
+import io.github.dehuckakpyt.telegrambot.model.telegram.MaybeInaccessibleMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.User
 
 
 /**

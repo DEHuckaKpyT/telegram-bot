@@ -5,7 +5,7 @@ import com.fasterxml.jackson.`annotation`.JsonTypeInfo
 import kotlin.Long
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object describes a message that can be inaccessible to the bot. It can be one of
  *

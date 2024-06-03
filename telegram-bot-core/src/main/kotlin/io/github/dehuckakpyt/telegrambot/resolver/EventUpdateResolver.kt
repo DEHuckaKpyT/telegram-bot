@@ -1,7 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
-import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
-import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.telegram.*
 import org.slf4j.LoggerFactory
 
 
@@ -61,25 +60,25 @@ internal class EventUpdateResolver {
         }
     }
 
-    internal val allowedUpdates: Set<AllowedUpdate>
+    internal val allowedUpdates: Set<String>
         get() = buildSet {
-            if (message != null) add(AllowedUpdate.Message)
-            if (editedMessage != null) add(AllowedUpdate.EditedMessage)
-            if (channelPost != null) add(AllowedUpdate.ChannelPost)
-            if (editedChannelPost != null) add(AllowedUpdate.EditedChannelPost)
-            if (messageReaction != null) add(AllowedUpdate.MessageReaction)
-            if (messageReactionCount != null) add(AllowedUpdate.MessageReactionCount)
-            if (inlineQuery != null) add(AllowedUpdate.InlineQuery)
-            if (chosenInlineResult != null) add(AllowedUpdate.ChosenInlineQuery)
-            if (callbackQuery != null) add(AllowedUpdate.CallbackQuery)
-            if (shippingQuery != null) add(AllowedUpdate.ShippingQuery)
-            if (preCheckoutQuery != null) add(AllowedUpdate.PreCheckoutQuery)
-            if (poll != null) add(AllowedUpdate.Poll)
-            if (pollAnswer != null) add(AllowedUpdate.PollAnswer)
-            if (myChatMember != null) add(AllowedUpdate.MyChatMember)
-            if (chatMember != null) add(AllowedUpdate.ChatMember)
-            if (chatJoinRequest != null) add(AllowedUpdate.ChatJoinRequest)
-            if (chatBoost != null) add(AllowedUpdate.ChatBoost)
-            if (removedChatBoost != null) add(AllowedUpdate.RemovedChatBoost)
+            if (message != null) add("message")
+            if (editedMessage != null) add("edited_message")
+            if (channelPost != null) add("channel_post")
+            if (editedChannelPost != null) add("edited_channel_post")
+            if (messageReaction != null) add("message_reaction")
+            if (messageReactionCount != null) add("message_reaction_count")
+            if (inlineQuery != null) add("inline_query")
+            if (chosenInlineResult != null) add("chosen_inline_query")
+            if (callbackQuery != null) add("callback_query")
+            if (shippingQuery != null) add("shipping_query")
+            if (preCheckoutQuery != null) add("pre_checkout_query")
+            if (poll != null) add("poll")
+            if (pollAnswer != null) add("poll_answer")
+            if (myChatMember != null) add("my_chat_member")
+            if (chatMember != null) add("chat_member")
+            if (chatJoinRequest != null) add("chat_join_request")
+            if (chatBoost != null) add("chat_boost")
+            if (removedChatBoost != null) add("removed_chat_boost")
         }
 }

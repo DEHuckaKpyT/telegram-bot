@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.exception.handler
 
-import io.github.dehuckakpyt.telegrambot.model.type.Chat
+import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
 
 
 /**

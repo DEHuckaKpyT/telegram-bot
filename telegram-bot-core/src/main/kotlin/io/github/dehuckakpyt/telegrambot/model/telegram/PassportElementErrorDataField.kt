@@ -4,7 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * Represents an issue in one of the data fields that was provided by the user. The error is
  * considered resolved when the field's value changes.

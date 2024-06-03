@@ -1,7 +1,5 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram.input
 
-import java.io.File
-
 
 /**
  * Created on 26.01.2024.

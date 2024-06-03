@@ -1,7 +1,6 @@
 package io.github.dehuckakpyt.telegrambotexample.runner
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.model.type.ParseMode.HTML
 import io.github.dehuckakpyt.telegrambot.template.Templating
 import io.github.dehuckakpyt.telegrambot.template.Templating.Companion.with
 import io.github.dehuckakpyt.telegrambotexample.template.runnerNotifyWhenStarted
@@ -23,6 +22,6 @@ class NotifyWhenStartedRunner : Runner, Templating {
     private val chatIdToNotify = 1165327523L
 
     override suspend fun execute() {
-        bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted with ("botUsername" to bot.username), parseMode = HTML)
+        bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted with ("botUsername" to bot.username), parseMode = "HTML")
     }
 }

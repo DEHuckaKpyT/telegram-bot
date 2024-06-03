@@ -5,7 +5,7 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object represents a file ready to be downloaded. The file can be downloaded via the link
  * `https://api.telegram.org/file/bot<token>/<file_path>`. It is guaranteed that the link will be valid

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * Describes an inline message sent by a [Web App](https://core.telegram.org/bots/webapps) on behalf
  * of a user.

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Boolean
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * Upon receiving a message with this object, Telegram clients will remove the current custom
  * keyboard and display the default letter-keyboard. By default, custom keyboards are displayed until a

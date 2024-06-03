@@ -1,7 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
-import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
-import io.github.dehuckakpyt.telegrambot.model.type.Update
+import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 
 
 /**
@@ -24,7 +23,7 @@ internal class UpdateResolverImpl(
         }
     }
 
-    override val allowedUpdates: Set<AllowedUpdate>
+    override val allowedUpdates: Set<String>
         get() = buildSet {
             addAll(eventUpdateResolver.allowedUpdates)
             addAll(dialogUpdateResolver.allowedUpdates)

@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.receiver
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
-import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate.Message
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.kotest.core.spec.style.FreeSpec
 import io.mockk.*
@@ -15,7 +14,7 @@ import io.mockk.*
  */
 class LongPollingUpdateReceiverTest : FreeSpec({
 
-    val bot = mockk<TelegramBot>(relaxUnitFun = true)
+    val bot = mockk<TelegramBot>(relaxed = true, relaxUnitFun = true)
     val updateResolver = mockk<UpdateResolver>()
     val config = LongPollingConfig()
     val updateReceiver = LongPollingUpdateReceiver(bot, updateResolver, config)
@@ -25,7 +24,7 @@ class LongPollingUpdateReceiverTest : FreeSpec({
     beforeEach {
         clearAllMocks()
 
-        every { updateResolver.allowedUpdates } returns setOf(Message)
+        every { updateResolver.allowedUpdates } returns setOf("message")
     }
 
     afterEach {

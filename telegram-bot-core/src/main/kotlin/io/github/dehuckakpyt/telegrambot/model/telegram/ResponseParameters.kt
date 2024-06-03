@@ -5,7 +5,7 @@ import kotlin.Int
 import kotlin.Long
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * Describes why a request was unsuccessful.
  *

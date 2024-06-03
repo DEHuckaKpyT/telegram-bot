@@ -52,7 +52,7 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * @author KScript
  */
@@ -83,7 +83,7 @@ public interface TelegramBotApi {
      * getUpdates, so unwanted updates may be received for a short period of time.
      */
     public suspend fun getUpdates(
-        offset: Int? = null,
+        offset: Long? = null,
         limit: Int? = null,
         timeout: Int? = null,
         allowedUpdates: Iterable<String>? = null,

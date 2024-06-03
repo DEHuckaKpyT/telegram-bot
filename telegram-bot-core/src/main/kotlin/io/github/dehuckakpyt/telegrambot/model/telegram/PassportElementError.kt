@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.model.telegram
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object represents an error in the Telegram Passport element which was submitted that should
  * be resolved by the user. It should be one of:

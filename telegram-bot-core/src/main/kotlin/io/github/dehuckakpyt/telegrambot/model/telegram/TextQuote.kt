@@ -7,7 +7,7 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object contains information about the quoted part of a message that is replied to by the
  * given message.

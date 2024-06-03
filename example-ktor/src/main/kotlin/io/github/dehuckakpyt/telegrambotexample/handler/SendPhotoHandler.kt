@@ -16,7 +16,7 @@ import org.koin.core.annotation.Factory
 class SendPhotoHandler : BotHandler({
     command("/photo") {
         val message = sendPhoto(NamedResourceContent("Hello.jpg", "/images/cat.jpg"))
-        val fileId = message.photo[0].fileId
+        val fileId = message.photo!![0].fileId
 
         delay(500)
         sendPhoto(fileId, "So cute!")

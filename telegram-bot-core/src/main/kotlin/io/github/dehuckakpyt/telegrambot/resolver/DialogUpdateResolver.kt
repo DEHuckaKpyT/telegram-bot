@@ -9,9 +9,8 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.chatId
-import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
-import io.github.dehuckakpyt.telegrambot.model.type.CallbackQuery
-import io.github.dehuckakpyt.telegrambot.model.type.Message
+import io.github.dehuckakpyt.telegrambot.model.telegram.CallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import kotlinx.coroutines.withContext
@@ -109,7 +108,7 @@ internal class DialogUpdateResolver(
         }
     }
 
-    internal val allowedUpdates: Set<AllowedUpdate> get() = chainResolver.allowedUpdates
+    internal val allowedUpdates: Set<String> get() = chainResolver.allowedUpdates
 
     private val Message.messageContainerFactory: MessageContainerFactory
         get() = messageArgumentFactories.firstOrNull { it.matches(this) }

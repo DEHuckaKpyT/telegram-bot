@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.container
 
-import io.github.dehuckakpyt.telegrambot.model.type.Chat
-import io.github.dehuckakpyt.telegrambot.model.type.User
+import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
+import io.github.dehuckakpyt.telegrambot.model.telegram.User
 
 
 /**

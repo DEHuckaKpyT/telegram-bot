@@ -6,7 +6,7 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object contains information about a user that was shared with the bot using a
  * [KeyboardButtonRequestUsers](https://core.telegram.org/bots/api/#keyboardbuttonrequestusers) button.

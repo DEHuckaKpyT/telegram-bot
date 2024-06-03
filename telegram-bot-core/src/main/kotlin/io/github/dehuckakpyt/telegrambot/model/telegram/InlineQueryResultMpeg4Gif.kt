@@ -7,7 +7,7 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this
  * animated MPEG-4 file will be sent by the user with optional caption. Alternatively, you can use

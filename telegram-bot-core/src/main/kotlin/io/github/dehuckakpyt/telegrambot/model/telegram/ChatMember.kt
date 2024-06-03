@@ -5,7 +5,7 @@ import com.fasterxml.jackson.`annotation`.JsonTypeInfo
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object contains information about one member of a chat. Currently, the following 6 types of
  * chat members are supported:

@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.test
 import com.fasterxml.jackson.databind.json.JsonMapper
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
-import io.github.dehuckakpyt.telegrambot.model.type.Update
+import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.test.ext.anyConstructed

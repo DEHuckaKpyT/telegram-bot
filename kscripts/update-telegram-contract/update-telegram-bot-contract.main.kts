@@ -29,7 +29,8 @@ import kotlin.io.path.readText
 
 val getDefaultValueFromDescriptionRegex = Regex("^(?:Always (.+)\\..+)|(?:.+, always “([a-z0-9_]+)”)$")
 val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*?$")
-val modulePath = Path("./../../telegram-bot-core/src/main/kotlin")
+val coreModulePath = Path("./../../telegram-bot-core/src/main/kotlin")
+val testModulePath = Path("./../../telegram-bot-test/src/main/kotlin")
 val objectsPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram"
 val objectsInternalPackageName = "io.github.dehuckakpyt.telegrambot.model.telegram.internal"
 val telegramBotClassPackageName = "io.github.dehuckakpyt.telegrambot"
@@ -62,6 +63,160 @@ runBlocking {
     createMethods(contract.methodsWithOverloadsByName, contract.objects)
     createExtensionApiMethods(contract.methodsWithOverloadsByName)
     createApiMethods(contract.methodsWithOverloadsByName)
+    createTelegramBotApiHandling(contract.methodsWithOverloadsByName)
+    createTelegramBotApiExtHandling(contract.methodsWithOverloadsByName)
+    createMockTelegramBot(contract.methodsWithOverloadsByName)
+}
+
+suspend fun createMockTelegramBot(methods: List<List<Method>>) {
+    fun TypeSpec.Builder.addFunctions(): TypeSpec.Builder {
+        methods.forEach { allMethods ->
+            val mainMethod = allMethods.first()
+            addFunction(FunSpec.builder(mainMethod.name)
+                .addModifiers(SUSPEND, OVERRIDE)
+                .apply { mainMethod.arguments.forEach { addParameter(it.toParameter(specifyNull = false)) } }
+                .addStatement("return mockk()")
+                .returns(mainMethod.returnType.toClassTypeName())
+                .build())
+        }
+
+        return this
+    }
+
+    val file = FileSpec.builder("io.github.dehuckakpyt.telegrambot.test.mock", "MockTelegramBot")
+        .indent("    ")
+        .addImport("io.mockk", "mockk")
+        .addType(
+            TypeSpec.classBuilder("MockTelegramBot")
+                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addModifiers(INTERNAL)
+                .addSuperinterface(ClassName(telegramBotClassPackageName, "TelegramBot"))
+                .addProperty(PropertySpec.builder("username", String::class)
+                    .initializer("\"mock_bot\"")
+                    .addModifiers(OVERRIDE)
+                    .build())
+                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"))
+                    .initializer("mockk()")
+                    .addModifiers(OVERRIDE)
+                    .build())
+                .addFunctions()
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(testModulePath)
+    }
+}
+
+suspend fun createTelegramBotApiHandling(methods: List<List<Method>>) {
+    fun convertArgumentStatement(argName: String, from: Type, to: Type): String {
+        if (from is LongType && to is StringType) return "$argName.toString()"
+        if (from is StringType && to is ReferenceType && to.reference == "Input") return "StringInput($argName)"
+        throw RuntimeException("Unexpected types to convert")
+    }
+
+    fun TypeSpec.Builder.addFunctions(): TypeSpec.Builder {
+        methods.forEach { allMethods ->
+            val mainMethod = allMethods.first()
+            var statement = "return bot.${mainMethod.name}("
+            for (argument in mainMethod.arguments) {
+                statement += if (argument.nameCamelCase == "chatId")
+                    "\n    ${argument.nameCamelCase} = chat.id,"
+                else
+                    "\n    ${argument.nameCamelCase} = ${argument.nameCamelCase},"
+            }
+            statement += "\n)"
+
+            addFunction(FunSpec.builder(mainMethod.name)
+                .addModifiers(SUSPEND)
+                .receiver(ClassName("io.github.dehuckakpyt.telegrambot.container", "Container"))
+                .addKdoc(mainMethod.description)
+                .apply { mainMethod.arguments.filter { it.nameCamelCase != "chatId" }.forEach { addParameter(it.toParameter(withDoc = true)) } }
+                .addStatement(statement)
+                .returns(mainMethod.returnType.toClassTypeName())
+                .build())
+        }
+
+        return this
+    }
+
+    val file = FileSpec.builder(apiPackageName, "TelegramBotApiHandling")
+        .indent("    ")
+        .addType(
+            TypeSpec.classBuilder("TelegramBotApiHandling")
+                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addModifiers(ABSTRACT)
+                .addProperty("bot", ClassName(telegramBotClassPackageName, "TelegramBot"), ABSTRACT, PROTECTED)
+                .addFunctions()
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(coreModulePath)
+    }
+}
+
+suspend fun createTelegramBotApiExtHandling(methods: List<List<Method>>) {
+    fun convertArgumentStatement(argName: String, from: Type, to: Type): String {
+        if (from is LongType && to is StringType) return "$argName.toString()"
+        if (from is StringType && to is ReferenceType && to.reference == "Input") return "StringInput($argName)"
+        throw RuntimeException("Unexpected types to convert")
+    }
+
+    fun TypeSpec.Builder.addFunctions(): TypeSpec.Builder {
+        methods.forEach { allMethods ->
+            val mainMethod = allMethods.first()
+            allMethods.drop(1).forEach { method ->
+                var statement = "return ${method.name}("
+                for ((i, argument) in method.arguments.withIndex()) {
+                    statement += if (argument.typeInfo == mainMethod.arguments[i].typeInfo) {
+                        if (argument.nameCamelCase == "chatId")
+                            ""
+                        else
+                            "\n    ${argument.nameCamelCase} = ${argument.nameCamelCase},"
+                    } else {
+                        if (argument.required) {
+                            "\n    ${argument.nameCamelCase} = ${convertArgumentStatement(argument.nameCamelCase, argument.typeInfo, mainMethod.arguments[i].typeInfo)},"
+                        } else {
+                            "\n    ${argument.nameCamelCase} = ${argument.nameCamelCase}?.let { ${convertArgumentStatement(argument.nameCamelCase, argument.typeInfo, mainMethod.arguments[i].typeInfo)} },"
+                        }
+                    }
+                }
+                statement += "\n)"
+
+                if ((method.arguments.any { it.nameCamelCase == "chatId" && it.typeInfo !is StringType }).not())
+                    addFunction(FunSpec.builder(method.name)
+                        .addModifiers(SUSPEND)
+                        .receiver(ClassName("io.github.dehuckakpyt.telegrambot.container", "Container"))
+                        .addKdoc(method.description)
+                        .apply { method.arguments.filter { it.nameCamelCase != "chatId" }.forEach { addParameter(it.toParameter(withDoc = true)) } }
+                        .addStatement(statement)
+                        .returns(method.returnType.toClassTypeName())
+                        .build())
+            }
+        }
+
+        return this
+    }
+
+    val file = FileSpec.builder(apiPackageName, "TelegramBotApiExtHandling")
+        .indent("    ")
+        .addImport(inputClassPackageName, "StringInput")
+        .addType(
+            TypeSpec.classBuilder("TelegramBotApiExtHandling")
+                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .superclass(ClassName(apiPackageName, "TelegramBotApiHandling"))
+                .addModifiers(ABSTRACT)
+                .addFunctions()
+                .build()
+        )
+        .build()
+
+    withContext(Dispatchers.IO) {
+        file.writeTo(coreModulePath)
+    }
 }
 
 suspend fun createApiMethods(methods: List<List<Method>>) {
@@ -76,7 +231,7 @@ suspend fun createApiMethods(methods: List<List<Method>>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -88,7 +243,6 @@ suspend fun createExtensionApiMethods(methods: List<List<Method>>) {
     }
 
     fun TypeSpec.Builder.addFunctions(): TypeSpec.Builder {
-
         methods.forEach { allMethods ->
             val mainMethod = allMethods.first()
             allMethods.drop(1).forEach { method ->
@@ -132,7 +286,7 @@ suspend fun createExtensionApiMethods(methods: List<List<Method>>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -182,8 +336,8 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file1.writeTo(modulePath)
-        file2.writeTo(modulePath)
+        file1.writeTo(coreModulePath)
+        file2.writeTo(coreModulePath)
     }
 }
 
@@ -420,7 +574,7 @@ suspend fun createInternalPropertiesObject(obj: PropertiesObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -525,7 +679,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
             .build()
 
         withContext(Dispatchers.IO) {
-            file.writeTo(modulePath)
+            file.writeTo(coreModulePath)
         }
         return
     }
@@ -564,7 +718,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -603,7 +757,7 @@ suspend fun createMultiTypeIntLongAndStringPropertiesObject(obj: PropertiesObjec
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -643,7 +797,7 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -664,7 +818,7 @@ suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -678,7 +832,7 @@ suspend fun createUnknownObject(obj: UnknownObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(modulePath)
+        file.writeTo(coreModulePath)
     }
 }
 
@@ -820,6 +974,13 @@ suspend fun Contract.replaceMethodTypes() {
     methods.forEach { method ->
         val arguments = method.arguments
         for ((i, argument) in arguments.withIndex()) {
+            // this param must be long
+            if (method.name == "getUpdates" && argument.name == "offset") {
+                if (argument.typeInfo is IntegerType) {
+                    val typeInfo = argument.typeInfo
+                    arguments[i] = argument.copy(typeInfo = (typeInfo as IntegerType).toLongType())
+                }
+            }
             // means that you can download file by this field
             if (argument.description.contains("exists on the Telegram servers")) {
                 arguments[i] = argument.copy(typeInfo = AnyOfType("any_of", mutableListOf(StringType("string"), ReferenceType("reference", "Input"))))
@@ -863,7 +1024,7 @@ suspend fun Contract.replaceMethodTypes() {
                         .build()
 
                     withContext(Dispatchers.IO) {
-                        file.writeTo(modulePath)
+                        file.writeTo(coreModulePath)
                     }
                 }
                 argument.typeInfo = ReferenceType("reference", interfaceName)

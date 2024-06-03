@@ -9,7 +9,6 @@ import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.toContentOrNull
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.container.chatId
-import io.github.dehuckakpyt.telegrambot.model.internal.AllowedUpdate
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import kotlin.collections.set
 import kotlin.reflect.KClass
@@ -117,10 +116,10 @@ internal class ChainResolver(
         return actionByCallback[callback]
     }
 
-    internal val allowedUpdates: Set<AllowedUpdate>
+    internal val allowedUpdates: Set<String>
         get() = buildSet {
-            if (actionByCommand.isNotEmpty() || actionByStep.isNotEmpty()) add(AllowedUpdate.Message)
-            if (actionByCallback.isNotEmpty()) add(AllowedUpdate.CallbackQuery)
+            if (actionByCommand.isNotEmpty() || actionByStep.isNotEmpty()) add("message")
+            if (actionByCallback.isNotEmpty()) add("callback_query")
         }
 
     /**

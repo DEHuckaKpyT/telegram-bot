@@ -3,7 +3,7 @@ package io.github.dehuckakpyt.telegrambot.model.telegram
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object represents the scope to which bot commands are applied. Currently, the following 7
  * scopes are supported:

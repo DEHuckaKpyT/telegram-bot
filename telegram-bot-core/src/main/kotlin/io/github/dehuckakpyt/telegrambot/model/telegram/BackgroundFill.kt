@@ -5,7 +5,7 @@ import com.fasterxml.jackson.`annotation`.JsonTypeInfo
 import kotlin.String
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * This object describes the way a background is filled based on the selected colors. Currently, it
  * can be one of

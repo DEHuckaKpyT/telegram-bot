@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.container.message
 
-import io.github.dehuckakpyt.telegrambot.model.type.Message
-import io.github.dehuckakpyt.telegrambot.model.type.PhotoSize
+import io.github.dehuckakpyt.telegrambot.model.telegram.Message
+import io.github.dehuckakpyt.telegrambot.model.telegram.PhotoSize
 
 
 /**
@@ -14,7 +14,7 @@ class PhotoMessageContainer(message: Message, step: String?, content: String?) :
     MessageContainer(message, step, content) {
 
     val caption: String? get() = message.caption
-    val photos: List<PhotoSize> get() = message.photo
+    val photos: List<PhotoSize> get() = message.photo!!
 
     override val type: String = "PHOTO"
 }

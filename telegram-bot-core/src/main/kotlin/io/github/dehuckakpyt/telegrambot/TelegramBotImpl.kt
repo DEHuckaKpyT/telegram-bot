@@ -163,7 +163,7 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 02.06.2024.
+ * Created on 03.06.2024.
  *
  * @author KScript
  */
@@ -175,7 +175,7 @@ public class TelegramBotImpl(
     override val client: TelegramApiClient = TelegramApiClient(token)
 
     override suspend fun getUpdates(
-        offset: Int?,
+        offset: Long?,
         limit: Int?,
         timeout: Int?,
         allowedUpdates: Iterable<String>?,

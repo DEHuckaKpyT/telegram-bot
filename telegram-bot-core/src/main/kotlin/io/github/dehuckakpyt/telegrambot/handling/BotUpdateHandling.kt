@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambot.handling
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
-import io.github.dehuckakpyt.telegrambot.model.type.*
+import io.github.dehuckakpyt.telegrambot.model.telegram.*
 import io.github.dehuckakpyt.telegrambot.resolver.EventUpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
