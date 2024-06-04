@@ -1,8 +1,7 @@
 package io.github.dehuckakpyt.telegrambot
 
 import io.github.dehuckakpyt.telegrambot.api.TelegramBotApiExt
-import io.github.dehuckakpyt.telegrambot.client.TelegramApiClient
-import kotlin.String
+import io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient
 
 /**
  * Created on 03.06.2024.

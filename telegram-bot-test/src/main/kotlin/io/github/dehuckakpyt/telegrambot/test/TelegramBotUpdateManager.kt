@@ -24,7 +24,7 @@ import kotlinx.coroutines.channels.Channel
 internal object TelegramBotUpdateManager {
     internal val updatesChannel = Channel<List<Update>>()
     internal lateinit var updateResolver: UpdateResolver
-    internal val objectMapper = Class.forName("io.github.dehuckakpyt.telegrambot.client.TelegramApiClient")
+    internal val objectMapper = Class.forName("io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient")
         .getDeclaredField("MAPPER")
         .apply { isAccessible = true }
         .get(null) as JsonMapper

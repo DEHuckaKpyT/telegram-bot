@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.test.mock
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.client.TelegramApiClient
+import io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription

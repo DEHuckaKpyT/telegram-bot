@@ -21,7 +21,7 @@ class SendFilesHandler : BotHandler({
         val message = sendPhoto(input("/files/cat.jpg"))
         val fileId: String = message.photo!![0].fileId
 
-        sendPhoto(fileId, "So cute!")
+        sendPhoto(fileId, caption = "So cute!")
     }
 
     command("/audio") {
@@ -42,6 +42,7 @@ class SendFilesHandler : BotHandler({
 
     command("/photos") {
         sendMediaGroup(listOf(
+            InputMediaPhoto(media = "AgACAgIAAxkDAAIiH2Zdyo_8haA51WiPm24nUe08eVwBAAJ22jEbfvjxSqkxOQjpDDJWAQADAgADcwADNQQ"),
             InputMediaPhoto(media = input("cat123.jpg", "/files/cat.jpg")),
             InputMediaVideo(media = input("cat123.gif", "/files/cat.gif")),
         ))

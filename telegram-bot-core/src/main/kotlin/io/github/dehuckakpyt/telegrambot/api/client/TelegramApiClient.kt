@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.client
+package io.github.dehuckakpyt.telegrambot.api.client
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -6,12 +6,17 @@ import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.addSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import io.github.dehuckakpyt.telegrambot.api.serializer.ContentInputSerializer
+import io.github.dehuckakpyt.telegrambot.api.serializer.StringInputSerializer
 import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.github.dehuckakpyt.telegrambot.ext.toJson
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
@@ -23,7 +28,6 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.serialization.jackson.*
-import java.text.SimpleDateFormat
 
 /**
  * Created on 19.04.2024.
@@ -114,9 +118,11 @@ public class TelegramApiClient(
                 indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
                 indentObjectsWith(DefaultIndenter("  ", "\n"))
             })
-            dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
-            registerModule(JavaTimeModule())
+            registerModule(SimpleModule().apply {
+                addSerializer(StringInput::class, StringInputSerializer())
+                addSerializer(ContentInput::class, ContentInputSerializer())
+            })
 
             registerModule(
                 KotlinModule.Builder()

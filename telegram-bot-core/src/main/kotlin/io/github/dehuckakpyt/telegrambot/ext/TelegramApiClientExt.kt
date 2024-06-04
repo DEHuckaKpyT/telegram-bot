@@ -1,9 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
-import io.github.dehuckakpyt.telegrambot.client.TelegramApiClient
+import io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
-import io.github.dehuckakpyt.telegrambot.model.telegram.input.NamedContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
@@ -36,19 +35,9 @@ fun FormBuilder.appendIfNotNull(key: String, value: Boolean?) {
     append(key, value.toString())
 }
 
-fun FormBuilder.appendThumbnailIfNotNull(key: String, value: ContentInput?) {
-    value ?: return
-    append("attach://$key", value.byteArray, headersOf(HttpHeaders.ContentDisposition, "filename=\"${value.name}\""))
-}
-
 fun FormBuilder.appendContentIfNotNull(key: String, value: ContentInput?) {
     value ?: return
     append(key, value.byteArray, headersOf(HttpHeaders.ContentDisposition, "filename=\"${value.name}\""))
-}
-
-fun FormBuilder.appendContentIfNotNull(value: NamedContentInput?) {
-    value ?: return
-    append(value.name, value.byteArray, headersOf(HttpHeaders.ContentDisposition, "filename=\"${value.name}\""))
 }
 
 fun FormBuilder.appendContentIfNotNull(value: Input?) {
