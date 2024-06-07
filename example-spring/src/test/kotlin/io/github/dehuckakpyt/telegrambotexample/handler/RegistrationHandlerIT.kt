@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.removeKeyboard
 import io.github.dehuckakpyt.telegrambot.test.annotation.EnableTelegramBotTest
 import io.github.dehuckakpyt.telegrambot.test.sendUpdate
 import io.github.dehuckakpyt.telegrambotexample.test.EnablePostgresTestContainer

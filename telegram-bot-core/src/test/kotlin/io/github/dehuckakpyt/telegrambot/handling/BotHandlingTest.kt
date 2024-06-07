@@ -6,7 +6,7 @@ import io.github.dehuckakpyt.telegrambot.container.message.AudioMessageContainer
 import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
 import io.github.dehuckakpyt.telegrambot.container.message.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
-import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.kotest.core.spec.style.FreeSpec

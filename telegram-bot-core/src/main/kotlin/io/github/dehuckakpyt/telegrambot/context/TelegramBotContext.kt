@@ -1,7 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.context
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
+import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
@@ -39,6 +40,9 @@ interface TelegramBotContext {
 
     /** Factory for creating buttons. */
     val buttonFactory: ButtonFactory
+
+    /** Factory for creating InputFile. */
+    val inputFactory: InputFactory
 
     /** Interface for saving messages. */
     val messageSource: MessageSource

@@ -3,8 +3,8 @@ package io.github.dehuckakpyt.telegrambotexample.handler
 import io.github.dehuckakpyt.telegrambot.container.message.MessageType.CONTACT
 import io.github.dehuckakpyt.telegrambot.container.message.MessageType.TEXT
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.factory.contactKeyboard
-import io.github.dehuckakpyt.telegrambot.factory.removeKeyboard
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.contactKeyboard
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.removeKeyboard
 import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambotexample.template.*
 import org.koin.core.annotation.Factory

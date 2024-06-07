@@ -4,7 +4,8 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
-import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
+import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
@@ -45,6 +46,7 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     koin.declare<BotUpdateHandling>(context.botUpdateHandling)
     koin.declare<Templater>(context.templater)
     koin.declare<ButtonFactory>(context.buttonFactory)
+    koin.declare<InputFactory>(context.inputFactory)
     koin.declare<MessageSource>(context.messageSource)
     koin.declare<ChainSource>(context.chainSource)
     koin.declare<CallbackContentSource>(context.callbackContentSource)

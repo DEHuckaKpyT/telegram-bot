@@ -4,7 +4,8 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.context.SpringContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
-import io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
+import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
@@ -59,6 +60,9 @@ class TelegramBotInitializationConfig(
 
     @Bean
     fun buttonFactory(): ButtonFactory = botContext.buttonFactory
+
+    @Bean
+    fun inputFactory(): InputFactory = botContext.inputFactory
 
     @Bean
     fun messageTelegramBotSource(): MessageSource = botContext.messageSource

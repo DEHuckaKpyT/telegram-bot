@@ -13,6 +13,7 @@ import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 
 
@@ -39,6 +40,9 @@ data class UpdateReceiverConfig(
 
     /** Text templates for show to user when exception throws */
     var messageTemplate: (TelegramBotActualConfig.() -> MessageTemplate)? = null,
+
+    /** Strategy for invoking BotHandler actions */
+    var invocationStrategy: (TelegramBotActualConfig.() -> HandlerInvocationStrategy)? = null,
 
     /** Handler for catch internal exceptions */
     var exceptionHandler: (TelegramBotActualConfig.() -> ExceptionHandler)? = null,

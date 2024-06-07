@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.factory
+package io.github.dehuckakpyt.telegrambot.factory.keyboard
 
 import io.github.dehuckakpyt.telegrambot.model.telegram.*
 

@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 
 
@@ -21,6 +22,7 @@ internal class TelegramBotReceiverActualConfigImpl : TelegramBotReceiverActualCo
     override lateinit var contentConverter: ContentConverter
     override lateinit var callbackSerializer: CallbackSerializer
     override lateinit var messageTemplate: MessageTemplate
+    override lateinit var invocationStrategy: HandlerInvocationStrategy
     override lateinit var exceptionHandler: ExceptionHandler
     override lateinit var chainExceptionHandler: ChainExceptionHandler
 }

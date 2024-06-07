@@ -2,7 +2,6 @@
 
 ## High priority
 - Remove [SpringContext object](https://github.com/DEHuckaKpyT/telegram-bot/blob/v0.7.13b/telegram-bot-spring/src/main/kotlin/io/github/dehuckakpyt/telegrambot/context/SpringContext.kt#L15).
-- Make async updates handling. 
 
 ## Medium priority
 - Add more tests.

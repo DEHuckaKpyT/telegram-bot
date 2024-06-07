@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
-import io.github.dehuckakpyt.telegrambot.factory.inlineKeyboard
+import io.github.dehuckakpyt.telegrambot.factory.keyboard.inlineKeyboard
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 
 

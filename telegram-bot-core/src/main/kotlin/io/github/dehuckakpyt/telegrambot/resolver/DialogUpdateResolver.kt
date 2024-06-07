@@ -8,11 +8,13 @@ import io.github.dehuckakpyt.telegrambot.context.container.ContainerCoroutineCon
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
-import io.github.dehuckakpyt.telegrambot.ext.chatId
+import io.github.dehuckakpyt.telegrambot.ext.update.message.chatId
+import io.github.dehuckakpyt.telegrambot.ext.update.message.fetchCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 
@@ -29,6 +31,7 @@ internal class DialogUpdateResolver(
     private val chainResolver: ChainResolver,
     private val exceptionHandler: ExceptionHandler,
     private val chainExceptionHandler: ChainExceptionHandler,
+    private val invocationStrategy: HandlerInvocationStrategy,
     private val messageArgumentFactories: List<MessageContainerFactory>,
     private val messageSource: MessageSource,
     private val username: String,
@@ -45,11 +48,12 @@ internal class DialogUpdateResolver(
             logger.warn("Don't expect message without fromId.\nchatId = '${chat.id}'\ntext = $text")
             return
         }
-
-        exceptionHandler.execute(message.chat) {
-            fetchCommand(text)?.let {
-                processCommandMessage(it, message)
-            } ?: processGeneralMessage(message)
+        invocationStrategy.invokeHandler(chat.id, from.id) {
+            exceptionHandler.execute(message.chat) {
+                fetchCommand(text, username)?.let {
+                    processCommandMessage(it, message)
+                } ?: processGeneralMessage(message)
+            }
         }
     }
 
@@ -99,11 +103,13 @@ internal class DialogUpdateResolver(
         val data = data ?: return
         if (message !is Message) return
 
-        exceptionHandler.execute(message.chat) {
-            val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
+        invocationStrategy.invokeHandler(message.chat.id, from.id) {
+            exceptionHandler.execute(message.chat) {
+                val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
-            chainResolver.getCallback(callbackName)?.let { action ->
-                invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), action)
+                chainResolver.getCallback(callbackName)?.let { action ->
+                    invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), action)
+                }
             }
         }
     }
@@ -114,26 +120,9 @@ internal class DialogUpdateResolver(
         get() = messageArgumentFactories.firstOrNull { it.matches(this) }
             ?: throw RuntimeException("Not found factory for received argument type.")
 
-    private fun fetchCommand(input: String?): String? {
-        input ?: return null
-
-        val find = commandRegex.find(input) ?: return null
-        val groups = find.groups
-
-        val command = groups[1]?.value ?: return null
-
-        val usernameActual = groups[2]?.value
-        if (usernameActual != null && usernameActual != username) return null
-
-        return command
-    }
 
     private suspend fun <T : Container> invokeWithContainerContext(container: T, action: suspend T.() -> Unit) =
         withContext(ContainerCoroutineContext(container)) {
             action.invoke(container)
         }
-
-    companion object {
-        private val commandRegex = Regex("^(/[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*)(?:__[a-zA-Z0-9-_]+)?(?:@([a-zA-Z_]+))?")
-    }
 }
