@@ -5,8 +5,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents one shipping option.
  *
  * @see [ShippingOption] (https://core.telegram.org/bots/api/#shippingoption)

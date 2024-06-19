@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a button to be shown above inline query results. You **must** use exactly
  * one of the optional fields.
  *

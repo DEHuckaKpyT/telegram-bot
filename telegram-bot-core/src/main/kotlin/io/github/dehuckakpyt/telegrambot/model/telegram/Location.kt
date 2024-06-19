@@ -5,8 +5,6 @@ import kotlin.Double
 import kotlin.Int
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a point on the map.
  *
  * @see [Location] (https://core.telegram.org/bots/api/#location)

@@ -6,8 +6,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a sticker.
  *
  * @see [Sticker] (https://core.telegram.org/bots/api/#sticker)

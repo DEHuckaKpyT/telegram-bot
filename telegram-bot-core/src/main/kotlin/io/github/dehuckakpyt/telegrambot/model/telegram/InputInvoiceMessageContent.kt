@@ -7,8 +7,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Represents the [content](https://core.telegram.org/bots/api/#inputmessagecontent) of an invoice
  * message to be sent as the result of an inline query.
  *

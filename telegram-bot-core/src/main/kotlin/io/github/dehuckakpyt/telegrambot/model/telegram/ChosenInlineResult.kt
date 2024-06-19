@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a [result](https://core.telegram.org/bots/api/#inlinequeryresult) of an inline query
  * that was chosen by the user and sent to their chat partner.
  *

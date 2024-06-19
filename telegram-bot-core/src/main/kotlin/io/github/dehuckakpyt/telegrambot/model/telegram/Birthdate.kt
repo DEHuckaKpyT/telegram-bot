@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Int
 
 /**
- * Created on 03.06.2024.
- *
  * Describes the birthdate of a user.
  *
  * @see [Birthdate] (https://core.telegram.org/bots/api/#birthdate)

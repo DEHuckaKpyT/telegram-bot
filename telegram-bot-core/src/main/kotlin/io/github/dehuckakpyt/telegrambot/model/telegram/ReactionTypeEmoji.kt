@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * The reaction is based on an emoji.
  *
  * @see [ReactionTypeEmoji] (https://core.telegram.org/bots/api/#reactiontypeemoji)

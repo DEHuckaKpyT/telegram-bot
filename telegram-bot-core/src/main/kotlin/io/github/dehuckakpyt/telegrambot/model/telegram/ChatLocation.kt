@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a location to which a chat is connected.
  *
  * @see [ChatLocation] (https://core.telegram.org/bots/api/#chatlocation)

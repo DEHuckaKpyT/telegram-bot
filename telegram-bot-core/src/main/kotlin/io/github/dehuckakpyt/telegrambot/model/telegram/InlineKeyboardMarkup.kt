@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents an [inline
  * keyboard](https://core.telegram.org/bots/features#inline-keyboards) that appears right next to the
  * message it belongs to.

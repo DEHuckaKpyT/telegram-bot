@@ -6,8 +6,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent
  * by the user with an optional caption. Alternatively, you can use *input_message_content* to send a
  * message with the specified content instead of the photo.

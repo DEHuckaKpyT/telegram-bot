@@ -9,8 +9,6 @@ import kotlin.String
 import kotlin.collections.Iterable
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal data class EditMessageTextByChatIdAndMessageId(
@@ -20,6 +18,8 @@ internal data class EditMessageTextByChatIdAndMessageId(
     public val messageId: Long,
     @get:JsonProperty("text")
     public val text: String,
+    @get:JsonProperty("business_connection_id")
+    public val businessConnectionId: String? = null,
     @get:JsonProperty("parse_mode")
     public val parseMode: String? = null,
     @get:JsonProperty("entities")

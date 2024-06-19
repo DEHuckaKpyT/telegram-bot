@@ -6,8 +6,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents an answer of a user in a non-anonymous poll.
  *
  * @see [PollAnswer] (https://core.telegram.org/bots/api/#pollanswer)

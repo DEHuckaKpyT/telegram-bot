@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represent a user's profile pictures.
  *
  * @see [UserProfilePhotos] (https://core.telegram.org/bots/api/#userprofilephotos)

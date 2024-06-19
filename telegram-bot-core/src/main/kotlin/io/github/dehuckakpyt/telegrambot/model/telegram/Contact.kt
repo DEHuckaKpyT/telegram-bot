@@ -5,8 +5,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a phone contact.
  *
  * @see [Contact] (https://core.telegram.org/bots/api/#contact)

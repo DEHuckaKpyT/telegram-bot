@@ -36,6 +36,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
 import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.StarTransactions
 import io.github.dehuckakpyt.telegrambot.model.telegram.Sticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.StickerSet
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
@@ -55,8 +56,6 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal class MockTelegramBot : TelegramBot {
@@ -604,6 +603,7 @@ internal class MockTelegramBot : TelegramBot {
         chatId: String,
         messageId: Long,
         text: String,
+        businessConnectionId: String?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
@@ -613,6 +613,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun editMessageCaption(
         chatId: String,
         messageId: Long,
+        businessConnectionId: String?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -624,6 +625,7 @@ internal class MockTelegramBot : TelegramBot {
         chatId: String,
         messageId: Long,
         media: InputMedia,
+        businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = mockk()
 
@@ -632,6 +634,7 @@ internal class MockTelegramBot : TelegramBot {
         messageId: Long,
         latitude: Double,
         longitude: Double,
+        businessConnectionId: String?,
         livePeriod: Int?,
         horizontalAccuracy: Double?,
         heading: Int?,
@@ -642,18 +645,21 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun stopMessageLiveLocation(
         chatId: String,
         messageId: Long,
+        businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = mockk()
 
     override suspend fun editMessageReplyMarkup(
         chatId: String,
         messageId: Long,
+        businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = mockk()
 
     override suspend fun stopPoll(
         chatId: String,
         messageId: Long,
+        businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Poll = mockk()
 
@@ -814,6 +820,8 @@ internal class MockTelegramBot : TelegramBot {
         errorMessage: String?,
     ): Boolean = mockk()
 
+    override suspend fun getStarTransactions(offset: Int?, limit: Int?): StarTransactions = mockk()
+
     override suspend fun refundStarPayment(userId: Long, telegramPaymentChargeId: String): Boolean =
             mockk()
 
@@ -851,6 +859,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun editMessageText(
         inlineMessageId: String,
         text: String,
+        businessConnectionId: String?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
@@ -859,6 +868,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun editMessageCaption(
         inlineMessageId: String,
+        businessConnectionId: String?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -869,6 +879,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun editMessageMedia(
         inlineMessageId: String,
         media: InputMedia,
+        businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = mockk()
 
@@ -876,6 +887,7 @@ internal class MockTelegramBot : TelegramBot {
         inlineMessageId: String,
         latitude: Double,
         longitude: Double,
+        businessConnectionId: String?,
         livePeriod: Int?,
         horizontalAccuracy: Double?,
         heading: Int?,
@@ -883,11 +895,17 @@ internal class MockTelegramBot : TelegramBot {
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = mockk()
 
-    override suspend fun stopMessageLiveLocation(inlineMessageId: String,
-            replyMarkup: InlineKeyboardMarkup?): Boolean = mockk()
+    override suspend fun stopMessageLiveLocation(
+        inlineMessageId: String,
+        businessConnectionId: String?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Boolean = mockk()
 
-    override suspend fun editMessageReplyMarkup(inlineMessageId: String,
-            replyMarkup: InlineKeyboardMarkup?): Boolean = mockk()
+    override suspend fun editMessageReplyMarkup(
+        inlineMessageId: String,
+        businessConnectionId: String?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Boolean = mockk()
 
     override suspend fun setGameScore(
         userId: Long,

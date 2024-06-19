@@ -9,8 +9,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a photo to be sent.
  *
  * @see [InputMediaPhoto] (https://core.telegram.org/bots/api/#inputmediaphoto)

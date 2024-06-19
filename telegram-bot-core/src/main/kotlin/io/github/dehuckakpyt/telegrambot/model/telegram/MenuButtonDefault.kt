@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Describes that no specific value for the menu button was set.
  *
  * @see [MenuButtonDefault] (https://core.telegram.org/bots/api/#menubuttondefault)

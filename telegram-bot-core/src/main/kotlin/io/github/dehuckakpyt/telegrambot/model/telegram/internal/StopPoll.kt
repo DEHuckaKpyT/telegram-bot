@@ -6,8 +6,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal data class StopPoll(
@@ -15,6 +13,8 @@ internal data class StopPoll(
     public val chatId: String,
     @get:JsonProperty("message_id")
     public val messageId: Long,
+    @get:JsonProperty("business_connection_id")
+    public val businessConnectionId: String? = null,
     @get:JsonProperty("reply_markup")
     public val replyMarkup: InlineKeyboardMarkup? = null,
 )

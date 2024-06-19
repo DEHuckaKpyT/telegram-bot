@@ -6,8 +6,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * The boost was obtained by the creation of a Telegram Premium giveaway. This boosts the chat 4
  * times for the duration of the corresponding Telegram Premium subscription.
  *

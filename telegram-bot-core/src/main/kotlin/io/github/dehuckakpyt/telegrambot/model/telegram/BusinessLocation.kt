@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Contains information about the location of a Telegram Business account.
  *
  * @see [BusinessLocation] (https://core.telegram.org/bots/api/#businesslocation)

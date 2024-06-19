@@ -2,9 +2,10 @@ package io.github.dehuckakpyt.telegrambot
 
 import io.github.dehuckakpyt.telegrambot.api.TelegramBotApiExt
 import io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient
+import kotlin.String
 
 /**
- * Created on 03.06.2024.
+ * Created on 19.06.2024.
  *
  * @author KScript
  */

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a menu button, which opens the bot's list of commands.
  *
  * @see [MenuButtonCommands] (https://core.telegram.org/bots/api/#menubuttoncommands)

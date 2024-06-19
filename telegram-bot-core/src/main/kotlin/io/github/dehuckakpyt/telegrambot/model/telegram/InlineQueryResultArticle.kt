@@ -6,8 +6,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a link to an article or web page.
  *
  * @see [InlineQueryResultArticle] (https://core.telegram.org/bots/api/#inlinequeryresultarticle)

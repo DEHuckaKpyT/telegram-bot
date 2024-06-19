@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Describes data required for decrypting and authenticating
  * [EncryptedPassportElement](https://core.telegram.org/bots/api/#encryptedpassportelement). See the
  * [Telegram Passport Documentation](https://core.telegram.org/passport#receiving-information) for a

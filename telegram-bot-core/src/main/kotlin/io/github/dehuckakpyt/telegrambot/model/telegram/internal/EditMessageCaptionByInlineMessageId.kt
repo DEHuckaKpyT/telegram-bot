@@ -8,13 +8,13 @@ import kotlin.String
 import kotlin.collections.Iterable
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal data class EditMessageCaptionByInlineMessageId(
     @get:JsonProperty("inline_message_id")
     public val inlineMessageId: String,
+    @get:JsonProperty("business_connection_id")
+    public val businessConnectionId: String? = null,
     @get:JsonProperty("caption")
     public val caption: String? = null,
     @get:JsonProperty("parse_mode")

@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object contains information about an incoming pre-checkout query.
  *
  * @see [PreCheckoutQuery] (https://core.telegram.org/bots/api/#precheckoutquery)

@@ -5,8 +5,6 @@ import kotlin.Boolean
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents one button of an inline keyboard. Exactly one of the optional fields must
  * be used to specify type of the button.
  *
@@ -19,8 +17,8 @@ import kotlin.String
  * `tg://user?id=<user_id>` can be used to mention a user by their identifier without using a username,
  * if this is allowed by their privacy settings.
  * @param callbackData *Optional*. Data to be sent in a [callback
- * query](https://core.telegram.org/bots/api/#callbackquery) to the bot when button is pressed, 1-64
- * bytes. Not supported for messages sent on behalf of a Telegram Business account.
+ * query](https://core.telegram.org/bots/api/#callbackquery) to the bot when the button is pressed,
+ * 1-64 bytes
  * @param webApp *Optional*. Description of the [Web App](https://core.telegram.org/bots/webapps)
  * that will be launched when the user presses the button. The Web App will be able to send an
  * arbitrary message on behalf of the user using the method
@@ -72,8 +70,8 @@ public data class InlineKeyboardButton(
     public val url: String? = null,
     /**
      * *Optional*. Data to be sent in a [callback
-     * query](https://core.telegram.org/bots/api/#callbackquery) to the bot when button is pressed,
-     * 1-64 bytes. Not supported for messages sent on behalf of a Telegram Business account.
+     * query](https://core.telegram.org/bots/api/#callbackquery) to the bot when the button is pressed,
+     * 1-64 bytes
      */
     @get:JsonProperty("callback_data")
     @param:JsonProperty("callback_data")

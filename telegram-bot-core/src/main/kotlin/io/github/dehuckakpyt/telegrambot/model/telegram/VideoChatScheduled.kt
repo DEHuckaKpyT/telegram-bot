@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Long
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a service message about a video chat scheduled in the chat.
  *
  * @see [VideoChatScheduled] (https://core.telegram.org/bots/api/#videochatscheduled)

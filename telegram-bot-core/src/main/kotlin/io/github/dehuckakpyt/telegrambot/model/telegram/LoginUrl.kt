@@ -5,8 +5,6 @@ import kotlin.Boolean
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a parameter of the inline keyboard button used to automatically authorize
  * a user. Serves as a great replacement for the [Telegram Login
  * Widget](https://core.telegram.org/widgets/login) when the user is coming from Telegram. All the user

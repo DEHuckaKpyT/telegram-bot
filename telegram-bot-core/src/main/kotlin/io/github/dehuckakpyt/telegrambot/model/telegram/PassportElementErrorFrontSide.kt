@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents an issue with the front side of a document. The error is considered resolved when the
  * file with the front side of the document changes.
  *

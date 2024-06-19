@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Boolean
 
 /**
- * Created on 03.06.2024.
- *
  * Describes actions that a non-administrator user is allowed to take in a chat.
  *
  * @see [ChatPermissions] (https://core.telegram.org/bots/api/#chatpermissions)

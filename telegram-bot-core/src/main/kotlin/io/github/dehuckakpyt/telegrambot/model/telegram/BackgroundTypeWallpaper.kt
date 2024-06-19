@@ -6,8 +6,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * The background is a wallpaper in the JPEG format.
  *
  * @see [BackgroundTypeWallpaper] (https://core.telegram.org/bots/api/#backgroundtypewallpaper)

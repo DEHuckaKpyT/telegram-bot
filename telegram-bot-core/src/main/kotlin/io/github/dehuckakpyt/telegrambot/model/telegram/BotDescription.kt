@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents the bot's description.
  *
  * @see [BotDescription] (https://core.telegram.org/bots/api/#botdescription)

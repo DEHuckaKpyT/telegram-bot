@@ -8,8 +8,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object contains full information about a chat.
  *
  * @see [ChatFullInfo] (https://core.telegram.org/bots/api/#chatfullinfo)

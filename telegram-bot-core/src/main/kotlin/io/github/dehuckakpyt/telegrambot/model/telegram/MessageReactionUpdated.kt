@@ -5,8 +5,6 @@ import kotlin.Long
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a change of a reaction on a message performed by a user.
  *
  * @see [MessageReactionUpdated] (https://core.telegram.org/bots/api/#messagereactionupdated)

@@ -6,8 +6,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object describes the origin of a message. It can be one of
  *
  * * [MessageOriginUser](https://core.telegram.org/bots/api/#messageoriginuser)

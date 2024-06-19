@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Describes data sent from a [Web App](https://core.telegram.org/bots/webapps) to the bot.
  *
  * @see [WebAppData] (https://core.telegram.org/bots/api/#webappdata)

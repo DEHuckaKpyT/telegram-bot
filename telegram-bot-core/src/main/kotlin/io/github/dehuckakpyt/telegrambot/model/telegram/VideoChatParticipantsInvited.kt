@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a service message about new members invited to a video chat.
  *
  * @see [VideoChatParticipantsInvited]

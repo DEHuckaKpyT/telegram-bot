@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a portion of the price for goods or services.
  *
  * @see [LabeledPrice] (https://core.telegram.org/bots/api/#labeledprice)

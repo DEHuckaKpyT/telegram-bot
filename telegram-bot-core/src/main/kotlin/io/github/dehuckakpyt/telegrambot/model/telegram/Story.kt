@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Long
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a story.
  *
  * @see [Story] (https://core.telegram.org/bots/api/#story)

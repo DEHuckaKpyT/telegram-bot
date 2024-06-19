@@ -7,8 +7,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal data class EditMessageLiveLocationByInlineMessageId(
@@ -18,6 +16,8 @@ internal data class EditMessageLiveLocationByInlineMessageId(
     public val latitude: Double,
     @get:JsonProperty("longitude")
     public val longitude: Double,
+    @get:JsonProperty("business_connection_id")
+    public val businessConnectionId: String? = null,
     @get:JsonProperty("live_period")
     public val livePeriod: Int? = null,
     @get:JsonProperty("horizontal_accuracy")

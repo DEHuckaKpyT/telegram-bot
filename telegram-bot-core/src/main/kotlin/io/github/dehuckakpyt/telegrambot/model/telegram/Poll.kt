@@ -8,8 +8,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object contains information about a poll.
  *
  * @see [Poll] (https://core.telegram.org/bots/api/#poll)

@@ -5,8 +5,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * The message was originally sent by a known user.
  *
  * @see [MessageOriginUser] (https://core.telegram.org/bots/api/#messageoriginuser)

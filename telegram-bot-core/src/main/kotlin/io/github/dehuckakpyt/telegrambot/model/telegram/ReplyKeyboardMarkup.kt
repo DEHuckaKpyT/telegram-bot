@@ -6,8 +6,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a [custom keyboard](https://core.telegram.org/bots/features#keyboards)
  * with reply options (see [Introduction to bots](https://core.telegram.org/bots/features#keyboards)
  * for details and examples). Not supported in channels and for messages sent on behalf of a Telegram

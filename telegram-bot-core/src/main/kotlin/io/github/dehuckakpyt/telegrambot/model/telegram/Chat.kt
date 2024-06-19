@@ -6,8 +6,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a chat.
  *
  * @see [Chat] (https://core.telegram.org/bots/api/#chat)

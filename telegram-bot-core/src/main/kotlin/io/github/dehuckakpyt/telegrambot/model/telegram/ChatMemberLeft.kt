@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a [chat member](https://core.telegram.org/bots/api/#chatmember) that isn't currently a
  * member of the chat, but may join it themselves.
  *

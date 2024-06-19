@@ -8,8 +8,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Describes reply parameters for the message that is being sent.
  *
  * @see [ReplyParameters] (https://core.telegram.org/bots/api/#replyparameters)

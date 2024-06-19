@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents an incoming inline query. When the user sends an empty query, your bot
  * could return some default or trending results.
  *

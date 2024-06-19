@@ -88,14 +88,14 @@ suspend fun createMockTelegramBot(methods: List<List<Method>>) {
         .addImport("io.mockk", "mockk")
         .addType(
             TypeSpec.classBuilder("MockTelegramBot")
-                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addKdoc("@author KScript")
                 .addModifiers(INTERNAL)
                 .addSuperinterface(ClassName(telegramBotClassPackageName, "TelegramBot"))
                 .addProperty(PropertySpec.builder("username", String::class)
                     .initializer("\"mock_bot\"")
                     .addModifiers(OVERRIDE)
                     .build())
-                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"))
+                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.api.client", "TelegramApiClient"))
                     .initializer("mockk()")
                     .addModifiers(OVERRIDE)
                     .build())
@@ -145,7 +145,7 @@ suspend fun createTelegramBotApiHandling(methods: List<List<Method>>) {
         .indent("    ")
         .addType(
             TypeSpec.classBuilder("TelegramBotApiHandling")
-                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addKdoc("@author KScript")
                 .addModifiers(ABSTRACT)
                 .addProperty("bot", ClassName(telegramBotClassPackageName, "TelegramBot"), ABSTRACT, PROTECTED)
                 .addFunctions()
@@ -206,7 +206,7 @@ suspend fun createTelegramBotApiExtHandling(methods: List<List<Method>>) {
         .addImport(inputClassPackageName, "StringInput")
         .addType(
             TypeSpec.classBuilder("TelegramBotApiExtHandling")
-                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addKdoc("@author KScript")
                 .superclass(ClassName(apiPackageName, "TelegramBotApiHandling"))
                 .addModifiers(ABSTRACT)
                 .addFunctions()
@@ -224,7 +224,7 @@ suspend fun createApiMethods(methods: List<List<Method>>) {
         .indent("    ")
         .addType(
             TypeSpec.interfaceBuilder("TelegramBotApi")
-                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addKdoc("@author KScript")
                 .addTelegramBotMethods(methods)
                 .build()
         )
@@ -279,7 +279,7 @@ suspend fun createExtensionApiMethods(methods: List<List<Method>>) {
         .addType(
             TypeSpec.interfaceBuilder("TelegramBotApiExt")
                 .addSuperinterface(ClassName(apiPackageName, "TelegramBotApi"))
-                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addKdoc("@author KScript")
                 .addFunctions()
                 .build()
         )
@@ -299,7 +299,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                 .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
                 .addSuperinterface(ClassName(apiPackageName, "TelegramBotApiExt"))
                 .addProperty("username", String::class)
-                .addProperty("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"))
+                .addProperty("client", ClassName("io.github.dehuckakpyt.telegrambot.api.client", "TelegramApiClient"))
                 .build()
         )
         .build()
@@ -327,7 +327,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                 .addProperty(PropertySpec.builder("messageSource", ClassName("io.github.dehuckakpyt.telegrambot.source.message", "MessageSource"), PRIVATE)
                     .initializer("messageSource")
                     .build())
-                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.client", "TelegramApiClient"), OVERRIDE)
+                .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.api.client", "TelegramApiClient"), OVERRIDE)
                     .initializer("TelegramApiClient(token)")
                     .build())
                 .addTelegramBotImplMethods(methods, objectsByName)
@@ -565,7 +565,7 @@ suspend fun createInternalPropertiesObject(obj: PropertiesObject) {
         .indent("    ")
         .addType(
             TypeSpec.classBuilder(obj.name)
-                .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                .addKdoc("@author KScript")
                 .addModifiers(DATA, INTERNAL)
                 .primaryConstructor(constructor)
                 .addProperties(properties)
@@ -899,8 +899,7 @@ fun Property.toInternalPropertySpec(type: TypeName? = null, name: String = nameC
 fun TypeSpec.Companion.defaultClassBuilder(obj: Object): TypeSpec.Builder = classBuilder(obj.name).apply {
     addKdoc(
         CodeBlock.builder()
-            .add("Created on $todayFormattedDate.")
-            .also { if (obj.description != null) it.add("\n\n%L", obj.description!!) }
+            .also { if (obj.description != null) it.add("%L", obj.description!!) }
             .add("\n\n@see [%L] (%L)", obj.name, obj.documentationLink)
             .add("\n\n@author KScript")
             .build()
@@ -916,8 +915,7 @@ fun TypeSpec.Companion.defaultClassBuilder(obj: Object): TypeSpec.Builder = clas
 fun TypeSpec.Companion.defaultInterfaceBuilder(obj: Object): TypeSpec.Builder = interfaceBuilder(obj.name).apply {
     addKdoc(
         CodeBlock.builder()
-            .add("Created on $todayFormattedDate.")
-            .also { if (obj.description != null) it.add("\n\n%L", obj.description!!) }
+            .also { if (obj.description != null) it.add("%L", obj.description!!) }
             .add("\n\n@see [%L] (%L)", obj.name, obj.documentationLink)
             .add("\n\n@author KScript")
             .build()
@@ -1019,7 +1017,7 @@ suspend fun Contract.replaceMethodTypes() {
                     val file = FileSpec.builder(objectsPackageName, interfaceName)
                         .indent("    ")
                         .addType(TypeSpec.interfaceBuilder(interfaceName)
-                            .addKdoc("Created on $todayFormattedDate.\n\n@author KScript")
+                            .addKdoc("@author KScript")
                             .build())
                         .build()
 

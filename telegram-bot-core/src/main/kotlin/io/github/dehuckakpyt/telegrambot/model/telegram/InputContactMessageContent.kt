@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents the [content](https://core.telegram.org/bots/api/#inputmessagecontent) of a contact
  * message to be sent as the result of an inline query.
  *

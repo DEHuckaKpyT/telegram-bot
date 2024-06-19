@@ -5,8 +5,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Represents an issue with the translated version of a document. The error is considered resolved
  * when a file with the document translation change.
  *

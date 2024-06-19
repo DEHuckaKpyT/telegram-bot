@@ -5,8 +5,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Represents an issue with a list of scans. The error is considered resolved when the list of files
  * containing the scans changes.
  *

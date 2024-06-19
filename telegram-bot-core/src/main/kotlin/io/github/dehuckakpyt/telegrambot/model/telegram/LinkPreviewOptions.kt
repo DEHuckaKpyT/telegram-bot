@@ -5,8 +5,6 @@ import kotlin.Boolean
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Describes the options used for link preview generation.
  *
  * @see [LinkPreviewOptions] (https://core.telegram.org/bots/api/#linkpreviewoptions)

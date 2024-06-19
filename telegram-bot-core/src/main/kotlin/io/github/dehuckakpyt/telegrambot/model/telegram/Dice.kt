@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents an animated emoji that displays a random value.
  *
  * @see [Dice] (https://core.telegram.org/bots/api/#dice)

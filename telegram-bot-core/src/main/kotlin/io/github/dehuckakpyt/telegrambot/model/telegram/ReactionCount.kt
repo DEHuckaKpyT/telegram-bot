@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Int
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a reaction added to a message along with the number of times it was added.
  *
  * @see [ReactionCount] (https://core.telegram.org/bots/api/#reactioncount)

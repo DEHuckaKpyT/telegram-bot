@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Int
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents the content of a service message, sent whenever a user in the chat
  * triggers a proximity alert set by another user.
  *

@@ -36,6 +36,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
 import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.StarTransactions
 import io.github.dehuckakpyt.telegrambot.model.telegram.Sticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.StickerSet
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
@@ -54,8 +55,6 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 public abstract class TelegramBotApiHandling {
@@ -2268,11 +2267,14 @@ public abstract class TelegramBotApiHandling {
      * Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages.
      * On success, if the edited message is not an inline message, the edited
      * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
-     * returned.
+     * returned. Note that business messages that were not sent by the bot and do not contain an inline
+     * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
      * to edit
      * @param text New text of the message, 1-4096 characters after entities parsing
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param parseMode Mode for parsing entities in the message text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which
@@ -2284,6 +2286,7 @@ public abstract class TelegramBotApiHandling {
     public suspend fun Container.editMessageText(
         messageId: Long,
         text: String,
+        businessConnectionId: String? = null,
         parseMode: String? = null,
         entities: Iterable<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
@@ -2292,6 +2295,7 @@ public abstract class TelegramBotApiHandling {
         chatId = chat.id,
         messageId = messageId,
         text = text,
+        businessConnectionId = businessConnectionId,
         parseMode = parseMode,
         entities = entities,
         linkPreviewOptions = linkPreviewOptions,
@@ -2301,10 +2305,14 @@ public abstract class TelegramBotApiHandling {
     /**
      * Use this method to edit captions of messages. On success, if the edited message is not an
      * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
-     * otherwise *True* is returned.
+     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
+     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
+     * sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
      * to edit
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param caption New caption of the message, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the message caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -2317,6 +2325,7 @@ public abstract class TelegramBotApiHandling {
      */
     public suspend fun Container.editMessageCaption(
         messageId: Long,
+        businessConnectionId: String? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -2325,6 +2334,7 @@ public abstract class TelegramBotApiHandling {
     ): Message = bot.editMessageCaption(
         chatId = chat.id,
         messageId = messageId,
+        businessConnectionId = businessConnectionId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -2339,22 +2349,27 @@ public abstract class TelegramBotApiHandling {
      * edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify
      * a URL. On success, if the edited message is not an inline message, the edited
      * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
-     * returned.
+     * returned. Note that business messages that were not sent by the bot and do not contain an inline
+     * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
      * to edit
      * @param media A JSON-serialized object for a new media content of the message
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
      */
     public suspend fun Container.editMessageMedia(
         messageId: Long,
         media: InputMedia,
+        businessConnectionId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message = bot.editMessageMedia(
         chatId = chat.id,
         messageId = messageId,
         media = media,
+        businessConnectionId = businessConnectionId,
         replyMarkup = replyMarkup,
     )
 
@@ -2370,6 +2385,8 @@ public abstract class TelegramBotApiHandling {
      * to edit
      * @param latitude Latitude of new location
      * @param longitude Longitude of new location
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param livePeriod New period in seconds during which the location can be updated, starting
      * from the message send date. If 0x7FFFFFFF is specified, then the location can be updated
      * forever. Otherwise, the new value must not exceed the current *live_period* by more than a day,
@@ -2388,6 +2405,7 @@ public abstract class TelegramBotApiHandling {
         messageId: Long,
         latitude: Double,
         longitude: Double,
+        businessConnectionId: String? = null,
         livePeriod: Int? = null,
         horizontalAccuracy: Double? = null,
         heading: Int? = null,
@@ -2398,6 +2416,7 @@ public abstract class TelegramBotApiHandling {
         messageId = messageId,
         latitude = latitude,
         longitude = longitude,
+        businessConnectionId = businessConnectionId,
         livePeriod = livePeriod,
         horizontalAccuracy = horizontalAccuracy,
         heading = heading,
@@ -2413,30 +2432,44 @@ public abstract class TelegramBotApiHandling {
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
      * with live location to stop
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
      */
-    public suspend fun Container.stopMessageLiveLocation(messageId: Long,
-            replyMarkup: InlineKeyboardMarkup? = null): Message = bot.stopMessageLiveLocation(
+    public suspend fun Container.stopMessageLiveLocation(
+        messageId: Long,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message = bot.stopMessageLiveLocation(
         chatId = chat.id,
         messageId = messageId,
+        businessConnectionId = businessConnectionId,
         replyMarkup = replyMarkup,
     )
 
     /**
      * Use this method to edit only the reply markup of messages. On success, if the edited message
      * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
-     * returned, otherwise *True* is returned.
+     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
+     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
+     * they were sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
      * to edit
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
      */
-    public suspend fun Container.editMessageReplyMarkup(messageId: Long,
-            replyMarkup: InlineKeyboardMarkup? = null): Message = bot.editMessageReplyMarkup(
+    public suspend fun Container.editMessageReplyMarkup(
+        messageId: Long,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message = bot.editMessageReplyMarkup(
         chatId = chat.id,
         messageId = messageId,
+        businessConnectionId = businessConnectionId,
         replyMarkup = replyMarkup,
     )
 
@@ -2445,13 +2478,19 @@ public abstract class TelegramBotApiHandling {
      * [Poll](https://core.telegram.org/bots/api/#poll) is returned.
      *
      * @param messageId Identifier of the original message with the poll
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new message [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
      */
-    public suspend fun Container.stopPoll(messageId: Long, replyMarkup: InlineKeyboardMarkup? =
-            null): Poll = bot.stopPoll(
+    public suspend fun Container.stopPoll(
+        messageId: Long,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Poll = bot.stopPoll(
         chatId = chat.id,
         messageId = messageId,
+        businessConnectionId = businessConnectionId,
         replyMarkup = replyMarkup,
     )
 
@@ -3122,6 +3161,20 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
+     * Returns the bot's Telegram Star transactions in chronological order. On success, returns a
+     * [StarTransactions](https://core.telegram.org/bots/api/#startransactions) object.
+     *
+     * @param offset Number of transactions to skip in the response
+     * @param limit The maximum number of transactions to be retrieved. Values between 1-100 are
+     * accepted. Defaults to 100.
+     */
+    public suspend fun Container.getStarTransactions(offset: Int? = null, limit: Int? = null):
+            StarTransactions = bot.getStarTransactions(
+        offset = offset,
+        limit = limit,
+    )
+
+    /**
      * Refunds a successful payment in [Telegram Stars](https://t.me/BotNews/90). Returns *True* on
      * success.
      *
@@ -3255,11 +3308,14 @@ public abstract class TelegramBotApiHandling {
      * Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages.
      * On success, if the edited message is not an inline message, the edited
      * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
-     * returned.
+     * returned. Note that business messages that were not sent by the bot and do not contain an inline
+     * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
      * of the inline message
      * @param text New text of the message, 1-4096 characters after entities parsing
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param parseMode Mode for parsing entities in the message text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which
@@ -3271,6 +3327,7 @@ public abstract class TelegramBotApiHandling {
     public suspend fun Container.editMessageText(
         inlineMessageId: String,
         text: String,
+        businessConnectionId: String? = null,
         parseMode: String? = null,
         entities: Iterable<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
@@ -3278,6 +3335,7 @@ public abstract class TelegramBotApiHandling {
     ): Boolean = bot.editMessageText(
         inlineMessageId = inlineMessageId,
         text = text,
+        businessConnectionId = businessConnectionId,
         parseMode = parseMode,
         entities = entities,
         linkPreviewOptions = linkPreviewOptions,
@@ -3287,10 +3345,14 @@ public abstract class TelegramBotApiHandling {
     /**
      * Use this method to edit captions of messages. On success, if the edited message is not an
      * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
-     * otherwise *True* is returned.
+     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
+     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
+     * sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
      * of the inline message
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param caption New caption of the message, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the message caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -3303,6 +3365,7 @@ public abstract class TelegramBotApiHandling {
      */
     public suspend fun Container.editMessageCaption(
         inlineMessageId: String,
+        businessConnectionId: String? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -3310,6 +3373,7 @@ public abstract class TelegramBotApiHandling {
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Boolean = bot.editMessageCaption(
         inlineMessageId = inlineMessageId,
+        businessConnectionId = businessConnectionId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -3324,21 +3388,26 @@ public abstract class TelegramBotApiHandling {
      * edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify
      * a URL. On success, if the edited message is not an inline message, the edited
      * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
-     * returned.
+     * returned. Note that business messages that were not sent by the bot and do not contain an inline
+     * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
      * of the inline message
      * @param media A JSON-serialized object for a new media content of the message
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
      */
     public suspend fun Container.editMessageMedia(
         inlineMessageId: String,
         media: InputMedia,
+        businessConnectionId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Boolean = bot.editMessageMedia(
         inlineMessageId = inlineMessageId,
         media = media,
+        businessConnectionId = businessConnectionId,
         replyMarkup = replyMarkup,
     )
 
@@ -3354,6 +3423,8 @@ public abstract class TelegramBotApiHandling {
      * of the inline message
      * @param latitude Latitude of new location
      * @param longitude Longitude of new location
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param livePeriod New period in seconds during which the location can be updated, starting
      * from the message send date. If 0x7FFFFFFF is specified, then the location can be updated
      * forever. Otherwise, the new value must not exceed the current *live_period* by more than a day,
@@ -3372,6 +3443,7 @@ public abstract class TelegramBotApiHandling {
         inlineMessageId: String,
         latitude: Double,
         longitude: Double,
+        businessConnectionId: String? = null,
         livePeriod: Int? = null,
         horizontalAccuracy: Double? = null,
         heading: Int? = null,
@@ -3381,6 +3453,7 @@ public abstract class TelegramBotApiHandling {
         inlineMessageId = inlineMessageId,
         latitude = latitude,
         longitude = longitude,
+        businessConnectionId = businessConnectionId,
         livePeriod = livePeriod,
         horizontalAccuracy = horizontalAccuracy,
         heading = heading,
@@ -3396,28 +3469,42 @@ public abstract class TelegramBotApiHandling {
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
      * of the inline message
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
      */
-    public suspend fun Container.stopMessageLiveLocation(inlineMessageId: String,
-            replyMarkup: InlineKeyboardMarkup? = null): Boolean = bot.stopMessageLiveLocation(
+    public suspend fun Container.stopMessageLiveLocation(
+        inlineMessageId: String,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Boolean = bot.stopMessageLiveLocation(
         inlineMessageId = inlineMessageId,
+        businessConnectionId = businessConnectionId,
         replyMarkup = replyMarkup,
     )
 
     /**
      * Use this method to edit only the reply markup of messages. On success, if the edited message
      * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
-     * returned, otherwise *True* is returned.
+     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
+     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
+     * they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
      * of the inline message
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
      */
-    public suspend fun Container.editMessageReplyMarkup(inlineMessageId: String,
-            replyMarkup: InlineKeyboardMarkup? = null): Boolean = bot.editMessageReplyMarkup(
+    public suspend fun Container.editMessageReplyMarkup(
+        inlineMessageId: String,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Boolean = bot.editMessageReplyMarkup(
         inlineMessageId = inlineMessageId,
+        businessConnectionId = businessConnectionId,
         replyMarkup = replyMarkup,
     )
 

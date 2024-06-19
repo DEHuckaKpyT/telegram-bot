@@ -5,8 +5,6 @@ import kotlin.Boolean
 import kotlin.Long
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents changes in the status of a chat member.
  *
  * @see [ChatMemberUpdated] (https://core.telegram.org/bots/api/#chatmemberupdated)

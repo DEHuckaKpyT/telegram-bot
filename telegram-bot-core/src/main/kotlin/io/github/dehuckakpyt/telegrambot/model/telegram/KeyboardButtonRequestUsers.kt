@@ -6,8 +6,6 @@ import kotlin.Int
 import kotlin.Long
 
 /**
- * Created on 03.06.2024.
- *
  * This object defines the criteria used to request suitable users. Information about the selected
  * users will be shared with the bot when the corresponding button is pressed. [More about requesting
  * users ](https://core.telegram.org/bots/features#chat-and-user-selection)

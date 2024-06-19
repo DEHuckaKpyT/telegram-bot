@@ -5,8 +5,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object contains information about a chat boost.
  *
  * @see [ChatBoost] (https://core.telegram.org/bots/api/#chatboost)

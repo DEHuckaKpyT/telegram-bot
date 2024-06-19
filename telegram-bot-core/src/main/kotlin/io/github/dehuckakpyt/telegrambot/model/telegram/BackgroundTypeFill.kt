@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * The background is automatically filled based on the selected colors.
  *
  * @see [BackgroundTypeFill] (https://core.telegram.org/bots/api/#backgroundtypefill)

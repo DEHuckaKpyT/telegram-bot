@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents an incoming callback query from a callback button in an [inline
  * keyboard](https://core.telegram.org/bots/features#inline-keyboards). If the button that originated
  * the query was attached to a message sent by the bot, the field *message* will be present. If the

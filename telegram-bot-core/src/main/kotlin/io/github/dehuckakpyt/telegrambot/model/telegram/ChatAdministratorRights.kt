@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Boolean
 
 /**
- * Created on 03.06.2024.
- *
  * Represents the rights of an administrator in a chat.
  *
  * @see [ChatAdministratorRights] (https://core.telegram.org/bots/api/#chatadministratorrights)

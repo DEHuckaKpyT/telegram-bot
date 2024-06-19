@@ -6,8 +6,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Describes the connection of the bot with a business account.
  *
  * @see [BusinessConnection] (https://core.telegram.org/bots/api/#businessconnection)

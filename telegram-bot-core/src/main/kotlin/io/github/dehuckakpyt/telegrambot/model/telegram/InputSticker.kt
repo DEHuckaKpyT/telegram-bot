@@ -7,8 +7,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object describes a sticker to be added to a sticker set.
  *
  * @see [InputSticker] (https://core.telegram.org/bots/api/#inputsticker)

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents type of a poll, which is allowed to be created and sent when the
  * corresponding button is pressed.
  *

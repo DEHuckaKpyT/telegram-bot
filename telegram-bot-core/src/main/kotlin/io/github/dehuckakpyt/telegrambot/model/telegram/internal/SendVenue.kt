@@ -9,8 +9,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal data class SendVenue(

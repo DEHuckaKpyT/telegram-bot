@@ -5,8 +5,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Represents a join request sent to a chat.
  *
  * @see [ChatJoinRequest] (https://core.telegram.org/bots/api/#chatjoinrequest)

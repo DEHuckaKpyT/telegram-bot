@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Int
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a service message about a user boosting a chat.
  *
  * @see [ChatBoostAdded] (https://core.telegram.org/bots/api/#chatboostadded)

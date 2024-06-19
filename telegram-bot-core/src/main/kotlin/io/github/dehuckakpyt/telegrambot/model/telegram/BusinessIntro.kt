@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * Contains information about the start page settings of a Telegram Business account.
  *
  * @see [BusinessIntro] (https://core.telegram.org/bots/api/#businessintro)

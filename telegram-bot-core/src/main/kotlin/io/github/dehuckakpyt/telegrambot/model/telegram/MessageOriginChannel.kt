@@ -5,8 +5,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * The message was originally sent to a channel chat.
  *
  * @see [MessageOriginChannel] (https://core.telegram.org/bots/api/#messageoriginchannel)

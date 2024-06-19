@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.Long
 
 /**
- * Created on 03.06.2024.
- *
  * Describes why a request was unsuccessful.
  *
  * @see [ResponseParameters] (https://core.telegram.org/bots/api/#responseparameters)

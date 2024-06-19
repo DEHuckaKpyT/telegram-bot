@@ -8,8 +8,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Describes the current status of a webhook.
  *
  * @see [WebhookInfo] (https://core.telegram.org/bots/api/#webhookinfo)

@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents one special entity in a text message. For example, hashtags, usernames,
  * URLs, etc.
  *

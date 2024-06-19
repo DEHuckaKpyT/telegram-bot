@@ -3,8 +3,6 @@ package io.github.dehuckakpyt.telegrambot.model.telegram
 import com.fasterxml.jackson.`annotation`.JsonProperty
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a chat background.
  *
  * @see [ChatBackground] (https://core.telegram.org/bots/api/#chatbackground)

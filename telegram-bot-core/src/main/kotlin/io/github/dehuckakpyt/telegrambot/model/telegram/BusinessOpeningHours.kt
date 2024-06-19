@@ -5,8 +5,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Describes the opening hours of a business.
  *
  * @see [BusinessOpeningHours] (https://core.telegram.org/bots/api/#businessopeninghours)

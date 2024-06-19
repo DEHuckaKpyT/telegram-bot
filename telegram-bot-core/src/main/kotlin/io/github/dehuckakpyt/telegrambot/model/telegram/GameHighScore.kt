@@ -4,8 +4,6 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Int
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents one row of the high scores table for a game.
  *
  * @see [GameHighScore] (https://core.telegram.org/bots/api/#gamehighscore)

@@ -5,8 +5,6 @@ import kotlin.Int
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents a [video message](https://telegram.org/blog/video-messages-and-telescope)
  * (available in Telegram apps as of [v.4.0](https://telegram.org/blog/video-messages-and-telescope)).
  *

@@ -6,8 +6,6 @@ import kotlin.Long
 import kotlin.collections.Iterable
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal data class SetPassportDataErrors(

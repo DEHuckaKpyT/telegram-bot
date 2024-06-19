@@ -9,8 +9,6 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
  *
  * @see [InputMediaAnimation] (https://core.telegram.org/bots/api/#inputmediaanimation)

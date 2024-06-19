@@ -5,8 +5,6 @@ import com.fasterxml.jackson.`annotation`.JsonTypeInfo
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object describes the type of a background. Currently, it can be one of
  *
  * * [BackgroundTypeFill](https://core.telegram.org/bots/api/#backgroundtypefill)

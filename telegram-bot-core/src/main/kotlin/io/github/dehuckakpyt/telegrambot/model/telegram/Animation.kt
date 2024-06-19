@@ -6,8 +6,6 @@ import kotlin.Long
 import kotlin.String
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents an animation file (GIF or H.264/MPEG-4 AVC video without sound).
  *
  * @see [Animation] (https://core.telegram.org/bots/api/#animation)

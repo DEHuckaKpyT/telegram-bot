@@ -5,8 +5,6 @@ import kotlin.Long
 import kotlin.collections.List
 
 /**
- * Created on 03.06.2024.
- *
  * This object represents reaction changes on a message with anonymous reactions.
  *
  * @see [MessageReactionCountUpdated]

@@ -5,8 +5,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.MenuButton
 import kotlin.Long
 
 /**
- * Created on 03.06.2024.
- *
  * @author KScript
  */
 internal data class SetChatMenuButton(
