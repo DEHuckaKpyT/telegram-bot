@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="ktb"
+                  name="Kotlin Telegram Bot"
+                  start-page="starter-topic.md">
+
+    <toc-element topic="starter-topic.md"/>
+    <toc-element topic="get-started.md"/>
+    <toc-element topic="message-chains.md">
+        <toc-element topic="entry-points.md"/>
+        <toc-element topic="static-chains.md"/>
+        <toc-element topic="dynamic-chains.md"/>
+        <toc-element topic="object-transfer.md"/>
+        <toc-element topic="step-types.md"/>
+        <toc-element topic="exceptions.md"/>
+    </toc-element>
+    <toc-element topic="update-handling.md"/>
+    <toc-element topic="templates.md"/>
+    <toc-element topic="file-sending.md"/>
+    <toc-element topic="testing.md"/>
+    <toc-element topic="configuration.md">
+        <toc-element topic="synchronization.md"/>
+        <toc-element topic="exception-handling.md"/>
+        <toc-element topic="sources.md"/>
+        <toc-element topic="callback-serialization.md"/>
+    </toc-element>
+    <toc-element topic="database-integration.md">
+        <toc-element topic="spring-jpa.md"/>
+        <toc-element topic="exposed.md"/>
+    </toc-element>
+    <toc-element topic="todo.md"/>
+</instance-profile>

@@ -1,0 +1,17 @@
+{
+  "update_id": 1,
+  "message": {
+    "message_id": 2,
+    "from": {
+      "id": 1001,
+      "is_bot": false,
+      "first_name": "Den"
+    },
+    "chat": {
+      "id": 1001,
+      "type": "private"
+    },
+    "date": 1707824482,
+    "text": "/register"
+  }
+}

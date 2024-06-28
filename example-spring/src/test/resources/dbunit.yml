@@ -1,0 +1,5 @@
+alwaysCleanBefore: true
+alwaysCleanAfter: true
+properties:
+  schema: public
+  caseSensitiveTableNames: true
