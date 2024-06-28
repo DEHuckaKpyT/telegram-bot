@@ -12,7 +12,7 @@ import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
  *
  * IMPORTANT: Values in ...ActualConfig are filling in strict order.
  * It means that you can`t use instance from config, which is not yet initialized.
- * Limitation due to the fact that no DI is used (like Spring or Koin).
+ * Limitation due to the fact that no DI is used.
  *
  * Order of instances:
  * - TelegramBotActualConfig.token
@@ -42,16 +42,16 @@ class TelegramBotConfig(
     /** Source for saving messages */
     var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null,
 ) {
-    internal var templating: TelegramBotTemplatingConfig.() -> Unit = {}
-    internal var receiving: UpdateReceiverConfig.() -> Unit = {}
+    var templating: TelegramBotTemplatingConfig = TelegramBotTemplatingConfig()
+    var receiving: UpdateReceiverConfig = UpdateReceiverConfig()
 
     /** Configure templating */
     fun templating(block: TelegramBotTemplatingConfig.() -> Unit) {
-        templating = block
+        templating.apply(block)
     }
 
     /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit) {
-        receiving = block
+        receiving.apply(block)
     }
 }

@@ -3,12 +3,13 @@ package io.github.dehuckakpyt.telegrambot.model.message
 import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
 import java.time.LocalDateTime
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Table
 
 
 /**
@@ -19,7 +20,8 @@ import java.time.LocalDateTime
  */
 @Entity
 @Table(name = "telegram_message")
-class DatabaseTelegramMessage(
+@TypeDef(name = "list-array", typeClass = ListArrayType::class)
+class JpaTelegramMessage(
     @Column(nullable = false)
     override val chatId: Long,
 
@@ -42,7 +44,7 @@ class DatabaseTelegramMessage(
     @Column(columnDefinition = "text")
     override val text: String?,
 
-    @Type(ListArrayType::class)
+    @Type(type = "list-array")
     @Column(name = "file_ids", columnDefinition = "text[]")
     override val fileIds: List<String>?,
 

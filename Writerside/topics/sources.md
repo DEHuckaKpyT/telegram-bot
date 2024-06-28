@@ -21,3 +21,21 @@ val config = TelegramBotConfig().apply {
 ```
 
 How to **save state in database** see <a href="database-integration.md">here</a>.
+
+## Spring only
+
+You can create beans as `ConfigExpression<..Source>` also:
+
+```kotlin
+    @Bean
+    fun telegramMessageSourceExpression(): ConfigExpression<MessageSource> = 
+        ConfigExpression { CustomTelegramMessageSource() }
+
+    @Bean
+    fun chainSourceExpression(): ConfigExpression<ChainSource> = 
+        ConfigExpression { CustomChainSource() }
+
+    @Bean
+    fun callbackContentSourceExpression(): ConfigExpression<CallbackContentSource> = 
+        ConfigExpression { CustomCallbackContentSource() }
+```

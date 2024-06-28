@@ -5,7 +5,7 @@ Then add the dependency and specify the sources:
 ```Gradle
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-database-source:%current_version%")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-exposed:%current_version%")
 }
 ```
 ```kotlin

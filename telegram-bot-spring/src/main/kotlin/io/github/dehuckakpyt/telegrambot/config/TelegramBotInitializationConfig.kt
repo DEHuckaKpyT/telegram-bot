@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
 import io.github.dehuckakpyt.telegrambot.context.SpringContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
@@ -15,13 +16,13 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
-import org.springframework.core.env.Environment
+import org.springframework.context.support.GenericApplicationContext
 
 
 /**
@@ -32,8 +33,12 @@ import org.springframework.core.env.Environment
  */
 @Configuration
 class TelegramBotInitializationConfig(
-    private val environment: Environment,
-    private val applicationContext: ApplicationContext,
+    private val applicationContext: GenericApplicationContext,
+    callbackContentSourceExpression: ConfigExpression<CallbackContentSource>?,
+    chainSourceExpression: ConfigExpression<ChainSource>?,
+    telegramMessageSourceExpression: ConfigExpression<MessageSource>?,
+    @Value("\${telegram-bot.token}") botToken: String?,
+    @Value("\${telegram-bot.username}") botUsername: String?,
     telegramBotConfig: TelegramBotConfig?,
 ) {
     private final val logger = LoggerFactory.getLogger(javaClass)
@@ -45,8 +50,12 @@ class TelegramBotInitializationConfig(
 
     init {
         val config: TelegramBotConfig = (telegramBotConfig ?: TelegramBotConfig()).apply {
-            if (token == null) token = environment.getProperty("telegram-bot.token")
-            if (username == null) username = environment.getProperty("telegram-bot.username")
+            if (token == null) token = botToken
+            if (username == null) username = botUsername
+
+            if (messageSource == null && telegramMessageSourceExpression != null) messageSource = telegramMessageSourceExpression::configure
+            if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
+            if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
         }
 
         botContext = TelegramBotFactory.createTelegramBotContext(config)

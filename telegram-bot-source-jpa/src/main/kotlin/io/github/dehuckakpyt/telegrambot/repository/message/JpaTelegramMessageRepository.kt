@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.repository.message
 
-import io.github.dehuckakpyt.telegrambot.model.message.DatabaseTelegramMessage
+import io.github.dehuckakpyt.telegrambot.model.message.JpaTelegramMessage
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
@@ -11,4 +11,4 @@ import java.util.*
  *
  * @author Denis Matytsin
  */
-interface DatabaseTelegramMessageRepository : JpaRepository<DatabaseTelegramMessage, UUID>
+interface JpaTelegramMessageRepository : JpaRepository<JpaTelegramMessage, UUID>

@@ -1,11 +1,11 @@
 package io.github.dehuckakpyt.telegrambot.source.chain
 
-import io.github.dehuckakpyt.telegrambot.model.chain.DatabaseChain
-import io.github.dehuckakpyt.telegrambot.repository.chain.DatabaseChainRepository
+import io.github.dehuckakpyt.telegrambot.model.chain.JpaChain
+import io.github.dehuckakpyt.telegrambot.repository.chain.JpaChainRepository
 import org.springframework.transaction.annotation.Transactional
 
-open class DatabaseChainSource(
-    private val repository: DatabaseChainRepository,
+open class JpaChainSource(
+    private val repository: JpaChainRepository,
 ) : ChainSource {
 
     @Transactional
@@ -13,7 +13,7 @@ open class DatabaseChainSource(
         val chain = get(chatId, fromId)?.apply {
             this.step = step
             this.content = content
-        } ?: DatabaseChain(
+        } ?: JpaChain(
             chatId = chatId,
             fromId = fromId,
             step = step,
@@ -24,5 +24,5 @@ open class DatabaseChainSource(
     }
 
     @Transactional(readOnly = true)
-    override suspend fun get(chatId: Long, fromId: Long): DatabaseChain? = repository.findFirstByChatIdAndFromId(chatId, fromId)
+    override suspend fun get(chatId: Long, fromId: Long): JpaChain? = repository.findFirstByChatIdAndFromId(chatId, fromId)
 }

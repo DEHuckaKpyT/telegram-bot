@@ -6,9 +6,7 @@ import io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.TelegramBotReceiverActualConfigImpl
-import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingActualConfigImpl
-import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingConfig
 import io.github.dehuckakpyt.telegrambot.container.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContextImpl
@@ -86,9 +84,7 @@ object TelegramBotFactory {
         return context
     }
 
-    private fun buildTemplating(config: TelegramBotConfig, actual: TelegramBotActualConfigImpl, context: TelegramBotContextImpl) = with(TelegramBotTemplatingConfig()) {
-        config.templating.invoke(this)
-
+    private fun buildTemplating(config: TelegramBotConfig, actual: TelegramBotActualConfigImpl, context: TelegramBotContextImpl) = with(config.templating) {
         val actualTemplating = TelegramBotTemplatingActualConfigImpl()
         actual.templating = actualTemplating
         actualTemplating.htmlFormatter = htmlFormatter?.invoke(actual) ?: HtmlFormatterImpl()
@@ -97,9 +93,7 @@ object TelegramBotFactory {
         context.templater = actualTemplating.templater
     }
 
-    private fun buildReceiving(config: TelegramBotConfig, actual: TelegramBotActualConfigImpl, context: TelegramBotContextImpl) = with(UpdateReceiverConfig()) {
-        config.receiving.invoke(this)
-
+    private fun buildReceiving(config: TelegramBotConfig, actual: TelegramBotActualConfigImpl, context: TelegramBotContextImpl) = with(config.receiving) {
         val actualReceiving = TelegramBotReceiverActualConfigImpl()
         actual.receiving = actualReceiving
         actualReceiving.messageTemplate = messageTemplate?.invoke(actual) ?: MessageTemplate()

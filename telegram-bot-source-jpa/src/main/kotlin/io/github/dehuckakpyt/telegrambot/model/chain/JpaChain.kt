@@ -2,9 +2,9 @@ package io.github.dehuckakpyt.telegrambot.model.chain
 
 import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.Chain
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Table
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
 
 /**
@@ -15,7 +15,7 @@ import javax.persistence.Table
  */
 @Entity
 @Table(name = "chain")
-class DatabaseChain(
+class JpaChain(
     @Column(nullable = false)
     override val chatId: Long,
 

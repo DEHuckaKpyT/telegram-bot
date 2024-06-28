@@ -1,18 +1,17 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
-import io.github.dehuckakpyt.telegrambot.constant.Default.MAX_CALLBACK_CONTENTS_PER_USER
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.model.callback.DatabaseCallbackContent
+import io.github.dehuckakpyt.telegrambot.model.callback.JpaCallbackContent
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import io.github.dehuckakpyt.telegrambot.repository.OffsetLimitPageable
-import io.github.dehuckakpyt.telegrambot.repository.callback.DatabaseCallbackContentRepository
+import io.github.dehuckakpyt.telegrambot.repository.callback.JpaCallbackContentRepository
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.*
 
-open class DatabaseCallbackContentSource(
-    private val repository: DatabaseCallbackContentRepository,
-    private val maxCallbackContentsPerUser: Long = MAX_CALLBACK_CONTENTS_PER_USER,
+open class JpaCallbackContentSource(
+    private val repository: JpaCallbackContentRepository,
+    private val maxCallbackContentsPerUser: Long,
 ) : CallbackContentSource {
 
     private val pageable = OffsetLimitPageable(maxCallbackContentsPerUser - 1, 1)
@@ -23,7 +22,7 @@ open class DatabaseCallbackContentSource(
             this.callbackId = UUID.randomUUID()
             this.content = content
             this.updateDate = LocalDateTime.now()
-        } ?: DatabaseCallbackContent(
+        } ?: JpaCallbackContent(
             chatId = chatId,
             fromId = fromId,
             callbackId = UUID.randomUUID(),
@@ -40,7 +39,7 @@ open class DatabaseCallbackContentSource(
             ?: throw ChatException("Содержание для callback'а не найдено :(")
     }
 
-    private fun findLast(chatId: Long, fromId: Long): DatabaseCallbackContent? {
+    private fun findLast(chatId: Long, fromId: Long): JpaCallbackContent? {
         if (maxCallbackContentsPerUser < 1) return null
 
         return repository.findByChatIdAndFromIdOrderByUpdateDateDesc(chatId, fromId, pageable).firstOrNull()

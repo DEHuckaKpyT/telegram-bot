@@ -2,11 +2,11 @@ package io.github.dehuckakpyt.telegrambot.model.callback
 
 import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
 import java.time.LocalDateTime
 import java.util.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Table
 
 
 /**
@@ -18,7 +18,7 @@ import java.util.*
  */
 @Entity
 @Table(name = "callback_content")
-class DatabaseCallbackContent(
+class JpaCallbackContent(
 
     @Column(nullable = false)
     override val chatId: Long,
