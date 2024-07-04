@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import kotlinx.coroutines.*
+import org.apache.http.ConnectionClosedException
 import org.slf4j.LoggerFactory
 
 
@@ -32,6 +33,9 @@ internal class LongPollingUpdateReceiver(
         while (true) {
             try {
                 receiveUpdates()
+            } catch (e: ConnectionClosedException) {
+                logger.info("Telegram-bot's (${bot.username}) client was stopped.")
+                return
             } catch (throwable: Throwable) {
                 logger.error("Internal error. Receiving updates will be resumed after $delayBetweenTries milliseconds.", throwable)
                 delay(delayBetweenTries)

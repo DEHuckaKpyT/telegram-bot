@@ -16,11 +16,11 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.context.support.GenericApplicationContext
 
@@ -40,7 +40,7 @@ class TelegramBotInitializationConfig(
     @Value("\${telegram-bot.token}") botToken: String?,
     @Value("\${telegram-bot.username}") botUsername: String?,
     telegramBotConfig: TelegramBotConfig?,
-) {
+) : DisposableBean {
     private final val logger = LoggerFactory.getLogger(javaClass)
     private final val botContext: TelegramBotContext
 
@@ -100,8 +100,7 @@ class TelegramBotInitializationConfig(
         logger.info("Telegram-bot '${botContext.telegramBot.username}' started.")
     }
 
-    @EventListener(ContextClosedEvent::class)
-    fun stopTelegramBot() {
+    override fun destroy() {
         logger.info("Stopping telegram-bot '${botContext.telegramBot.username}'..")
         botContext.updateReceiver.stop()
         logger.info("Telegram-bot '${botContext.telegramBot.username}' stopped.")
