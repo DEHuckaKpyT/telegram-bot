@@ -18,7 +18,7 @@ import kotlin.String
  * float/double). For example, for a price of `US$ 1.45` pass `amount = 145`. See the *exp* parameter
  * in [currencies.json](https://core.telegram.org/bots/payments/currencies.json), it shows the number
  * of digits past the decimal point for each currency (2 for the majority of currencies).
- * @param invoicePayload Bot specified invoice payload
+ * @param invoicePayload Bot-specified invoice payload
  * @param shippingOptionId *Optional*. Identifier of the shipping option chosen by the user
  * @param orderInfo *Optional*. Order information provided by the user
  * @param telegramPaymentChargeId Telegram payment identifier
@@ -43,7 +43,7 @@ public data class SuccessfulPayment(
     @param:JsonProperty("total_amount")
     public val totalAmount: Int,
     /**
-     * Bot specified invoice payload
+     * Bot-specified invoice payload
      */
     @get:JsonProperty("invoice_payload")
     @param:JsonProperty("invoice_payload")

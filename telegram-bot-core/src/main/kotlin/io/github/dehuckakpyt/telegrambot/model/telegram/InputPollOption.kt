@@ -5,7 +5,7 @@ import kotlin.String
 import kotlin.collections.List
 
 /**
- * This object contains information about one answer option in a poll to send.
+ * This object contains information about one answer option in a poll to be sent.
  *
  * @see [InputPollOption] (https://core.telegram.org/bots/api/#inputpolloption)
  *

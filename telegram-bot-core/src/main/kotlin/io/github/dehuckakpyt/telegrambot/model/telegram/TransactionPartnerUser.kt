@@ -12,6 +12,7 @@ import kotlin.String
  *
  * @param type Type of the transaction partner, always “user”
  * @param user Information about the user
+ * @param invoicePayload *Optional*. Bot-specified invoice payload
  */
 public data class TransactionPartnerUser(
     /**
@@ -26,4 +27,10 @@ public data class TransactionPartnerUser(
     @get:JsonProperty("user")
     @param:JsonProperty("user")
     public val user: User,
+    /**
+     * *Optional*. Bot-specified invoice payload
+     */
+    @get:JsonProperty("invoice_payload")
+    @param:JsonProperty("invoice_payload")
+    public val invoicePayload: String? = null,
 ) : TransactionPartner

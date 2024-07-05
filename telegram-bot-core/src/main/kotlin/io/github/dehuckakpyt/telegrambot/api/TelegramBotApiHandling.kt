@@ -20,6 +20,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.LabeledPrice
@@ -312,8 +313,8 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
-     * winners messages, and invoice messages can't be copied. A quiz
+     * Use this method to copy messages of any kind. Service messages, paid media messages, giveaway
+     * messages, giveaway winners messages, and invoice messages can't be copied. A quiz
      * [poll](https://core.telegram.org/bots/api/#poll) can be copied only if the value of the field
      * *correct_option_id* is known to the bot. The method is analogous to the method
      * [forwardMessage](https://core.telegram.org/bots/api/#forwardmessage), but the copied message
@@ -372,8 +373,8 @@ public abstract class TelegramBotApiHandling {
 
     /**
      * Use this method to copy messages of any kind. If some of the specified messages can't be
-     * found or copied, they are skipped. Service messages, giveaway messages, giveaway winners
-     * messages, and invoice messages can't be copied. A quiz
+     * found or copied, they are skipped. Service messages, paid media messages, giveaway messages,
+     * giveaway winners messages, and invoice messages can't be copied. A quiz
      * [poll](https://core.telegram.org/bots/api/#poll) can be copied only if the value of the field
      * *correct_option_id* is known to the bot. The method is analogous to the method
      * [forwardMessages](https://core.telegram.org/bots/api/#forwardmessages), but the copied messages
@@ -918,6 +919,54 @@ public abstract class TelegramBotApiHandling {
         disableNotification = disableNotification,
         protectContent = protectContent,
         messageEffectId = messageEffectId,
+        replyParameters = replyParameters,
+        replyMarkup = replyMarkup,
+    )
+
+    /**
+     * Use this method to send paid media to channel chats. On success, the sent
+     * [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param starCount The number of Telegram Stars that must be paid to buy access to the media
+     * @param media A JSON-serialized array describing the media to be sent; up to 10 items
+     * @param caption Media caption, 0-1024 characters after entities parsing
+     * @param parseMode Mode for parsing entities in the media caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
+     * media
+     * @param disableNotification Sends the message
+     * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
+     * notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
+     * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
+     * keyboard or to force a reply from the user
+     */
+    public suspend fun Container.sendPaidMedia(
+        starCount: Int,
+        media: Iterable<InputPaidMedia>,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message = bot.sendPaidMedia(
+        chatId = chat.id,
+        starCount = starCount,
+        media = media,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        showCaptionAboveMedia = showCaptionAboveMedia,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )

@@ -82,8 +82,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
     )
 
     /**
-     * Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
-     * winners messages, and invoice messages can't be copied. A quiz
+     * Use this method to copy messages of any kind. Service messages, paid media messages, giveaway
+     * messages, giveaway winners messages, and invoice messages can't be copied. A quiz
      * [poll](https://core.telegram.org/bots/api/#poll) can be copied only if the value of the field
      * *correct_option_id* is known to the bot. The method is analogous to the method
      * [forwardMessage](https://core.telegram.org/bots/api/#forwardmessage), but the copied message
@@ -141,8 +141,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
 
     /**
      * Use this method to copy messages of any kind. If some of the specified messages can't be
-     * found or copied, they are skipped. Service messages, giveaway messages, giveaway winners
-     * messages, and invoice messages can't be copied. A quiz
+     * found or copied, they are skipped. Service messages, paid media messages, giveaway messages,
+     * giveaway winners messages, and invoice messages can't be copied. A quiz
      * [poll](https://core.telegram.org/bots/api/#poll) can be copied only if the value of the field
      * *correct_option_id* is known to the bot. The method is analogous to the method
      * [forwardMessages](https://core.telegram.org/bots/api/#forwardmessages), but the copied messages

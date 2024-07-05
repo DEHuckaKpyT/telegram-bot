@@ -16,6 +16,8 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.ktor.client.*
 import io.ktor.client.engine.apache5.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.serialization.jackson.*
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +27,6 @@ import org.jetbrains.kotlin.com.google.common.base.CaseFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.Path
-import kotlin.io.path.readText
 
 val getDefaultValueFromDescriptionRegex = Regex("^(?:Always (.+)\\..+)|(?:.+, always “([a-z0-9_]+)”)$")
 val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*?$")
@@ -44,8 +45,9 @@ val client = HttpClient(Apache5) {
 }
 
 runBlocking {
-//    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").body<Contract>()
-    val contract = Path("./custom_v2.json").readText()
+    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").bodyAsText()
+//    val contract = Path("./custom_v2.json").readText()
+        .replace("\"reference\": \"Telegram\"", "\"reference\": \"StarTransactions\"")
         .replace("\\\\_", "_")
         .replace("\\'", "'")
         .replace("\\\\-", "-")

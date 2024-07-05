@@ -20,6 +20,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.LabeledPrice
@@ -271,6 +272,20 @@ internal class MockTelegramBot : TelegramBot {
         disableNotification: Boolean?,
         protectContent: Boolean?,
         messageEffectId: String?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+    ): Message = mockk()
+
+    override suspend fun sendPaidMedia(
+        chatId: String,
+        starCount: Int,
+        media: Iterable<InputPaidMedia>,
+        caption: String?,
+        parseMode: String?,
+        captionEntities: Iterable<MessageEntity>?,
+        showCaptionAboveMedia: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = mockk()

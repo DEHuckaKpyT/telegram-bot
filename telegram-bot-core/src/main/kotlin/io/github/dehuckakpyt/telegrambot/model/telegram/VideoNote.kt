@@ -15,8 +15,8 @@ import kotlin.String
  * @param fileId Identifier for this file, which can be used to download or reuse the file
  * @param fileUniqueId Unique identifier for this file, which is supposed to be the same over time
  * and for different bots. Can't be used to download or reuse the file.
- * @param length Video width and height (diameter of the video message) as defined by sender
- * @param duration Duration of the video in seconds as defined by sender
+ * @param length Video width and height (diameter of the video message) as defined by the sender
+ * @param duration Duration of the video in seconds as defined by the sender
  * @param thumbnail *Optional*. Video thumbnail
  * @param fileSize *Optional*. File size in bytes
  */
@@ -35,13 +35,13 @@ public data class VideoNote(
     @param:JsonProperty("file_unique_id")
     public val fileUniqueId: String,
     /**
-     * Video width and height (diameter of the video message) as defined by sender
+     * Video width and height (diameter of the video message) as defined by the sender
      */
     @get:JsonProperty("length")
     @param:JsonProperty("length")
     public val length: Int,
     /**
-     * Duration of the video in seconds as defined by sender
+     * Duration of the video in seconds as defined by the sender
      */
     @get:JsonProperty("duration")
     @param:JsonProperty("duration")

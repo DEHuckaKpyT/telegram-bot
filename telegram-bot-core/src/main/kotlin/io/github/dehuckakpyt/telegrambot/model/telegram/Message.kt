@@ -67,6 +67,7 @@ import kotlin.collections.List
  * backward compatibility, when this field is set, the *document* field will also be set
  * @param audio *Optional*. Message is an audio file, information about the file
  * @param document *Optional*. Message is a general file, information about the file
+ * @param paidMedia *Optional*. Message contains paid media; information about the paid media
  * @param photo *Optional*. Message is a photo, available sizes of the photo
  * @param sticker *Optional*. Message is a sticker, information about the sticker
  * @param story *Optional*. Message is a forwarded story
@@ -74,7 +75,8 @@ import kotlin.collections.List
  * @param videoNote *Optional*. Message is a [video
  * note](https://telegram.org/blog/video-messages-and-telescope), information about the video message
  * @param voice *Optional*. Message is a voice message, information about the file
- * @param caption *Optional*. Caption for the animation, audio, document, photo, video or voice
+ * @param caption *Optional*. Caption for the animation, audio, document, paid media, photo, video
+ * or voice
  * @param captionEntities *Optional*. For messages with a caption, special entities like usernames,
  * URLs, bot commands, etc. that appear in the caption
  * @param showCaptionAboveMedia *Optional*. True, if the caption must be shown above the message
@@ -353,6 +355,12 @@ public data class Message(
     @param:JsonProperty("document")
     public val document: Document? = null,
     /**
+     * *Optional*. Message contains paid media; information about the paid media
+     */
+    @get:JsonProperty("paid_media")
+    @param:JsonProperty("paid_media")
+    public val paidMedia: PaidMediaInfo? = null,
+    /**
      * *Optional*. Message is a photo, available sizes of the photo
      */
     @get:JsonProperty("photo")
@@ -391,7 +399,7 @@ public data class Message(
     @param:JsonProperty("voice")
     public val voice: Voice? = null,
     /**
-     * *Optional*. Caption for the animation, audio, document, photo, video or voice
+     * *Optional*. Caption for the animation, audio, document, paid media, photo, video or voice
      */
     @get:JsonProperty("caption")
     @param:JsonProperty("caption")

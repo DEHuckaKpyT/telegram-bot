@@ -11,8 +11,8 @@ import kotlin.Int
  *
  * @author KScript
  *
- * @param latitude Latitude as defined by sender
- * @param longitude Longitude as defined by sender
+ * @param latitude Latitude as defined by the sender
+ * @param longitude Longitude as defined by the sender
  * @param horizontalAccuracy *Optional*. The radius of uncertainty for the location, measured in
  * meters; 0-1500
  * @param livePeriod *Optional*. Time relative to the message sending date, during which the
@@ -24,13 +24,13 @@ import kotlin.Int
  */
 public data class Location(
     /**
-     * Latitude as defined by sender
+     * Latitude as defined by the sender
      */
     @get:JsonProperty("latitude")
     @param:JsonProperty("latitude")
     public val latitude: Double,
     /**
-     * Longitude as defined by sender
+     * Longitude as defined by the sender
      */
     @get:JsonProperty("longitude")
     @param:JsonProperty("longitude")

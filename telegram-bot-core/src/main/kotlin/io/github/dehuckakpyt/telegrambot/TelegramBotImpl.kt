@@ -124,7 +124,7 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 19.06.2024.
+ * Created on 05.07.2024.
  *
  * @author KScript
  */
@@ -530,6 +530,40 @@ public class TelegramBotImpl(
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.also { messageSource.save(it.chat.id, it.from!!.id, true, it.messageId, type = "VIDEO_NOTE", fileIds = listOf(it.videoNote!!.fileId)) }
+
+    override suspend fun sendPaidMedia(
+        chatId: String,
+        starCount: Int,
+        media: Iterable<InputPaidMedia>,
+        caption: String?,
+        parseMode: String?,
+        captionEntities: Iterable<MessageEntity>?,
+        showCaptionAboveMedia: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+    ): Message = client.postMultiPart<Message>("sendPaidMedia") {
+        append("chat_id", chatId)
+        append("star_count", starCount)
+        append("media", client.toJson(media))
+        appendIfNotNull("caption", caption)
+        appendIfNotNull("parse_mode", parseMode)
+        appendIfNotNull("caption_entities", client.toJson(captionEntities))
+        appendIfNotNull("show_caption_above_media", showCaptionAboveMedia)
+        appendIfNotNull("disable_notification", disableNotification)
+        appendIfNotNull("protect_content", protectContent)
+        appendIfNotNull("reply_parameters", client.toJson(replyParameters))
+        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+        
+        media.forEach { media ->
+            appendContent(media.media)
+        }
+        
+        media.forEach { media ->
+            appendContentIfNotNull(media.thumbnail)
+        }
+    }.also { messageSource.save(it.chat.id, it.from!!.id, true, it.messageId, type = "PAID_MEDIA", text = caption) }
 
     override suspend fun sendMediaGroup(
         chatId: String,

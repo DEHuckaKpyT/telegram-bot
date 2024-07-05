@@ -12,7 +12,7 @@ import kotlin.String
  *
  * @param id Unique query identifier
  * @param from User who sent the query
- * @param invoicePayload Bot specified invoice payload
+ * @param invoicePayload Bot-specified invoice payload
  * @param shippingAddress User specified shipping address
  */
 public data class ShippingQuery(
@@ -29,7 +29,7 @@ public data class ShippingQuery(
     @param:JsonProperty("from")
     public val from: User,
     /**
-     * Bot specified invoice payload
+     * Bot-specified invoice payload
      */
     @get:JsonProperty("invoice_payload")
     @param:JsonProperty("invoice_payload")

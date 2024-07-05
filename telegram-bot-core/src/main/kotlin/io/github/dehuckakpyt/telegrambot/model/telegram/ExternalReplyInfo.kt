@@ -23,6 +23,7 @@ import kotlin.collections.List
  * @param animation *Optional*. Message is an animation, information about the animation
  * @param audio *Optional*. Message is an audio file, information about the file
  * @param document *Optional*. Message is a general file, information about the file
+ * @param paidMedia *Optional*. Message contains paid media; information about the paid media
  * @param photo *Optional*. Message is a photo, available sizes of the photo
  * @param sticker *Optional*. Message is a sticker, information about the sticker
  * @param story *Optional*. Message is a forwarded story
@@ -90,6 +91,12 @@ public data class ExternalReplyInfo(
     @get:JsonProperty("document")
     @param:JsonProperty("document")
     public val document: Document? = null,
+    /**
+     * *Optional*. Message contains paid media; information about the paid media
+     */
+    @get:JsonProperty("paid_media")
+    @param:JsonProperty("paid_media")
+    public val paidMedia: PaidMediaInfo? = null,
     /**
      * *Optional*. Message is a photo, available sizes of the photo
      */

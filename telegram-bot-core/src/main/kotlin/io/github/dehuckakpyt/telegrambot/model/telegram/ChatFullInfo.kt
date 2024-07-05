@@ -68,6 +68,8 @@ import kotlin.collections.List
  * @param inviteLink *Optional*. Primary invite link, for groups, supergroups and channel chats
  * @param pinnedMessage *Optional*. The most recent pinned message (by sending date)
  * @param permissions *Optional*. Default chat member permissions, for groups and supergroups
+ * @param canSendPaidMedia *Optional*. *True*, if paid media messages can be sent or forwarded to
+ * the channel chat. The field is available only for channel chats.
  * @param slowModeDelay *Optional*. For supergroups, the minimum allowed delay between consecutive
  * messages sent by each unprivileged user; in seconds
  * @param unrestrictBoostCount *Optional*. For supergroups, the minimum number of boosts that a
@@ -298,6 +300,13 @@ public data class ChatFullInfo(
     @get:JsonProperty("permissions")
     @param:JsonProperty("permissions")
     public val permissions: ChatPermissions? = null,
+    /**
+     * *Optional*. *True*, if paid media messages can be sent or forwarded to the channel chat. The
+     * field is available only for channel chats.
+     */
+    @get:JsonProperty("can_send_paid_media")
+    @param:JsonProperty("can_send_paid_media")
+    public val canSendPaidMedia: Boolean? = null,
     /**
      * *Optional*. For supergroups, the minimum allowed delay between consecutive messages sent by
      * each unprivileged user; in seconds
