@@ -5,19 +5,19 @@ import io.github.dehuckakpyt.telegrambot.model.callback.JpaCallbackContent
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import io.github.dehuckakpyt.telegrambot.repository.OffsetLimitPageable
 import io.github.dehuckakpyt.telegrambot.repository.callback.JpaCallbackContentRepository
-import org.springframework.transaction.annotation.Transactional
+import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import java.time.LocalDateTime
 import java.util.*
 
 open class JpaCallbackContentSource(
+    private val transactional: TransactionAction,
     private val repository: JpaCallbackContentRepository,
     private val maxCallbackContentsPerUser: Long,
 ) : CallbackContentSource {
 
-    private val pageable = OffsetLimitPageable(maxCallbackContentsPerUser - 1, 1)
+    protected val pageable = OffsetLimitPageable(maxCallbackContentsPerUser - 1, 1)
 
-    @Transactional
-    override suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent {
+    override suspend fun save(chatId: Long, fromId: Long, content: String): CallbackContent = transactional {
         val callbackContent = findLast(chatId, fromId)?.apply {
             this.callbackId = UUID.randomUUID()
             this.content = content
@@ -30,12 +30,11 @@ open class JpaCallbackContentSource(
             updateDate = LocalDateTime.now(),
         )
 
-        return repository.save(callbackContent)
+        repository.save(callbackContent)
     }
 
-    @Transactional(readOnly = true)
-    override suspend fun get(callbackId: UUID): CallbackContent {
-        return repository.findFirstByCallbackId(callbackId)
+    override suspend fun get(callbackId: UUID): CallbackContent = transactional(readOnly = true) {
+        repository.findFirstByCallbackId(callbackId)
             ?: throw ChatException("Содержание для callback'а не найдено :(")
     }
 

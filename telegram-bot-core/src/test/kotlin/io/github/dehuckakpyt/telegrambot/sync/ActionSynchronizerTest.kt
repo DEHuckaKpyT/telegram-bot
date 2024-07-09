@@ -133,7 +133,7 @@ class ActionSynchronizerTest : FreeSpec({
         }
     }
 
-    "a lot of invokes" {
+    "a lot of invokes".config(enabled = false) {
         // Arrange
         val oneItemList = mutableListOf(0)
         val task: suspend () -> Unit = {

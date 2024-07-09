@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
 import io.github.dehuckakpyt.telegrambot.repository.chain.JpaChainRepository
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chain.JpaChainSource
+import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -27,5 +28,10 @@ class ChainSourceInitializationConfig {
     //TODO create custom @ConditionalOnMissingBean
     @ConditionalOnMissingBean(name = ["chainSourceExpression"], parameterizedContainer = [ConfigExpression::class])
     @ConditionalOnProperty(TELEGRAM_BOT_SOURCE_JPA_CHAIN_SOURCE, havingValue = "true", matchIfMissing = true)
-    fun chainSourceExpression(repository: JpaChainRepository): ConfigExpression<ChainSource> = ConfigExpression { JpaChainSource(repository) }
+    fun chainSourceExpression(
+        transactionAction: TransactionAction,
+        repository: JpaChainRepository,
+    ): ConfigExpression<ChainSource> = ConfigExpression {
+        JpaChainSource(transactionAction, repository)
+    }
 }

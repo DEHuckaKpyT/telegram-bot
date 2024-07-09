@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
 import io.github.dehuckakpyt.telegrambot.repository.callback.JpaCallbackContentRepository
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.JpaCallbackContentSource
+import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -30,7 +31,10 @@ class CallbackContentSourceInitializationConfig {
     @ConditionalOnMissingBean(name = ["callbackContentSourceExpression"], parameterizedContainer = [ConfigExpression::class])
     @ConditionalOnProperty(TELEGRAM_BOT_SOURCE_JPA_CALLBACK_CONTENT_SOURCE, havingValue = "true", matchIfMissing = true)
     fun callbackContentSourceExpression(
+        transactionAction: TransactionAction,
         repository: JpaCallbackContentRepository,
         @Value("\${$TELEGRAM_BOT_SOURCE_JPA_CALLBACK_CONTENT_SOURCE_PER_USER}") perUser: Long,
-    ): ConfigExpression<CallbackContentSource> = ConfigExpression { JpaCallbackContentSource(repository, maxCallbackContentsPerUser = perUser) }
+    ): ConfigExpression<CallbackContentSource> = ConfigExpression {
+        JpaCallbackContentSource(transactionAction, repository, maxCallbackContentsPerUser = perUser)
+    }
 }
