@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component
  */
 @Component
 @ConfigurationProperties("telegram-bot.template")
-class SpringMessageTemplate : MessageTemplate() {
-    override val whenCommandNotFound: String = "Введена неизвестная команда \${command}. Посмотреть возможные действия можно, вызвав команду /help."
-    override val whenUnexpectedMessageType: String = "Ожидается сообщение другого типа."
-    override val whenStepNotFound: String = "Неожидаемое сообщение. Посмотреть возможные действия можно, вызвав команду /help."
-    override val whenKnownException: String = "\${message}"
-    override val whenUnknownException: String = "Произошла непредвиденная ошибка. Обратитесь к разработчику."
-}
+class SpringMessageTemplate(
+    override val whenCommandNotFound: String = "An unknown command \${command} has been entered. You can view the possible actions by invoking the /help command.",
+    override val whenUnexpectedMessageType: String = "A different message type is pending.",
+    override val whenStepNotFound: String = "Unexpected message. You can view possible actions by calling /help.",
+    override val whenKnownException: String = "\${message}",
+    override val whenUnknownException: String = "An unexpected error occurred. Please contact the developer.",
+) : MessageTemplate()

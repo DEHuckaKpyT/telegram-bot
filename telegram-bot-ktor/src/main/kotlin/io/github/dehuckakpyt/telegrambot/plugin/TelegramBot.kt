@@ -14,6 +14,7 @@ import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.template.KtorMessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
@@ -32,6 +33,7 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     val appConfig = application.environment.config
     if (pluginConfig.token == null) pluginConfig.token = appConfig.tryGetString("telegram-bot.token")
     if (pluginConfig.username == null) pluginConfig.username = appConfig.tryGetString("telegram-bot.username")
+    if (pluginConfig.receiving.messageTemplate == null) pluginConfig.receiving.messageTemplate = { KtorMessageTemplate() }
 
     InternalKoinContext.koin.declare<ApplicationConfig>(appConfig.config("telegram-bot.template"), named("telegramBotTemplate"))
 

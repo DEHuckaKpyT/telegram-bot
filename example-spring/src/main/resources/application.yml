@@ -20,3 +20,5 @@ telegram-bot:
     template-escaped-example: "formatted text: ${dollar}{escapeHtml(param)}"
 
     runner-notify-when-started: "Bot <b><u>${dollar}{botUsername}</u></b> started!"
+
+    when-command-not-found: "Command ${command} not found"
