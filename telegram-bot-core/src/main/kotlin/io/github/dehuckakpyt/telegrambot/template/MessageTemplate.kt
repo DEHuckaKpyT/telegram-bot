@@ -10,9 +10,9 @@ package io.github.dehuckakpyt.telegrambot.template
  * @author Denis Matytsin
  */
 open class MessageTemplate(
-    open val whenCommandNotFound: String = "Введена неизвестная команда \${command}. Посмотреть возможные действия можно, вызвав команду /help.",
-    open val whenUnexpectedMessageType: String = "Ожидается сообщение другого типа.",
-    open val whenStepNotFound: String = "Неожидаемое сообщение. Посмотреть возможные действия можно, вызвав команду /help.",
+    open val whenCommandNotFound: String = "An unknown command \${command} has been entered. You can view the possible actions by invoking the /help command.",
+    open val whenUnexpectedMessageType: String = "A different message type is pending.",
+    open val whenStepNotFound: String = "Unexpected message. You can view possible actions by calling /help.",
     open val whenKnownException: String = "\${message}",
-    open val whenUnknownException: String = "Произошла непредвиденная ошибка. Обратитесь к разработчику.",
+    open val whenUnknownException: String = "An unexpected error occurred. Please contact the developer.",
 )

@@ -10,13 +10,21 @@ plugins {
 
 allprojects {
     group = "io.github.dehuckakpyt.telegrambot"
-    version = "0.9.5"
+    version = "0.9.6"
 }
 
 subprojects {
     repositories {
         mavenCentral()
     }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 nexusPublishing {
@@ -103,10 +111,6 @@ configure(subprojects.filter { it.path.startsWith(":example").not() && it.path.s
 
     tasks.test {
         useJUnitPlatform()
-    }
-
-    tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     sourceSets.main {

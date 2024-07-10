@@ -14,11 +14,13 @@ import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.template.SpringMessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
@@ -32,8 +34,10 @@ import org.springframework.context.support.GenericApplicationContext
  * @author Denis Matytsin
  */
 @Configuration
+@EnableConfigurationProperties(SpringMessageTemplate::class)
 class TelegramBotInitializationConfig(
     private val applicationContext: GenericApplicationContext,
+    springMessageTemplate: SpringMessageTemplate,
     callbackContentSourceExpression: ConfigExpression<CallbackContentSource>?,
     chainSourceExpression: ConfigExpression<ChainSource>?,
     telegramMessageSourceExpression: ConfigExpression<MessageSource>?,
@@ -53,9 +57,12 @@ class TelegramBotInitializationConfig(
             if (token == null) token = botToken
             if (username == null) username = botUsername
 
+            if (receiving.messageTemplate == null) receiving.messageTemplate = { springMessageTemplate }
+
             if (messageSource == null && telegramMessageSourceExpression != null) messageSource = telegramMessageSourceExpression::configure
             if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
             if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
+
         }
 
         botContext = TelegramBotFactory.createTelegramBotContext(config)
