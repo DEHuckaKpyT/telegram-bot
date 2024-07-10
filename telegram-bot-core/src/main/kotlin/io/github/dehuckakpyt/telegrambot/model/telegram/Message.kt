@@ -124,6 +124,8 @@ import kotlin.collections.List
  * payments ](https://core.telegram.org/bots/api/#payments)
  * @param successfulPayment *Optional*. Message is a service message about a successful payment,
  * information about the payment. [More about payments ](https://core.telegram.org/bots/api/#payments)
+ * @param refundedPayment *Optional*. Message is a service message about a refunded payment,
+ * information about the payment. [More about payments ](https://core.telegram.org/bots/api/#payments)
  * @param usersShared *Optional*. Service message: users were shared with the bot
  * @param chatShared *Optional*. Service message: a chat was shared with the bot
  * @param connectedWebsite *Optional*. The domain name of the website on which the user has logged
@@ -563,6 +565,13 @@ public data class Message(
     @get:JsonProperty("successful_payment")
     @param:JsonProperty("successful_payment")
     public val successfulPayment: SuccessfulPayment? = null,
+    /**
+     * *Optional*. Message is a service message about a refunded payment, information about the
+     * payment. [More about payments ](https://core.telegram.org/bots/api/#payments)
+     */
+    @get:JsonProperty("refunded_payment")
+    @param:JsonProperty("refunded_payment")
+    public val refundedPayment: RefundedPayment? = null,
     /**
      * *Optional*. Service message: users were shared with the bot
      */
