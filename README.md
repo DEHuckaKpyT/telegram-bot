@@ -9,7 +9,7 @@
 Kotlin library for creating Telegram Bots. You can use clean version, with implementation for [Spring](https://spring.io/), [Ktor](https://ktor.io/)+[Koin](https://insert-koin.io/) or create with you own implementation.
 It have also possibility to save state in database with [Spring JPA](https://spring.io/projects/spring-data-jpa/) or [Exposed](https://github.com/JetBrains/Exposed).
 
-[Full documentation](https://dehuckakpyt.github.io/telegram-bot/starter-topic.html) with examples and explanations.
+[Full documentation with examples and explanations](https://dehuckakpyt.github.io/telegram-bot/starter-topic.html).
 
 Example of applications in [example-spring](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-spring), [example-ktor](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-ktor), [example-core](https://github.com/DEHuckaKpyT/telegram-bot/tree/master/example-core) directories.
 
@@ -22,7 +22,7 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 - Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
 - Easy to **write tests** for your bot.
 
-## ⚠️ Caveat at this moment (will be resolved) ⚠️
+## ⚠️ Limitations (will be resolved) ⚠️
 - Now available only long polling (will be added webhook also).
 
 ## Prerequisites
@@ -46,6 +46,8 @@ dependencies {
 
 ### Core version
 
+Can be used for integrate with any frameworks manually.
+
 `com/example/myproject/App.kt`
 ```kotlin
 fun main(args: Array<String>): Unit {
@@ -63,6 +65,7 @@ fun main(args: Array<String>): Unit {
     val updateReceiver = context.updateReceiver
     // get telegramBot, templater, buttonFactory and other from created context...
     
+    // start and stop for example only, use this methods with starting and stopping your application
     updateReceiver.start()
     readlnOrNull()
     updateReceiver.stop()
@@ -84,6 +87,151 @@ fun BotHandling.startCommand() {
 }
 ```
 
-### Spring and Ktor+Koin
+### Spring version
 
-Get started in [documentation](https://dehuckakpyt.github.io/telegram-bot/get-started.html).
+Ready-to-use solution for use with Spring.
+
+`build.gradle.kts`
+```kotlin
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:$telegram_bot_version")
+}
+```
+`com/example/myproject/config/BotConfig.kt`
+```kotlin
+@EnableTelegramBot
+@Configuration
+class BotConfig {
+
+    @Bean //optional bean
+    fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
+        //configure..
+    }
+}
+```
+`resources/application.properties`
+```
+telegram-bot.token=${TELEGRAM_BOT_TOKEN}
+telegram-bot.username=${TELEGRAM_BOT_USERNAME}
+```
+`com/example/myproject/handler/StartHandler.kt`
+```kotlin
+@HandlerComponent
+class StartHandler : BotHandler({
+    command("/start") {
+        sendMessage("Hello, my name is ${bot.username} :-)")
+    }
+})
+```
+
+### Ktor+Koin version
+
+Ready-to-use solution for use with Ktor+Koin.
+
+`build.gradle.kts`
+```kotlin
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:$telegram_bot_version")
+}
+```
+`com/example/myproject/KtorApp.kt`
+```kotlin
+fun Application.module() {
+    install(Koin) {
+        modules(defaultModule)
+    }
+    install(TelegramBot) {
+        //configure..
+    }
+}
+```
+`resources/application.conf`
+```
+telegram-bot {
+    token = ${TELEGRAM_BOT_TOKEN}
+    username = ${TELEGRAM_BOT_USERNAME}
+}
+```
+`com/example/myproject/handler/StartHandler.kt`
+```kotlin
+@Factory
+class StartHandler : BotHandler({
+    command("/start") {
+        sendMessage("Hello, my name is ${bot.username} :-)")
+    }
+})
+```
+
+
+## Database integration
+
+> [!WARNING]  
+> And it is <b>highly recommended</b> to use with <b>saving states in database</b>.
+> There are ready-to-use solutions for <a href="spring-jpa.md">Spring JPA</a> and <a href="exposed.md">Exposed</a>.
+> Interfaces to be implemented with saving to the database described <a href="sources.md">here</a>.
+
+### Spring JPA
+
+All you have to do is add a dependency for `source-jpa`:
+
+#### Spring 3.x
+```kotlin
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:$telegram_bot_version")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-jpa:$telegram_bot_version")
+}
+```
+#### Spring 2.7
+```kotlin
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:$telegram_bot_version")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-spring2-jpa:$telegram_bot_version")
+}
+```
+
+#### Available properties
+
+| PROPERTY                                                   | DEFAULT | DESCRIPTION                                                          |
+|------------------------------------------------------------|---------|----------------------------------------------------------------------|
+| `telegram-bot.source-jpa.enabled`                          | `true`  | Disable all default sources                                          |
+| `telegram-bot.source-jpa.message-source.enabled`           | `true`  | Disable default message source                                       |
+| `telegram-bot.source-jpa.chain-source.enabled`             | `true`  | Disable default chain source                                         |
+| `telegram-bot.source-jpa.callback-content-source.enabled`  | `true`  | Disable default callback content source                              |
+| `telegram-bot.source-jpa.callback-content-source.per-user` | `20`    | Max count of contents will be saved for every user (`-1` for ignore) |
+
+### Exposed
+
+To save the state in the database, it is necessary to connect to it using [Exposed](https://github.com/JetBrains/Exposed) ([example](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/example/src/main/kotlin/io/github/dehuckakpyt/telegrambotexample/plugin/DatabaseConnection.kt)).
+Then add the dependency and specify the sources:
+
+```kotlin
+dependencies {
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
+    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-exposed:$telegram_bot_version")
+}
+```
+```kotlin
+val config = TelegramBotConfig().apply {
+    messageSource = { MessageSource.inDatabase }
+    receiving {
+        callbackContentSource = {
+            CallbackContentSource.inDatabase(
+                maxCallbackContentsPerUser = 20
+            )
+        }
+        chainSource = { ChainSource.inDatabase }
+    }
+}
+```
+
+[🔗Full documentation with examples and explanations🔗](https://dehuckakpyt.github.io/telegram-bot/starter-topic.html).

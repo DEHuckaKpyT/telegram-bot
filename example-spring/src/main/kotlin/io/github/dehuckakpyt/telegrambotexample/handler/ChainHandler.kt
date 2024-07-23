@@ -1,14 +1,15 @@
 package io.github.dehuckakpyt.telegrambotexample.handler
 
+import io.github.dehuckakpyt.telegrambot.annotation.HandlerComponent
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
 import io.github.dehuckakpyt.telegrambot.ext.container.chatId
-import io.github.dehuckakpyt.telegrambot.handling.BotHandling
-import io.github.dehuckakpyt.telegrambotexample.template.chain
-import io.github.dehuckakpyt.telegrambotexample.template.chainEnd
-import io.github.dehuckakpyt.telegrambotexample.template.chainOneMore
-import io.github.dehuckakpyt.telegrambotexample.template.chainStartSum
+import io.github.dehuckakpyt.telegrambot.handler.BotHandler
+import io.github.dehuckakpyt.telegrambotexample.holder.MessageTemplateHolder
 
-fun BotHandling.chainCommand() {
+@HandlerComponent
+class ChainHandler(
+    template: MessageTemplateHolder,
+) : BotHandler({
 
     val startSum = 0
 
@@ -16,7 +17,7 @@ fun BotHandling.chainCommand() {
     command("/chain", next = "get target") {
         // чтобы отправить сообщение, можно указать chatId (в этом контексте chatId - чат, в котором пришло сообщение)
         // chain - шаблон сообщения, заданный val BotHandling.chain by template()
-        bot.sendMessage(chatId, chain)
+        bot.sendMessage(chatId, template.chain)
     }
 
     step("get target", next = "sum numbers") {
@@ -25,7 +26,7 @@ fun BotHandling.chainCommand() {
         if (target < 1) throw ChatException("Ожидается положительное число")
 
         // метод with подставляет в шаблон chainStartSum значение переменной target (с помощью FreeMarker)
-        sendMessage(chainStartSum with ("target" to target))
+        sendMessage(template.chainStartSum with ("target" to target))
         // метод transferToNext передаёт переменную в следующий шаг
         transfer(target to startSum)
     }
@@ -39,12 +40,12 @@ fun BotHandling.chainCommand() {
         sum += value
 
         if (sum < target) {
-            sendMessage(chainOneMore with mapOf("sum" to sum, "target" to target))
+            sendMessage(template.chainOneMore with mapOf("sum" to sum, "target" to target))
             // метод next указывает следующий шаг цепочки
             next("sum numbers", target to sum)
             return@step
         }
 
-        sendMessage(chainEnd with mapOf("sum" to sum, "target" to target))
+        sendMessage(template.chainEnd with mapOf("sum" to sum, "target" to target))
     }
-}
+})

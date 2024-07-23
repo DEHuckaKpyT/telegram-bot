@@ -1,9 +1,8 @@
 package io.github.dehuckakpyt.telegrambotexample.runner
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
-import io.github.dehuckakpyt.telegrambot.template.Templating
-import io.github.dehuckakpyt.telegrambot.template.Templating.Companion.with
-import io.github.dehuckakpyt.telegrambotexample.template.runnerNotifyWhenStarted
+import io.github.dehuckakpyt.telegrambot.template.Templater
+import io.github.dehuckakpyt.telegrambotexample.holder.MessageTemplateHolder
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
@@ -19,10 +18,14 @@ import org.springframework.stereotype.Component
 class NotifyWhenStartedRunner(
     // всегда доступен TelegramBot для отправки сообщений
     private val bot: TelegramBot,
-) : CommandLineRunner, Templating {
+    private val template: MessageTemplateHolder,
+    private val templater: Templater,
+) : CommandLineRunner {
     private val chatIdToNotify = 1165327523L
 
     override fun run(vararg args: String): Unit = runBlocking {
-        bot.sendMessage(chatIdToNotify, runnerNotifyWhenStarted with ("botUsername" to bot.username), parseMode = "HTML")
+        with(templater) {
+            bot.sendMessage(chatIdToNotify, template.runnerNotifyWhenStarted with ("botUsername" to bot.username), parseMode = "HTML")
+        }
     }
 }

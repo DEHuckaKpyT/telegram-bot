@@ -4,7 +4,7 @@
 
 All you have to do is add a dependency for `source-jpa`:
 <tabs>
-<tab title="Spring 3.0">
+<tab title="Spring 3.x">
 <code-block lang="kotlin">
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")

@@ -1,7 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.handler
 
-import io.github.dehuckakpyt.telegrambot.context.SpringContext.autowired
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import jakarta.annotation.PostConstruct
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.support.GenericApplicationContext
 
 
 /**
@@ -10,9 +12,13 @@ import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
  *
  * @author Denis Matytsin
  */
-//TODO remake to spring @Autowired and @PostConstruct (or any better solution)
-abstract class BotUpdateHandler(block: BotUpdateHandling.() -> Unit) {
-    init {
-        autowired<BotUpdateHandling>().block()
+abstract class BotUpdateHandler(private val block: BotUpdateHandling.() -> Unit) {
+
+    @Autowired
+    private lateinit var applicationContext: GenericApplicationContext
+
+    @PostConstruct
+    private fun initialize() {
+        applicationContext.getBean(BotUpdateHandling::class.java).block()
     }
 }

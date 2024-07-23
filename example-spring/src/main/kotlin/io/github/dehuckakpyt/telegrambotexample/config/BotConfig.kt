@@ -5,7 +5,10 @@ import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.ext.strategy.invocation.fullSync
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
-import io.github.dehuckakpyt.telegrambotexample.handler.*
+import io.github.dehuckakpyt.telegrambotexample.handler.buttonCommand
+import io.github.dehuckakpyt.telegrambotexample.handler.exceptionCommand
+import io.github.dehuckakpyt.telegrambotexample.handler.templateCommand
+import io.github.dehuckakpyt.telegrambotexample.handler.withArgsCommand
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -27,8 +30,6 @@ class BotConfig {
             exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
 
             handling {
-                startCommand()
-                chainCommand()
                 buttonCommand()
                 templateCommand()
                 exceptionCommand()

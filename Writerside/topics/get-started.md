@@ -4,6 +4,8 @@ To use the library, all you need to do is add a dependency, build a config, spec
 
 <tabs id="bot-creating" group="telegram-bot-code">
     <tab title="Spring" group-key="spring">
+        Ready-to-use solution for use with Spring.
+        <br/>
         <code>build.gradle.kts</code>
         <code-block lang="kotlin">
             repositories {
@@ -18,7 +20,12 @@ To use the library, all you need to do is add a dependency, build a config, spec
         <code-block lang="kotlin">
             @EnableTelegramBot
             @Configuration
-            class BotConfig
+            class BotConfig {
+                @Bean //optional bean
+                fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
+                    //configure..
+                }
+            }
         </code-block>
         <code>resources/application.properties</code>
         <code-block>
@@ -36,6 +43,8 @@ To use the library, all you need to do is add a dependency, build a config, spec
         </code-block>
     </tab>
     <tab title="Ktor + Koin" group-key="ktor">
+        Ready-to-use solution for use with Ktor+Koin.
+        <br/>
         <code>build.gradle.kts</code>
         <code-block lang="kotlin">
             repositories {
@@ -73,6 +82,8 @@ To use the library, all you need to do is add a dependency, build a config, spec
         </code-block>
     </tab>
     <tab title="Core" group-key="core">
+        Can be used for integrate with any frameworks manually.
+        <br/>
         <code>build.gradle.kts</code>
         <code-block lang="kotlin">
             repositories {
@@ -97,6 +108,7 @@ To use the library, all you need to do is add a dependency, build a config, spec
                 val context = TelegramBotFactory.createTelegramBotContext(config)
                 val bot = context.telegramBot
                 val updateReceiver = context.updateReceiver
+                // start and stop for example only, use this methods with starting and stopping your application
                 updateReceiver.start()
                 readlnOrNull()
                 updateReceiver.stop()
@@ -112,3 +124,9 @@ To use the library, all you need to do is add a dependency, build a config, spec
         </code-block>
     </tab>
 </tabs>
+
+<note>
+    And it is <b>highly recommended</b> to use with <b>saving states in database</b>.
+    There are ready-to-use solutions for <a href="spring-jpa.md">Spring JPA</a> and <a href="exposed.md">Exposed</a>.
+    Interfaces to be implemented with saving to the database described <a href="sources.md">here</a>.
+</note>

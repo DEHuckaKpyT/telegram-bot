@@ -34,7 +34,7 @@ internal class LongPollingUpdateReceiver(
             try {
                 receiveUpdates()
             } catch (e: ConnectionClosedException) {
-                logger.info("Telegram-bot's (${bot.username}) client was stopped.")
+                logger.info("Telegram-bot's (${bot.username}) client was closed.")
                 return
             } catch (throwable: Throwable) {
                 logger.error("Internal error. Receiving updates will be resumed after $delayBetweenTries milliseconds.", throwable)
