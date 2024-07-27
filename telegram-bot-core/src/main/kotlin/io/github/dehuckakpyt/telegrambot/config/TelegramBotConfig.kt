@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
-import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingConfig
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.template.Templater
 
 
 /**
@@ -41,14 +41,11 @@ class TelegramBotConfig(
 
     /** Source for saving messages */
     var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null,
-) {
-    var templating: TelegramBotTemplatingConfig = TelegramBotTemplatingConfig()
-    var receiving: UpdateReceiverConfig = UpdateReceiverConfig()
 
-    /** Configure templating */
-    fun templating(block: TelegramBotTemplatingConfig.() -> Unit) {
-        templating.apply(block)
-    }
+    /** Templater for build message templates */
+    var templater: (TelegramBotActualConfig.() -> Templater)? = null,
+) {
+    var receiving: UpdateReceiverConfig = UpdateReceiverConfig()
 
     /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit) {

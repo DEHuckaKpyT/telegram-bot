@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.chain
 
-import io.github.dehuckakpyt.telegrambot.ext.executeQuery
-import io.github.dehuckakpyt.telegrambot.ext.readQuery
+import io.github.dehuckakpyt.telegrambot.ext.transaction.executeQuery
+import io.github.dehuckakpyt.telegrambot.ext.transaction.readQuery
 import io.github.dehuckakpyt.telegrambot.model.Chains
 import io.github.dehuckakpyt.telegrambot.model.DatabaseChain
 import io.github.dehuckakpyt.telegrambot.model.source.Chain

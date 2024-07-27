@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":telegram-bot-core"))
     implementation(project(":telegram-bot-spring"))
     implementation(project(":telegram-bot-source-jpa"))
+    implementation(project(":telegram-bot-templater-freemarker"))
     //endregion dehuckakpyt
 
     //region other

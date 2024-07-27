@@ -130,3 +130,33 @@ To use the library, all you need to do is add a dependency, build a config, spec
     There are ready-to-use solutions for <a href="spring-jpa.md">Spring JPA</a> and <a href="exposed.md">Exposed</a>.
     Interfaces to be implemented with saving to the database described <a href="sources.md">here</a>.
 </note>
+
+
+## Containing modules
+
+### Common
+```text
+io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%
+io.github.dehuckakpyt.telegrambot:telegram-bot-spring:%current_version%
+io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:%current_version%
+```
+
+### Testing
+Link to <a href="testing.md">Testing</a>.
+```text
+io.github.dehuckakpyt.telegrambot:telegram-bot-test:%current_version%
+```
+
+### Database integration
+Link to <a href="spring-jpa.md">Spring JPA</a>, to <a href="exposed.md">Exposed</a>.
+```text
+io.github.dehuckakpyt.telegrambot:telegram-bot-source-jpa:%current_version%
+io.github.dehuckakpyt.telegrambot:telegram-bot-source-spring2-jpa:%current_version%
+io.github.dehuckakpyt.telegrambot:telegram-bot-source-exposed:%current_version%
+```
+
+### FreeMarker integration
+Link to <a href="templates.md">Templating</a>.
+```text
+io.github.dehuckakpyt.telegrambot:telegram-bot-templater-freemarker:%current_version%
+```

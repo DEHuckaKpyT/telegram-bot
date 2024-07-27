@@ -6,7 +6,6 @@ import io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.TelegramBotReceiverActualConfigImpl
-import io.github.dehuckakpyt.telegrambot.config.template.TelegramBotTemplatingActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.container.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContextImpl
@@ -17,7 +16,6 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionH
 import io.github.dehuckakpyt.telegrambot.ext.empty
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactoryImpl
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactoryImpl
-import io.github.dehuckakpyt.telegrambot.formatter.HtmlFormatterImpl
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
@@ -31,7 +29,7 @@ import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationSmartSyncStrategy
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
-import io.github.dehuckakpyt.telegrambot.template.TemplaterImpl
+import io.github.dehuckakpyt.telegrambot.template.RegexTemplater
 
 
 /**
@@ -74,23 +72,15 @@ object TelegramBotFactory {
         actual.username = config.username ?: throw IllegalArgumentException("Telegram-bot USERNAME must not be empty!")
         actual.messageSource = config.messageSource?.invoke(actual) ?: EmptyMessageSource()
         actual.telegramBot = TelegramBotImpl(actual.token, actual.username, actual.messageSource)
+        actual.templater = config.templater?.invoke(actual) ?: RegexTemplater()
 
         context.messageSource = actual.messageSource
         context.telegramBot = actual.telegramBot
+        context.templater = actual.templater
 
-        buildTemplating(config, actual, context)
         buildReceiving(config, actual, context)
 
         return context
-    }
-
-    private fun buildTemplating(config: TelegramBotConfig, actual: TelegramBotActualConfigImpl, context: TelegramBotContextImpl) = with(config.templating) {
-        val actualTemplating = TelegramBotTemplatingActualConfigImpl()
-        actual.templating = actualTemplating
-        actualTemplating.htmlFormatter = htmlFormatter?.invoke(actual) ?: HtmlFormatterImpl()
-        actualTemplating.templater = TemplaterImpl(freemarkerConfig, actualTemplating.htmlFormatter)
-
-        context.templater = actualTemplating.templater
     }
 
     private fun buildReceiving(config: TelegramBotConfig, actual: TelegramBotActualConfigImpl, context: TelegramBotContextImpl) = with(config.receiving) {
@@ -103,8 +93,8 @@ object TelegramBotFactory {
         actualReceiving.callbackSerializer = callbackSerializer?.invoke(actual) ?: SimpleCallbackSerializer(actualReceiving.callbackContentSource, actualReceiving.contentConverter)
         val buttonFactory = ButtonFactoryImpl(actualReceiving.callbackSerializer)
         actualReceiving.invocationStrategy = invocationStrategy?.invoke(actual) ?: HandlerInvocationSmartSyncStrategy()
-        actualReceiving.exceptionHandler = exceptionHandler?.invoke(actual) ?: ExceptionHandlerImpl(actual.telegramBot, actualReceiving.messageTemplate, actual.templating.templater)
-        actualReceiving.chainExceptionHandler = chainExceptionHandler?.invoke(actual) ?: ChainExceptionHandlerImpl(actualReceiving.messageTemplate, actual.templating.templater)
+        actualReceiving.exceptionHandler = exceptionHandler?.invoke(actual) ?: ExceptionHandlerImpl(actual.telegramBot, actualReceiving.messageTemplate, actual.templater)
+        actualReceiving.chainExceptionHandler = chainExceptionHandler?.invoke(actual) ?: ChainExceptionHandlerImpl(actualReceiving.messageTemplate, actual.templater)
 
         val chainResolver = ChainResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, actualReceiving.chainExceptionHandler, actualReceiving.contentConverter)
         val messageArgumentFactories: List<MessageContainerFactory> = listOf(
@@ -119,8 +109,8 @@ object TelegramBotFactory {
         val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, actualReceiving.invocationStrategy, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
         val eventUpdateResolver = EventUpdateResolver()
 
-        val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templating.templater, buttonFactory)
-        val botUpdateHandling = BotUpdateHandling(actual.telegramBot, eventUpdateResolver, actualReceiving.chainSource, actual.templating.templater, buttonFactory)
+        val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templater, buttonFactory)
+        val botUpdateHandling = BotUpdateHandling(actual.telegramBot, eventUpdateResolver, actualReceiving.chainSource, actual.templater, buttonFactory)
         handling.invoke(botHandling)
         update.invoke(botUpdateHandling)
 

@@ -2,8 +2,10 @@ package io.github.dehuckakpyt.telegrambotexample.config
 
 import io.github.dehuckakpyt.telegrambot.annotation.EnableTelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.ext.dynamicFreeMarker
 import io.github.dehuckakpyt.telegrambot.ext.strategy.invocation.fullSync
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
+import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.buttonCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.exceptionCommand
@@ -25,9 +27,11 @@ class BotConfig {
 
     @Bean
     fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
+        templater = { Templater.dynamicFreeMarker }
+
         receiving {
             invocationStrategy = { HandlerInvocationStrategy.fullSync }
-            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
+            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
 
             handling {
                 buttonCommand()

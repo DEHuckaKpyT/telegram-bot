@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.ext.executeQuery
-import io.github.dehuckakpyt.telegrambot.ext.readQuery
+import io.github.dehuckakpyt.telegrambot.ext.transaction.executeQuery
+import io.github.dehuckakpyt.telegrambot.ext.transaction.readQuery
 import io.github.dehuckakpyt.telegrambot.model.CallbackContents
 import io.github.dehuckakpyt.telegrambot.model.DatabaseCallbackContent
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent

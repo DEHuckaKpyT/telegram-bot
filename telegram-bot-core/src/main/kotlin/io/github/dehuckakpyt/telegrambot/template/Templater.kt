@@ -8,9 +8,12 @@ package io.github.dehuckakpyt.telegrambot.template
  * @author Denis Matytsin
  */
 interface Templater {
-    infix fun String.with(pair: Pair<String, Any>): String
 
-    fun String.with(vararg pairs: Pair<String, Any>): String
+    infix fun String.with(pair: Pair<String, Any>): String = with(mutableMapOf(pair))
+
+    fun String.with(vararg pairs: Pair<String, Any>): String = with(mutableMapOf(*pairs))
 
     infix fun String.with(instance: Any): String
+
+    companion object
 }

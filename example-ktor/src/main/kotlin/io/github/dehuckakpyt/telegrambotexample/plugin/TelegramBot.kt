@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambotexample.plugin
 
-import io.github.dehuckakpyt.telegrambot.config.inDatabase
+import io.github.dehuckakpyt.telegrambot.ext.source.inDatabase
 import io.github.dehuckakpyt.telegrambot.plugin.TelegramBot
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -34,13 +34,7 @@ fun Application.configureTelegramBot() {
             chainSource = { ChainSource.inDatabase }
 
             // для обработки своих исключений
-            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
-
-            templating {
-                freemarker {
-                    defaultEncoding = "UTF-8"
-                }
-            }
+            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
 
             handling {
                 startCommand()

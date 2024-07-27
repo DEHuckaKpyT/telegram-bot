@@ -18,19 +18,13 @@ suspend fun main(args: Array<String>): Unit {
         token = "<>"
         username = "<>"
 
-        templating {
-            freemarker {
-                defaultEncoding = "UTF-8"
-            }
-        }
-
         receiving {
             longPolling {
                 limit = 10
                 timeout = 25
             }
 
-            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
+            exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
 
             handling {
                 startCommand()

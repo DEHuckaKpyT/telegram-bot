@@ -18,7 +18,7 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 - Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
 - Easy to **write tests** for your bot.
 
-## ⚠️ Caveat (will be resolved) ⚠️
+## ⚠️ Limitations (will be resolved) ⚠️
 - Now available only long polling (will be added webhook also).
 
 ## Prerequisites
@@ -120,45 +120,50 @@ Most of the examples will be shown on the core version only.</note>
 
 <tabs id="complex-example" group="telegram-bot-code">
     <tab title="Spring" group-key="spring">
-        <code>com/example/myproject/handler/Template.kt</code>
+        <code>com/example/myproject/holder/MessageTemplateHolder.kt</code>
         <code-block lang="kotlin">
+        @ConfigurationProperties("telegram-bot.template")
+        class MessageTemplateHolder {
             // from application.yml telegram-bot.template.chain = "Let's play a game. Write any positive integer."
-            val GameChainHandler.chain by property()
+            lateinit var chain: String
             // from application.yml telegram-bot.template.chain-start-sum = "I will now add the numbers entered until the sum of them is greater than or equal to ${target}."
-            val GameChainHandler.chainStartSum by property()
+            lateinit var chainStartSum: String
             // from application.yml telegram-bot.template.chain-one-more = "The current amount is ${sum}. Target: ${target}."
-            val GameChainHandler.chainOneMore by property() 
+            lateinit var chainOneMore: String
             // from application.yml telegram-bot.template.chain-end = "Let's play a game. Write any positive integer."
-            val GameChainHandler.chainEnd by property() 
+            lateinit var chainEnd: String
             // from application.yml telegram-bot.template.chain-integer-is-expected = "Integer is expected."
-            val GameChainHandler.chainIntegerIsExpected by property() 
+            lateinit var chainIntegerIsExpected: String
             // from application.yml telegram-bot.template.chain-positive-is-expected = "Positive integer is expected."
-            val GameChainHandler.chainPositiveIsExpected by property() 
+            lateinit var chainPositiveIsExpected: String
+        }
         </code-block>
         <code>com/example/myproject/handler/GameChainHandler.kt</code>
         <code-block lang="kotlin">
             @HandlerComponent
-            class GameChainHandler : BotHandler({
+            class GameChainHandler(
+                private val template: MessageTemplateHolder,
+            ) : BotHandler({
                 val startSum = 0
-                command("/chain", next = "get target") {
-                    sendMessage(chain)
+                command("/chain", next = "get_target") {
+                    sendMessage(template.chain)
                 }
-                step("get target", next = "sum numbers") {
-                    val target = text.toIntOrNull() ?: throw ChatException(chainIntegerIsExpected)
-                    if (target &lt; 1) throw ChatException(chainPositiveIsExpected)
-                    sendMessage(chainStartSum with ("target" to target))
+                step("get_target", next = "sum_numbers") {
+                    val target = text.toIntOrNull() ?: throw ChatException(template.chainIntegerIsExpected)
+                    if (target &lt; 1) throw ChatException(template.chainPositiveIsExpected)
+                    sendMessage(template.chainStartSum with ("target" to target))
                     transfer(target to startSum)
                 }
-                step("sum numbers") {
-                    val value = text.toIntOrNull() ?: throw ChatException(chainIntegerIsExpected)
+                step("sum_numbers") {
+                    val value = text.toIntOrNull() ?: throw ChatException(template.chainIntegerIsExpected)
                     var (target, sum) = transferred&lt;Pair&lt;Int, Int&gt;&gt;()
                     sum += value
                     if (sum &lt; target) {
-                        sendMessage(chainOneMore with mapOf("sum" to sum, "target" to target))
-                        next("sum numbers", target to sum)
+                        sendMessage(template.chainOneMore with mapOf("sum" to sum, "target" to target))
+                        next("sum_numbers", target to sum)
                         return@step
                     }
-                    sendMessage(chainEnd with mapOf("sum" to sum, "target" to target))
+                    sendMessage(template.chainEnd with mapOf("sum" to sum, "target" to target))
                 }
             })
         </code-block>
@@ -172,7 +177,7 @@ Most of the examples will be shown on the core version only.</note>
                 private val feedbackService: FeedbackService,
             ) : BotHandler({
                 command("/buy") {
-                    sendMessage("Выберите действие", replyMarkup = inlineKeyboard(
+                    sendMessage("Make your choice", replyMarkup = inlineKeyboard(
                         callbackButton("Buy slippers", next = "buy", content = "some id 1"),
                         callbackButton("Buy hats", next = "buy", content = "some id 2"),
                         callbackButton("Give feedback", next = "get_feedback_intro")))

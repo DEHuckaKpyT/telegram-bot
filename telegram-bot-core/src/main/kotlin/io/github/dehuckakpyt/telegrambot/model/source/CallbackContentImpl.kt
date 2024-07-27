@@ -14,4 +14,18 @@ class CallbackContentImpl(
     override val chatId: Long,
     override val fromId: Long,
     override val content: String,
-) : CallbackContent
+) : CallbackContent {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CallbackContentImpl
+
+        return callbackId == other.callbackId
+    }
+
+    override fun hashCode(): Int {
+        return callbackId.hashCode()
+    }
+}

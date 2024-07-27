@@ -22,7 +22,7 @@ internal class LongPollingUpdateReceiver(
 
     private val scope = CoroutineScope(Dispatchers.Default)
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val delayBetweenTries = 5000L
+    private val delayBetweenTries: Long = 5000
     private var lastUpdateId: Long? = null
 
     override fun start(): Unit {

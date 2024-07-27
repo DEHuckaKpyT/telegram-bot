@@ -4,54 +4,47 @@
 
 ```kotlin
 class TelegramBotConfig {
-    // telegram bot token
-    var token: String
-    // telegram bot username - need for command matching in group chats
-    var username: String
 
-    // source for save messages from user and bot
-    var messageSource: MessageSource?
+    /** Telegram bot token */
+    var token: String? = null,
+    /** Telegram bot username */
+    var username: String? = null,
+    /** Source for saving messages */
+    var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null,
+    /** Templater for build message templates */
+    var templater: (TelegramBotActualConfig.() -> Templater)? = null,
 
-    fun templating(block: TelegramBotTemplatingConfig.() -> Unit)
-
+    /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit)
 }
 ```
 
 ```kotlin
-class TelegramBotTemplatingConfig {
-    // formatter for methods 'cleanHtml()' and 'escapeHtml()' in templating
-    var htmlFormatter: HtmlFormatter?
-
-    // configuration for freemarker library
-    fun freemarker(block: Configuration.() -> Unit)
-}
-```
-
-```kotlin
 class UpdateReceiverConfig {
-    // source for working callback data with more than 64 symbols
-    var callbackContentSource: CallbackContentSource?
-    // source for save chain state
-    var chainSource: ChainSource?
-    // delimiter for callback data values (using in callbackSerializer)
-    var callbackDataDelimiter: Char?
-    // converter from/to string callback data (using in callbackSerializer)
-    var contentConverter: ContentConverter?
-    // serializer for callback data - need for working callback buttons
-    var callbackSerializer: CallbackSerializer?
-    // messages to be display to the user when an internal exception throws
-    var messageTemplate: MessageTemplate?
-    // handler for processing exceptions in handlers
-    var exceptionHandler: ExceptionHandler?
-    // handler for processing internal errors (like unknown command)
-    var chainExceptionHandler: ChainExceptionHandler?
 
-    // configuration for long polling (webhook coming soon)
+    /** Source for saving callback.data */
+    var callbackContentSource: (TelegramBotActualConfig.() -> CallbackContentSource)? = null,
+    /** Source for saving chain state */
+    var chainSource: (TelegramBotActualConfig.() -> ChainSource)? = null,
+    /** Converter from object to string and back */
+    var contentConverter: (TelegramBotActualConfig.() -> ContentConverter)? = null,
+    /** Serializer from string to callback.data and back */
+    var callbackSerializer: (TelegramBotActualConfig.() -> CallbackSerializer)? = null,
+    /** Text templates for show to user when exception throws */
+    var messageTemplate: (TelegramBotActualConfig.() -> MessageTemplate)? = null,
+    /** Strategy for invoking BotHandler actions */
+    var invocationStrategy: (TelegramBotActualConfig.() -> HandlerInvocationStrategy)? = null,
+    /** Handler for catch internal exceptions */
+    var exceptionHandler: (TelegramBotActualConfig.() -> ExceptionHandler)? = null,
+    /** Handler for process exceptions in message chains */
+    var chainExceptionHandler: (TelegramBotActualConfig.() -> ChainExceptionHandler)? = null,
+            
+    /** Activate and configure long polling for receiving updates */
     fun longPolling(block: LongPollingConfig.() -> Unit)
-
-    // handler registration
+    /** Declare chain handlers */
     fun handling(block: BotHandling.() -> Unit)
+    /** Declare any update handlers */
+    fun update(block: BotUpdateHandling.() -> Unit)
 }
 ```
 
@@ -70,8 +63,8 @@ You can use already initialized elements for creation.
                 fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
                     receiving {
                         // you can use other initialized elements in lambda
-                        // (for example, 'telegramBot', 'receiving.messageTemplate', 'templating.templater')
-                        exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
+                        // (for example, 'telegramBot', 'receiving.messageTemplate', 'templater')
+                        exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
                     }
                 }
             }
@@ -83,8 +76,8 @@ You can use already initialized elements for creation.
                 install(TelegramBot) {
                     receiving {
                         // you can use other initialized elements in lambda
-                        // (for example, 'telegramBot', 'receiving.messageTemplate', 'templating.templater')
-                        exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
+                        // (for example, 'telegramBot', 'receiving.messageTemplate', 'templater')
+                        exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
                     }
                 }
             }
@@ -95,8 +88,8 @@ You can use already initialized elements for creation.
             val config = TelegramBotConfig().apply {
                 receiving {
                     // you can use other initialized elements in lambda
-                    // (for example, 'telegramBot', 'receiving.messageTemplate', 'templating.templater')
-                    exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templating.templater) }
+                    // (for example, 'telegramBot', 'receiving.messageTemplate', 'templater')
+                    exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
                 }
             }
             val context = TelegramBotFactory.createTelegramBotContext(config)

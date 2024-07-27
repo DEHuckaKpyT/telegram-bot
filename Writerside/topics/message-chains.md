@@ -1,8 +1,8 @@
-# Message chains
+# Message chains (FSM)
 
 The most valuable thing in the library is the convenient construction of a dialog with the user (let name it the "chain").
 
-Most dialogs with bot begin with the command. You can also start a chain with a callback, reaction etc.
+Most dialogs with bot begin with the command. You can also start a chain with a callback, etc.
 
 <tabs id="message-chain-start" group="telegram-bot-code">
     <tab title="Spring" group-key="spring">
@@ -38,5 +38,7 @@ Most dialogs with bot begin with the command. You can also start a chain with a 
         </code-block>
     </tab>
 </tabs>
-<note>Everything that works in the core version also works in the frameworks.
-Such as the extension method from BotHandling. Most of the examples will be shown on the core version only.</note>
+<note>
+    Everything that works in the core version also works in the frameworks.
+    Such as the extension method from BotHandling. Most of the examples will be shown on the core version only.
+</note>

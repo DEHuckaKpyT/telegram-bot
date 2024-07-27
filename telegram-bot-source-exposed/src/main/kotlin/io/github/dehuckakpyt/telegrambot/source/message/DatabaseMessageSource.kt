@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.source.message
 
-import io.github.dehuckakpyt.telegrambot.ext.executeQuery
+import io.github.dehuckakpyt.telegrambot.ext.transaction.executeQuery
 import io.github.dehuckakpyt.telegrambot.model.DatabaseTelegramMessage
 
 class DatabaseMessageSource : MessageSource {
