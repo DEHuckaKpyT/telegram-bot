@@ -3122,6 +3122,8 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
      * @param messageId Identifier of a message to pin
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be pinned
      * @param disableNotification Pass *True* if it is not necessary to send a notification to all
      * chat members about the new pinned message. Notifications are always disabled in channels and
      * private chats.
@@ -3129,10 +3131,12 @@ public interface TelegramBotApiExt : TelegramBotApi {
     public suspend fun pinChatMessage(
         chatId: Long,
         messageId: Long,
+        businessConnectionId: String? = null,
         disableNotification: Boolean? = null,
     ): Boolean = pinChatMessage(
         chatId = chatId.toString(),
         messageId = messageId,
+        businessConnectionId = businessConnectionId,
         disableNotification = disableNotification,
     )
 
@@ -3144,12 +3148,18 @@ public interface TelegramBotApiExt : TelegramBotApi {
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
-     * @param messageId Identifier of a message to unpin. If not specified, the most recent pinned
-     * message (by sending date) will be unpinned.
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be unpinned
+     * @param messageId Identifier of the message to unpin. Required if *business_connection_id* is
+     * specified. If not specified, the most recent pinned message (by sending date) will be unpinned.
      */
-    public suspend fun unpinChatMessage(chatId: Long, messageId: Long? = null): Boolean =
-            unpinChatMessage(
+    public suspend fun unpinChatMessage(
+        chatId: Long,
+        businessConnectionId: String? = null,
+        messageId: Long? = null,
+    ): Boolean = unpinChatMessage(
         chatId = chatId.toString(),
+        businessConnectionId = businessConnectionId,
         messageId = messageId,
     )
 
@@ -3924,10 +3934,10 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * @param thumbnail A **.WEBP** or **.PNG** image with the thumbnail, must be up to 128
      * kilobytes in size and have a width and height of exactly 100px, or a **.TGS** animation with a
      * thumbnail up to 32 kilobytes in size (see
-     * [https://core.telegram.org/stickers#animated-sticker-requirements](https://core.telegram.org/stickers#animated-sticker-requirements)
+     * [https://core.telegram.org/stickers#animation-requirements](https://core.telegram.org/stickers#animation-requirements)
      * for animated sticker technical requirements), or a **WEBM** video with the thumbnail up to 32
      * kilobytes in size; see
-     * [https://core.telegram.org/stickers#video-sticker-requirements](https://core.telegram.org/stickers#video-sticker-requirements)
+     * [https://core.telegram.org/stickers#video-requirements](https://core.telegram.org/stickers#video-requirements)
      * for video sticker technical requirements. Pass a *file_id* as a String to send a file that
      * already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file
      * from the Internet, or upload a new one using multipart/form-data. [More information on Sending

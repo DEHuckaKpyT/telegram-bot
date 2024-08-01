@@ -35,6 +35,8 @@ import kotlin.String
  * @param canConnectToBusiness *Optional*. *True*, if the bot can be connected to a Telegram
  * Business account to receive its messages. Returned only in
  * [getMe](https://core.telegram.org/bots/api/#getme).
+ * @param hasMainWebApp *Optional*. *True*, if the bot has a main Web App. Returned only in
+ * [getMe](https://core.telegram.org/bots/api/#getme).
  */
 public data class User(
     /**
@@ -117,4 +119,11 @@ public data class User(
     @get:JsonProperty("can_connect_to_business")
     @param:JsonProperty("can_connect_to_business")
     public val canConnectToBusiness: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the bot has a main Web App. Returned only in
+     * [getMe](https://core.telegram.org/bots/api/#getme).
+     */
+    @get:JsonProperty("has_main_web_app")
+    @param:JsonProperty("has_main_web_app")
+    public val hasMainWebApp: Boolean? = null,
 )

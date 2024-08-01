@@ -13,6 +13,8 @@ internal data class PinChatMessage(
     public val chatId: String,
     @get:JsonProperty("message_id")
     public val messageId: Long,
+    @get:JsonProperty("business_connection_id")
+    public val businessConnectionId: String? = null,
     @get:JsonProperty("disable_notification")
     public val disableNotification: Boolean? = null,
 )

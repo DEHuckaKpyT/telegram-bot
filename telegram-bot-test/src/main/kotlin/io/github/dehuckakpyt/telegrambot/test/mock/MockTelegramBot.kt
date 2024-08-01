@@ -505,10 +505,15 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun pinChatMessage(
         chatId: String,
         messageId: Long,
+        businessConnectionId: String?,
         disableNotification: Boolean?,
     ): Boolean = mockk()
 
-    override suspend fun unpinChatMessage(chatId: String, messageId: Long?): Boolean = mockk()
+    override suspend fun unpinChatMessage(
+        chatId: String,
+        businessConnectionId: String?,
+        messageId: Long?,
+    ): Boolean = mockk()
 
     override suspend fun unpinAllChatMessages(chatId: String): Boolean = mockk()
 

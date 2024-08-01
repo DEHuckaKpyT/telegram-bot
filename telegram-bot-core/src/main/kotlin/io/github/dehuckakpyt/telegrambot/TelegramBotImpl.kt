@@ -124,7 +124,7 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 10.07.2024.
+ * Created on 01.08.2024.
  *
  * @author KScript
  */
@@ -1007,17 +1007,23 @@ public class TelegramBotImpl(
     override suspend fun pinChatMessage(
         chatId: String,
         messageId: Long,
+        businessConnectionId: String?,
         disableNotification: Boolean?,
     ): Boolean = client.postJson("pinChatMessage", PinChatMessage(
             chatId = chatId, 
             messageId = messageId, 
+            businessConnectionId = businessConnectionId, 
             disableNotification = disableNotification
         )
     )
 
-    override suspend fun unpinChatMessage(chatId: String, messageId: Long?): Boolean =
-            client.postJson("unpinChatMessage", UnpinChatMessage(
+    override suspend fun unpinChatMessage(
+        chatId: String,
+        businessConnectionId: String?,
+        messageId: Long?,
+    ): Boolean = client.postJson("unpinChatMessage", UnpinChatMessage(
             chatId = chatId, 
+            businessConnectionId = businessConnectionId, 
             messageId = messageId
         )
     )
