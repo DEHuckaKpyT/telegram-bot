@@ -28,6 +28,10 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     testImplementation("io.mockk:mockk:1.13.9")
     //endregion test
+
+    //region temp
+    runtimeOnly("commons-codec:commons-codec:1.17.1") //TODO remove when dependency will be resolved in "io.ktor:ktor-client-apache-jvm:$ktor_version"
+    //endregion temp
 }
 
 tasks.withType<Test> {

@@ -22,13 +22,18 @@ dependencies {
 
     //region test
     testImplementation("org.springframework.boot:spring-boot-starter-test:$spring_version")
-    testImplementation("com.github.database-rider:rider-spring:1.41.1")
+    testImplementation("com.github.database-rider:rider-spring:1.44.0")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
-    testImplementation("org.testcontainers:postgresql:1.19.3")
+    testImplementation("org.testcontainers:postgresql:1.20.1")
     //endregion test
+
+    //region temp
+    runtimeOnly("org.postgresql:postgresql:42.7.3") //TODO remove when dependency will be resolved in "com.github.database-rider:rider-spring:1.44.0"
+    runtimeOnly("org.apache.commons:commons-compress:1.27.0") //TODO remove when dependency will be resolved in "org.testcontainers:postgresql:1.20.1"
+    //endregion temp
 }
 
 allOpen {
