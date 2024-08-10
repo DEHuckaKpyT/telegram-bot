@@ -31,8 +31,8 @@ dependencies {
     //endregion test
 
     //region temp
-    runtimeOnly("org.postgresql:postgresql:42.7.3") //TODO remove when dependency will be resolved in "com.github.database-rider:rider-spring:1.44.0"
-    runtimeOnly("org.apache.commons:commons-compress:1.27.0") //TODO remove when dependency will be resolved in "org.testcontainers:postgresql:1.20.1"
+    testImplementation("org.postgresql:postgresql:42.7.3") //TODO remove when dependency will be resolved in "com.github.database-rider:rider-spring:1.44.0"
+    testImplementation("org.apache.commons:commons-compress:1.27.0") //TODO remove when dependency will be resolved in "org.testcontainers:postgresql:1.20.1"
     //endregion temp
 }
 
