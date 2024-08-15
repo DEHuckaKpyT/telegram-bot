@@ -280,6 +280,7 @@ internal class MockTelegramBot : TelegramBot {
         chatId: String,
         starCount: Int,
         media: Iterable<InputPaidMedia>,
+        businessConnectionId: String?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -485,6 +486,19 @@ internal class MockTelegramBot : TelegramBot {
         expireDate: Long?,
         memberLimit: Int?,
         createsJoinRequest: Boolean?,
+    ): ChatInviteLink = mockk()
+
+    override suspend fun createChatSubscriptionInviteLink(
+        chatId: String,
+        subscriptionPeriod: Int,
+        subscriptionPrice: Int,
+        name: String?,
+    ): ChatInviteLink = mockk()
+
+    override suspend fun editChatSubscriptionInviteLink(
+        chatId: String,
+        inviteLink: String,
+        name: String?,
     ): ChatInviteLink = mockk()
 
     override suspend fun revokeChatInviteLink(chatId: String, inviteLink: String): ChatInviteLink =

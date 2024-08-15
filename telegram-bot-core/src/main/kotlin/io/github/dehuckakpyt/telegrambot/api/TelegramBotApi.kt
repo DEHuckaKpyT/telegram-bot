@@ -775,13 +775,16 @@ public interface TelegramBotApi {
     ): Message
 
     /**
-     * Use this method to send paid media to channel chats. On success, the sent
+     * Use this method to send paid media. On success, the sent
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
+     * format `@channelusername`). If the chat is a channel, all Telegram Star proceeds from this media
+     * will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
      * @param starCount The number of Telegram Stars that must be paid to buy access to the media
      * @param media A JSON-serialized array describing the media to be sent; up to 10 items
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
      * @param caption Media caption, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the media caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -803,6 +806,7 @@ public interface TelegramBotApi {
         chatId: String,
         starCount: Int,
         media: Iterable<InputPaidMedia>,
+        businessConnectionId: String? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -1137,7 +1141,8 @@ public interface TelegramBotApi {
     /**
      * Use this method to change the chosen reactions on a message. Service messages can't be
      * reacted to. Automatically forwarded messages from a channel to its discussion group have the
-     * same available reactions as messages in the channel. Returns *True* on success.
+     * same available reactions as messages in the channel. Bots can't use paid reactions. Returns
+     * *True* on success.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
@@ -1146,7 +1151,7 @@ public interface TelegramBotApi {
      * @param reaction A JSON-serialized list of reaction types to set on the message. Currently, as
      * non-premium users, bots can set up to one reaction per message. A custom emoji reaction can be
      * used if it is either already present on the message or explicitly allowed by chat
-     * administrators.
+     * administrators. Paid reactions can't be used by bots.
      * @param isBig Pass *True* to set the reaction with a big animation
      */
     public suspend fun setMessageReaction(
@@ -1429,6 +1434,48 @@ public interface TelegramBotApi {
     ): ChatInviteLink
 
     /**
+     * Use this method to create a [subscription invite
+     * link](https://telegram.org/blog/superchannels-star-reactions-subscriptions#star-subscriptions)
+     * for a channel chat. The bot must have the *can_invite_users* administrator rights. The link can
+     * be edited using the method
+     * [editChatSubscriptionInviteLink](https://core.telegram.org/bots/api/#editchatsubscriptioninvitelink)
+     * or revoked using the method
+     * [revokeChatInviteLink](https://core.telegram.org/bots/api/#revokechatinvitelink). Returns the
+     * new invite link as a [ChatInviteLink](https://core.telegram.org/bots/api/#chatinvitelink)
+     * object.
+     *
+     * @param chatId Unique identifier for the target channel chat or username of the target channel
+     * (in the format `@channelusername`)
+     * @param subscriptionPeriod The number of seconds the subscription will be active for before
+     * the next payment. Currently, it must always be 2592000 (30 days).
+     * @param subscriptionPrice The amount of Telegram Stars a user must pay initially and after
+     * each subsequent subscription period to be a member of the chat; 1-2500
+     * @param name Invite link name; 0-32 characters
+     */
+    public suspend fun createChatSubscriptionInviteLink(
+        chatId: String,
+        subscriptionPeriod: Int,
+        subscriptionPrice: Int,
+        name: String? = null,
+    ): ChatInviteLink
+
+    /**
+     * Use this method to edit a subscription invite link created by the bot. The bot must have the
+     * *can_invite_users* administrator rights. Returns the edited invite link as a
+     * [ChatInviteLink](https://core.telegram.org/bots/api/#chatinvitelink) object.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     * @param inviteLink The invite link to edit
+     * @param name Invite link name; 0-32 characters
+     */
+    public suspend fun editChatSubscriptionInviteLink(
+        chatId: String,
+        inviteLink: String,
+        name: String? = null,
+    ): ChatInviteLink
+
+    /**
      * Use this method to revoke an invite link created by the bot. If the primary link is revoked,
      * a new link is automatically generated. The bot must be an administrator in the chat for this to
      * work and must have the appropriate administrator rights. Returns the revoked invite link as
@@ -1660,8 +1707,8 @@ public interface TelegramBotApi {
 
     /**
      * Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be
-     * an administrator in the chat for this to work and must have *can_manage_topics* administrator
-     * rights, unless it is the creator of the topic. Returns *True* on success.
+     * an administrator in the chat for this to work and must have the *can_manage_topics*
+     * administrator rights, unless it is the creator of the topic. Returns *True* on success.
      *
      * @param chatId Unique identifier for the target chat or username of the target supergroup (in
      * the format `@supergroupusername`)
@@ -1726,7 +1773,7 @@ public interface TelegramBotApi {
 
     /**
      * Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot
-     * must be an administrator in the chat for this to work and must have *can_manage_topics*
+     * must be an administrator in the chat for this to work and must have the *can_manage_topics*
      * administrator rights. Returns *True* on success.
      *
      * @param chatId Unique identifier for the target chat or username of the target supergroup (in

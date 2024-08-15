@@ -5,7 +5,7 @@ import io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient
 import kotlin.String
 
 /**
- * Created on 01.08.2024.
+ * Created on 15.08.2024.
  *
  * @author KScript
  */

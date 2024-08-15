@@ -1,7 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
-import com.fasterxml.jackson.`annotation`.JsonProperty
-import kotlin.String
+import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * Represents a [chat member](https://core.telegram.org/bots/api/#chatmember) that has no additional
@@ -13,6 +12,7 @@ import kotlin.String
  *
  * @param status The member's status in the chat, always “member”
  * @param user Information about the user
+ * @param untilDate *Optional*. Date when the user's subscription will expire; Unix time
  */
 public data class ChatMemberMember(
     /**
@@ -27,4 +27,10 @@ public data class ChatMemberMember(
     @get:JsonProperty("user")
     @param:JsonProperty("user")
     override val user: User,
+    /**
+     * *Optional*. Date when the user's subscription will expire; Unix time
+     */
+    @get:JsonProperty("until_date")
+    @param:JsonProperty("until_date")
+    public val untilDate: Long? = null,
 ) : ChatMember

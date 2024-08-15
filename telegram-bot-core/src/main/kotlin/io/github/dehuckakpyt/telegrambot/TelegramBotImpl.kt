@@ -19,6 +19,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CloseGeneralF
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CopyMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CopyMessages
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateChatSubscriptionInviteLink
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateInvoiceLink
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeclineChatJoinRequest
@@ -32,6 +33,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteSticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteStickerSet
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteWebhook
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditChatSubscriptionInviteLink
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditGeneralForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageCaptionByChatIdAndMessageId
@@ -124,7 +126,7 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 01.08.2024.
+ * Created on 15.08.2024.
  *
  * @author KScript
  */
@@ -535,6 +537,7 @@ public class TelegramBotImpl(
         chatId: String,
         starCount: Int,
         media: Iterable<InputPaidMedia>,
+        businessConnectionId: String?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -547,6 +550,7 @@ public class TelegramBotImpl(
         append("chat_id", chatId)
         append("star_count", starCount)
         append("media", client.toJson(media))
+        appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
         appendIfNotNull("caption_entities", client.toJson(captionEntities))
@@ -954,6 +958,32 @@ public class TelegramBotImpl(
             expireDate = expireDate, 
             memberLimit = memberLimit, 
             createsJoinRequest = createsJoinRequest
+        )
+    )
+
+    override suspend fun createChatSubscriptionInviteLink(
+        chatId: String,
+        subscriptionPeriod: Int,
+        subscriptionPrice: Int,
+        name: String?,
+    ): ChatInviteLink = client.postJson("createChatSubscriptionInviteLink",
+            CreateChatSubscriptionInviteLink(
+            chatId = chatId, 
+            subscriptionPeriod = subscriptionPeriod, 
+            subscriptionPrice = subscriptionPrice, 
+            name = name
+        )
+    )
+
+    override suspend fun editChatSubscriptionInviteLink(
+        chatId: String,
+        inviteLink: String,
+        name: String?,
+    ): ChatInviteLink = client.postJson("editChatSubscriptionInviteLink",
+            EditChatSubscriptionInviteLink(
+            chatId = chatId, 
+            inviteLink = inviteLink, 
+            name = name
         )
     )
 

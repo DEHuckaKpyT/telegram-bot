@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.String
+import kotlin.collections.List
 
 /**
  * Describes a transaction with a user.
@@ -13,6 +14,7 @@ import kotlin.String
  * @param type Type of the transaction partner, always “user”
  * @param user Information about the user
  * @param invoicePayload *Optional*. Bot-specified invoice payload
+ * @param paidMedia *Optional*. Information about the paid media bought by the user
  */
 public data class TransactionPartnerUser(
     /**
@@ -33,4 +35,10 @@ public data class TransactionPartnerUser(
     @get:JsonProperty("invoice_payload")
     @param:JsonProperty("invoice_payload")
     public val invoicePayload: String? = null,
+    /**
+     * *Optional*. Information about the paid media bought by the user
+     */
+    @get:JsonProperty("paid_media")
+    @param:JsonProperty("paid_media")
+    public val paidMedia: List<PaidMedia>? = null,
 ) : TransactionPartner

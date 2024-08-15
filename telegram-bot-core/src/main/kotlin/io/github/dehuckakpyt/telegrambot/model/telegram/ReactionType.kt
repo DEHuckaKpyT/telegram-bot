@@ -9,6 +9,7 @@ import kotlin.String
  *
  * * [ReactionTypeEmoji](https://core.telegram.org/bots/api/#reactiontypeemoji)
  * * [ReactionTypeCustomEmoji](https://core.telegram.org/bots/api/#reactiontypecustomemoji)
+ * * [ReactionTypePaid](https://core.telegram.org/bots/api/#reactiontypepaid)
  *
  * @see [ReactionType] (https://core.telegram.org/bots/api/#reactiontype)
  *
@@ -23,6 +24,7 @@ import kotlin.String
 @JsonSubTypes(
     JsonSubTypes.Type(value = ReactionTypeEmoji::class, name = "emoji"),
     JsonSubTypes.Type(value = ReactionTypeCustomEmoji::class, name = "custom_emoji"),
+    JsonSubTypes.Type(value = ReactionTypePaid::class, name = "paid"),
 )
 public sealed interface ReactionType {
     public val type: String
