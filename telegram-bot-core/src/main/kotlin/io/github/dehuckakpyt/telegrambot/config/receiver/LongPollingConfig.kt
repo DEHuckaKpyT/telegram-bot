@@ -8,6 +8,9 @@ package io.github.dehuckakpyt.telegrambot.config.receiver
  * @author Denis Matytsin
  */
 data class LongPollingConfig(
+
     public var limit: Int? = null,
+
+    /** Max available value now is 10 min because of client timeout is 300_000 milliseconds (it will be in config too) */
     public var timeout: Int? = 30,
 )

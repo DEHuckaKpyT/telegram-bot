@@ -43,7 +43,7 @@ public class TelegramApiClient(
             register(Json, JacksonConverter(MAPPER))
         }
         engine {
-            socketTimeout = 0
+            socketTimeout = 600_000
         }
         defaultRequest {
             url {
