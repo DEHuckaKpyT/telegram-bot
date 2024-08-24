@@ -13,7 +13,7 @@ allprojects {
     version = "0.10.2b"
 }
 
-subprojects {
+allprojects {
     repositories {
         mavenCentral()
     }
