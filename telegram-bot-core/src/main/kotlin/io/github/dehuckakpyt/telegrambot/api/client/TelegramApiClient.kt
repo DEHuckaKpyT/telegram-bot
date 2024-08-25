@@ -2,10 +2,7 @@ package io.github.dehuckakpyt.telegrambot.api.client
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.util.DefaultIndenter
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -27,6 +24,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
+import io.ktor.http.URLProtocol.Companion.HTTPS
 import io.ktor.serialization.jackson.*
 
 /**
@@ -47,11 +45,25 @@ public class TelegramApiClient(
         }
         defaultRequest {
             url {
-                protocol = URLProtocol.HTTPS
+                protocol = HTTPS
                 host = "api.telegram.org"
                 path("/bot$token/")
             }
         }
+    }
+
+    private val hiddenToken: String = buildString {
+        val visibleFirstCharsCount = 4
+        val visibleLastCharsCount = 8
+
+        val hideAfterFirstCharsCount = token.substringBefore(":").length - visibleFirstCharsCount
+        val hideBeforeLastCharsCount = token.substringAfter(":").length - visibleLastCharsCount
+
+        append(token.substring(0, visibleFirstCharsCount))
+        append("*".repeat(hideAfterFirstCharsCount))
+        append(":")
+        append("*".repeat(hideBeforeLastCharsCount))
+        append(token.substring(token.length - visibleLastCharsCount))
     }
 
     suspend inline fun <reified R : Any> get(method: String): R = handleRequest(client.get(method))
@@ -86,16 +98,16 @@ public class TelegramApiClient(
 
     fun throwException(response: HttpResponse, telegramResponse: TelegramResponse<*>, body: Any? = null) {
         throw TelegramBotApiException(
-            """Request to Telegram Error. 
-        Request
+            """
+        Failed request to telegram:
+        Request info
         Method: ${response.request.method.value}
         Content-type: ${response.request.contentType()?.contentType}
-        Url: ${response.request.url}
-        Body:
-        ${toJson(body)}
+        Url: ${response.request.url.toString().replace(token, hiddenToken)}
+        Body: ${toJson(body)}
         
-        Response
-        Code: ${telegramResponse.errorCode}. 
+        Response info
+        Code: ${telegramResponse.errorCode}
         Description: ${telegramResponse.description}"""
         )
     }
@@ -110,14 +122,9 @@ public class TelegramApiClient(
 
     companion object {
         private val MAPPER = jacksonMapperBuilder().apply {
-            configure(SerializationFeature.INDENT_OUTPUT, true)
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }.build().apply {
             setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
-                indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
-                indentObjectsWith(DefaultIndenter("  ", "\n"))
-            })
 
             registerModule(SimpleModule().apply {
                 addSerializer(StringInput::class, StringInputSerializer())
