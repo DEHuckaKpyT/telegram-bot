@@ -4,7 +4,7 @@ val ktor_version: String by project
 val koin_version: String by project
 val exposed_version = "0.41.1"
 val hikaricp_version = "5.0.1"
-val postgresql_version = "42.5.4"
+val postgresql_version = "42.7.2"
 
 plugins {
     application

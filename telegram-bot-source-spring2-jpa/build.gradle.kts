@@ -33,6 +33,7 @@ dependencies {
     //region temp
     testImplementation("org.postgresql:postgresql:42.7.3") //TODO remove when dependency will be resolved in "com.github.database-rider:rider-spring:1.44.0"
     testImplementation("org.apache.commons:commons-compress:1.27.0") //TODO remove when dependency will be resolved in "org.testcontainers:postgresql:1.20.1"
+    testImplementation("com.jayway.jsonpath:json-path:2.9.0") //TODO remove when dependency will be resolved in "org.springframework.boot:spring-boot-starter-test:$spring2_version"
     //endregion temp
 }
 
