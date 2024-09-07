@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
+import kotlin.Boolean
 import kotlin.Int
 
 /**
@@ -15,6 +16,8 @@ import kotlin.Int
  * @param unclaimedPrizeCount *Optional*. Number of undistributed prizes
  * @param giveawayMessage *Optional*. Message with the giveaway that was completed, if it wasn't
  * deleted
+ * @param isStarGiveaway *Optional*. *True*, if the giveaway is a Telegram Star giveaway. Otherwise,
+ * currently, the giveaway is a Telegram Premium giveaway.
  */
 public data class GiveawayCompleted(
     /**
@@ -35,4 +38,11 @@ public data class GiveawayCompleted(
     @get:JsonProperty("giveaway_message")
     @param:JsonProperty("giveaway_message")
     public val giveawayMessage: Message? = null,
+    /**
+     * *Optional*. *True*, if the giveaway is a Telegram Star giveaway. Otherwise, currently, the
+     * giveaway is a Telegram Premium giveaway.
+     */
+    @get:JsonProperty("is_star_giveaway")
+    @param:JsonProperty("is_star_giveaway")
+    public val isStarGiveaway: Boolean? = null,
 )

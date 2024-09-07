@@ -27,6 +27,10 @@ import kotlin.String
  * simultaneously after joining the chat via this invite link; 1-99999
  * @param pendingJoinRequestCount *Optional*. Number of pending join requests created using this
  * link
+ * @param subscriptionPeriod *Optional*. The number of seconds the subscription will be active for
+ * before the next payment
+ * @param subscriptionPrice *Optional*. The amount of Telegram Stars a user must pay initially and
+ * after each subsequent subscription period to be a member of the chat using the link
  */
 public data class ChatInviteLink(
     /**
@@ -85,4 +89,17 @@ public data class ChatInviteLink(
     @get:JsonProperty("pending_join_request_count")
     @param:JsonProperty("pending_join_request_count")
     public val pendingJoinRequestCount: Int? = null,
+    /**
+     * *Optional*. The number of seconds the subscription will be active for before the next payment
+     */
+    @get:JsonProperty("subscription_period")
+    @param:JsonProperty("subscription_period")
+    public val subscriptionPeriod: Int? = null,
+    /**
+     * *Optional*. The amount of Telegram Stars a user must pay initially and after each subsequent
+     * subscription period to be a member of the chat using the link
+     */
+    @get:JsonProperty("subscription_price")
+    @param:JsonProperty("subscription_price")
+    public val subscriptionPrice: Int? = null,
 )

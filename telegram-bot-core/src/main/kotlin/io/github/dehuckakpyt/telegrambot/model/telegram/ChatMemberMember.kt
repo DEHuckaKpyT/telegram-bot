@@ -1,6 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.`annotation`.JsonProperty
+import kotlin.Long
+import kotlin.String
 
 /**
  * Represents a [chat member](https://core.telegram.org/bots/api/#chatmember) that has no additional

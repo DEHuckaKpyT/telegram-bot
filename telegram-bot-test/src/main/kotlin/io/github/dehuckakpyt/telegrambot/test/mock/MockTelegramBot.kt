@@ -281,6 +281,7 @@ internal class MockTelegramBot : TelegramBot {
         starCount: Int,
         media: Iterable<InputPaidMedia>,
         businessConnectionId: String?,
+        payload: String?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,

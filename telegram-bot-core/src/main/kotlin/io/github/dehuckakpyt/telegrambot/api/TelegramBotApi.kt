@@ -781,10 +781,13 @@ public interface TelegramBotApi {
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`). If the chat is a channel, all Telegram Star proceeds from this media
      * will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
-     * @param starCount The number of Telegram Stars that must be paid to buy access to the media
+     * @param starCount The number of Telegram Stars that must be paid to buy access to the media;
+     * 1-2500
      * @param media A JSON-serialized array describing the media to be sent; up to 10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
+     * @param payload Bot-defined paid media payload, 0-128 bytes. This will not be displayed to the
+     * user, use it for your internal processes.
      * @param caption Media caption, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the media caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -807,6 +810,7 @@ public interface TelegramBotApi {
         starCount: Int,
         media: Iterable<InputPaidMedia>,
         businessConnectionId: String? = null,
+        payload: String? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -2568,7 +2572,7 @@ public interface TelegramBotApi {
      * @param title Product name, 1-32 characters
      * @param description Product description, 1-255 characters
      * @param payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the
-     * user, use for your internal processes.
+     * user, use it for your internal processes.
      * @param currency Three-letter ISO 4217 currency code, see [more on
      * currencies](https://core.telegram.org/bots/payments#supported-currencies). Pass “XTR” for
      * payments in [Telegram Stars](https://t.me/BotNews/90).
@@ -2666,7 +2670,7 @@ public interface TelegramBotApi {
      * @param title Product name, 1-32 characters
      * @param description Product description, 1-255 characters
      * @param payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the
-     * user, use for your internal processes.
+     * user, use it for your internal processes.
      * @param currency Three-letter ISO 4217 currency code, see [more on
      * currencies](https://core.telegram.org/bots/payments#supported-currencies). Pass “XTR” for
      * payments in [Telegram Stars](https://t.me/BotNews/90).

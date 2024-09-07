@@ -29,8 +29,10 @@ import kotlin.collections.List
  * from which eligible users for the giveaway must come. If empty, then all users can participate in
  * the giveaway. Users with a phone number that was bought on Fragment can always participate in
  * giveaways.
+ * @param prizeStarCount *Optional*. The number of Telegram Stars to be split between giveaway
+ * winners; for Telegram Star giveaways only
  * @param premiumSubscriptionMonthCount *Optional*. The number of months the Telegram Premium
- * subscription won from the giveaway will be active for
+ * subscription won from the giveaway will be active for; for Telegram Premium giveaways only
  */
 public data class Giveaway(
     /**
@@ -81,8 +83,15 @@ public data class Giveaway(
     @param:JsonProperty("country_codes")
     public val countryCodes: List<String>? = null,
     /**
+     * *Optional*. The number of Telegram Stars to be split between giveaway winners; for Telegram
+     * Star giveaways only
+     */
+    @get:JsonProperty("prize_star_count")
+    @param:JsonProperty("prize_star_count")
+    public val prizeStarCount: Int? = null,
+    /**
      * *Optional*. The number of months the Telegram Premium subscription won from the giveaway will
-     * be active for
+     * be active for; for Telegram Premium giveaways only
      */
     @get:JsonProperty("premium_subscription_month_count")
     @param:JsonProperty("premium_subscription_month_count")

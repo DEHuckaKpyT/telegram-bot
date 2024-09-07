@@ -22,8 +22,10 @@ import kotlin.collections.List
  * @param winners List of up to 100 winners of the giveaway
  * @param additionalChatCount *Optional*. The number of other chats the user had to join in order to
  * be eligible for the giveaway
+ * @param prizeStarCount *Optional*. The number of Telegram Stars that were split between giveaway
+ * winners; for Telegram Star giveaways only
  * @param premiumSubscriptionMonthCount *Optional*. The number of months the Telegram Premium
- * subscription won from the giveaway will be active for
+ * subscription won from the giveaway will be active for; for Telegram Premium giveaways only
  * @param unclaimedPrizeCount *Optional*. Number of undistributed prizes
  * @param onlyNewMembers *Optional*. *True*, if only users who had joined the chats after the
  * giveaway started were eligible to win
@@ -70,8 +72,15 @@ public data class GiveawayWinners(
     @param:JsonProperty("additional_chat_count")
     public val additionalChatCount: Int? = null,
     /**
+     * *Optional*. The number of Telegram Stars that were split between giveaway winners; for
+     * Telegram Star giveaways only
+     */
+    @get:JsonProperty("prize_star_count")
+    @param:JsonProperty("prize_star_count")
+    public val prizeStarCount: Int? = null,
+    /**
      * *Optional*. The number of months the Telegram Premium subscription won from the giveaway will
-     * be active for
+     * be active for; for Telegram Premium giveaways only
      */
     @get:JsonProperty("premium_subscription_month_count")
     @param:JsonProperty("premium_subscription_month_count")

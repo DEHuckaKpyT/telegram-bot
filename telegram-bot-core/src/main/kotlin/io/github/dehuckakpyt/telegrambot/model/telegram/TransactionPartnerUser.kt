@@ -15,6 +15,7 @@ import kotlin.collections.List
  * @param user Information about the user
  * @param invoicePayload *Optional*. Bot-specified invoice payload
  * @param paidMedia *Optional*. Information about the paid media bought by the user
+ * @param paidMediaPayload *Optional*. Bot-specified paid media payload
  */
 public data class TransactionPartnerUser(
     /**
@@ -41,4 +42,10 @@ public data class TransactionPartnerUser(
     @get:JsonProperty("paid_media")
     @param:JsonProperty("paid_media")
     public val paidMedia: List<PaidMedia>? = null,
+    /**
+     * *Optional*. Bot-specified paid media payload
+     */
+    @get:JsonProperty("paid_media_payload")
+    @param:JsonProperty("paid_media_payload")
+    public val paidMediaPayload: String? = null,
 ) : TransactionPartner

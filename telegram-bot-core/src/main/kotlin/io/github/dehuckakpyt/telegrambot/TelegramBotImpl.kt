@@ -126,7 +126,7 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 15.08.2024.
+ * Created on 07.09.2024.
  *
  * @author KScript
  */
@@ -538,6 +538,7 @@ public class TelegramBotImpl(
         starCount: Int,
         media: Iterable<InputPaidMedia>,
         businessConnectionId: String?,
+        payload: String?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -551,6 +552,7 @@ public class TelegramBotImpl(
         append("star_count", starCount)
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
+        appendIfNotNull("payload", payload)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
         appendIfNotNull("caption_entities", client.toJson(captionEntities))

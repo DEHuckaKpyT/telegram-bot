@@ -52,6 +52,8 @@ import kotlin.Long
  * price
  * @param preCheckoutQuery *Optional*. New incoming pre-checkout query. Contains full information
  * about checkout
+ * @param purchasedPaidMedia *Optional*. A user purchased paid media with a non-empty payload sent
+ * by the bot in a non-channel chat
  * @param poll *Optional*. New poll state. Bots receive only updates about manually stopped polls
  * and polls, which are sent by the bot
  * @param pollAnswer *Optional*. A user changed their answer in a non-anonymous poll. Bots receive
@@ -183,6 +185,13 @@ public data class Update(
     @get:JsonProperty("pre_checkout_query")
     @param:JsonProperty("pre_checkout_query")
     public val preCheckoutQuery: PreCheckoutQuery? = null,
+    /**
+     * *Optional*. A user purchased paid media with a non-empty payload sent by the bot in a
+     * non-channel chat
+     */
+    @get:JsonProperty("purchased_paid_media")
+    @param:JsonProperty("purchased_paid_media")
+    public val purchasedPaidMedia: PaidMediaPurchased? = null,
     /**
      * *Optional*. New poll state. Bots receive only updates about manually stopped polls and polls,
      * which are sent by the bot

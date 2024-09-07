@@ -18,7 +18,7 @@ import kotlin.collections.List
  * @param title Product name, 1-32 characters
  * @param description Product description, 1-255 characters
  * @param payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user,
- * use for your internal processes.
+ * use it for your internal processes.
  * @param providerToken *Optional*. Payment provider token, obtained via
  * [@BotFather](https://t.me/botfather). Pass an empty string for payments in [Telegram
  * Stars](https://t.me/BotNews/90).
@@ -75,7 +75,7 @@ public data class InputInvoiceMessageContent(
     @param:JsonProperty("description")
     public val description: String,
     /**
-     * Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for
+     * Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for
      * your internal processes.
      */
     @get:JsonProperty("payload")
