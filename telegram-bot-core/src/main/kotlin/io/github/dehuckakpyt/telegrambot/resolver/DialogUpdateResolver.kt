@@ -59,10 +59,8 @@ internal class DialogUpdateResolver(
 
     private suspend fun processCommandMessage(command: String, message: Message): Unit = with(message) {
         messageSource.save(
-            chatId = chatId,
-            fromId = from!!.id,
+            message = message,
             fromBot = false,
-            messageId = messageId,
             type = "COMMAND",
             step = command,
             stepContainerType = "COMMAND",
@@ -79,10 +77,8 @@ internal class DialogUpdateResolver(
         val factory = message.messageContainerFactory
 
         messageSource.save(
-            chatId = chatId,
-            fromId = from.id,
+            message = message,
             fromBot = false,
-            messageId = messageId,
             type = factory.messageType,
             step = chain?.step,
             stepContainerType = factory.messageType,
