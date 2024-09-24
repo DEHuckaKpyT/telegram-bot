@@ -2,7 +2,9 @@ package io.github.dehuckakpyt.telegrambot.model.message
 
 import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
@@ -49,4 +51,8 @@ class JpaTelegramMessage(
     @Column(nullable = false)
     @ColumnDefault("'now()'")
     override val createDate: LocalDateTime = LocalDateTime.now(),
+
+    @Type(JsonType::class)
+    @Column(columnDefinition = "jsonb")
+    override val replyMarkup: InlineKeyboardMarkup?,
 ) : UUIDTable(), TelegramMessage

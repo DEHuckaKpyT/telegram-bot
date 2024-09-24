@@ -2,10 +2,11 @@ package io.github.dehuckakpyt.telegrambot.source.message
 
 import io.github.dehuckakpyt.telegrambot.ext.transaction.executeQuery
 import io.github.dehuckakpyt.telegrambot.model.DatabaseTelegramMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 
 class DatabaseMessageSource : MessageSource {
 
-    override suspend fun save(chatId: Long, fromId: Long, fromBot: Boolean, messageId: Long, type: String, step: String?, stepContainerType: String?, text: String?, fileIds: List<String>?): Unit = executeQuery {
+    override suspend fun save(chatId: Long, fromId: Long, fromBot: Boolean, messageId: Long, type: String, step: String?, stepContainerType: String?, text: String?, fileIds: List<String>?, replyMarkup: InlineKeyboardMarkup?): Unit = executeQuery {
         DatabaseTelegramMessage.new {
             this.chatId = chatId
             this.fromId = fromId
@@ -16,6 +17,7 @@ class DatabaseMessageSource : MessageSource {
             this.stepContainerType = stepContainerType
             this.text = text
             this.fileIds = fileIds
+            this.replyMarkup = replyMarkup
         }
     }
 }

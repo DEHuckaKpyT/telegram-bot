@@ -2,7 +2,9 @@ package io.github.dehuckakpyt.telegrambot.model.message
 
 import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
@@ -21,6 +23,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "telegram_message")
 @TypeDef(name = "list-array", typeClass = ListArrayType::class)
+@TypeDef(name = "json", typeClass = JsonType::class)
 class JpaTelegramMessage(
     @Column(nullable = false)
     override val chatId: Long,
@@ -51,4 +54,8 @@ class JpaTelegramMessage(
     @Column(nullable = false)
     @ColumnDefault("'now()'")
     override val createDate: LocalDateTime = LocalDateTime.now(),
+
+    @Column(columnDefinition = "jsonb")
+    @Type(type = "json")
+    override val replyMarkup: InlineKeyboardMarkup?,
 ) : UUIDTable(), TelegramMessage

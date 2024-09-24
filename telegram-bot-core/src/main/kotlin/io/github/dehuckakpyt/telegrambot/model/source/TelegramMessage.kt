@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.model.source
 
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import java.time.LocalDateTime
 
 
@@ -45,4 +46,7 @@ interface TelegramMessage {
 
     /** Date/time when message was sent. */
     val createDate: LocalDateTime
+
+    /** Keyboard of the message. */
+    val replyMarkup: InlineKeyboardMarkup?
 }

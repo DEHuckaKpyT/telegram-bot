@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.message
 
 import io.github.dehuckakpyt.telegrambot.ext.context.currentContainerContextOrNull
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 
 
 /**
@@ -29,6 +30,7 @@ interface MessageSource {
      * @param step the step when the message saving
      * @param stepContainerType type of the container, which process user message
      * @param text content of the message
+     * @param replyMarkup replyMarkup of the message
      *
      * @see io.github.dehuckakpyt.telegrambot.TelegramBotImpl
      */
@@ -42,6 +44,7 @@ interface MessageSource {
         stepContainerType: String? = null,
         text: String? = null,
         fileIds: List<String>? = null,
+        replyMarkup: InlineKeyboardMarkup? = null
     )
 
     /**
@@ -66,6 +69,7 @@ interface MessageSource {
         type: String,
         text: String? = null,
         fileIds: List<String>? = null,
+        replyMarkup: InlineKeyboardMarkup? = null
     ) {
         val currentContainer = currentContainerContextOrNull()
 
@@ -78,7 +82,8 @@ interface MessageSource {
             step = currentContainer?.step,
             stepContainerType = currentContainer?.type,
             text = text,
-            fileIds = fileIds
+            fileIds = fileIds,
+            replyMarkup = replyMarkup
         )
     }
 
