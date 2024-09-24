@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.message
 
 import io.github.dehuckakpyt.telegrambot.ext.context.currentContainerContextOrNull
+import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 
 
 /**
@@ -21,10 +22,8 @@ interface MessageSource {
     /**
      * Save message.
      *
-     * @param chatId from which chat
-     * @param fromId from which user (in private chats equals to chatId)
+     * @param message sent message
      * @param fromBot true if bot sent message
-     * @param messageId
      * @param type type of the message (like 'TEXT', 'PHOTO', 'AUDIO') (can find all in TelegramBotImpl)
      * @param step the step when the message saving
      * @param stepContainerType type of the container, which process user message
@@ -33,10 +32,8 @@ interface MessageSource {
      * @see io.github.dehuckakpyt.telegrambot.TelegramBotImpl
      */
     suspend fun save(
-        chatId: Long,
-        fromId: Long,
+        message: Message,
         fromBot: Boolean,
-        messageId: Long,
         type: String,
         step: String? = null,
         stepContainerType: String? = null,
@@ -47,22 +44,16 @@ interface MessageSource {
     /**
      * Save message.
      *
-     * @param chatId from which chat
-     * @param fromId from which user (in private chats equals to chatId)
+     * @param message sent message
      * @param fromBot true if bot sent message
-     * @param messageId
      * @param type type of the message (like 'TEXT', 'PHOTO', 'AUDIO') (can find all in TelegramBotImpl)
-     * @param step the step when the message saving
-     * @param stepContainerType type of the container, which process user message
      * @param text content of the message
      *
      * @see io.github.dehuckakpyt.telegrambot.TelegramBotImpl
      */
     suspend fun save(
-        chatId: Long,
-        fromId: Long,
+        message: Message,
         fromBot: Boolean,
-        messageId: Long,
         type: String,
         text: String? = null,
         fileIds: List<String>? = null,
@@ -70,10 +61,8 @@ interface MessageSource {
         val currentContainer = currentContainerContextOrNull()
 
         save(
-            chatId = chatId,
-            fromId = fromId,
+            message = message,
             fromBot = fromBot,
-            messageId = messageId,
             type = type,
             step = currentContainer?.step,
             stepContainerType = currentContainer?.type,

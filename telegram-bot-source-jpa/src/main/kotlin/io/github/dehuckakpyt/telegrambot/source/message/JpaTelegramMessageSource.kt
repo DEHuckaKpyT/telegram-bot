@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.message
 
 import io.github.dehuckakpyt.telegrambot.model.message.JpaTelegramMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import io.github.dehuckakpyt.telegrambot.repository.message.JpaTelegramMessageRepository
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 
@@ -9,13 +10,13 @@ open class JpaTelegramMessageSource(
     private val repository: JpaTelegramMessageRepository,
 ) : MessageSource {
 
-    override suspend fun save(chatId: Long, fromId: Long, fromBot: Boolean, messageId: Long, type: String, step: String?, stepContainerType: String?, text: String?, fileIds: List<String>?): Unit = transactional {
+    override suspend fun save(message: Message, fromBot: Boolean, type: String, step: String?, stepContainerType: String?, text: String?, fileIds: List<String>?): Unit = transactional {
         repository.save(
             JpaTelegramMessage(
-                chatId = chatId,
-                fromId = fromId,
+                chatId = message.chat.id,
+                fromId = message.from!!.id,
                 fromBot = fromBot,
-                messageId = messageId,
+                messageId = message.messageId,
                 type = type,
                 step = step,
                 stepContainerType = stepContainerType,
