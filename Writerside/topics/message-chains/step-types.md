@@ -44,12 +44,13 @@ class RegistrationHandler : BotHandler({
 Available types at this time:
 ```kotlin
 object MessageType {
-    val TEXT = TextMessageArgument::class
-    val PHOTO = PhotoMessageArgument::class
-    val AUDIO = AudioMessageArgument::class
-    val VOICE = VoiceMessageArgument::class
-    val CONTACT = ContactMessageArgument::class
-    val DOCUMENT = DocumentMessageArgument::class
-    val LOCATION = LocationMessageArgument::class
+    val TEXT
+    val PHOTO
+    val AUDIO
+    val VOICE
+    val CONTACT
+    val DOCUMENT
+    val LOCATION
+    val WEB_APP_DATA
 }
 ```

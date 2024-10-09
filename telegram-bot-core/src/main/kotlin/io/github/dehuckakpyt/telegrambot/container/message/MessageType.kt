@@ -15,4 +15,5 @@ object MessageType {
     val CONTACT = ContactMessageContainer::class
     val DOCUMENT = DocumentMessageContainer::class
     val LOCATION = LocationMessageContainer::class
+    val WEB_APP_DATA = WebAppDataMessageContainer::class
 }
