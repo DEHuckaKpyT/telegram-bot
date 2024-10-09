@@ -19,10 +19,7 @@ env:
   # Replace HI with the ID of the instance in capital letters
   ARTIFACT: webHelpKTB2-all.zip
   # Writerside docker image version
-  DOCKER_VERSION: 232.10275
-  # Add the variable below to upload Algolia indexes
-  # Replace HI with the ID of the instance in capital letters
-  ALGOLIA_ARTIFACT: algolia-indexes-KTB.zip
+  DOCKER_VERSION: 242.21870
 
 jobs:
   build:
@@ -30,30 +27,24 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Build Writerside docs using Docker
+      - name: Build docs using Writerside Docker builder
         uses: JetBrains/writerside-github-action@v4
         with:
           instance: ${{ env.INSTANCE }}
           artifact: ${{ env.ARTIFACT }}
           docker-version: ${{ env.DOCKER_VERSION }}
 
-      - name: Upload documentation
-        uses: actions/upload-artifact@v3
+      - name: Save artifact with build results
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           path: |
             artifacts/${{ env.ARTIFACT }}
             artifacts/report.json
-          retention-days: 7
-
-      # Add the step below to upload Algolia indexes
-      - name: Upload algolia-indexes
-        uses: actions/upload-artifact@v3
-        with:
-          name: algolia-indexes
-          path: artifacts/${{ env.ALGOLIA_ARTIFACT }}
           retention-days: 7
 
   # Add the job below and artifacts/report.json on Upload documentation step above if you want to fail the build when documentation contains errors
@@ -64,7 +55,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: docs
           path: artifacts
@@ -79,11 +70,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     # Requires the build job results
-    needs: test
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docs
 
@@ -91,13 +82,13 @@ jobs:
         run: unzip -O UTF-8 -qq ${{ env.ARTIFACT }} -d dir
 
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v4
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Package and upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dir
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
