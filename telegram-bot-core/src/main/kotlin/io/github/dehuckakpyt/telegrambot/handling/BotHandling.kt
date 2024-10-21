@@ -49,6 +49,22 @@ class BotHandling internal constructor(
     }
 
     /**
+     * Declare an action executed before command.
+     * @param action lambda, which will be invoked
+     */
+    fun beforeCommand(action: suspend CommandContainer.() -> Unit) {
+        chainResolver.addBeforeCommand(action)
+    }
+
+    /**
+     * Declare an action executed after command.
+     * @param action lambda, which will be invoked
+     */
+    fun afterCommand(action: suspend CommandContainer.() -> Unit) {
+        chainResolver.addAfterCommand(action)
+    }
+
+    /**
      * Declare an action for the step.
      *
      * Default invoked for text messages.
@@ -92,6 +108,22 @@ class BotHandling internal constructor(
      */
     fun callback(callback: String, next: String? = null, action: suspend CallbackContainer.() -> Unit) {
         chainResolver.addCallback(callback, next, action)
+    }
+
+    /**
+     * Declare an action executed before callback.
+     * @param action lambda, which will be invoked
+     */
+    fun beforeCallback(action: suspend CallbackContainer.() -> Unit) {
+        chainResolver.addBeforeCallback(action)
+    }
+
+    /**
+     * Declare an action executed after callback.
+     * @param action lambda, which will be invoked
+     */
+    fun afterCallback(action: suspend CallbackContainer.() -> Unit) {
+        chainResolver.addAfterCallback(action)
     }
 
     /**
@@ -149,5 +181,6 @@ class BotHandling internal constructor(
      *
      * @return if exists then object of selected class else null
      */
-    fun <T : Any> GeneralContainer.transferredOrNull(clazz: KClass<T>): T? = contentConverter.fromContentOrNull(content, clazz)
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> GeneralContainer.transferredOrNull(clazz: KClass<T>): T? = contentConverter.fromContentOrNull(content, clazz) ?: nextStepInstance as? T
 }

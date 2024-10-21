@@ -33,6 +33,10 @@ internal class ChainResolver(
     private val actionByCommand: MutableMap<String, suspend CommandContainer.() -> Unit> = hashMapOf()
     private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageContainer>, suspend MessageContainer.() -> Unit>> = hashMapOf()
     private val actionByCallback: MutableMap<String, suspend CallbackContainer.() -> Unit> = hashMapOf()
+    private val beforeByCommand: MutableList<suspend CommandContainer.() -> Unit> = arrayListOf()
+    private val afterByCommand: MutableList<suspend CommandContainer.() -> Unit> = arrayListOf()
+    private val beforeByCallback: MutableList<suspend CallbackContainer.() -> Unit> = arrayListOf()
+    private val afterByCallback: MutableList<suspend CallbackContainer.() -> Unit> = arrayListOf()
 
     /**
      * Add command handler.
@@ -81,6 +85,62 @@ internal class ChainResolver(
 
         actionByCallback[callback] = wrapAction(next, action)
     }
+
+    /**
+     * Add before command handler.
+     *
+     * @param action lambda, which will be invoked
+     */
+    fun addBeforeCommand(action: suspend CommandContainer.() -> Unit) {
+        beforeByCommand.add(action)
+    }
+
+    /**
+     * Add after command handler.
+     *
+     * @param action lambda, which will be invoked
+     */
+    fun addAfterCommand(action: suspend CommandContainer.() -> Unit) {
+        afterByCommand.add(action)
+    }
+
+    /**
+     * Add before callback handler.
+     *
+     * @param action lambda, which will be invoked
+     */
+    fun addBeforeCallback(action: suspend CallbackContainer.() -> Unit) {
+        beforeByCallback.add(action)
+    }
+
+    /**
+     * Add after callback handler.
+     *
+     * @param action lambda, which will be invoked
+     */
+    fun addAfterCallback(action: suspend CallbackContainer.() -> Unit) {
+        afterByCallback.add(action)
+    }
+
+    /**
+     * Get command handler.
+     */
+    fun getBeforeCommand() = beforeByCommand
+
+    /**
+     * Get command handler.
+     */
+    fun getAfterCommand() = afterByCommand
+
+    /**
+     * Get callback handler.
+     */
+    fun getBeforeCallback() = beforeByCallback
+
+    /**
+     * Get callback handler.
+     */
+    fun getAfterCallback() = afterByCallback
 
     /**
      * Get command handler.

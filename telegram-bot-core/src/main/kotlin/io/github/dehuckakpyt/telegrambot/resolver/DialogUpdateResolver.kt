@@ -68,7 +68,15 @@ internal class DialogUpdateResolver(
         )
 
         chainResolver.getCommand(command).let { action ->
-            invokeWithContainerContext(CommandContainer(message, step = command), action)
+            invokeWithContainerContext(CommandContainer(message, step = command), {
+                chainResolver.getBeforeCommand().forEach { beforeAction ->
+                    beforeAction()
+                }
+                action()
+                chainResolver.getAfterCommand().forEach { afterAction ->
+                    afterAction()
+                }
+            })
         }
     }
 
@@ -104,7 +112,15 @@ internal class DialogUpdateResolver(
                 val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
                 chainResolver.getCallback(callbackName)?.let { action ->
-                    invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), action)
+                    invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), {
+                        chainResolver.getBeforeCallback().forEach { beforeAction ->
+                            beforeAction()
+                        }
+                        action()
+                        chainResolver.getAfterCallback().forEach { afterAction ->
+                            afterAction()
+                        }
+                    })
                 }
             }
         }
