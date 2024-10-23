@@ -69,11 +69,11 @@ internal class DialogUpdateResolver(
 
         chainResolver.getCommand(command).let { action ->
             invokeWithContainerContext(CommandContainer(message, step = command), {
-                chainResolver.getBeforeCommand().forEach { beforeAction ->
+                chainResolver.getBeforeCommand(command)?.forEach { beforeAction ->
                     beforeAction()
                 }
                 action()
-                chainResolver.getAfterCommand().forEach { afterAction ->
+                chainResolver.getAfterCommand(command)?.forEach { afterAction ->
                     afterAction()
                 }
             })
@@ -113,11 +113,11 @@ internal class DialogUpdateResolver(
 
                 chainResolver.getCallback(callbackName)?.let { action ->
                     invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), {
-                        chainResolver.getBeforeCallback().forEach { beforeAction ->
+                        chainResolver.getBeforeCallback(callbackName)?.forEach { beforeAction ->
                             beforeAction()
                         }
                         action()
-                        chainResolver.getAfterCallback().forEach { afterAction ->
+                        chainResolver.getAfterCallback(callbackName)?.forEach { afterAction ->
                             afterAction()
                         }
                     })

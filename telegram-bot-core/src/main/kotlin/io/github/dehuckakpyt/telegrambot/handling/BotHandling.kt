@@ -41,27 +41,30 @@ class BotHandling internal constructor(
      * Declare an action for the command.
      *
      * @param command name of the command, started with the '/' (for example, '/start', '/help')
+     * @param before bind before actions
+     * @param after bind after actions
      * @param next name of the next step (for example, 'get_name', 'get_phone')
      * @param action lambda, which will be invoked
      */
-    fun command(command: String, next: String? = null, action: suspend CommandContainer.() -> Unit) {
-        chainResolver.addCommand(command, next, action)
+    fun command(command: String, next: String? = null, before: List<String>? = null, after: List<String>? = null,
+                action: suspend CommandContainer.() -> Unit) {
+        chainResolver.addCommand(command, next, before, after, action)
     }
 
     /**
      * Declare an action executed before command.
      * @param action lambda, which will be invoked
      */
-    fun beforeCommand(action: suspend CommandContainer.() -> Unit) {
-        chainResolver.addBeforeCommand(action)
+    fun beforeCommand(name: String, action: suspend CommandContainer.() -> Unit) {
+        chainResolver.addBeforeCommand(name, action)
     }
 
     /**
      * Declare an action executed after command.
      * @param action lambda, which will be invoked
      */
-    fun afterCommand(action: suspend CommandContainer.() -> Unit) {
-        chainResolver.addAfterCommand(action)
+    fun afterCommand(name: String, action: suspend CommandContainer.() -> Unit) {
+        chainResolver.addAfterCommand(name, action)
     }
 
     /**
@@ -102,28 +105,31 @@ class BotHandling internal constructor(
      *
      * @param callback callback name (sets in ButtonFactory.callbackButton())
      * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param before bind before actions
+     * @param after bind after actions
      * @param action lambda, which will be invoked
      *
      * @see io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
      */
-    fun callback(callback: String, next: String? = null, action: suspend CallbackContainer.() -> Unit) {
-        chainResolver.addCallback(callback, next, action)
+    fun callback(callback: String, next: String? = null, before: List<String>? = null, after: List<String>? = null,
+                 action: suspend CallbackContainer.() -> Unit) {
+        chainResolver.addCallback(callback, next, before, after, action)
     }
 
     /**
      * Declare an action executed before callback.
      * @param action lambda, which will be invoked
      */
-    fun beforeCallback(action: suspend CallbackContainer.() -> Unit) {
-        chainResolver.addBeforeCallback(action)
+    fun beforeCallback(name: String, action: suspend CallbackContainer.() -> Unit) {
+        chainResolver.addBeforeCallback(name, action)
     }
 
     /**
      * Declare an action executed after callback.
      * @param action lambda, which will be invoked
      */
-    fun afterCallback(action: suspend CallbackContainer.() -> Unit) {
-        chainResolver.addAfterCallback(action)
+    fun afterCallback(name: String, action: suspend CallbackContainer.() -> Unit) {
+        chainResolver.addAfterCallback(name, action)
     }
 
     /**

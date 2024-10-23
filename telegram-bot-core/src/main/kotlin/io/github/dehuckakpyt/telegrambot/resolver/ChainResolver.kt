@@ -33,19 +33,29 @@ internal class ChainResolver(
     private val actionByCommand: MutableMap<String, suspend CommandContainer.() -> Unit> = hashMapOf()
     private val actionByStep: MutableMap<String, MutableMap<KClass<out MessageContainer>, suspend MessageContainer.() -> Unit>> = hashMapOf()
     private val actionByCallback: MutableMap<String, suspend CallbackContainer.() -> Unit> = hashMapOf()
-    private val beforeByCommand: MutableList<suspend CommandContainer.() -> Unit> = arrayListOf()
-    private val afterByCommand: MutableList<suspend CommandContainer.() -> Unit> = arrayListOf()
-    private val beforeByCallback: MutableList<suspend CallbackContainer.() -> Unit> = arrayListOf()
-    private val afterByCallback: MutableList<suspend CallbackContainer.() -> Unit> = arrayListOf()
+    private val beforeCommandActions: MutableMap<String, suspend CommandContainer.() -> Unit> = hashMapOf()
+    private val afterCommandActions: MutableMap<String, suspend CommandContainer.() -> Unit> = hashMapOf()
+    private val beforeCallbackActions: MutableMap<String, suspend CallbackContainer.() -> Unit> = hashMapOf()
+    private val afterCallbackActions: MutableMap<String, suspend CallbackContainer.() -> Unit> = hashMapOf()
+
+    private val bindBeforeCommand: MutableMap<String, List<String>> = hashMapOf()
+    private val bindAfterCommand: MutableMap<String, List<String>> = hashMapOf()
+    private val bindBeforeCallback: MutableMap<String, List<String>> = hashMapOf()
+    private val bindAfterCallback: MutableMap<String, List<String>> = hashMapOf()
 
     /**
      * Add command handler.
      *
      * @param command name of the command, started with the '/' (for example, '/start', '/help')
      * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param before bind before actions
+     * @param after bind after actions
      * @param action lambda, which will be invoked
      */
-    fun addCommand(command: String, next: String? = null, action: suspend CommandContainer.() -> Unit) {
+    fun addCommand(command: String, next: String? = null, before: List<String>? = null, after: List<String>? = null,
+                   action: suspend CommandContainer.() -> Unit) {
+        before?.let { bindBeforeCommand[command] = it }
+        after?.let { bindAfterCommand[command] = it }
         actionByCommand[command] = wrapAction(next, action)
     }
 
@@ -76,71 +86,100 @@ internal class ChainResolver(
      *
      * @param callback callback name (sets in ButtonFactory.callbackButton())
      * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param before bind before actions
+     * @param after bind after actions
      * @param action lambda, which will be invoked
      *
      * @see io.github.dehuckakpyt.telegrambot.factory.button.ButtonFactory
      */
-    fun addCallback(callback: String, next: String? = null, action: suspend CallbackContainer.() -> Unit) {
+    fun addCallback(callback: String, next: String? = null, before: List<String>? = null, after: List<String>? = null,
+                    action: suspend CallbackContainer.() -> Unit) {
         callbackSerializer.validateCallbackName(callback)
-
+        before?.let { bindBeforeCallback[callback] = it }
+        after?.let { bindAfterCallback[callback] = it }
         actionByCallback[callback] = wrapAction(next, action)
     }
 
     /**
      * Add before command handler.
      *
+     * @name name of the action
      * @param action lambda, which will be invoked
      */
-    fun addBeforeCommand(action: suspend CommandContainer.() -> Unit) {
-        beforeByCommand.add(action)
+    fun addBeforeCommand(name: String, action: suspend CommandContainer.() -> Unit) {
+        beforeCommandActions[name] = action
     }
 
     /**
      * Add after command handler.
      *
+     * @name name of the action
      * @param action lambda, which will be invoked
      */
-    fun addAfterCommand(action: suspend CommandContainer.() -> Unit) {
-        afterByCommand.add(action)
+    fun addAfterCommand(name: String, action: suspend CommandContainer.() -> Unit) {
+        afterCommandActions[name] = action
     }
 
     /**
      * Add before callback handler.
      *
+     * @name name of the action
      * @param action lambda, which will be invoked
      */
-    fun addBeforeCallback(action: suspend CallbackContainer.() -> Unit) {
-        beforeByCallback.add(action)
+    fun addBeforeCallback(name: String, action: suspend CallbackContainer.() -> Unit) {
+        beforeCallbackActions[name] = action
     }
 
     /**
      * Add after callback handler.
      *
+     * @name name of the action
      * @param action lambda, which will be invoked
      */
-    fun addAfterCallback(action: suspend CallbackContainer.() -> Unit) {
-        afterByCallback.add(action)
+    fun addAfterCallback(name: String, action: suspend CallbackContainer.() -> Unit) {
+        afterCallbackActions[name] = action
     }
 
     /**
      * Get command handler.
+     *
+     * @param command name of the command, started with the '/' (for example, '/start', '/help')
      */
-    fun getBeforeCommand() = beforeByCommand
+    fun getBeforeCommand(command: String): List<suspend CommandContainer.() -> Unit>? {
+        val match = bindBeforeCommand[command] ?: return null
+        return match.mapNotNull { beforeCommandActions[it] }
+    }
 
     /**
      * Get command handler.
+     *
+     * @param command name of the command, started with the '/' (for example, '/start', '/help')
      */
-    fun getAfterCommand() = afterByCommand
+    fun getAfterCommand(command: String): List<suspend CommandContainer.() -> Unit>? {
+        val match = bindAfterCommand[command] ?: return null
+        return match.mapNotNull { afterCommandActions[it] }
+    }
 
     /**
      * Get callback handler.
+     *
+     * @param callback callback name (sets in ButtonFactory.callbackButton())
      */
-    fun getBeforeCallback() = beforeByCallback
+    fun getBeforeCallback(callback: String): List<suspend CallbackContainer.() -> Unit>? {
+        val match = bindBeforeCallback[callback] ?: return null
+        return match.mapNotNull { beforeCallbackActions[it] }
+
+    }
 
     /**
      * Get callback handler.
+     *
+     * @param callback callback name (sets in ButtonFactory.callbackButton())
      */
-    fun getAfterCallback() = afterByCallback
+    fun getAfterCallback(callback: String): List<suspend CallbackContainer.() -> Unit>? {
+        val match = bindAfterCallback[callback] ?: return null
+        return match.mapNotNull { afterCallbackActions[it] }
+    }
 
     /**
      * Get command handler.
