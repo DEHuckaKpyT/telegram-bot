@@ -14,7 +14,10 @@ import kotlin.collections.List
  *
  * @author KScript
  *
- * @param messageId Unique message identifier inside this chat
+ * @param messageId Unique message identifier inside this chat. In specific instances (e.g., message
+ * containing a video sent to a big chat), the server might automatically schedule a message instead of
+ * sending it immediately. In such cases, this field will be 0 and the relevant message will be
+ * unusable until it is actually sent
  * @param messageThreadId *Optional*. Unique identifier of a message thread to which the message
  * belongs; for supergroups only
  * @param from *Optional*. Sender of the message; may be empty for messages sent to channels. For
@@ -161,7 +164,10 @@ import kotlin.collections.List
  */
 public data class Message(
     /**
-     * Unique message identifier inside this chat
+     * Unique message identifier inside this chat. In specific instances (e.g., message containing a
+     * video sent to a big chat), the server might automatically schedule a message instead of sending
+     * it immediately. In such cases, this field will be 0 and the relevant message will be unusable
+     * until it is actually sent
      */
     @get:JsonProperty("message_id")
     @param:JsonProperty("message_id")

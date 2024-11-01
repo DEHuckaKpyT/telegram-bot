@@ -33,6 +33,8 @@ internal data class CopyMessage(
     public val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content")
     public val protectContent: Boolean? = null,
+    @get:JsonProperty("allow_paid_broadcast")
+    public val allowPaidBroadcast: Boolean? = null,
     @get:JsonProperty("reply_parameters")
     public val replyParameters: ReplyParameters? = null,
     @get:JsonProperty("reply_markup")

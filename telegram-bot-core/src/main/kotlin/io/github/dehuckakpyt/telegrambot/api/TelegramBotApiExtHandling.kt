@@ -107,6 +107,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -123,6 +128,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         showCaptionAboveMedia: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): MessageId = copyMessage(
@@ -135,6 +141,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         showCaptionAboveMedia = showCaptionAboveMedia,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -205,6 +212,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -224,6 +236,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -238,6 +251,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -279,6 +293,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -300,6 +319,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         thumbnail: ContentInput? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -316,6 +336,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -353,6 +374,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -372,6 +398,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         disableContentTypeDetection: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -386,6 +413,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         disableContentTypeDetection = disableContentTypeDetection,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -429,6 +457,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -453,6 +486,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         supportsStreaming: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -472,6 +506,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         supportsStreaming = supportsStreaming,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -513,6 +548,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -536,6 +576,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         hasSpoiler: Boolean? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -554,6 +595,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         hasSpoiler = hasSpoiler,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -586,6 +628,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -604,6 +651,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         duration: Int? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -617,6 +665,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         duration = duration,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -649,6 +698,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -666,6 +720,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         thumbnail: ContentInput? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -678,6 +733,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         thumbnail = thumbnail,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -702,6 +758,11 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -717,6 +778,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -727,6 +789,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         emoji = emoji,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,

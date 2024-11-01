@@ -12,7 +12,7 @@ import kotlin.String
  *
  * @author KScript
  *
- * @param id Unique identifier of the transaction. Coincides with the identifer of the original
+ * @param id Unique identifier of the transaction. Coincides with the identifier of the original
  * transaction for refund transactions. Coincides with *SuccessfulPayment.telegram_payment_charge_id*
  * for successful incoming payments from users.
  * @param amount Number of Telegram Stars transferred by the transaction
@@ -24,7 +24,7 @@ import kotlin.String
  */
 public data class StarTransaction(
     /**
-     * Unique identifier of the transaction. Coincides with the identifer of the original
+     * Unique identifier of the transaction. Coincides with the identifier of the original
      * transaction for refund transactions. Coincides with
      * *SuccessfulPayment.telegram_payment_charge_id* for successful incoming payments from users.
      */

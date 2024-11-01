@@ -12,6 +12,8 @@ import kotlin.String
  * * [TransactionPartnerFragment](https://core.telegram.org/bots/api/#transactionpartnerfragment)
  * *
  * [TransactionPartnerTelegramAds](https://core.telegram.org/bots/api/#transactionpartnertelegramads)
+ * *
+ * [TransactionPartnerTelegramApi](https://core.telegram.org/bots/api/#transactionpartnertelegramapi)
  * * [TransactionPartnerOther](https://core.telegram.org/bots/api/#transactionpartnerother)
  *
  * @see [TransactionPartner] (https://core.telegram.org/bots/api/#transactionpartner)
@@ -28,6 +30,7 @@ import kotlin.String
     JsonSubTypes.Type(value = TransactionPartnerUser::class, name = "user"),
     JsonSubTypes.Type(value = TransactionPartnerFragment::class, name = "fragment"),
     JsonSubTypes.Type(value = TransactionPartnerTelegramAds::class, name = "telegram_ads"),
+    JsonSubTypes.Type(value = TransactionPartnerTelegramApi::class, name = "telegram_api"),
     JsonSubTypes.Type(value = TransactionPartnerOther::class, name = "other"),
 )
 public sealed interface TransactionPartner {

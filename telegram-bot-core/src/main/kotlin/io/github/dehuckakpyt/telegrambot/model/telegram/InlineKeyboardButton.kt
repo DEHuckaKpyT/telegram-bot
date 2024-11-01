@@ -42,6 +42,8 @@ import kotlin.String
  * to select one of their chats of the specified type, open that chat and insert the bot's username and
  * the specified inline query in the input field. Not supported for messages sent on behalf of a
  * Telegram Business account.
+ * @param copyText *Optional*. Description of the button that copies the specified text to the
+ * clipboard.
  * @param callbackGame *Optional*. Description of the game that will be launched when the user
  * presses the button.  
  *
@@ -123,6 +125,12 @@ public data class InlineKeyboardButton(
     @get:JsonProperty("switch_inline_query_chosen_chat")
     @param:JsonProperty("switch_inline_query_chosen_chat")
     public val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat? = null,
+    /**
+     * *Optional*. Description of the button that copies the specified text to the clipboard.
+     */
+    @get:JsonProperty("copy_text")
+    @param:JsonProperty("copy_text")
+    public val copyText: CopyTextButton? = null,
     /**
      * *Optional*. Description of the game that will be launched when the user presses the button.  
      *

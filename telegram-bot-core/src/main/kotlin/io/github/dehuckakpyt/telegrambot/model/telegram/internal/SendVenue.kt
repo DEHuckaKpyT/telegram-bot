@@ -38,6 +38,8 @@ internal data class SendVenue(
     public val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content")
     public val protectContent: Boolean? = null,
+    @get:JsonProperty("allow_paid_broadcast")
+    public val allowPaidBroadcast: Boolean? = null,
     @get:JsonProperty("message_effect_id")
     public val messageEffectId: String? = null,
     @get:JsonProperty("reply_parameters")
