@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.22"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
 }
 
 dependencies {
@@ -10,7 +10,7 @@ dependencies {
     //endregion dehuckakpyt
 
     //region test
-    api("io.mockk:mockk:1.13.9")
+    api(libs.mockk)
     //endregion test
 }
 

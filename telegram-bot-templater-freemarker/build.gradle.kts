@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.22"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
 }
 
 dependencies {
@@ -10,13 +10,13 @@ dependencies {
     //endregion dehuckakpyt
 
     //region other
-    implementation("org.jsoup:jsoup:1.16.1")
-    api("org.freemarker:freemarker:2.3.33")
+    implementation(libs.jsoup)
+    api(libs.freemarker)
     //endregion other
 
     //region test
-    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
-    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.mockk)
     //endregion test
 }
 

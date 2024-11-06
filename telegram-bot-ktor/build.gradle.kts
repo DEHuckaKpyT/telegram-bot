@@ -1,13 +1,10 @@
-val ktor_version: String by project
-val koin_version: String by project
-
 plugins {
-    kotlin("jvm") version "1.8.22"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
 }
 
 dependencies {
-    api("io.ktor:ktor-server-core-jvm:$ktor_version")
-    api("io.insert-koin:koin-ktor:$koin_version")
-    api("io.insert-koin:koin-logger-slf4j:$koin_version")
+    api(libs.ktor.server.core.jvm)
+    api(libs.koin.ktor)
+    api(libs.koin.logger.slf4j)
     implementation(project(":telegram-bot-core"))
 }

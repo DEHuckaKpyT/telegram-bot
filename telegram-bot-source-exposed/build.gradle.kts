@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.8.22"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
 }
 
 dependencies {
@@ -8,9 +8,9 @@ dependencies {
     //endregion dehuckakpyt
 
     //region database
-    api("org.jetbrains.exposed:exposed-core:0.50.0")
-    api("org.jetbrains.exposed:exposed-dao:0.50.0")
-    api("org.jetbrains.exposed:exposed-java-time:0.50.0")
-    api("org.jetbrains.exposed:exposed-jdbc:0.50.0")
+    api(libs.exposed.core)
+    api(libs.exposed.dao)
+    api(libs.exposed.java.time)
+    api(libs.exposed.jdbc)
     //endregion database
 }

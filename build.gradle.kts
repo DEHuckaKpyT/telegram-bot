@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.22"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
     `java-library`
     `maven-publish`
     signing
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+    alias(libs.plugins.io.github.gradle.nexus.publish.plugin)
 }
 
 allprojects {
     group = "io.github.dehuckakpyt.telegrambot"
-    version = "0.11.1"
+    version = "0.11.2"
 }
 
 allprojects {

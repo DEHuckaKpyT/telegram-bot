@@ -1,21 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version: String by project
-val koin_version: String by project
-val exposed_version = "0.41.1"
-val hikaricp_version = "5.0.1"
-val postgresql_version = "42.7.2"
-
 plugins {
     application
-    kotlin("jvm") version "1.8.22"
-    id("com.google.devtools.ksp") version "1.8.22-1.0.11"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
+    alias(libs.plugins.com.google.devtools.ksp)
 }
 
 dependencies {
     //region ktor
-    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+    implementation(libs.ktor.server.core.jvm)
+    implementation(libs.ktor.server.netty.jvm)
     //endregion ktor
 
     //region dehuckakpyt
@@ -25,14 +19,14 @@ dependencies {
     //endregion dehuckakpyt
 
     //region other
-    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
-    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
-    implementation("com.zaxxer:HikariCP:$hikaricp_version")
-    implementation("org.postgresql:postgresql:$postgresql_version")
-    compileOnly("io.insert-koin:koin-annotations:1.2.2")
-    ksp("io.insert-koin:koin-ksp-compiler:1.2.2")
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.java.time)
+    implementation(libs.hikaricp)
+    implementation(libs.org.postgresql.postgresql)
+    compileOnly(libs.koin.annotations)
+    ksp(libs.koin.ksp.compiler)
     //endregion other
 }
 

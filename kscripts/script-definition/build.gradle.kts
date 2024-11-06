@@ -1,8 +1,5 @@
-val kotlin_version: String by project
-val kotlin_coroutines_version: String by project
-
 plugins {
-    kotlin("jvm") version "1.8.22"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
 }
 
 repositories {
@@ -10,11 +7,11 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-scripting-common:$kotlin_version")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:$kotlin_version")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies:$kotlin_version")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven:$kotlin_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version")
+    implementation(libs.kotlin.scripting.common)
+    implementation(libs.kotlin.scripting.jvm)
+    implementation(libs.kotlin.scripting.dependencies)
+    implementation(libs.kotlin.scripting.dependencies.maven)
+    implementation(libs.kotlinx.coroutines.core)
 }
 
 tasks.test {

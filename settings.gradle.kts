@@ -15,3 +15,15 @@ include("example-ktor")
 include("kscripts")
 include("kscripts:host")
 include("kscripts:script-definition")
+
+
+plugins {
+    // See https://jmfayard.github.io/refreshVersions
+    id("de.fayard.refreshVersions") version "0.60.5"
+}
+
+refreshVersions {
+    // Ignoring file versions.properties
+    file("build/tmp/refreshVersions").mkdirs()
+    versionsPropertiesFile = file("build/tmp/refreshVersions/versions.properties")
+}

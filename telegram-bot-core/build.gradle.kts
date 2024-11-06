@@ -1,37 +1,30 @@
-val ktor_version: String by project
-val jackson_version: String by project
-
 plugins {
-    kotlin("jvm") version "1.8.22"
+    alias(libs.plugins.org.jetbrains.kotlin.jvm)
 }
 
 dependencies {
     //region jackson
-    api("com.fasterxml.jackson.core:jackson-databind:$jackson_version")
-    api("com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version")
-    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version")
+    api(libs.jackson.databind)
+    api(libs.jackson.module.kotlin)
+    api(libs.jackson.datatype.jsr310)
     //endregion jackson
 
     //region ktor
-    api("io.ktor:ktor-client-apache-jvm:$ktor_version")
-    api("io.ktor:ktor-client-content-negotiation-jvm:$ktor_version")
-    api("io.ktor:ktor-serialization-jackson-jvm:$ktor_version")
+    api(libs.ktor.client.apache.jvm)
+    api(libs.ktor.client.content.negotiation.jvm)
+    api(libs.ktor.serialization.jackson.jvm)
     //endregion ktor
 
     //region other
-    implementation("org.jsoup:jsoup:1.16.1")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    api("ch.qos.logback:logback-classic:1.4.14")
+    implementation(libs.jsoup)
+    api(libs.kotlinx.coroutines.core)
+    api(libs.logback.classic)
     //endregion other
 
     //region test
-    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
-    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.mockk)
     //endregion test
-
-    //region temp
-    runtimeOnly("commons-codec:commons-codec:1.17.1") //TODO remove when dependency will be resolved in "io.ktor:ktor-client-apache-jvm:$ktor_version"
-    //endregion temp
 }
 
 tasks.withType<Test> {
