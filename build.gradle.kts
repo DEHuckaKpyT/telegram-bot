@@ -117,3 +117,24 @@ configure(subprojects.filter { it.path.startsWith(":example").not() && it.path.s
         java.srcDirs("build/generated/ksp/main/kotlin")
     }
 }
+
+// Experimental
+tasks.register("updateProjectVersionInWriterside") {
+    doFirst {
+        // write project version to Writerside variables
+        val writersideVariablesFile = file("Writerside/v.list")
+        val writersideVariables = writersideVariablesFile.readText()
+            .replace(Regex("<var name=\"current_version\" value=\".*\"/>"), "<var name=\"current_version\" value=\"${project.version}\"/>")
+        writersideVariablesFile.writeText(writersideVariables)
+
+        // write project version to Writerside config
+        val writersideConfigFile = file("Writerside/writerside.cfg")
+        val writersideConfig = writersideConfigFile.readText()
+            .replace(Regex("<instance src=\"ktb.tree\" web-path=\"/ktb/\" version=\".*\"/>"), "<instance src=\"ktb.tree\" web-path=\"/ktb/\" version=\"${project.version}\"/>")
+        writersideConfigFile.writeText(writersideConfig)
+    }
+}
+
+tasks.build {
+    dependsOn("updateProjectVersionInWriterside")
+}
