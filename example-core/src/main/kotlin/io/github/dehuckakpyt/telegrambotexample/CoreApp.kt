@@ -1,6 +1,9 @@
 package io.github.dehuckakpyt.telegrambotexample
 
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.handling
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.longPolling
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.updateHandling
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handling.exceptionCommand
@@ -31,7 +34,7 @@ suspend fun main(args: Array<String>): Unit {
                 exceptionCommand()
             }
 
-            update {
+            updateHandling {
                 onSomeEvent()
             }
         }

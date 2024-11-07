@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambotexample.config
 
 import io.github.dehuckakpyt.telegrambot.annotation.EnableTelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.handling
 import io.github.dehuckakpyt.telegrambot.ext.dynamicFreeMarker
 import io.github.dehuckakpyt.telegrambot.ext.strategy.invocation.fullSync
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy

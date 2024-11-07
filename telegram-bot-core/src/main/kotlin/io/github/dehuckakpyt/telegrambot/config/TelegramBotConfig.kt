@@ -19,7 +19,6 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
  * - TelegramBotActualConfig.username
  * - TelegramBotActualConfig.messageSource
  * - TelegramBotActualConfig.telegramBot
- * - TelegramBotTemplatingActualConfig.htmlFormatter
  * - TelegramBotTemplatingActualConfig.templater
  * - TelegramBotReceiverActualConfig.messageTemplate
  * - TelegramBotReceiverActualConfig.contentConverter

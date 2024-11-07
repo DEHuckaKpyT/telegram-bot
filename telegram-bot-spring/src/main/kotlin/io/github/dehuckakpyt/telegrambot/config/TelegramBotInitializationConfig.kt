@@ -62,7 +62,6 @@ class TelegramBotInitializationConfig(
             if (messageSource == null && telegramMessageSourceExpression != null) messageSource = telegramMessageSourceExpression::configure
             if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
             if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
-
         }
 
         botContext = TelegramBotFactory.createTelegramBotContext(config)
@@ -81,7 +80,7 @@ class TelegramBotInitializationConfig(
     fun inputFactory(): InputFactory = botContext.inputFactory
 
     @Bean
-    fun messageTelegramBotSource(): MessageSource = botContext.messageSource
+    fun telegramMessageSource(): MessageSource = botContext.messageSource
 
     @Bean
     fun chainSource(): ChainSource = botContext.chainSource
