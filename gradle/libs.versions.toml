@@ -24,6 +24,7 @@ spring = "3.3.5"
 koin = "4.0.0"
 koin-additional = "1.4.0"
 jetbrains-exposed = "0.56.0"
+hypersistence = "3.8.3"
 kotest = "5.9.1"
 kotest-extensions-spring = "1.3.0"
 mockk = "1.13.13"
@@ -71,6 +72,9 @@ exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.r
 exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "jetbrains-exposed" }
 exposed-java-time = { group = "org.jetbrains.exposed", name = "exposed-java-time", version.ref = "jetbrains-exposed" }
 
+hypersistence-utils-hibernate-v63 = { group = "io.hypersistence", name = "hypersistence-utils-hibernate-63", version.ref = "hypersistence" }
+hypersistence-utils-hibernate-v55 = { group = "io.hypersistence", name = "hypersistence-utils-hibernate-55", version.ref = "hypersistence" }
+
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 kotest-extensions-spring = { group = "io.kotest.extensions", name = "kotest-extensions-spring", version.ref = "kotest-extensions-spring" }
 
@@ -80,9 +84,7 @@ logback-classic = "ch.qos.logback:logback-classic:1.5.12"
 slf4j-nop = "org.slf4j:slf4j-nop:2.0.16"
 jsoup = "org.jsoup:jsoup:1.18.1"
 org-postgresql-postgresql = "org.postgresql:postgresql:42.7.4"
-hibernate-core = "org.hibernate:hibernate-core:6.6.1.Final"
-hypersistence-utils-hibernate-63 = "io.hypersistence:hypersistence-utils-hibernate-63:3.8.3"
-hypersistence-utils-hibernate-55 = "io.hypersistence:hypersistence-utils-hibernate-55:3.8.3"
+hibernate-core = "org.hibernate:hibernate-core:6.6.2.Final"
 hikaricp = "com.zaxxer:HikariCP:6.1.0"
 freemarker = "org.freemarker:freemarker:2.3.33"
 springmockk = "com.ninja-squad:springmockk:4.0.2"

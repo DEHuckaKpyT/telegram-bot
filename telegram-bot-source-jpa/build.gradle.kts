@@ -15,7 +15,7 @@ dependencies {
     //endregion springframework
 
     //region database
-    api(libs.hypersistence.utils.hibernate.get63())
+    api(libs.hypersistence.utils.hibernate.v63)
     //endregion database
 
     //region test
