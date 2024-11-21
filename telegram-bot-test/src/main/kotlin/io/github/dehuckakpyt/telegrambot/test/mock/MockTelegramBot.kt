@@ -16,6 +16,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ChatPermissions
 import io.github.dehuckakpyt.telegrambot.model.telegram.File
 import io.github.dehuckakpyt.telegrambot.model.telegram.ForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.GameHighScore
+import io.github.dehuckakpyt.telegrambot.model.telegram.Gifts
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
@@ -32,6 +33,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.PassportElementError
 import io.github.dehuckakpyt.telegrambot.model.telegram.Poll
+import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedInlineMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
@@ -427,6 +429,12 @@ internal class MockTelegramBot : TelegramBot {
         limit: Int?,
     ): UserProfilePhotos = mockk()
 
+    override suspend fun setUserEmojiStatus(
+        userId: Long,
+        emojiStatusCustomEmojiId: String?,
+        emojiStatusExpirationDate: Long?,
+    ): Boolean = mockk()
+
     override suspend fun getFile(fileId: String): File = mockk()
 
     override suspend fun banChatMember(
@@ -519,7 +527,7 @@ internal class MockTelegramBot : TelegramBot {
     ): ChatInviteLink = mockk()
 
     override suspend fun revokeChatInviteLink(chatId: String, inviteLink: String): ChatInviteLink =
-            mockk()
+        mockk()
 
     override suspend fun approveChatJoinRequest(chatId: String, userId: Long): Boolean = mockk()
 
@@ -559,7 +567,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun getChatMember(chatId: String, userId: Long): ChatMember = mockk()
 
     override suspend fun setChatStickerSet(chatId: String, stickerSetName: String): Boolean =
-            mockk()
+        mockk()
 
     override suspend fun deleteChatStickerSet(chatId: String): Boolean = mockk()
 
@@ -585,8 +593,7 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun deleteForumTopic(chatId: String, messageThreadId: Long): Boolean = mockk()
 
-    override suspend fun unpinAllForumTopicMessages(chatId: String, messageThreadId: Long): Boolean
-            = mockk()
+    override suspend fun unpinAllForumTopicMessages(chatId: String, messageThreadId: Long): Boolean = mockk()
 
     override suspend fun editGeneralForumTopic(chatId: String, name: String): Boolean = mockk()
 
@@ -611,7 +618,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun getUserChatBoosts(chatId: String, userId: Long): UserChatBoosts = mockk()
 
     override suspend fun getBusinessConnection(businessConnectionId: String): BusinessConnection =
-            mockk()
+        mockk()
 
     override suspend fun setMyCommands(
         commands: Iterable<BotCommand>,
@@ -620,7 +627,7 @@ internal class MockTelegramBot : TelegramBot {
     ): Boolean = mockk()
 
     override suspend fun deleteMyCommands(scope: BotCommandScope?, languageCode: String?): Boolean =
-            mockk()
+        mockk()
 
     override suspend fun getMyCommands(scope: BotCommandScope?, languageCode: String?):
             List<BotCommand> = mockk()
@@ -630,7 +637,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun getMyName(languageCode: String?): BotName = mockk()
 
     override suspend fun setMyDescription(description: String?, languageCode: String?): Boolean =
-            mockk()
+        mockk()
 
     override suspend fun getMyDescription(languageCode: String?): BotDescription = mockk()
 
@@ -640,12 +647,14 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun getMyShortDescription(languageCode: String?): BotShortDescription = mockk()
 
     override suspend fun setChatMenuButton(chatId: Long?, menuButton: MenuButton?): Boolean =
-            mockk()
+        mockk()
 
     override suspend fun getChatMenuButton(chatId: Long?): MenuButton = mockk()
 
-    override suspend fun setMyDefaultAdministratorRights(rights: ChatAdministratorRights?,
-            forChannels: Boolean?): Boolean = mockk()
+    override suspend fun setMyDefaultAdministratorRights(
+        rights: ChatAdministratorRights?,
+        forChannels: Boolean?,
+    ): Boolean = mockk()
 
     override suspend fun getMyDefaultAdministratorRights(forChannels: Boolean?):
             ChatAdministratorRights = mockk()
@@ -717,7 +726,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun deleteMessage(chatId: String, messageId: Long): Boolean = mockk()
 
     override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean =
-            mockk()
+        mockk()
 
     override suspend fun sendSticker(
         chatId: String,
@@ -736,7 +745,7 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun getStickerSet(name: String): StickerSet = mockk()
 
     override suspend fun getCustomEmojiStickers(customEmojiIds: Iterable<String>): List<Sticker> =
-            mockk()
+        mockk()
 
     override suspend fun uploadStickerFile(
         userId: Long,
@@ -770,11 +779,10 @@ internal class MockTelegramBot : TelegramBot {
         sticker: InputSticker,
     ): Boolean = mockk()
 
-    override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean
-            = mockk()
+    override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean = mockk()
 
     override suspend fun setStickerKeywords(sticker: String, keywords: Iterable<String>?): Boolean =
-            mockk()
+        mockk()
 
     override suspend fun setStickerMaskPosition(sticker: String, maskPosition: MaskPosition?):
             Boolean = mockk()
@@ -793,6 +801,16 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun deleteStickerSet(name: String): Boolean = mockk()
 
+    override suspend fun getAvailableGifts(): Gifts = mockk()
+
+    override suspend fun sendGift(
+        userId: Long,
+        giftId: String,
+        text: String?,
+        textParseMode: String?,
+        textEntities: Iterable<MessageEntity>?,
+    ): Boolean = mockk()
+
     override suspend fun answerInlineQuery(
         inlineQueryId: String,
         results: Iterable<InlineQueryResult>,
@@ -804,6 +822,15 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun answerWebAppQuery(webAppQueryId: String, result: InlineQueryResult):
             SentWebAppMessage = mockk()
+
+    override suspend fun savePreparedInlineMessage(
+        userId: Long,
+        result: InlineQueryResult,
+        allowUserChats: Boolean?,
+        allowBotChats: Boolean?,
+        allowGroupChats: Boolean?,
+        allowChannelChats: Boolean?,
+    ): PreparedInlineMessage = mockk()
 
     override suspend fun sendInvoice(
         chatId: String,
@@ -843,7 +870,9 @@ internal class MockTelegramBot : TelegramBot {
         payload: String,
         currency: String,
         prices: Iterable<LabeledPrice>,
+        businessConnectionId: String?,
         providerToken: String?,
+        subscriptionPeriod: Int?,
         maxTipAmount: Int?,
         suggestedTipAmounts: Iterable<Int>?,
         providerData: String?,
@@ -876,10 +905,18 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun getStarTransactions(offset: Int?, limit: Int?): StarTransactions = mockk()
 
     override suspend fun refundStarPayment(userId: Long, telegramPaymentChargeId: String): Boolean =
-            mockk()
+        mockk()
 
-    override suspend fun setPassportDataErrors(userId: Long,
-            errors: Iterable<PassportElementError>): Boolean = mockk()
+    override suspend fun editUserStarSubscription(
+        userId: Long,
+        telegramPaymentChargeId: String,
+        isCanceled: Boolean,
+    ): Boolean = mockk()
+
+    override suspend fun setPassportDataErrors(
+        userId: Long,
+        errors: Iterable<PassportElementError>,
+    ): Boolean = mockk()
 
     override suspend fun sendGame(
         chatId: Long,

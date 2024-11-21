@@ -16,6 +16,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ChatPermissions
 import io.github.dehuckakpyt.telegrambot.model.telegram.File
 import io.github.dehuckakpyt.telegrambot.model.telegram.ForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.GameHighScore
+import io.github.dehuckakpyt.telegrambot.model.telegram.Gifts
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
@@ -32,6 +33,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.PassportElementError
 import io.github.dehuckakpyt.telegrambot.model.telegram.Poll
+import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedInlineMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
@@ -1527,6 +1529,27 @@ public abstract class TelegramBotApiHandling {
         userId = userId,
         offset = offset,
         limit = limit,
+    )
+
+    /**
+     * Changes the emoji status for a given user that previously allowed the bot to manage their
+     * emoji status via the Mini App method
+     * [requestEmojiStatusAccess](https://core.telegram.org/bots/webapps#initializing-mini-apps).
+     * Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user
+     * @param emojiStatusCustomEmojiId Custom emoji identifier of the emoji status to set. Pass an
+     * empty string to remove the status.
+     * @param emojiStatusExpirationDate Expiration date of the emoji status, if any
+     */
+    public suspend fun Container.setUserEmojiStatus(
+        userId: Long,
+        emojiStatusCustomEmojiId: String? = null,
+        emojiStatusExpirationDate: Long? = null,
+    ): Boolean = bot.setUserEmojiStatus(
+        userId = userId,
+        emojiStatusCustomEmojiId = emojiStatusCustomEmojiId,
+        emojiStatusExpirationDate = emojiStatusExpirationDate,
     )
 
     /**
@@ -3073,6 +3096,42 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
+     * Returns the list of gifts that can be sent by the bot to users. Requires no parameters.
+     * Returns a [Gifts](https://core.telegram.org/bots/api/#gifts) object.
+     */
+    public suspend fun Container.getAvailableGifts(): Gifts = bot.getAvailableGifts(
+    )
+
+    /**
+     * Sends a gift to the given user. The gift can't be converted to Telegram Stars by the user.
+     * Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user that will receive the gift
+     * @param giftId Identifier of the gift
+     * @param text Text that will be shown along with the gift; 0-255 characters
+     * @param textParseMode Mode for parsing entities in the text. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
+     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
+     * ignored.
+     * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
+     * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
+     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+     */
+    public suspend fun Container.sendGift(
+        userId: Long,
+        giftId: String,
+        text: String? = null,
+        textParseMode: String? = null,
+        textEntities: Iterable<MessageEntity>? = null,
+    ): Boolean = bot.sendGift(
+        userId = userId,
+        giftId = giftId,
+        text = text,
+        textParseMode = textParseMode,
+        textEntities = textEntities,
+    )
+
+    /**
      * Use this method to send answers to an inline query. On success, *True* is returned.  
      * No more than **50** results per query are allowed.
      *
@@ -3117,6 +3176,33 @@ public abstract class TelegramBotApiHandling {
             result: InlineQueryResult): SentWebAppMessage = bot.answerWebAppQuery(
         webAppQueryId = webAppQueryId,
         result = result,
+    )
+
+    /**
+     * Stores a message that can be sent by a user of a Mini App. Returns a
+     * [PreparedInlineMessage](https://core.telegram.org/bots/api/#preparedinlinemessage) object.
+     *
+     * @param userId Unique identifier of the target user that can use the prepared message
+     * @param result A JSON-serialized object describing the message to be sent
+     * @param allowUserChats Pass *True* if the message can be sent to private chats with users
+     * @param allowBotChats Pass *True* if the message can be sent to private chats with bots
+     * @param allowGroupChats Pass *True* if the message can be sent to group and supergroup chats
+     * @param allowChannelChats Pass *True* if the message can be sent to channel chats
+     */
+    public suspend fun Container.savePreparedInlineMessage(
+        userId: Long,
+        result: InlineQueryResult,
+        allowUserChats: Boolean? = null,
+        allowBotChats: Boolean? = null,
+        allowGroupChats: Boolean? = null,
+        allowChannelChats: Boolean? = null,
+    ): PreparedInlineMessage = bot.savePreparedInlineMessage(
+        userId = userId,
+        result = result,
+        allowUserChats = allowUserChats,
+        allowBotChats = allowBotChats,
+        allowGroupChats = allowGroupChats,
+        allowChannelChats = allowChannelChats,
     )
 
     /**
@@ -3266,9 +3352,16 @@ public abstract class TelegramBotApiHandling {
      * @param prices Price breakdown, a JSON-serialized list of components (e.g. product price, tax,
      * discount, delivery cost, delivery tax, bonus, etc.). Must contain exactly one item for payments
      * in [Telegram Stars](https://t.me/BotNews/90).
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the link will be created. For payments in [Telegram Stars](https://t.me/BotNews/90) only.
      * @param providerToken Payment provider token, obtained via
      * [@BotFather](https://t.me/botfather). Pass an empty string for payments in [Telegram
      * Stars](https://t.me/BotNews/90).
+     * @param subscriptionPeriod The number of seconds the subscription will be active for before
+     * the next payment. The currency must be set to “XTR” (Telegram Stars) if the parameter is used.
+     * Currently, it must always be 2592000 (30 days) if specified. Any number of subscriptions can be
+     * active for a given bot at the same time, including multiple concurrent subscriptions from the
+     * same user.
      * @param maxTipAmount The maximum accepted amount for tips in the *smallest units* of the
      * currency (integer, **not** float/double). For example, for a maximum tip of `US$ 1.45` pass
      * `max_tip_amount = 145`. See the *exp* parameter in
@@ -3308,7 +3401,9 @@ public abstract class TelegramBotApiHandling {
         payload: String,
         currency: String,
         prices: Iterable<LabeledPrice>,
+        businessConnectionId: String? = null,
         providerToken: String? = null,
+        subscriptionPeriod: Int? = null,
         maxTipAmount: Int? = null,
         suggestedTipAmounts: Iterable<Int>? = null,
         providerData: String? = null,
@@ -3329,7 +3424,9 @@ public abstract class TelegramBotApiHandling {
         payload = payload,
         currency = currency,
         prices = prices,
+        businessConnectionId = businessConnectionId,
         providerToken = providerToken,
+        subscriptionPeriod = subscriptionPeriod,
         maxTipAmount = maxTipAmount,
         suggestedTipAmounts = suggestedTipAmounts,
         providerData = providerData,
@@ -3423,6 +3520,26 @@ public abstract class TelegramBotApiHandling {
             Boolean = bot.refundStarPayment(
         userId = userId,
         telegramPaymentChargeId = telegramPaymentChargeId,
+    )
+
+    /**
+     * Allows the bot to cancel or re-enable extension of a subscription paid in Telegram Stars.
+     * Returns *True* on success.
+     *
+     * @param userId Identifier of the user whose subscription will be edited
+     * @param telegramPaymentChargeId Telegram payment identifier for the subscription
+     * @param isCanceled Pass *True* to cancel extension of the user subscription; the subscription
+     * must be active up to the end of the current subscription period. Pass *False* to allow the user
+     * to re-enable a subscription that was previously canceled by the bot.
+     */
+    public suspend fun Container.editUserStarSubscription(
+        userId: Long,
+        telegramPaymentChargeId: String,
+        isCanceled: Boolean,
+    ): Boolean = bot.editUserStarSubscription(
+        userId = userId,
+        telegramPaymentChargeId = telegramPaymentChargeId,
+        isCanceled = isCanceled,
     )
 
     /**

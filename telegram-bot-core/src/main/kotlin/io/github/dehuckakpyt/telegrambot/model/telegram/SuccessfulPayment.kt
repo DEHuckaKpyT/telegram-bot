@@ -1,7 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
+import kotlin.Boolean
 import kotlin.Int
+import kotlin.Long
 import kotlin.String
 
 /**
@@ -19,6 +21,10 @@ import kotlin.String
  * in [currencies.json](https://core.telegram.org/bots/payments/currencies.json), it shows the number
  * of digits past the decimal point for each currency (2 for the majority of currencies).
  * @param invoicePayload Bot-specified invoice payload
+ * @param subscriptionExpirationDate *Optional*. Expiration date of the subscription, in Unix time;
+ * for recurring payments only
+ * @param isRecurring *Optional*. True, if the payment is a recurring payment for a subscription
+ * @param isFirstRecurring *Optional*. True, if the payment is the first payment for a subscription
  * @param shippingOptionId *Optional*. Identifier of the shipping option chosen by the user
  * @param orderInfo *Optional*. Order information provided by the user
  * @param telegramPaymentChargeId Telegram payment identifier
@@ -48,6 +54,24 @@ public data class SuccessfulPayment(
     @get:JsonProperty("invoice_payload")
     @param:JsonProperty("invoice_payload")
     public val invoicePayload: String,
+    /**
+     * *Optional*. Expiration date of the subscription, in Unix time; for recurring payments only
+     */
+    @get:JsonProperty("subscription_expiration_date")
+    @param:JsonProperty("subscription_expiration_date")
+    public val subscriptionExpirationDate: Long? = null,
+    /**
+     * *Optional*. True, if the payment is a recurring payment for a subscription
+     */
+    @get:JsonProperty("is_recurring")
+    @param:JsonProperty("is_recurring")
+    public val isRecurring: Boolean? = null,
+    /**
+     * *Optional*. True, if the payment is the first payment for a subscription
+     */
+    @get:JsonProperty("is_first_recurring")
+    @param:JsonProperty("is_first_recurring")
+    public val isFirstRecurring: Boolean? = null,
     /**
      * *Optional*. Identifier of the shipping option chosen by the user
      */

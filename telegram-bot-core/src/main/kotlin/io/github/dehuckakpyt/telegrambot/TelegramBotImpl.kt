@@ -44,6 +44,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageRe
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageReplyMarkupByInlineMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageTextByChatIdAndMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageTextByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditUserStarSubscription
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ExportChatInviteLink
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ForwardMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ForwardMessages
@@ -75,13 +76,16 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenForumTo
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenGeneralForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RestrictChatMember
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RevokeChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SavePreparedInlineMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendChatAction
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendContact
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendDice
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendGame
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendGift
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendInvoice
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendLocation
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendPoll
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendVenue
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatAdministratorCustomTitle
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatDescription
@@ -104,6 +108,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerKey
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerMaskPosition
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerPositionInSet
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerSetTitle
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetUserEmojiStatus
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopMessageLiveLocationByChatIdAndMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopMessageLiveLocationByInlineMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopPoll
@@ -126,7 +131,7 @@ import kotlin.collections.Iterable
 import kotlin.collections.List
 
 /**
- * Created on 01.11.2024.
+ * Created on 21.11.2024.
  *
  * @author KScript
  */
@@ -750,31 +755,32 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendPoll") {
-        append("chat_id", chatId)
-        append("question", question)
-        append("options", client.toJson(options))
-        appendIfNotNull("business_connection_id", businessConnectionId)
-        appendIfNotNull("message_thread_id", messageThreadId)
-        appendIfNotNull("question_parse_mode", questionParseMode)
-        appendIfNotNull("question_entities", client.toJson(questionEntities))
-        appendIfNotNull("is_anonymous", isAnonymous)
-        appendIfNotNull("type", type)
-        appendIfNotNull("allows_multiple_answers", allowsMultipleAnswers)
-        appendIfNotNull("correct_option_id", correctOptionId)
-        appendIfNotNull("explanation", explanation)
-        appendIfNotNull("explanation_parse_mode", explanationParseMode)
-        appendIfNotNull("explanation_entities", client.toJson(explanationEntities))
-        appendIfNotNull("open_period", openPeriod)
-        appendIfNotNull("close_date", closeDate)
-        appendIfNotNull("is_closed", isClosed)
-        appendIfNotNull("disable_notification", disableNotification)
-        appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
-        appendIfNotNull("message_effect_id", messageEffectId)
-        appendIfNotNull("reply_parameters", client.toJson(replyParameters))
-        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "POLL", text = question) }
+    ): Message = client.postJson<Message>("sendPoll", SendPoll(
+            chatId = chatId, 
+            question = question, 
+            options = options, 
+            businessConnectionId = businessConnectionId, 
+            messageThreadId = messageThreadId, 
+            questionParseMode = questionParseMode, 
+            questionEntities = questionEntities, 
+            isAnonymous = isAnonymous, 
+            type = type, 
+            allowsMultipleAnswers = allowsMultipleAnswers, 
+            correctOptionId = correctOptionId, 
+            explanation = explanation, 
+            explanationParseMode = explanationParseMode, 
+            explanationEntities = explanationEntities, 
+            openPeriod = openPeriod, 
+            closeDate = closeDate, 
+            isClosed = isClosed, 
+            disableNotification = disableNotification, 
+            protectContent = protectContent, 
+            allowPaidBroadcast = allowPaidBroadcast, 
+            messageEffectId = messageEffectId, 
+            replyParameters = replyParameters, 
+            replyMarkup = replyMarkup
+        )
+    ).also { messageSource.save(message = it, fromBot = true, type = "POLL", text = question) }
 
     override suspend fun sendDice(
         chatId: String,
@@ -835,6 +841,17 @@ public class TelegramBotImpl(
             userId = userId, 
             offset = offset, 
             limit = limit
+        )
+    )
+
+    override suspend fun setUserEmojiStatus(
+        userId: Long,
+        emojiStatusCustomEmojiId: String?,
+        emojiStatusExpirationDate: Long?,
+    ): Boolean = client.postJson("setUserEmojiStatus", SetUserEmojiStatus(
+            userId = userId, 
+            emojiStatusCustomEmojiId = emojiStatusCustomEmojiId, 
+            emojiStatusExpirationDate = emojiStatusExpirationDate
         )
     )
 
@@ -1657,6 +1674,23 @@ public class TelegramBotImpl(
         )
     )
 
+    override suspend fun getAvailableGifts(): Gifts = client.get("getAvailableGifts")
+
+    override suspend fun sendGift(
+        userId: Long,
+        giftId: String,
+        text: String?,
+        textParseMode: String?,
+        textEntities: Iterable<MessageEntity>?,
+    ): Boolean = client.postJson("sendGift", SendGift(
+            userId = userId, 
+            giftId = giftId, 
+            text = text, 
+            textParseMode = textParseMode, 
+            textEntities = textEntities
+        )
+    )
+
     override suspend fun answerInlineQuery(
         inlineQueryId: String,
         results: Iterable<InlineQueryResult>,
@@ -1678,6 +1712,24 @@ public class TelegramBotImpl(
             SentWebAppMessage = client.postJson("answerWebAppQuery", AnswerWebAppQuery(
             webAppQueryId = webAppQueryId, 
             result = result
+        )
+    )
+
+    override suspend fun savePreparedInlineMessage(
+        userId: Long,
+        result: InlineQueryResult,
+        allowUserChats: Boolean?,
+        allowBotChats: Boolean?,
+        allowGroupChats: Boolean?,
+        allowChannelChats: Boolean?,
+    ): PreparedInlineMessage = client.postJson("savePreparedInlineMessage",
+            SavePreparedInlineMessage(
+            userId = userId, 
+            result = result, 
+            allowUserChats = allowUserChats, 
+            allowBotChats = allowBotChats, 
+            allowGroupChats = allowGroupChats, 
+            allowChannelChats = allowChannelChats
         )
     )
 
@@ -1750,7 +1802,9 @@ public class TelegramBotImpl(
         payload: String,
         currency: String,
         prices: Iterable<LabeledPrice>,
+        businessConnectionId: String?,
         providerToken: String?,
+        subscriptionPeriod: Int?,
         maxTipAmount: Int?,
         suggestedTipAmounts: Iterable<Int>?,
         providerData: String?,
@@ -1771,7 +1825,9 @@ public class TelegramBotImpl(
             payload = payload, 
             currency = currency, 
             prices = prices, 
+            businessConnectionId = businessConnectionId, 
             providerToken = providerToken, 
+            subscriptionPeriod = subscriptionPeriod, 
             maxTipAmount = maxTipAmount, 
             suggestedTipAmounts = suggestedTipAmounts, 
             providerData = providerData, 
@@ -1824,6 +1880,17 @@ public class TelegramBotImpl(
             client.postJson("refundStarPayment", RefundStarPayment(
             userId = userId, 
             telegramPaymentChargeId = telegramPaymentChargeId
+        )
+    )
+
+    override suspend fun editUserStarSubscription(
+        userId: Long,
+        telegramPaymentChargeId: String,
+        isCanceled: Boolean,
+    ): Boolean = client.postJson("editUserStarSubscription", EditUserStarSubscription(
+            userId = userId, 
+            telegramPaymentChargeId = telegramPaymentChargeId, 
+            isCanceled = isCanceled
         )
     )
 

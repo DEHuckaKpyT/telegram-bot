@@ -21,8 +21,12 @@ internal data class CreateInvoiceLink(
     public val currency: String,
     @get:JsonProperty("prices")
     public val prices: Iterable<LabeledPrice>,
+    @get:JsonProperty("business_connection_id")
+    public val businessConnectionId: String? = null,
     @get:JsonProperty("provider_token")
     public val providerToken: String? = null,
+    @get:JsonProperty("subscription_period")
+    public val subscriptionPeriod: Int? = null,
     @get:JsonProperty("max_tip_amount")
     public val maxTipAmount: Int? = null,
     @get:JsonProperty("suggested_tip_amounts")
