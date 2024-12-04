@@ -21,7 +21,7 @@ open class ExceptionHandlerImpl(
     templater: Templater,
 ) : ExceptionHandler, Templater by templater {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger = LoggerFactory.getLogger(ExceptionHandlerImpl::class.java)
 
     /**
      * Execute handler action with exceptions handling.

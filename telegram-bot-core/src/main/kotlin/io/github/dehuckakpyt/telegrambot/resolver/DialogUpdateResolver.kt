@@ -37,7 +37,7 @@ internal class DialogUpdateResolver(
     private val username: String,
 ) {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger = LoggerFactory.getLogger(DialogUpdateResolver::class.java)
 
     suspend fun processMessage(message: Message): Unit {
         val from = message.from
@@ -48,16 +48,23 @@ internal class DialogUpdateResolver(
             logger.warn("Don't expect message without fromId.\nchatId = '${chat.id}'\ntext = $text")
             return
         }
-        invocationStrategy.invokeHandler(chat.id, from.id) {
-            exceptionHandler.execute(message.chat) {
-                fetchCommand(text, username)?.let {
-                    processCommandMessage(it, message)
-                } ?: processGeneralMessage(message)
+
+        val command = fetchCommand(text, username)
+        if (command != null)
+            invocationStrategy.invokeHandler(chat.id, from.id) {
+                exceptionHandler.executeCommand(message) {
+                    processCommand(command, message)
+                }
             }
-        }
+        else
+            invocationStrategy.invokeHandler(chat.id, from.id) {
+                exceptionHandler.executeStep(message) {
+                    processStep(message)
+                }
+            }
     }
 
-    private suspend fun processCommandMessage(command: String, message: Message): Unit = with(message) {
+    private suspend fun processCommand(command: String, message: Message): Unit = with(message) {
         messageSource.save(
             message = message,
             fromBot = false,
@@ -72,7 +79,7 @@ internal class DialogUpdateResolver(
         }
     }
 
-    private suspend fun processGeneralMessage(message: Message): Unit = with(message) {
+    private suspend fun processStep(message: Message): Unit = with(message) {
         val chain = chainSource.get(chatId, from!!.id)
         val factory = message.messageContainerFactory
 
@@ -100,7 +107,7 @@ internal class DialogUpdateResolver(
         if (message !is Message) return
 
         invocationStrategy.invokeHandler(message.chat.id, from.id) {
-            exceptionHandler.execute(message.chat) {
+            exceptionHandler.executeCallback(callback) {
                 val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
                 chainResolver.getCallback(callbackName)?.let { action ->
