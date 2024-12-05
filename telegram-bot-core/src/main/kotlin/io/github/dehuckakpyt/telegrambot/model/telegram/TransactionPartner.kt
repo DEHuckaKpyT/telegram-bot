@@ -9,6 +9,8 @@ import kotlin.String
  * Currently, it can be one of
  *
  * * [TransactionPartnerUser](https://core.telegram.org/bots/api/#transactionpartneruser)
+ * *
+ * [TransactionPartnerAffiliateProgram](https://core.telegram.org/bots/api/#transactionpartneraffiliateprogram)
  * * [TransactionPartnerFragment](https://core.telegram.org/bots/api/#transactionpartnerfragment)
  * *
  * [TransactionPartnerTelegramAds](https://core.telegram.org/bots/api/#transactionpartnertelegramads)
@@ -28,6 +30,8 @@ import kotlin.String
 )
 @JsonSubTypes(
     JsonSubTypes.Type(value = TransactionPartnerUser::class, name = "user"),
+    JsonSubTypes.Type(value = TransactionPartnerAffiliateProgram::class, name =
+            "affiliate_program"),
     JsonSubTypes.Type(value = TransactionPartnerFragment::class, name = "fragment"),
     JsonSubTypes.Type(value = TransactionPartnerTelegramAds::class, name = "telegram_ads"),
     JsonSubTypes.Type(value = TransactionPartnerTelegramApi::class, name = "telegram_api"),

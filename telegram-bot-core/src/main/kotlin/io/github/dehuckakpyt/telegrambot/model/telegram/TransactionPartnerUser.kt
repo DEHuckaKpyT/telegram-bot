@@ -14,6 +14,8 @@ import kotlin.collections.List
  *
  * @param type Type of the transaction partner, always “user”
  * @param user Information about the user
+ * @param affiliate *Optional*. Information about the affiliate that received a commission via this
+ * transaction
  * @param invoicePayload *Optional*. Bot-specified invoice payload
  * @param subscriptionPeriod *Optional*. The duration of the paid subscription
  * @param paidMedia *Optional*. Information about the paid media bought by the user
@@ -33,6 +35,12 @@ public data class TransactionPartnerUser(
     @get:JsonProperty("user")
     @param:JsonProperty("user")
     public val user: User,
+    /**
+     * *Optional*. Information about the affiliate that received a commission via this transaction
+     */
+    @get:JsonProperty("affiliate")
+    @param:JsonProperty("affiliate")
+    public val affiliate: AffiliateInfo? = null,
     /**
      * *Optional*. Bot-specified invoice payload
      */
@@ -62,5 +70,5 @@ public data class TransactionPartnerUser(
      */
     @get:JsonProperty("gift")
     @param:JsonProperty("gift")
-    public val gift: String? = null,
+    public val gift: Gift? = null,
 ) : TransactionPartner

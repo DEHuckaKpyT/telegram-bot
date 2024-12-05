@@ -15,7 +15,9 @@ import kotlin.String
  * @param id Unique identifier of the transaction. Coincides with the identifier of the original
  * transaction for refund transactions. Coincides with *SuccessfulPayment.telegram_payment_charge_id*
  * for successful incoming payments from users.
- * @param amount Number of Telegram Stars transferred by the transaction
+ * @param amount Integer amount of Telegram Stars transferred by the transaction
+ * @param nanostarAmount *Optional*. The number of 1/1000000000 shares of Telegram Stars transferred
+ * by the transaction; from 0 to 999999999
  * @param date Date the transaction was created in Unix time
  * @param source *Optional*. Source of an incoming transaction (e.g., a user purchasing goods or
  * services, Fragment refunding a failed withdrawal). Only for incoming transactions
@@ -32,11 +34,18 @@ public data class StarTransaction(
     @param:JsonProperty("id")
     public val id: String,
     /**
-     * Number of Telegram Stars transferred by the transaction
+     * Integer amount of Telegram Stars transferred by the transaction
      */
     @get:JsonProperty("amount")
     @param:JsonProperty("amount")
     public val amount: Int,
+    /**
+     * *Optional*. The number of 1/1000000000 shares of Telegram Stars transferred by the
+     * transaction; from 0 to 999999999
+     */
+    @get:JsonProperty("nanostar_amount")
+    @param:JsonProperty("nanostar_amount")
+    public val nanostarAmount: Int? = null,
     /**
      * Date the transaction was created in Unix time
      */
