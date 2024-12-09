@@ -98,12 +98,15 @@ object TelegramBotFactory {
 
         val chainResolver = ChainResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, actualReceiving.chainExceptionHandler, actualReceiving.contentConverter)
         val messageArgumentFactories: List<MessageContainerFactory> = listOf(
+            TextMessageContainerFactory(),
             AudioMessageContainerFactory(),
-            ContactMessageContainerFactory(),
             DocumentMessageContainerFactory(),
             PhotoMessageContainerFactory(),
-            TextMessageContainerFactory(),
+            StickerMessageContainerFactory(),
+            VideoMessageContainerFactory(),
+            VideoNoteMessageContainerFactory(),
             VoiceMessageContainerFactory(),
+            ContactMessageContainerFactory(),
             LocationMessageContainerFactory(),
             WebAppDataMessageContainerFactory(),
         )

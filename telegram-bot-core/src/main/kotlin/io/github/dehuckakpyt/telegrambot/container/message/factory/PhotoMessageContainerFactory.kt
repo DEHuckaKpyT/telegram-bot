@@ -16,9 +16,7 @@ import kotlin.reflect.KClass
  */
 internal class PhotoMessageContainerFactory : MessageContainerFactory {
 
-    override fun matches(message: Message): Boolean = with(message) {
-        return photo.isNullOrEmpty().not()
-    }
+    override fun matches(message: Message): Boolean = message.photo.isNullOrEmpty().not()
 
     override fun create(message: Message, step: String?, content: String?): MessageContainer =
         PhotoMessageContainer(message, step, content)

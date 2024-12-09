@@ -15,9 +15,7 @@ import kotlin.reflect.KClass
  */
 internal class ContactMessageContainerFactory : MessageContainerFactory {
 
-    override fun matches(message: Message): Boolean = with(message) {
-        return contact != null
-    }
+    override fun matches(message: Message): Boolean = message.contact != null
 
     override fun create(message: Message, step: String?, content: String?): MessageContainer =
         ContactMessageContainer(message, step, content)

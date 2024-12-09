@@ -15,9 +15,7 @@ import kotlin.reflect.KClass
  */
 internal class AudioMessageContainerFactory : MessageContainerFactory {
 
-    override fun matches(message: Message): Boolean = with(message) {
-        return audio != null
-    }
+    override fun matches(message: Message): Boolean = message.audio != null
 
     override fun create(message: Message, step: String?, content: String?): MessageContainer =
         AudioMessageContainer(message, step, content)

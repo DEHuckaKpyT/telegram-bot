@@ -15,9 +15,7 @@ import kotlin.reflect.KClass
  */
 internal class TextMessageContainerFactory : MessageContainerFactory {
 
-    override fun matches(message: Message): Boolean = with(message) {
-        return text != null
-    }
+    override fun matches(message: Message): Boolean = message.text != null
 
     override fun create(message: Message, step: String?, content: String?): MessageContainer =
         TextMessageContainer(message, step, content)

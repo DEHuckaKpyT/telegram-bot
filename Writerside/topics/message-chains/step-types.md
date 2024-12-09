@@ -45,11 +45,14 @@ Available types at this time:
 ```kotlin
 object MessageType {
     val TEXT
-    val PHOTO
     val AUDIO
+    val DOCUMENT
+    val PHOTO
+    val STICKER
+    val VIDEO
+    val VIDEO_NOTE
     val VOICE
     val CONTACT
-    val DOCUMENT
     val LOCATION
     val WEB_APP_DATA
 }

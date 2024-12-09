@@ -21,7 +21,7 @@ internal class LongPollingUpdateReceiver(
 ) : UpdateReceiver {
 
     private val scope = CoroutineScope(Dispatchers.Default)
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger = LoggerFactory.getLogger(LongPollingUpdateReceiver::class.java)
     private val delayBetweenTries: Long = 5000
     private var lastUpdateId: Long? = null
 

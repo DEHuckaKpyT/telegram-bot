@@ -15,9 +15,7 @@ import kotlin.reflect.KClass
  */
 internal class LocationMessageContainerFactory : MessageContainerFactory {
 
-    override fun matches(message: Message): Boolean = with(message) {
-        return location != null
-    }
+    override fun matches(message: Message): Boolean = message.location != null
 
     override fun create(message: Message, step: String?, content: String?): MessageContainer =
         LocationMessageContainer(message, step, content)
