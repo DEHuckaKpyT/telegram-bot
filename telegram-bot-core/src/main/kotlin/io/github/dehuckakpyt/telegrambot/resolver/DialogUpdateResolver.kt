@@ -14,7 +14,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.CallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 
@@ -31,7 +30,6 @@ internal class DialogUpdateResolver(
     private val chainResolver: ChainResolver,
     private val exceptionHandler: ExceptionHandler,
     private val chainExceptionHandler: ChainExceptionHandler,
-    private val invocationStrategy: HandlerInvocationStrategy,
     private val messageArgumentFactories: List<MessageContainerFactory>,
     private val messageSource: MessageSource,
     private val username: String,
@@ -51,16 +49,12 @@ internal class DialogUpdateResolver(
 
         val command = fetchCommand(text, username)
         if (command != null)
-            invocationStrategy.invokeHandler(chat.id, from.id) {
-                exceptionHandler.executeCommand(message) {
-                    processCommand(command, message)
-                }
+            exceptionHandler.executeCommand(message) {
+                processCommand(command, message)
             }
         else
-            invocationStrategy.invokeHandler(chat.id, from.id) {
-                exceptionHandler.executeStep(message) {
-                    processStep(message)
-                }
+            exceptionHandler.executeStep(message) {
+                processStep(message)
             }
     }
 
@@ -106,13 +100,11 @@ internal class DialogUpdateResolver(
         val data = data ?: return
         if (message !is Message) return
 
-        invocationStrategy.invokeHandler(message.chat.id, from.id) {
-            exceptionHandler.executeCallback(callback) {
-                val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
+        exceptionHandler.executeCallback(callback) {
+            val (callbackName, callbackContent) = callbackSerializer.fromCallback(data)
 
-                chainResolver.getCallback(callbackName)?.let { action ->
-                    invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), action)
-                }
+            chainResolver.getCallback(callbackName)?.let { action ->
+                invokeWithContainerContext(CallbackContainer(callback, step = callbackName, callbackContent), action)
             }
         }
     }

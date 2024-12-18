@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.ext.strategy.invocation
 
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.*
 import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.annotations.ApiStatus.Experimental
 
 
 /**
@@ -10,22 +9,29 @@ import org.jetbrains.annotations.ApiStatus.Experimental
  *
  * @author Denis Matytsin
  */
-@get:Experimental
+@get:Deprecated("HandlerInvocationStrategy will be removed in future releases")
 val HandlerInvocationStrategy.Companion.fullSync: HandlerInvocationStrategy get() = HandlerInvocationFullSyncStrategy()
-@get:Experimental
+
+@get:Deprecated("HandlerInvocationStrategy will be removed in future releases")
 val HandlerInvocationStrategy.Companion.fullAsync: HandlerInvocationStrategy get() = HandlerInvocationFullAsyncStrategy()
-@get:Experimental
+
+@get:Deprecated("HandlerInvocationStrategy will be removed in future releases")
 val HandlerInvocationStrategy.Companion.userSync: HandlerInvocationStrategy get() = HandlerInvocationUserSyncStrategy()
-@get:Experimental
+
+@get:Deprecated("HandlerInvocationStrategy will be removed in future releases")
 val HandlerInvocationStrategy.Companion.chatSync: HandlerInvocationStrategy get() = HandlerInvocationChatSyncStrategy()
-@get:Experimental
+
+@get:Deprecated("HandlerInvocationStrategy will be removed in future releases")
 val HandlerInvocationStrategy.Companion.smartSync: HandlerInvocationStrategy get() = HandlerInvocationSmartSyncStrategy()
 
-@Experimental
+@Deprecated("HandlerInvocationStrategy will be removed in future releases")
 fun HandlerInvocationStrategy.Companion.fullAsync(scope: CoroutineScope): HandlerInvocationStrategy = HandlerInvocationFullAsyncStrategy(scope)
-@Experimental
+
+@Deprecated("HandlerInvocationStrategy will be removed in future releases")
 fun HandlerInvocationStrategy.Companion.userSync(scope: CoroutineScope): HandlerInvocationStrategy = HandlerInvocationUserSyncStrategy(scope)
-@Experimental
+
+@Deprecated("HandlerInvocationStrategy will be removed in future releases")
 fun HandlerInvocationStrategy.Companion.chatSync(scope: CoroutineScope): HandlerInvocationStrategy = HandlerInvocationChatSyncStrategy(scope)
-@Experimental
+
+@Deprecated("HandlerInvocationStrategy will be removed in future releases")
 fun HandlerInvocationStrategy.Companion.smartSync(scope: CoroutineScope): HandlerInvocationStrategy = HandlerInvocationSmartSyncStrategy(scope)

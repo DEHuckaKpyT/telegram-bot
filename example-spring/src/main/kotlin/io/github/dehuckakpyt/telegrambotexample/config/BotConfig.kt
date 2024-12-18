@@ -4,8 +4,6 @@ import io.github.dehuckakpyt.telegrambot.annotation.EnableTelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.handling
 import io.github.dehuckakpyt.telegrambot.ext.dynamicFreeMarker
-import io.github.dehuckakpyt.telegrambot.ext.strategy.invocation.fullSync
-import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.buttonCommand
@@ -31,7 +29,6 @@ class BotConfig {
         templater = { Templater.dynamicFreeMarker }
 
         receiving {
-            invocationStrategy = { HandlerInvocationStrategy.fullSync }
             exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
 
             handling {

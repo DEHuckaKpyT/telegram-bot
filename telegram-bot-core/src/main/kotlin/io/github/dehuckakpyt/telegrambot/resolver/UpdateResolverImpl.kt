@@ -9,7 +9,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Update
  *
  * @author Denis Matytsin
  */
-internal class UpdateResolverImpl(
+class UpdateResolverImpl internal constructor(
     private val dialogUpdateResolver: DialogUpdateResolver,
     private val eventUpdateResolver: EventUpdateResolver,
 ) : UpdateResolver {

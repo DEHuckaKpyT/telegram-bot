@@ -27,7 +27,6 @@ import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContent
 import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationFullAsyncStrategy
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.RegexTemplater
 
@@ -92,7 +91,6 @@ object TelegramBotFactory {
         actualReceiving.chainSource = chainSource?.invoke(actual) ?: InMemoryChainSource()
         actualReceiving.callbackSerializer = callbackSerializer?.invoke(actual) ?: SimpleCallbackSerializer(actualReceiving.callbackContentSource, actualReceiving.contentConverter)
         val buttonFactory = ButtonFactoryImpl(actualReceiving.callbackSerializer)
-        actualReceiving.invocationStrategy = invocationStrategy?.invoke(actual) ?: HandlerInvocationFullAsyncStrategy()
         actualReceiving.exceptionHandler = exceptionHandler?.invoke(actual) ?: ExceptionHandlerImpl(actual.telegramBot, actualReceiving.messageTemplate, actual.templater)
         actualReceiving.chainExceptionHandler = chainExceptionHandler?.invoke(actual) ?: ChainExceptionHandlerImpl(actualReceiving.messageTemplate, actual.templater)
 
@@ -110,7 +108,7 @@ object TelegramBotFactory {
             LocationMessageContainerFactory(),
             WebAppDataMessageContainerFactory(),
         )
-        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, actualReceiving.invocationStrategy, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
+        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
         val eventUpdateResolver = EventUpdateResolver()
 
         val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templater, buttonFactory)

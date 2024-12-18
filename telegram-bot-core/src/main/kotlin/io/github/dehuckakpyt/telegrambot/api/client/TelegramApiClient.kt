@@ -53,6 +53,11 @@ public class TelegramApiClient(
     }
 
     private val hiddenToken: String = buildString {
+        if (token.length < 12 || token.contains(':').not()) {
+            append(token)
+            return@buildString
+        }
+
         val visibleFirstCharsCount = 4
         val visibleLastCharsCount = 8
 

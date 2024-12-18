@@ -62,7 +62,11 @@ internal class LongPollingUpdateReceiver(
 
             lastUpdateId = updates.last().updateId
 
-            updates.forEach { updateResolver.processUpdate(it) }
+            for (update in updates) {
+                scope.launch {
+                    updateResolver.processUpdate(update)
+                }
+            }
         }
     }
 
