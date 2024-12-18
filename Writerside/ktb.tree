@@ -24,7 +24,6 @@
     <toc-element topic="update-handling.md"/>
     <toc-element topic="testing.md"/>
     <toc-element topic="configuration.md">
-        <toc-element topic="synchronization.md"/>
         <toc-element topic="exception-handling.md"/>
         <toc-element topic="sources.md"/>
         <toc-element topic="callback-serialization.md"/>

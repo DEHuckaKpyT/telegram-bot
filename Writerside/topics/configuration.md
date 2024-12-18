@@ -32,8 +32,6 @@ class UpdateReceiverConfig {
     var callbackSerializer: (TelegramBotActualConfig.() -> CallbackSerializer)? = null,
     /** Text templates for show to user when exception throws */
     var messageTemplate: (TelegramBotActualConfig.() -> MessageTemplate)? = null,
-    /** Strategy for invoking BotHandler actions */
-    var invocationStrategy: (TelegramBotActualConfig.() -> HandlerInvocationStrategy)? = null,
     /** Handler for catch internal exceptions */
     var exceptionHandler: (TelegramBotActualConfig.() -> ExceptionHandler)? = null,
     /** Handler for process exceptions in message chains */
