@@ -20,23 +20,29 @@ internal class LongPollingUpdateReceiver(
     private val config: LongPollingConfig,
 ) : UpdateReceiver {
 
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.Default + CoroutineName("TelegramBot"))
     private val logger = LoggerFactory.getLogger(LongPollingUpdateReceiver::class.java)
     private val delayBetweenTries: Long = 5000
     private var lastUpdateId: Long? = null
+    private var running: Boolean = false
 
     override fun start(): Unit {
+        running = true
         scope.launch { retryingReceiveUpdates() }
     }
 
     private suspend fun retryingReceiveUpdates() {
-        while (true) {
+        while (running) {
             try {
                 receiveUpdates()
-            } catch (e: ConnectionClosedException) {
-                logger.info("Telegram-bot's (${bot.username}) client was closed.")
-                return
             } catch (throwable: Throwable) {
+                if (running.not()) { // If bot was stopped by stop() method
+                    if (throwable is ConnectionClosedException) { // It happens because of bot.client.close() when long polling connection is active
+                        logger.info("Telegram-bot's (${bot.username}) client was closed.")
+                    }
+                    return
+                }
+
                 logger.error("Internal error. Receiving updates will be resumed after $delayBetweenTries milliseconds.", throwable)
                 delay(delayBetweenTries)
             }
@@ -48,7 +54,7 @@ internal class LongPollingUpdateReceiver(
 
         val allowedUpdates: Set<String> = updateResolver.allowedUpdates
 
-        while (true) {
+        while (running) {
             val offset = lastUpdateId?.inc()
 
             val updates = bot.getUpdates(
@@ -71,6 +77,7 @@ internal class LongPollingUpdateReceiver(
     }
 
     override fun stop(): Unit {
+        running = false
         bot.client.close()
         scope.cancel()
     }
