@@ -11,23 +11,23 @@ org-springframework-boot = { id = "org.springframework.boot", version.ref = "spr
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
 
 io-github-gradle-nexus-publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
-io-spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.6" }
+io-spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 [versions]
 
 kotlin = "1.8.22"
 kotlinx-coroutines = "1.7.3"
 google-ksp = "1.8.22-1.0.11"
-ktor = "3.0.2"
+ktor = "3.0.3"
 jackson = "2.18.2"
-spring = "3.4.0"
+spring = "3.4.1"
 koin = "4.0.0"
 koin-additional = "1.4.0"
 jetbrains-exposed = "0.57.0"
 hypersistence = "3.9.0"
 kotest = "5.9.1"
 kotest-extensions-spring = "1.3.0"
-mockk = "1.13.13"
+mockk = "1.13.14"
 
 [libraries]
 
@@ -80,11 +80,11 @@ kotest-extensions-spring = { group = "io.kotest.extensions", name = "kotest-exte
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.5.12"
+logback-classic = "ch.qos.logback:logback-classic:1.5.14"
 slf4j-nop = "org.slf4j:slf4j-nop:2.0.16"
 jsoup = "org.jsoup:jsoup:1.18.3"
 org-postgresql-postgresql = "org.postgresql:postgresql:42.7.4"
-hibernate-core = "org.hibernate:hibernate-core:6.6.3.Final"
+hibernate-core = "org.hibernate:hibernate-core:6.6.4.Final"
 hikaricp = "com.zaxxer:HikariCP:6.2.1"
 freemarker = "org.freemarker:freemarker:2.3.33"
 springmockk = "com.ninja-squad:springmockk:4.0.2"

@@ -42,13 +42,10 @@ nexusPublishing {
 }
 
 configure(subprojects.filter { it.path.startsWith(":example").not() && it.path.startsWith(":kscripts").not() }) {
-//    kotlin {
-//        explicitApi()
-//    }
-
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
 
     publishing {
         publications {
@@ -72,7 +69,7 @@ configure(subprojects.filter { it.path.startsWith(":example").not() && it.path.s
                     licenses {
                         license {
                             name.set("The Apache License, Version 2.0")
-                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                         }
                     }
                     developers {
@@ -100,6 +97,10 @@ configure(subprojects.filter { it.path.startsWith(":example").not() && it.path.s
 
     signing {
         sign(publishing.publications[project.name])
+    }
+
+    kotlin {
+//        explicitApi()
     }
 
     java {

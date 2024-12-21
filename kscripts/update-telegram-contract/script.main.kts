@@ -318,21 +318,31 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                 .primaryConstructor(FunSpec.constructorBuilder()
                     .addParameter("token", String::class)
                     .addParameter("username", String::class)
-                    .addParameter("messageSource", ClassName("io.github.dehuckakpyt.telegrambot.source.message", "MessageSource"))
-                    .build())
-                .addProperty(PropertySpec.builder("token", String::class, PRIVATE)
-                    .initializer("token")
+                    .addParameter("eventListener", ClassName("io.github.dehuckakpyt.telegrambot.listener.event", "TelegramBotEventListener"))
                     .build())
                 .addProperty(PropertySpec.builder("username", String::class, OVERRIDE)
                     .initializer("username")
                     .build())
-                .addProperty(PropertySpec.builder("messageSource", ClassName("io.github.dehuckakpyt.telegrambot.source.message", "MessageSource"), PRIVATE)
-                    .initializer("messageSource")
+                .addProperty(PropertySpec.builder("eventListener", ClassName("io.github.dehuckakpyt.telegrambot.listener.event", "TelegramBotEventListener"), PRIVATE)
+                    .initializer("eventListener")
                     .build())
                 .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.api.client", "TelegramApiClient"), OVERRIDE)
                     .initializer("TelegramApiClient(token)")
                     .build())
                 .addTelegramBotImplMethods(methods, objectsByName)
+                .addFunction(FunSpec.builder("afterMethod")
+                    .addModifiers(PRIVATE, SUSPEND, INLINE)
+                    .addTypeVariable(TypeVariableName("T"))
+                    .receiver(TypeVariableName("T"))
+                    .returns(TypeVariableName("T"))
+                    .addParameter("methodName", String::class)
+                    .addParameter("collectArguments", LambdaTypeName.get(receiver = ClassName("kotlin.collections", "MutableMap").parameterizedBy(String::class.asTypeName(), Any::class.asTypeName().copy(nullable = true)), returnType = Unit::class.asTypeName()), CROSSINLINE)
+                    .addCode("""
+                        |eventListener.sendAfterEvent(methodName, this, collectArguments)
+                        |
+                        |return this
+                    """.trimMargin())
+                    .build())
                 .build()
         )
         .build()
@@ -399,7 +409,20 @@ suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpe
     val obj = method.toPropertiesObject()
     createInternalPropertiesObject(obj)
 
-    addStatement("return client.postJson(\"${method.name}\", ${obj.name}(" + obj.properties.joinToString { "\n        ${it.nameCamelCase} = ${it.nameCamelCase}" } + "\n    )\n)")
+    val returnType = method.returnType.toClassTypeName()
+    val returnClassName = when (returnType) {
+        is ClassName -> returnType.simpleName
+        is ParameterizedTypeName -> "${returnType.rawType.simpleName}<${(returnType.typeArguments.first() as ClassName).simpleName}>"
+        else -> returnType.toString()
+    }
+    if (returnType is ClassName) returnType.simpleName 
+
+    addStatement("return client.postJson<$returnClassName>(\"${method.name}\", ${obj.name}(" +
+            obj.properties.joinToString { "\n        ${it.nameCamelCase} = ${it.nameCamelCase}" } +
+            "\n    )\n)" +
+            ".afterMethod(\"${method.name}\") {" +
+            obj.properties.joinToString(separator = "") { "\n    put(\"${it.nameCamelCase}\", ${it.nameCamelCase})" } +
+            "\n}")
 
     return this
 }

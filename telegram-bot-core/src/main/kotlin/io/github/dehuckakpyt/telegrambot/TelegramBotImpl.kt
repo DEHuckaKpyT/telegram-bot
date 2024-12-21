@@ -5,7 +5,52 @@ import io.github.dehuckakpyt.telegrambot.ext.appendContent
 import io.github.dehuckakpyt.telegrambot.ext.appendContentIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.appendIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.toJson
-import io.github.dehuckakpyt.telegrambot.model.telegram.*
+import io.github.dehuckakpyt.telegrambot.listener.event.TelegramBotEventListener
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotName
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotShortDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.BusinessConnection
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatAdministratorRights
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatFullInfo
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMember
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatPermissions
+import io.github.dehuckakpyt.telegrambot.model.telegram.File
+import io.github.dehuckakpyt.telegrambot.model.telegram.ForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.GameHighScore
+import io.github.dehuckakpyt.telegrambot.model.telegram.Gifts
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
+import io.github.dehuckakpyt.telegrambot.model.telegram.LabeledPrice
+import io.github.dehuckakpyt.telegrambot.model.telegram.LinkPreviewOptions
+import io.github.dehuckakpyt.telegrambot.model.telegram.MaskPosition
+import io.github.dehuckakpyt.telegrambot.model.telegram.MenuButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.Message
+import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
+import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.PassportElementError
+import io.github.dehuckakpyt.telegrambot.model.telegram.Poll
+import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedInlineMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
+import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
+import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
+import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.StarTransactions
+import io.github.dehuckakpyt.telegrambot.model.telegram.Sticker
+import io.github.dehuckakpyt.telegrambot.model.telegram.StickerSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.Update
+import io.github.dehuckakpyt.telegrambot.model.telegram.User
+import io.github.dehuckakpyt.telegrambot.model.telegram.UserChatBoosts
+import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfilePhotos
+import io.github.dehuckakpyt.telegrambot.model.telegram.WebhookInfo
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerCallbackQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerInlineQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerPreCheckoutQuery
@@ -121,24 +166,26 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllGener
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinChatMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import kotlin.Any
 import kotlin.Boolean
 import kotlin.Double
 import kotlin.Int
 import kotlin.Long
 import kotlin.String
+import kotlin.Unit
 import kotlin.collections.Iterable
 import kotlin.collections.List
+import kotlin.collections.MutableMap
 
 /**
- * Created on 05.12.2024.
+ * Created on 22.12.2024.
  *
  * @author KScript
  */
 public class TelegramBotImpl(
-    private val token: String,
+    token: String,
     override val username: String,
-    private val messageSource: MessageSource,
+    private val eventListener: TelegramBotEventListener,
 ) : TelegramBot {
     override val client: TelegramApiClient = TelegramApiClient(token)
 
@@ -147,13 +194,18 @@ public class TelegramBotImpl(
         limit: Int?,
         timeout: Int?,
         allowedUpdates: Iterable<String>?,
-    ): List<Update> = client.postJson("getUpdates", GetUpdates(
+    ): List<Update> = client.postJson<List<Update>>("getUpdates", GetUpdates(
             offset = offset, 
             limit = limit, 
             timeout = timeout, 
             allowedUpdates = allowedUpdates
         )
-    )
+    ).afterMethod("getUpdates") {
+        put("offset", offset)
+        put("limit", limit)
+        put("timeout", timeout)
+        put("allowedUpdates", allowedUpdates)
+    }
 
     override suspend fun setWebhook(
         url: String,
@@ -174,10 +226,12 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteWebhook(dropPendingUpdates: Boolean?): Boolean =
-            client.postJson("deleteWebhook", DeleteWebhook(
+            client.postJson<Boolean>("deleteWebhook", DeleteWebhook(
             dropPendingUpdates = dropPendingUpdates
         )
-    )
+    ).afterMethod("deleteWebhook") {
+        put("dropPendingUpdates", dropPendingUpdates)
+    }
 
     override suspend fun getWebhookInfo(): WebhookInfo = client.get("getWebhookInfo")
 
@@ -216,7 +270,21 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "TEXT", text = text) }
+    ).afterMethod("sendMessage") {
+        put("chatId", chatId)
+        put("text", text)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("parseMode", parseMode)
+        put("entities", entities)
+        put("linkPreviewOptions", linkPreviewOptions)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun forwardMessage(
         chatId: String,
@@ -225,7 +293,7 @@ public class TelegramBotImpl(
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-    ): Message = client.postJson("forwardMessage", ForwardMessage(
+    ): Message = client.postJson<Message>("forwardMessage", ForwardMessage(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageId = messageId, 
@@ -233,7 +301,14 @@ public class TelegramBotImpl(
             disableNotification = disableNotification, 
             protectContent = protectContent
         )
-    )
+    ).afterMethod("forwardMessage") {
+        put("chatId", chatId)
+        put("fromChatId", fromChatId)
+        put("messageId", messageId)
+        put("messageThreadId", messageThreadId)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+    }
 
     override suspend fun forwardMessages(
         chatId: String,
@@ -242,7 +317,7 @@ public class TelegramBotImpl(
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-    ): List<MessageId> = client.postJson("forwardMessages", ForwardMessages(
+    ): List<MessageId> = client.postJson<List<MessageId>>("forwardMessages", ForwardMessages(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageIds = messageIds, 
@@ -250,7 +325,14 @@ public class TelegramBotImpl(
             disableNotification = disableNotification, 
             protectContent = protectContent
         )
-    )
+    ).afterMethod("forwardMessages") {
+        put("chatId", chatId)
+        put("fromChatId", fromChatId)
+        put("messageIds", messageIds)
+        put("messageThreadId", messageThreadId)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+    }
 
     override suspend fun copyMessage(
         chatId: String,
@@ -266,7 +348,7 @@ public class TelegramBotImpl(
         allowPaidBroadcast: Boolean?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): MessageId = client.postJson("copyMessage", CopyMessage(
+    ): MessageId = client.postJson<MessageId>("copyMessage", CopyMessage(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageId = messageId, 
@@ -281,7 +363,21 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    )
+    ).afterMethod("copyMessage") {
+        put("chatId", chatId)
+        put("fromChatId", fromChatId)
+        put("messageId", messageId)
+        put("messageThreadId", messageThreadId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun copyMessages(
         chatId: String,
@@ -291,7 +387,7 @@ public class TelegramBotImpl(
         disableNotification: Boolean?,
         protectContent: Boolean?,
         removeCaption: Boolean?,
-    ): List<MessageId> = client.postJson("copyMessages", CopyMessages(
+    ): List<MessageId> = client.postJson<List<MessageId>>("copyMessages", CopyMessages(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageIds = messageIds, 
@@ -300,7 +396,15 @@ public class TelegramBotImpl(
             protectContent = protectContent, 
             removeCaption = removeCaption
         )
-    )
+    ).afterMethod("copyMessages") {
+        put("chatId", chatId)
+        put("fromChatId", fromChatId)
+        put("messageIds", messageIds)
+        put("messageThreadId", messageThreadId)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("removeCaption", removeCaption)
+    }
 
     override suspend fun sendPhoto(
         chatId: String,
@@ -318,7 +422,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendPhoto") {
+    ): Message = client.postMultiPart("sendPhoto") {
         append("chat_id", chatId)
         appendContent("photo", photo)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -334,7 +438,7 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "PHOTO", text = caption, fileIds = it.photo!!.map(PhotoSize::fileId)) }
+    }
 
     override suspend fun sendAudio(
         chatId: String,
@@ -354,7 +458,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendAudio") {
+    ): Message = client.postMultiPart("sendAudio") {
         append("chat_id", chatId)
         appendContent("audio", audio)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -372,7 +476,7 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "AUDIO", text = caption, fileIds = listOf(it.audio!!.fileId)) }
+    }
 
     override suspend fun sendDocument(
         chatId: String,
@@ -390,7 +494,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendDocument") {
+    ): Message = client.postMultiPart("sendDocument") {
         append("chat_id", chatId)
         appendContent("document", document)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -406,7 +510,7 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "DOCUMENT", text = caption, fileIds = listOf(it.document!!.fileId)) }
+    }
 
     override suspend fun sendVideo(
         chatId: String,
@@ -429,7 +533,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendVideo") {
+    ): Message = client.postMultiPart("sendVideo") {
         append("chat_id", chatId)
         appendContent("video", video)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -450,7 +554,7 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "VIDEO", text = caption, fileIds = listOf(it.video!!.fileId)) }
+    }
 
     override suspend fun sendAnimation(
         chatId: String,
@@ -472,7 +576,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendAnimation") {
+    ): Message = client.postMultiPart("sendAnimation") {
         append("chat_id", chatId)
         appendContent("animation", animation)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -492,7 +596,7 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "ANIMATION", text = caption, fileIds = listOf(it.animation!!.fileId)) }
+    }
 
     override suspend fun sendVoice(
         chatId: String,
@@ -509,7 +613,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendVoice") {
+    ): Message = client.postMultiPart("sendVoice") {
         append("chat_id", chatId)
         appendContent("voice", voice)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -524,7 +628,7 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "VOICE", text = caption, fileIds = listOf(it.voice!!.fileId)) }
+    }
 
     override suspend fun sendVideoNote(
         chatId: String,
@@ -540,7 +644,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendVideoNote") {
+    ): Message = client.postMultiPart("sendVideoNote") {
         append("chat_id", chatId)
         appendContent("video_note", videoNote)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -554,7 +658,7 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "VIDEO_NOTE", fileIds = listOf(it.videoNote!!.fileId)) }
+    }
 
     override suspend fun sendPaidMedia(
         chatId: String,
@@ -571,7 +675,7 @@ public class TelegramBotImpl(
         allowPaidBroadcast: Boolean?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendPaidMedia") {
+    ): Message = client.postMultiPart("sendPaidMedia") {
         append("chat_id", chatId)
         append("star_count", starCount)
         append("media", client.toJson(media))
@@ -594,7 +698,7 @@ public class TelegramBotImpl(
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
-    }.also { messageSource.save(message = it, fromBot = true, type = "PAID_MEDIA", text = caption) }
+    }
 
     override suspend fun sendMediaGroup(
         chatId: String,
@@ -659,7 +763,23 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "LOCATION", text = "latitude = $latitude, longitude = $longitude") }
+    ).afterMethod("sendLocation") {
+        put("chatId", chatId)
+        put("latitude", latitude)
+        put("longitude", longitude)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("horizontalAccuracy", horizontalAccuracy)
+        put("livePeriod", livePeriod)
+        put("heading", heading)
+        put("proximityAlertRadius", proximityAlertRadius)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun sendVenue(
         chatId: String,
@@ -698,7 +818,25 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "VENUE", text = "latitude = $latitude, longitude = $longitude, title = $title, address = $address") }
+    ).afterMethod("sendVenue") {
+        put("chatId", chatId)
+        put("latitude", latitude)
+        put("longitude", longitude)
+        put("title", title)
+        put("address", address)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("foursquareId", foursquareId)
+        put("foursquareType", foursquareType)
+        put("googlePlaceId", googlePlaceId)
+        put("googlePlaceType", googlePlaceType)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun sendContact(
         chatId: String,
@@ -729,7 +867,21 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "CONTACT", text = "phoneNumber = $phoneNumber, firstName = $firstName") }
+    ).afterMethod("sendContact") {
+        put("chatId", chatId)
+        put("phoneNumber", phoneNumber)
+        put("firstName", firstName)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("lastName", lastName)
+        put("vcard", vcard)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun sendPoll(
         chatId: String,
@@ -780,7 +932,31 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "POLL", text = question) }
+    ).afterMethod("sendPoll") {
+        put("chatId", chatId)
+        put("question", question)
+        put("options", options)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("questionParseMode", questionParseMode)
+        put("questionEntities", questionEntities)
+        put("isAnonymous", isAnonymous)
+        put("type", type)
+        put("allowsMultipleAnswers", allowsMultipleAnswers)
+        put("correctOptionId", correctOptionId)
+        put("explanation", explanation)
+        put("explanationParseMode", explanationParseMode)
+        put("explanationEntities", explanationEntities)
+        put("openPeriod", openPeriod)
+        put("closeDate", closeDate)
+        put("isClosed", isClosed)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun sendDice(
         chatId: String,
@@ -805,84 +981,125 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "DICE", text = emoji) }
+    ).afterMethod("sendDice") {
+        put("chatId", chatId)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("emoji", emoji)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun sendChatAction(
         chatId: String,
         action: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
-    ): Boolean = client.postJson("sendChatAction", SendChatAction(
+    ): Boolean = client.postJson<Boolean>("sendChatAction", SendChatAction(
             chatId = chatId, 
             action = action, 
             businessConnectionId = businessConnectionId, 
             messageThreadId = messageThreadId
         )
-    )
+    ).afterMethod("sendChatAction") {
+        put("chatId", chatId)
+        put("action", action)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+    }
 
     override suspend fun setMessageReaction(
         chatId: String,
         messageId: Long,
         reaction: Iterable<ReactionType>?,
         isBig: Boolean?,
-    ): Boolean = client.postJson("setMessageReaction", SetMessageReaction(
+    ): Boolean = client.postJson<Boolean>("setMessageReaction", SetMessageReaction(
             chatId = chatId, 
             messageId = messageId, 
             reaction = reaction, 
             isBig = isBig
         )
-    )
+    ).afterMethod("setMessageReaction") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("reaction", reaction)
+        put("isBig", isBig)
+    }
 
     override suspend fun getUserProfilePhotos(
         userId: Long,
         offset: Int?,
         limit: Int?,
-    ): UserProfilePhotos = client.postJson("getUserProfilePhotos", GetUserProfilePhotos(
+    ): UserProfilePhotos = client.postJson<UserProfilePhotos>("getUserProfilePhotos",
+            GetUserProfilePhotos(
             userId = userId, 
             offset = offset, 
             limit = limit
         )
-    )
+    ).afterMethod("getUserProfilePhotos") {
+        put("userId", userId)
+        put("offset", offset)
+        put("limit", limit)
+    }
 
     override suspend fun setUserEmojiStatus(
         userId: Long,
         emojiStatusCustomEmojiId: String?,
         emojiStatusExpirationDate: Long?,
-    ): Boolean = client.postJson("setUserEmojiStatus", SetUserEmojiStatus(
+    ): Boolean = client.postJson<Boolean>("setUserEmojiStatus", SetUserEmojiStatus(
             userId = userId, 
             emojiStatusCustomEmojiId = emojiStatusCustomEmojiId, 
             emojiStatusExpirationDate = emojiStatusExpirationDate
         )
-    )
+    ).afterMethod("setUserEmojiStatus") {
+        put("userId", userId)
+        put("emojiStatusCustomEmojiId", emojiStatusCustomEmojiId)
+        put("emojiStatusExpirationDate", emojiStatusExpirationDate)
+    }
 
-    override suspend fun getFile(fileId: String): File = client.postJson("getFile", GetFile(
+    override suspend fun getFile(fileId: String): File = client.postJson<File>("getFile", GetFile(
             fileId = fileId
         )
-    )
+    ).afterMethod("getFile") {
+        put("fileId", fileId)
+    }
 
     override suspend fun banChatMember(
         chatId: String,
         userId: Long,
         untilDate: Long?,
         revokeMessages: Boolean?,
-    ): Boolean = client.postJson("banChatMember", BanChatMember(
+    ): Boolean = client.postJson<Boolean>("banChatMember", BanChatMember(
             chatId = chatId, 
             userId = userId, 
             untilDate = untilDate, 
             revokeMessages = revokeMessages
         )
-    )
+    ).afterMethod("banChatMember") {
+        put("chatId", chatId)
+        put("userId", userId)
+        put("untilDate", untilDate)
+        put("revokeMessages", revokeMessages)
+    }
 
     override suspend fun unbanChatMember(
         chatId: String,
         userId: Long,
         onlyIfBanned: Boolean?,
-    ): Boolean = client.postJson("unbanChatMember", UnbanChatMember(
+    ): Boolean = client.postJson<Boolean>("unbanChatMember", UnbanChatMember(
             chatId = chatId, 
             userId = userId, 
             onlyIfBanned = onlyIfBanned
         )
-    )
+    ).afterMethod("unbanChatMember") {
+        put("chatId", chatId)
+        put("userId", userId)
+        put("onlyIfBanned", onlyIfBanned)
+    }
 
     override suspend fun restrictChatMember(
         chatId: String,
@@ -890,14 +1107,20 @@ public class TelegramBotImpl(
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean?,
         untilDate: Long?,
-    ): Boolean = client.postJson("restrictChatMember", RestrictChatMember(
+    ): Boolean = client.postJson<Boolean>("restrictChatMember", RestrictChatMember(
             chatId = chatId, 
             userId = userId, 
             permissions = permissions, 
             useIndependentChatPermissions = useIndependentChatPermissions, 
             untilDate = untilDate
         )
-    )
+    ).afterMethod("restrictChatMember") {
+        put("chatId", chatId)
+        put("userId", userId)
+        put("permissions", permissions)
+        put("useIndependentChatPermissions", useIndependentChatPermissions)
+        put("untilDate", untilDate)
+    }
 
     override suspend fun promoteChatMember(
         chatId: String,
@@ -917,7 +1140,7 @@ public class TelegramBotImpl(
         canEditMessages: Boolean?,
         canPinMessages: Boolean?,
         canManageTopics: Boolean?,
-    ): Boolean = client.postJson("promoteChatMember", PromoteChatMember(
+    ): Boolean = client.postJson<Boolean>("promoteChatMember", PromoteChatMember(
             chatId = chatId, 
             userId = userId, 
             isAnonymous = isAnonymous, 
@@ -936,49 +1159,84 @@ public class TelegramBotImpl(
             canPinMessages = canPinMessages, 
             canManageTopics = canManageTopics
         )
-    )
+    ).afterMethod("promoteChatMember") {
+        put("chatId", chatId)
+        put("userId", userId)
+        put("isAnonymous", isAnonymous)
+        put("canManageChat", canManageChat)
+        put("canDeleteMessages", canDeleteMessages)
+        put("canManageVideoChats", canManageVideoChats)
+        put("canRestrictMembers", canRestrictMembers)
+        put("canPromoteMembers", canPromoteMembers)
+        put("canChangeInfo", canChangeInfo)
+        put("canInviteUsers", canInviteUsers)
+        put("canPostStories", canPostStories)
+        put("canEditStories", canEditStories)
+        put("canDeleteStories", canDeleteStories)
+        put("canPostMessages", canPostMessages)
+        put("canEditMessages", canEditMessages)
+        put("canPinMessages", canPinMessages)
+        put("canManageTopics", canManageTopics)
+    }
 
     override suspend fun setChatAdministratorCustomTitle(
         chatId: String,
         userId: Long,
         customTitle: String,
-    ): Boolean = client.postJson("setChatAdministratorCustomTitle", SetChatAdministratorCustomTitle(
+    ): Boolean = client.postJson<Boolean>("setChatAdministratorCustomTitle",
+            SetChatAdministratorCustomTitle(
             chatId = chatId, 
             userId = userId, 
             customTitle = customTitle
         )
-    )
+    ).afterMethod("setChatAdministratorCustomTitle") {
+        put("chatId", chatId)
+        put("userId", userId)
+        put("customTitle", customTitle)
+    }
 
     override suspend fun banChatSenderChat(chatId: String, senderChatId: Long): Boolean =
-            client.postJson("banChatSenderChat", BanChatSenderChat(
+            client.postJson<Boolean>("banChatSenderChat", BanChatSenderChat(
             chatId = chatId, 
             senderChatId = senderChatId
         )
-    )
+    ).afterMethod("banChatSenderChat") {
+        put("chatId", chatId)
+        put("senderChatId", senderChatId)
+    }
 
     override suspend fun unbanChatSenderChat(chatId: String, senderChatId: Long): Boolean =
-            client.postJson("unbanChatSenderChat", UnbanChatSenderChat(
+            client.postJson<Boolean>("unbanChatSenderChat", UnbanChatSenderChat(
             chatId = chatId, 
             senderChatId = senderChatId
         )
-    )
+    ).afterMethod("unbanChatSenderChat") {
+        put("chatId", chatId)
+        put("senderChatId", senderChatId)
+    }
 
     override suspend fun setChatPermissions(
         chatId: String,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean?,
-    ): Boolean = client.postJson("setChatPermissions", SetChatPermissions(
+    ): Boolean = client.postJson<Boolean>("setChatPermissions", SetChatPermissions(
             chatId = chatId, 
             permissions = permissions, 
             useIndependentChatPermissions = useIndependentChatPermissions
         )
-    )
+    ).afterMethod("setChatPermissions") {
+        put("chatId", chatId)
+        put("permissions", permissions)
+        put("useIndependentChatPermissions", useIndependentChatPermissions)
+    }
 
     override suspend fun exportChatInviteLink(chatId: String): String =
-            client.postJson("exportChatInviteLink", ExportChatInviteLink(
+            client.postJson<String>("exportChatInviteLink", ExportChatInviteLink(
             chatId = chatId
         )
-    )
+    ).afterMethod("exportChatInviteLink") {
+        put("chatId", chatId)
+    }
 
     override suspend fun createChatInviteLink(
         chatId: String,
@@ -986,14 +1244,21 @@ public class TelegramBotImpl(
         expireDate: Long?,
         memberLimit: Int?,
         createsJoinRequest: Boolean?,
-    ): ChatInviteLink = client.postJson("createChatInviteLink", CreateChatInviteLink(
+    ): ChatInviteLink = client.postJson<ChatInviteLink>("createChatInviteLink",
+            CreateChatInviteLink(
             chatId = chatId, 
             name = name, 
             expireDate = expireDate, 
             memberLimit = memberLimit, 
             createsJoinRequest = createsJoinRequest
         )
-    )
+    ).afterMethod("createChatInviteLink") {
+        put("chatId", chatId)
+        put("name", name)
+        put("expireDate", expireDate)
+        put("memberLimit", memberLimit)
+        put("createsJoinRequest", createsJoinRequest)
+    }
 
     override suspend fun editChatInviteLink(
         chatId: String,
@@ -1002,7 +1267,7 @@ public class TelegramBotImpl(
         expireDate: Long?,
         memberLimit: Int?,
         createsJoinRequest: Boolean?,
-    ): ChatInviteLink = client.postJson("editChatInviteLink", EditChatInviteLink(
+    ): ChatInviteLink = client.postJson<ChatInviteLink>("editChatInviteLink", EditChatInviteLink(
             chatId = chatId, 
             inviteLink = inviteLink, 
             name = name, 
@@ -1010,54 +1275,79 @@ public class TelegramBotImpl(
             memberLimit = memberLimit, 
             createsJoinRequest = createsJoinRequest
         )
-    )
+    ).afterMethod("editChatInviteLink") {
+        put("chatId", chatId)
+        put("inviteLink", inviteLink)
+        put("name", name)
+        put("expireDate", expireDate)
+        put("memberLimit", memberLimit)
+        put("createsJoinRequest", createsJoinRequest)
+    }
 
     override suspend fun createChatSubscriptionInviteLink(
         chatId: String,
         subscriptionPeriod: Int,
         subscriptionPrice: Int,
         name: String?,
-    ): ChatInviteLink = client.postJson("createChatSubscriptionInviteLink",
+    ): ChatInviteLink = client.postJson<ChatInviteLink>("createChatSubscriptionInviteLink",
             CreateChatSubscriptionInviteLink(
             chatId = chatId, 
             subscriptionPeriod = subscriptionPeriod, 
             subscriptionPrice = subscriptionPrice, 
             name = name
         )
-    )
+    ).afterMethod("createChatSubscriptionInviteLink") {
+        put("chatId", chatId)
+        put("subscriptionPeriod", subscriptionPeriod)
+        put("subscriptionPrice", subscriptionPrice)
+        put("name", name)
+    }
 
     override suspend fun editChatSubscriptionInviteLink(
         chatId: String,
         inviteLink: String,
         name: String?,
-    ): ChatInviteLink = client.postJson("editChatSubscriptionInviteLink",
+    ): ChatInviteLink = client.postJson<ChatInviteLink>("editChatSubscriptionInviteLink",
             EditChatSubscriptionInviteLink(
             chatId = chatId, 
             inviteLink = inviteLink, 
             name = name
         )
-    )
+    ).afterMethod("editChatSubscriptionInviteLink") {
+        put("chatId", chatId)
+        put("inviteLink", inviteLink)
+        put("name", name)
+    }
 
     override suspend fun revokeChatInviteLink(chatId: String, inviteLink: String): ChatInviteLink =
-            client.postJson("revokeChatInviteLink", RevokeChatInviteLink(
+            client.postJson<ChatInviteLink>("revokeChatInviteLink", RevokeChatInviteLink(
             chatId = chatId, 
             inviteLink = inviteLink
         )
-    )
+    ).afterMethod("revokeChatInviteLink") {
+        put("chatId", chatId)
+        put("inviteLink", inviteLink)
+    }
 
     override suspend fun approveChatJoinRequest(chatId: String, userId: Long): Boolean =
-            client.postJson("approveChatJoinRequest", ApproveChatJoinRequest(
+            client.postJson<Boolean>("approveChatJoinRequest", ApproveChatJoinRequest(
             chatId = chatId, 
             userId = userId
         )
-    )
+    ).afterMethod("approveChatJoinRequest") {
+        put("chatId", chatId)
+        put("userId", userId)
+    }
 
     override suspend fun declineChatJoinRequest(chatId: String, userId: Long): Boolean =
-            client.postJson("declineChatJoinRequest", DeclineChatJoinRequest(
+            client.postJson<Boolean>("declineChatJoinRequest", DeclineChatJoinRequest(
             chatId = chatId, 
             userId = userId
         )
-    )
+    ).afterMethod("declineChatJoinRequest") {
+        put("chatId", chatId)
+        put("userId", userId)
+    }
 
     override suspend fun setChatPhoto(chatId: String, photo: Input): Boolean =
             client.postMultiPart("setChatPhoto") {
@@ -1066,97 +1356,133 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteChatPhoto(chatId: String): Boolean =
-            client.postJson("deleteChatPhoto", DeleteChatPhoto(
+            client.postJson<Boolean>("deleteChatPhoto", DeleteChatPhoto(
             chatId = chatId
         )
-    )
+    ).afterMethod("deleteChatPhoto") {
+        put("chatId", chatId)
+    }
 
     override suspend fun setChatTitle(chatId: String, title: String): Boolean =
-            client.postJson("setChatTitle", SetChatTitle(
+            client.postJson<Boolean>("setChatTitle", SetChatTitle(
             chatId = chatId, 
             title = title
         )
-    )
+    ).afterMethod("setChatTitle") {
+        put("chatId", chatId)
+        put("title", title)
+    }
 
     override suspend fun setChatDescription(chatId: String, description: String?): Boolean =
-            client.postJson("setChatDescription", SetChatDescription(
+            client.postJson<Boolean>("setChatDescription", SetChatDescription(
             chatId = chatId, 
             description = description
         )
-    )
+    ).afterMethod("setChatDescription") {
+        put("chatId", chatId)
+        put("description", description)
+    }
 
     override suspend fun pinChatMessage(
         chatId: String,
         messageId: Long,
         businessConnectionId: String?,
         disableNotification: Boolean?,
-    ): Boolean = client.postJson("pinChatMessage", PinChatMessage(
+    ): Boolean = client.postJson<Boolean>("pinChatMessage", PinChatMessage(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
             disableNotification = disableNotification
         )
-    )
+    ).afterMethod("pinChatMessage") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("disableNotification", disableNotification)
+    }
 
     override suspend fun unpinChatMessage(
         chatId: String,
         businessConnectionId: String?,
         messageId: Long?,
-    ): Boolean = client.postJson("unpinChatMessage", UnpinChatMessage(
+    ): Boolean = client.postJson<Boolean>("unpinChatMessage", UnpinChatMessage(
             chatId = chatId, 
             businessConnectionId = businessConnectionId, 
             messageId = messageId
         )
-    )
+    ).afterMethod("unpinChatMessage") {
+        put("chatId", chatId)
+        put("businessConnectionId", businessConnectionId)
+        put("messageId", messageId)
+    }
 
     override suspend fun unpinAllChatMessages(chatId: String): Boolean =
-            client.postJson("unpinAllChatMessages", UnpinAllChatMessages(
+            client.postJson<Boolean>("unpinAllChatMessages", UnpinAllChatMessages(
             chatId = chatId
         )
-    )
+    ).afterMethod("unpinAllChatMessages") {
+        put("chatId", chatId)
+    }
 
-    override suspend fun leaveChat(chatId: String): Boolean = client.postJson("leaveChat",
+    override suspend fun leaveChat(chatId: String): Boolean = client.postJson<Boolean>("leaveChat",
             LeaveChat(
             chatId = chatId
         )
-    )
+    ).afterMethod("leaveChat") {
+        put("chatId", chatId)
+    }
 
-    override suspend fun getChat(chatId: String): ChatFullInfo = client.postJson("getChat", GetChat(
+    override suspend fun getChat(chatId: String): ChatFullInfo =
+            client.postJson<ChatFullInfo>("getChat", GetChat(
             chatId = chatId
         )
-    )
+    ).afterMethod("getChat") {
+        put("chatId", chatId)
+    }
 
     override suspend fun getChatAdministrators(chatId: String): List<ChatMember> =
-            client.postJson("getChatAdministrators", GetChatAdministrators(
+            client.postJson<List<ChatMember>>("getChatAdministrators", GetChatAdministrators(
             chatId = chatId
         )
-    )
+    ).afterMethod("getChatAdministrators") {
+        put("chatId", chatId)
+    }
 
     override suspend fun getChatMemberCount(chatId: String): Int =
-            client.postJson("getChatMemberCount", GetChatMemberCount(
+            client.postJson<Int>("getChatMemberCount", GetChatMemberCount(
             chatId = chatId
         )
-    )
+    ).afterMethod("getChatMemberCount") {
+        put("chatId", chatId)
+    }
 
     override suspend fun getChatMember(chatId: String, userId: Long): ChatMember =
-            client.postJson("getChatMember", GetChatMember(
+            client.postJson<ChatMember>("getChatMember", GetChatMember(
             chatId = chatId, 
             userId = userId
         )
-    )
+    ).afterMethod("getChatMember") {
+        put("chatId", chatId)
+        put("userId", userId)
+    }
 
     override suspend fun setChatStickerSet(chatId: String, stickerSetName: String): Boolean =
-            client.postJson("setChatStickerSet", SetChatStickerSet(
+            client.postJson<Boolean>("setChatStickerSet", SetChatStickerSet(
             chatId = chatId, 
             stickerSetName = stickerSetName
         )
-    )
+    ).afterMethod("setChatStickerSet") {
+        put("chatId", chatId)
+        put("stickerSetName", stickerSetName)
+    }
 
     override suspend fun deleteChatStickerSet(chatId: String): Boolean =
-            client.postJson("deleteChatStickerSet", DeleteChatStickerSet(
+            client.postJson<Boolean>("deleteChatStickerSet", DeleteChatStickerSet(
             chatId = chatId
         )
-    )
+    ).afterMethod("deleteChatStickerSet") {
+        put("chatId", chatId)
+    }
 
     override suspend fun getForumTopicIconStickers(): List<Sticker> =
             client.get("getForumTopicIconStickers")
@@ -1166,91 +1492,127 @@ public class TelegramBotImpl(
         name: String,
         iconColor: Int?,
         iconCustomEmojiId: String?,
-    ): ForumTopic = client.postJson("createForumTopic", CreateForumTopic(
+    ): ForumTopic = client.postJson<ForumTopic>("createForumTopic", CreateForumTopic(
             chatId = chatId, 
             name = name, 
             iconColor = iconColor, 
             iconCustomEmojiId = iconCustomEmojiId
         )
-    )
+    ).afterMethod("createForumTopic") {
+        put("chatId", chatId)
+        put("name", name)
+        put("iconColor", iconColor)
+        put("iconCustomEmojiId", iconCustomEmojiId)
+    }
 
     override suspend fun editForumTopic(
         chatId: String,
         messageThreadId: Long,
         name: String?,
         iconCustomEmojiId: String?,
-    ): Boolean = client.postJson("editForumTopic", EditForumTopic(
+    ): Boolean = client.postJson<Boolean>("editForumTopic", EditForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId, 
             name = name, 
             iconCustomEmojiId = iconCustomEmojiId
         )
-    )
+    ).afterMethod("editForumTopic") {
+        put("chatId", chatId)
+        put("messageThreadId", messageThreadId)
+        put("name", name)
+        put("iconCustomEmojiId", iconCustomEmojiId)
+    }
 
     override suspend fun closeForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson("closeForumTopic", CloseForumTopic(
+            client.postJson<Boolean>("closeForumTopic", CloseForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
-    )
+    ).afterMethod("closeForumTopic") {
+        put("chatId", chatId)
+        put("messageThreadId", messageThreadId)
+    }
 
     override suspend fun reopenForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson("reopenForumTopic", ReopenForumTopic(
+            client.postJson<Boolean>("reopenForumTopic", ReopenForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
-    )
+    ).afterMethod("reopenForumTopic") {
+        put("chatId", chatId)
+        put("messageThreadId", messageThreadId)
+    }
 
     override suspend fun deleteForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson("deleteForumTopic", DeleteForumTopic(
+            client.postJson<Boolean>("deleteForumTopic", DeleteForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
-    )
+    ).afterMethod("deleteForumTopic") {
+        put("chatId", chatId)
+        put("messageThreadId", messageThreadId)
+    }
 
     override suspend fun unpinAllForumTopicMessages(chatId: String, messageThreadId: Long): Boolean
-            = client.postJson("unpinAllForumTopicMessages", UnpinAllForumTopicMessages(
+            = client.postJson<Boolean>("unpinAllForumTopicMessages", UnpinAllForumTopicMessages(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
-    )
+    ).afterMethod("unpinAllForumTopicMessages") {
+        put("chatId", chatId)
+        put("messageThreadId", messageThreadId)
+    }
 
     override suspend fun editGeneralForumTopic(chatId: String, name: String): Boolean =
-            client.postJson("editGeneralForumTopic", EditGeneralForumTopic(
+            client.postJson<Boolean>("editGeneralForumTopic", EditGeneralForumTopic(
             chatId = chatId, 
             name = name
         )
-    )
+    ).afterMethod("editGeneralForumTopic") {
+        put("chatId", chatId)
+        put("name", name)
+    }
 
     override suspend fun closeGeneralForumTopic(chatId: String): Boolean =
-            client.postJson("closeGeneralForumTopic", CloseGeneralForumTopic(
+            client.postJson<Boolean>("closeGeneralForumTopic", CloseGeneralForumTopic(
             chatId = chatId
         )
-    )
+    ).afterMethod("closeGeneralForumTopic") {
+        put("chatId", chatId)
+    }
 
     override suspend fun reopenGeneralForumTopic(chatId: String): Boolean =
-            client.postJson("reopenGeneralForumTopic", ReopenGeneralForumTopic(
+            client.postJson<Boolean>("reopenGeneralForumTopic", ReopenGeneralForumTopic(
             chatId = chatId
         )
-    )
+    ).afterMethod("reopenGeneralForumTopic") {
+        put("chatId", chatId)
+    }
 
     override suspend fun hideGeneralForumTopic(chatId: String): Boolean =
-            client.postJson("hideGeneralForumTopic", HideGeneralForumTopic(
+            client.postJson<Boolean>("hideGeneralForumTopic", HideGeneralForumTopic(
             chatId = chatId
         )
-    )
+    ).afterMethod("hideGeneralForumTopic") {
+        put("chatId", chatId)
+    }
 
     override suspend fun unhideGeneralForumTopic(chatId: String): Boolean =
-            client.postJson("unhideGeneralForumTopic", UnhideGeneralForumTopic(
+            client.postJson<Boolean>("unhideGeneralForumTopic", UnhideGeneralForumTopic(
             chatId = chatId
         )
-    )
+    ).afterMethod("unhideGeneralForumTopic") {
+        put("chatId", chatId)
+    }
 
     override suspend fun unpinAllGeneralForumTopicMessages(chatId: String): Boolean =
-            client.postJson("unpinAllGeneralForumTopicMessages", UnpinAllGeneralForumTopicMessages(
+            client.postJson<Boolean>("unpinAllGeneralForumTopicMessages",
+            UnpinAllGeneralForumTopicMessages(
             chatId = chatId
         )
-    )
+    ).afterMethod("unpinAllGeneralForumTopicMessages") {
+        put("chatId", chatId)
+    }
 
     override suspend fun answerCallbackQuery(
         callbackQueryId: String,
@@ -1258,119 +1620,167 @@ public class TelegramBotImpl(
         showAlert: Boolean?,
         url: String?,
         cacheTime: Int?,
-    ): Boolean = client.postJson("answerCallbackQuery", AnswerCallbackQuery(
+    ): Boolean = client.postJson<Boolean>("answerCallbackQuery", AnswerCallbackQuery(
             callbackQueryId = callbackQueryId, 
             text = text, 
             showAlert = showAlert, 
             url = url, 
             cacheTime = cacheTime
         )
-    )
+    ).afterMethod("answerCallbackQuery") {
+        put("callbackQueryId", callbackQueryId)
+        put("text", text)
+        put("showAlert", showAlert)
+        put("url", url)
+        put("cacheTime", cacheTime)
+    }
 
     override suspend fun getUserChatBoosts(chatId: String, userId: Long): UserChatBoosts =
-            client.postJson("getUserChatBoosts", GetUserChatBoosts(
+            client.postJson<UserChatBoosts>("getUserChatBoosts", GetUserChatBoosts(
             chatId = chatId, 
             userId = userId
         )
-    )
+    ).afterMethod("getUserChatBoosts") {
+        put("chatId", chatId)
+        put("userId", userId)
+    }
 
     override suspend fun getBusinessConnection(businessConnectionId: String): BusinessConnection =
-            client.postJson("getBusinessConnection", GetBusinessConnection(
+            client.postJson<BusinessConnection>("getBusinessConnection", GetBusinessConnection(
             businessConnectionId = businessConnectionId
         )
-    )
+    ).afterMethod("getBusinessConnection") {
+        put("businessConnectionId", businessConnectionId)
+    }
 
     override suspend fun setMyCommands(
         commands: Iterable<BotCommand>,
         scope: BotCommandScope?,
         languageCode: String?,
-    ): Boolean = client.postJson("setMyCommands", SetMyCommands(
+    ): Boolean = client.postJson<Boolean>("setMyCommands", SetMyCommands(
             commands = commands, 
             scope = scope, 
             languageCode = languageCode
         )
-    )
+    ).afterMethod("setMyCommands") {
+        put("commands", commands)
+        put("scope", scope)
+        put("languageCode", languageCode)
+    }
 
     override suspend fun deleteMyCommands(scope: BotCommandScope?, languageCode: String?): Boolean =
-            client.postJson("deleteMyCommands", DeleteMyCommands(
+            client.postJson<Boolean>("deleteMyCommands", DeleteMyCommands(
             scope = scope, 
             languageCode = languageCode
         )
-    )
+    ).afterMethod("deleteMyCommands") {
+        put("scope", scope)
+        put("languageCode", languageCode)
+    }
 
     override suspend fun getMyCommands(scope: BotCommandScope?, languageCode: String?):
-            List<BotCommand> = client.postJson("getMyCommands", GetMyCommands(
+            List<BotCommand> = client.postJson<List<BotCommand>>("getMyCommands", GetMyCommands(
             scope = scope, 
             languageCode = languageCode
         )
-    )
+    ).afterMethod("getMyCommands") {
+        put("scope", scope)
+        put("languageCode", languageCode)
+    }
 
     override suspend fun setMyName(name: String?, languageCode: String?): Boolean =
-            client.postJson("setMyName", SetMyName(
+            client.postJson<Boolean>("setMyName", SetMyName(
             name = name, 
             languageCode = languageCode
         )
-    )
+    ).afterMethod("setMyName") {
+        put("name", name)
+        put("languageCode", languageCode)
+    }
 
-    override suspend fun getMyName(languageCode: String?): BotName = client.postJson("getMyName",
-            GetMyName(
+    override suspend fun getMyName(languageCode: String?): BotName =
+            client.postJson<BotName>("getMyName", GetMyName(
             languageCode = languageCode
         )
-    )
+    ).afterMethod("getMyName") {
+        put("languageCode", languageCode)
+    }
 
     override suspend fun setMyDescription(description: String?, languageCode: String?): Boolean =
-            client.postJson("setMyDescription", SetMyDescription(
+            client.postJson<Boolean>("setMyDescription", SetMyDescription(
             description = description, 
             languageCode = languageCode
         )
-    )
+    ).afterMethod("setMyDescription") {
+        put("description", description)
+        put("languageCode", languageCode)
+    }
 
     override suspend fun getMyDescription(languageCode: String?): BotDescription =
-            client.postJson("getMyDescription", GetMyDescription(
+            client.postJson<BotDescription>("getMyDescription", GetMyDescription(
             languageCode = languageCode
         )
-    )
+    ).afterMethod("getMyDescription") {
+        put("languageCode", languageCode)
+    }
 
     override suspend fun setMyShortDescription(shortDescription: String?, languageCode: String?):
-            Boolean = client.postJson("setMyShortDescription", SetMyShortDescription(
+            Boolean = client.postJson<Boolean>("setMyShortDescription", SetMyShortDescription(
             shortDescription = shortDescription, 
             languageCode = languageCode
         )
-    )
+    ).afterMethod("setMyShortDescription") {
+        put("shortDescription", shortDescription)
+        put("languageCode", languageCode)
+    }
 
     override suspend fun getMyShortDescription(languageCode: String?): BotShortDescription =
-            client.postJson("getMyShortDescription", GetMyShortDescription(
+            client.postJson<BotShortDescription>("getMyShortDescription", GetMyShortDescription(
             languageCode = languageCode
         )
-    )
+    ).afterMethod("getMyShortDescription") {
+        put("languageCode", languageCode)
+    }
 
     override suspend fun setChatMenuButton(chatId: Long?, menuButton: MenuButton?): Boolean =
-            client.postJson("setChatMenuButton", SetChatMenuButton(
+            client.postJson<Boolean>("setChatMenuButton", SetChatMenuButton(
             chatId = chatId, 
             menuButton = menuButton
         )
-    )
+    ).afterMethod("setChatMenuButton") {
+        put("chatId", chatId)
+        put("menuButton", menuButton)
+    }
 
     override suspend fun getChatMenuButton(chatId: Long?): MenuButton =
-            client.postJson("getChatMenuButton", GetChatMenuButton(
+            client.postJson<MenuButton>("getChatMenuButton", GetChatMenuButton(
             chatId = chatId
         )
-    )
+    ).afterMethod("getChatMenuButton") {
+        put("chatId", chatId)
+    }
 
     override suspend fun setMyDefaultAdministratorRights(rights: ChatAdministratorRights?,
-            forChannels: Boolean?): Boolean = client.postJson("setMyDefaultAdministratorRights",
+            forChannels: Boolean?): Boolean =
+            client.postJson<Boolean>("setMyDefaultAdministratorRights",
             SetMyDefaultAdministratorRights(
             rights = rights, 
             forChannels = forChannels
         )
-    )
+    ).afterMethod("setMyDefaultAdministratorRights") {
+        put("rights", rights)
+        put("forChannels", forChannels)
+    }
 
     override suspend fun getMyDefaultAdministratorRights(forChannels: Boolean?):
-            ChatAdministratorRights = client.postJson("getMyDefaultAdministratorRights",
+            ChatAdministratorRights =
+            client.postJson<ChatAdministratorRights>("getMyDefaultAdministratorRights",
             GetMyDefaultAdministratorRights(
             forChannels = forChannels
         )
-    )
+    ).afterMethod("getMyDefaultAdministratorRights") {
+        put("forChannels", forChannels)
+    }
 
     override suspend fun editMessageText(
         chatId: String,
@@ -1391,7 +1801,16 @@ public class TelegramBotImpl(
             linkPreviewOptions = linkPreviewOptions, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "EDIT_TEXT", text = text) }
+    ).afterMethod("editMessageText") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("text", text)
+        put("businessConnectionId", businessConnectionId)
+        put("parseMode", parseMode)
+        put("entities", entities)
+        put("linkPreviewOptions", linkPreviewOptions)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun editMessageCaption(
         chatId: String,
@@ -1402,7 +1821,8 @@ public class TelegramBotImpl(
         captionEntities: Iterable<MessageEntity>?,
         showCaptionAboveMedia: Boolean?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("editMessageCaption", EditMessageCaptionByChatIdAndMessageId(
+    ): Message = client.postJson<Message>("editMessageCaption",
+            EditMessageCaptionByChatIdAndMessageId(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
@@ -1412,7 +1832,16 @@ public class TelegramBotImpl(
             showCaptionAboveMedia = showCaptionAboveMedia, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "EDIT_CAPTION", text = caption) }
+    ).afterMethod("editMessageCaption") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun editMessageMedia(
         chatId: String,
@@ -1456,7 +1885,18 @@ public class TelegramBotImpl(
             proximityAlertRadius = proximityAlertRadius, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "EDIT_LIVE_LOCATION", text = "latitude = $latitude, longitude = $longitude") }
+    ).afterMethod("editMessageLiveLocation") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("latitude", latitude)
+        put("longitude", longitude)
+        put("businessConnectionId", businessConnectionId)
+        put("livePeriod", livePeriod)
+        put("horizontalAccuracy", horizontalAccuracy)
+        put("heading", heading)
+        put("proximityAlertRadius", proximityAlertRadius)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun stopMessageLiveLocation(
         chatId: String,
@@ -1470,7 +1910,12 @@ public class TelegramBotImpl(
             businessConnectionId = businessConnectionId, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "STOP_LIVE_LOCATION") }
+    ).afterMethod("stopMessageLiveLocation") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun editMessageReplyMarkup(
         chatId: String,
@@ -1484,34 +1929,50 @@ public class TelegramBotImpl(
             businessConnectionId = businessConnectionId, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "EDIT_REPLY_MARKUP") }
+    ).afterMethod("editMessageReplyMarkup") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun stopPoll(
         chatId: String,
         messageId: Long,
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Poll = client.postJson("stopPoll", StopPoll(
+    ): Poll = client.postJson<Poll>("stopPoll", StopPoll(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
             replyMarkup = replyMarkup
         )
-    )
+    ).afterMethod("stopPoll") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun deleteMessage(chatId: String, messageId: Long): Boolean =
-            client.postJson("deleteMessage", DeleteMessage(
+            client.postJson<Boolean>("deleteMessage", DeleteMessage(
             chatId = chatId, 
             messageId = messageId
         )
-    )
+    ).afterMethod("deleteMessage") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+    }
 
     override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean =
-            client.postJson("deleteMessages", DeleteMessages(
+            client.postJson<Boolean>("deleteMessages", DeleteMessages(
             chatId = chatId, 
             messageIds = messageIds
         )
-    )
+    ).afterMethod("deleteMessages") {
+        put("chatId", chatId)
+        put("messageIds", messageIds)
+    }
 
     override suspend fun sendSticker(
         chatId: String,
@@ -1525,7 +1986,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart<Message>("sendSticker") {
+    ): Message = client.postMultiPart("sendSticker") {
         append("chat_id", chatId)
         appendContent("sticker", sticker)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -1537,19 +1998,23 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.also { messageSource.save(message = it, fromBot = true, type = "STICKER", text = emoji) }
+    }
 
-    override suspend fun getStickerSet(name: String): StickerSet = client.postJson("getStickerSet",
-            GetStickerSet(
+    override suspend fun getStickerSet(name: String): StickerSet =
+            client.postJson<StickerSet>("getStickerSet", GetStickerSet(
             name = name
         )
-    )
+    ).afterMethod("getStickerSet") {
+        put("name", name)
+    }
 
     override suspend fun getCustomEmojiStickers(customEmojiIds: Iterable<String>): List<Sticker> =
-            client.postJson("getCustomEmojiStickers", GetCustomEmojiStickers(
+            client.postJson<List<Sticker>>("getCustomEmojiStickers", GetCustomEmojiStickers(
             customEmojiIds = customEmojiIds
         )
-    )
+    ).afterMethod("getCustomEmojiStickers") {
+        put("customEmojiIds", customEmojiIds)
+    }
 
     override suspend fun uploadStickerFile(
         userId: Long,
@@ -1594,17 +2059,22 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerPositionInSet(sticker: String, position: Int): Boolean =
-            client.postJson("setStickerPositionInSet", SetStickerPositionInSet(
+            client.postJson<Boolean>("setStickerPositionInSet", SetStickerPositionInSet(
             sticker = sticker, 
             position = position
         )
-    )
+    ).afterMethod("setStickerPositionInSet") {
+        put("sticker", sticker)
+        put("position", position)
+    }
 
     override suspend fun deleteStickerFromSet(sticker: String): Boolean =
-            client.postJson("deleteStickerFromSet", DeleteStickerFromSet(
+            client.postJson<Boolean>("deleteStickerFromSet", DeleteStickerFromSet(
             sticker = sticker
         )
-    )
+    ).afterMethod("deleteStickerFromSet") {
+        put("sticker", sticker)
+    }
 
     override suspend fun replaceStickerInSet(
         userId: Long,
@@ -1621,32 +2091,44 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean
-            = client.postJson("setStickerEmojiList", SetStickerEmojiList(
+            = client.postJson<Boolean>("setStickerEmojiList", SetStickerEmojiList(
             sticker = sticker, 
             emojiList = emojiList
         )
-    )
+    ).afterMethod("setStickerEmojiList") {
+        put("sticker", sticker)
+        put("emojiList", emojiList)
+    }
 
     override suspend fun setStickerKeywords(sticker: String, keywords: Iterable<String>?): Boolean =
-            client.postJson("setStickerKeywords", SetStickerKeywords(
+            client.postJson<Boolean>("setStickerKeywords", SetStickerKeywords(
             sticker = sticker, 
             keywords = keywords
         )
-    )
+    ).afterMethod("setStickerKeywords") {
+        put("sticker", sticker)
+        put("keywords", keywords)
+    }
 
     override suspend fun setStickerMaskPosition(sticker: String, maskPosition: MaskPosition?):
-            Boolean = client.postJson("setStickerMaskPosition", SetStickerMaskPosition(
+            Boolean = client.postJson<Boolean>("setStickerMaskPosition", SetStickerMaskPosition(
             sticker = sticker, 
             maskPosition = maskPosition
         )
-    )
+    ).afterMethod("setStickerMaskPosition") {
+        put("sticker", sticker)
+        put("maskPosition", maskPosition)
+    }
 
     override suspend fun setStickerSetTitle(name: String, title: String): Boolean =
-            client.postJson("setStickerSetTitle", SetStickerSetTitle(
+            client.postJson<Boolean>("setStickerSetTitle", SetStickerSetTitle(
             name = name, 
             title = title
         )
-    )
+    ).afterMethod("setStickerSetTitle") {
+        put("name", name)
+        put("title", title)
+    }
 
     override suspend fun setStickerSetThumbnail(
         name: String,
@@ -1661,18 +2143,23 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setCustomEmojiStickerSetThumbnail(name: String, customEmojiId: String?):
-            Boolean = client.postJson("setCustomEmojiStickerSetThumbnail",
+            Boolean = client.postJson<Boolean>("setCustomEmojiStickerSetThumbnail",
             SetCustomEmojiStickerSetThumbnail(
             name = name, 
             customEmojiId = customEmojiId
         )
-    )
+    ).afterMethod("setCustomEmojiStickerSetThumbnail") {
+        put("name", name)
+        put("customEmojiId", customEmojiId)
+    }
 
     override suspend fun deleteStickerSet(name: String): Boolean =
-            client.postJson("deleteStickerSet", DeleteStickerSet(
+            client.postJson<Boolean>("deleteStickerSet", DeleteStickerSet(
             name = name
         )
-    )
+    ).afterMethod("deleteStickerSet") {
+        put("name", name)
+    }
 
     override suspend fun getAvailableGifts(): Gifts = client.get("getAvailableGifts")
 
@@ -1682,14 +2169,20 @@ public class TelegramBotImpl(
         text: String?,
         textParseMode: String?,
         textEntities: Iterable<MessageEntity>?,
-    ): Boolean = client.postJson("sendGift", SendGift(
+    ): Boolean = client.postJson<Boolean>("sendGift", SendGift(
             userId = userId, 
             giftId = giftId, 
             text = text, 
             textParseMode = textParseMode, 
             textEntities = textEntities
         )
-    )
+    ).afterMethod("sendGift") {
+        put("userId", userId)
+        put("giftId", giftId)
+        put("text", text)
+        put("textParseMode", textParseMode)
+        put("textEntities", textEntities)
+    }
 
     override suspend fun answerInlineQuery(
         inlineQueryId: String,
@@ -1698,7 +2191,7 @@ public class TelegramBotImpl(
         isPersonal: Boolean?,
         nextOffset: String?,
         button: InlineQueryResultsButton?,
-    ): Boolean = client.postJson("answerInlineQuery", AnswerInlineQuery(
+    ): Boolean = client.postJson<Boolean>("answerInlineQuery", AnswerInlineQuery(
             inlineQueryId = inlineQueryId, 
             results = results, 
             cacheTime = cacheTime, 
@@ -1706,14 +2199,25 @@ public class TelegramBotImpl(
             nextOffset = nextOffset, 
             button = button
         )
-    )
+    ).afterMethod("answerInlineQuery") {
+        put("inlineQueryId", inlineQueryId)
+        put("results", results)
+        put("cacheTime", cacheTime)
+        put("isPersonal", isPersonal)
+        put("nextOffset", nextOffset)
+        put("button", button)
+    }
 
     override suspend fun answerWebAppQuery(webAppQueryId: String, result: InlineQueryResult):
-            SentWebAppMessage = client.postJson("answerWebAppQuery", AnswerWebAppQuery(
+            SentWebAppMessage = client.postJson<SentWebAppMessage>("answerWebAppQuery",
+            AnswerWebAppQuery(
             webAppQueryId = webAppQueryId, 
             result = result
         )
-    )
+    ).afterMethod("answerWebAppQuery") {
+        put("webAppQueryId", webAppQueryId)
+        put("result", result)
+    }
 
     override suspend fun savePreparedInlineMessage(
         userId: Long,
@@ -1722,7 +2226,7 @@ public class TelegramBotImpl(
         allowBotChats: Boolean?,
         allowGroupChats: Boolean?,
         allowChannelChats: Boolean?,
-    ): PreparedInlineMessage = client.postJson("savePreparedInlineMessage",
+    ): PreparedInlineMessage = client.postJson<PreparedInlineMessage>("savePreparedInlineMessage",
             SavePreparedInlineMessage(
             userId = userId, 
             result = result, 
@@ -1731,7 +2235,14 @@ public class TelegramBotImpl(
             allowGroupChats = allowGroupChats, 
             allowChannelChats = allowChannelChats
         )
-    )
+    ).afterMethod("savePreparedInlineMessage") {
+        put("userId", userId)
+        put("result", result)
+        put("allowUserChats", allowUserChats)
+        put("allowBotChats", allowBotChats)
+        put("allowGroupChats", allowGroupChats)
+        put("allowChannelChats", allowChannelChats)
+    }
 
     override suspend fun sendInvoice(
         chatId: String,
@@ -1794,7 +2305,37 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "INVOICE", text = title) }
+    ).afterMethod("sendInvoice") {
+        put("chatId", chatId)
+        put("title", title)
+        put("description", description)
+        put("payload", payload)
+        put("currency", currency)
+        put("prices", prices)
+        put("messageThreadId", messageThreadId)
+        put("providerToken", providerToken)
+        put("maxTipAmount", maxTipAmount)
+        put("suggestedTipAmounts", suggestedTipAmounts)
+        put("startParameter", startParameter)
+        put("providerData", providerData)
+        put("photoUrl", photoUrl)
+        put("photoSize", photoSize)
+        put("photoWidth", photoWidth)
+        put("photoHeight", photoHeight)
+        put("needName", needName)
+        put("needPhoneNumber", needPhoneNumber)
+        put("needEmail", needEmail)
+        put("needShippingAddress", needShippingAddress)
+        put("sendPhoneNumberToProvider", sendPhoneNumberToProvider)
+        put("sendEmailToProvider", sendEmailToProvider)
+        put("isFlexible", isFlexible)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun createInvoiceLink(
         title: String,
@@ -1819,7 +2360,7 @@ public class TelegramBotImpl(
         sendPhoneNumberToProvider: Boolean?,
         sendEmailToProvider: Boolean?,
         isFlexible: Boolean?,
-    ): String = client.postJson("createInvoiceLink", CreateInvoiceLink(
+    ): String = client.postJson<String>("createInvoiceLink", CreateInvoiceLink(
             title = title, 
             description = description, 
             payload = payload, 
@@ -1843,64 +2384,109 @@ public class TelegramBotImpl(
             sendEmailToProvider = sendEmailToProvider, 
             isFlexible = isFlexible
         )
-    )
+    ).afterMethod("createInvoiceLink") {
+        put("title", title)
+        put("description", description)
+        put("payload", payload)
+        put("currency", currency)
+        put("prices", prices)
+        put("businessConnectionId", businessConnectionId)
+        put("providerToken", providerToken)
+        put("subscriptionPeriod", subscriptionPeriod)
+        put("maxTipAmount", maxTipAmount)
+        put("suggestedTipAmounts", suggestedTipAmounts)
+        put("providerData", providerData)
+        put("photoUrl", photoUrl)
+        put("photoSize", photoSize)
+        put("photoWidth", photoWidth)
+        put("photoHeight", photoHeight)
+        put("needName", needName)
+        put("needPhoneNumber", needPhoneNumber)
+        put("needEmail", needEmail)
+        put("needShippingAddress", needShippingAddress)
+        put("sendPhoneNumberToProvider", sendPhoneNumberToProvider)
+        put("sendEmailToProvider", sendEmailToProvider)
+        put("isFlexible", isFlexible)
+    }
 
     override suspend fun answerShippingQuery(
         shippingQueryId: String,
         ok: Boolean,
         shippingOptions: Iterable<ShippingOption>?,
         errorMessage: String?,
-    ): Boolean = client.postJson("answerShippingQuery", AnswerShippingQuery(
+    ): Boolean = client.postJson<Boolean>("answerShippingQuery", AnswerShippingQuery(
             shippingQueryId = shippingQueryId, 
             ok = ok, 
             shippingOptions = shippingOptions, 
             errorMessage = errorMessage
         )
-    )
+    ).afterMethod("answerShippingQuery") {
+        put("shippingQueryId", shippingQueryId)
+        put("ok", ok)
+        put("shippingOptions", shippingOptions)
+        put("errorMessage", errorMessage)
+    }
 
     override suspend fun answerPreCheckoutQuery(
         preCheckoutQueryId: String,
         ok: Boolean,
         errorMessage: String?,
-    ): Boolean = client.postJson("answerPreCheckoutQuery", AnswerPreCheckoutQuery(
+    ): Boolean = client.postJson<Boolean>("answerPreCheckoutQuery", AnswerPreCheckoutQuery(
             preCheckoutQueryId = preCheckoutQueryId, 
             ok = ok, 
             errorMessage = errorMessage
         )
-    )
+    ).afterMethod("answerPreCheckoutQuery") {
+        put("preCheckoutQueryId", preCheckoutQueryId)
+        put("ok", ok)
+        put("errorMessage", errorMessage)
+    }
 
     override suspend fun getStarTransactions(offset: Int?, limit: Int?): StarTransactions =
-            client.postJson("getStarTransactions", GetStarTransactions(
+            client.postJson<StarTransactions>("getStarTransactions", GetStarTransactions(
             offset = offset, 
             limit = limit
         )
-    )
+    ).afterMethod("getStarTransactions") {
+        put("offset", offset)
+        put("limit", limit)
+    }
 
     override suspend fun refundStarPayment(userId: Long, telegramPaymentChargeId: String): Boolean =
-            client.postJson("refundStarPayment", RefundStarPayment(
+            client.postJson<Boolean>("refundStarPayment", RefundStarPayment(
             userId = userId, 
             telegramPaymentChargeId = telegramPaymentChargeId
         )
-    )
+    ).afterMethod("refundStarPayment") {
+        put("userId", userId)
+        put("telegramPaymentChargeId", telegramPaymentChargeId)
+    }
 
     override suspend fun editUserStarSubscription(
         userId: Long,
         telegramPaymentChargeId: String,
         isCanceled: Boolean,
-    ): Boolean = client.postJson("editUserStarSubscription", EditUserStarSubscription(
+    ): Boolean = client.postJson<Boolean>("editUserStarSubscription", EditUserStarSubscription(
             userId = userId, 
             telegramPaymentChargeId = telegramPaymentChargeId, 
             isCanceled = isCanceled
         )
-    )
+    ).afterMethod("editUserStarSubscription") {
+        put("userId", userId)
+        put("telegramPaymentChargeId", telegramPaymentChargeId)
+        put("isCanceled", isCanceled)
+    }
 
     override suspend fun setPassportDataErrors(userId: Long,
             errors: Iterable<PassportElementError>): Boolean =
-            client.postJson("setPassportDataErrors", SetPassportDataErrors(
+            client.postJson<Boolean>("setPassportDataErrors", SetPassportDataErrors(
             userId = userId, 
             errors = errors
         )
-    )
+    ).afterMethod("setPassportDataErrors") {
+        put("userId", userId)
+        put("errors", errors)
+    }
 
     override suspend fun sendGame(
         chatId: Long,
@@ -1925,7 +2511,18 @@ public class TelegramBotImpl(
             replyParameters = replyParameters, 
             replyMarkup = replyMarkup
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "GAME", text = gameShortName) }
+    ).afterMethod("sendGame") {
+        put("chatId", chatId)
+        put("gameShortName", gameShortName)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun setGameScore(
         userId: Long,
@@ -1942,20 +2539,33 @@ public class TelegramBotImpl(
             force = force, 
             disableEditMessage = disableEditMessage
         )
-    ).also { messageSource.save(message = it, fromBot = true, type = "GAME_SCORE", text = "userId = $userId, score = $score") }
+    ).afterMethod("setGameScore") {
+        put("userId", userId)
+        put("score", score)
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("force", force)
+        put("disableEditMessage", disableEditMessage)
+    }
 
     override suspend fun getGameHighScores(
         userId: Long,
         chatId: Long?,
         messageId: Long?,
         inlineMessageId: String?,
-    ): List<GameHighScore> = client.postJson("getGameHighScores", GetGameHighScores(
+    ): List<GameHighScore> = client.postJson<List<GameHighScore>>("getGameHighScores",
+            GetGameHighScores(
             userId = userId, 
             chatId = chatId, 
             messageId = messageId, 
             inlineMessageId = inlineMessageId
         )
-    )
+    ).afterMethod("getGameHighScores") {
+        put("userId", userId)
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("inlineMessageId", inlineMessageId)
+    }
 
     override suspend fun editMessageText(
         inlineMessageId: String,
@@ -1965,7 +2575,7 @@ public class TelegramBotImpl(
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postJson("editMessageText", EditMessageTextByInlineMessageId(
+    ): Boolean = client.postJson<Boolean>("editMessageText", EditMessageTextByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             text = text, 
             businessConnectionId = businessConnectionId, 
@@ -1974,7 +2584,15 @@ public class TelegramBotImpl(
             linkPreviewOptions = linkPreviewOptions, 
             replyMarkup = replyMarkup
         )
-    )
+    ).afterMethod("editMessageText") {
+        put("inlineMessageId", inlineMessageId)
+        put("text", text)
+        put("businessConnectionId", businessConnectionId)
+        put("parseMode", parseMode)
+        put("entities", entities)
+        put("linkPreviewOptions", linkPreviewOptions)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun editMessageCaption(
         inlineMessageId: String,
@@ -1984,7 +2602,7 @@ public class TelegramBotImpl(
         captionEntities: Iterable<MessageEntity>?,
         showCaptionAboveMedia: Boolean?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postJson("editMessageCaption", EditMessageCaptionByInlineMessageId(
+    ): Boolean = client.postJson<Boolean>("editMessageCaption", EditMessageCaptionByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             businessConnectionId = businessConnectionId, 
             caption = caption, 
@@ -1993,7 +2611,15 @@ public class TelegramBotImpl(
             showCaptionAboveMedia = showCaptionAboveMedia, 
             replyMarkup = replyMarkup
         )
-    )
+    ).afterMethod("editMessageCaption") {
+        put("inlineMessageId", inlineMessageId)
+        put("businessConnectionId", businessConnectionId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun editMessageMedia(
         inlineMessageId: String,
@@ -2021,7 +2647,7 @@ public class TelegramBotImpl(
         heading: Int?,
         proximityAlertRadius: Int?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postJson("editMessageLiveLocation",
+    ): Boolean = client.postJson<Boolean>("editMessageLiveLocation",
             EditMessageLiveLocationByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             latitude = latitude, 
@@ -2033,30 +2659,49 @@ public class TelegramBotImpl(
             proximityAlertRadius = proximityAlertRadius, 
             replyMarkup = replyMarkup
         )
-    )
+    ).afterMethod("editMessageLiveLocation") {
+        put("inlineMessageId", inlineMessageId)
+        put("latitude", latitude)
+        put("longitude", longitude)
+        put("businessConnectionId", businessConnectionId)
+        put("livePeriod", livePeriod)
+        put("horizontalAccuracy", horizontalAccuracy)
+        put("heading", heading)
+        put("proximityAlertRadius", proximityAlertRadius)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun stopMessageLiveLocation(
         inlineMessageId: String,
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postJson("stopMessageLiveLocation",
+    ): Boolean = client.postJson<Boolean>("stopMessageLiveLocation",
             StopMessageLiveLocationByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             businessConnectionId = businessConnectionId, 
             replyMarkup = replyMarkup
         )
-    )
+    ).afterMethod("stopMessageLiveLocation") {
+        put("inlineMessageId", inlineMessageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun editMessageReplyMarkup(
         inlineMessageId: String,
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postJson("editMessageReplyMarkup", EditMessageReplyMarkupByInlineMessageId(
+    ): Boolean = client.postJson<Boolean>("editMessageReplyMarkup",
+            EditMessageReplyMarkupByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             businessConnectionId = businessConnectionId, 
             replyMarkup = replyMarkup
         )
-    )
+    ).afterMethod("editMessageReplyMarkup") {
+        put("inlineMessageId", inlineMessageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
 
     override suspend fun setGameScore(
         userId: Long,
@@ -2064,12 +2709,25 @@ public class TelegramBotImpl(
         inlineMessageId: String,
         force: Boolean?,
         disableEditMessage: Boolean?,
-    ): Boolean = client.postJson("setGameScore", SetGameScoreByInlineMessageId(
+    ): Boolean = client.postJson<Boolean>("setGameScore", SetGameScoreByInlineMessageId(
             userId = userId, 
             score = score, 
             inlineMessageId = inlineMessageId, 
             force = force, 
             disableEditMessage = disableEditMessage
         )
-    )
+    ).afterMethod("setGameScore") {
+        put("userId", userId)
+        put("score", score)
+        put("inlineMessageId", inlineMessageId)
+        put("force", force)
+        put("disableEditMessage", disableEditMessage)
+    }
+
+    private suspend inline fun <T> T.afterMethod(methodName: String, crossinline
+            collectArguments: MutableMap<String, Any?>.() -> Unit): T {
+        eventListener.sendAfterEvent(methodName, this, collectArguments)
+
+        return this
+    }
 }
