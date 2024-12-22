@@ -336,7 +336,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                     .receiver(TypeVariableName("T"))
                     .returns(TypeVariableName("T"))
                     .addParameter("methodName", String::class)
-                    .addParameter("collectArguments", LambdaTypeName.get(receiver = ClassName("kotlin.collections", "MutableMap").parameterizedBy(String::class.asTypeName(), Any::class.asTypeName().copy(nullable = true)), returnType = Unit::class.asTypeName()), CROSSINLINE)
+                    .addParameter(ParameterSpec.builder("collectArguments", LambdaTypeName.get(receiver = ClassName("kotlin.collections", "MutableMap").parameterizedBy(String::class.asTypeName(), Any::class.asTypeName().copy(nullable = true)), returnType = Unit::class.asTypeName()), CROSSINLINE).defaultValue("{}").build())
                     .addCode("""
                         |eventListener.sendAfterEvent(methodName, this, collectArguments)
                         |
@@ -398,7 +398,14 @@ suspend fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List
 fun FunSpec.Builder.addGetMethodIfNecessary(method: Method): FunSpec.Builder {
     if (method.arguments.size != 0) return this
 
-    addStatement("return client.get(\"${method.name}\")")
+    val returnType = method.returnType.toClassTypeName()
+    val returnClassName = when (returnType) {
+        is ClassName -> returnType.simpleName
+        is ParameterizedTypeName -> "${returnType.rawType.simpleName}<${(returnType.typeArguments.first() as ClassName).simpleName}>"
+        else -> returnType.toString()
+    }
+
+    addStatement("return client.get<$returnClassName>(\"${method.name}\")\n    .afterMethod(\"${method.name}\")")
 
     return this
 }
@@ -415,9 +422,9 @@ suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpe
         is ParameterizedTypeName -> "${returnType.rawType.simpleName}<${(returnType.typeArguments.first() as ClassName).simpleName}>"
         else -> returnType.toString()
     }
-    if (returnType is ClassName) returnType.simpleName 
 
-    addStatement("return client.postJson<$returnClassName>(\"${method.name}\", ${obj.name}(" +
+    addStatement("return client.postJson<$returnClassName>(\"${method.name}\"," +
+            "\n    ${obj.name}(" +
             obj.properties.joinToString { "\n        ${it.nameCamelCase} = ${it.nameCamelCase}" } +
             "\n    )\n)" +
             ".afterMethod(\"${method.name}\") {" +
@@ -430,13 +437,21 @@ suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpe
 fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method, objectsByName: Map<String, Object>): FunSpec.Builder {
     if (method.arguments.size == 0 || method.maybeMultipart.not()) return this
 
-    val statement = StringBuilder("return client.postMultiPart(\"${method.name}\") {").also { builder ->
-        method.arguments.forEach { arg -> builder.append("\n    ").append(arg.toAppendStatement()) }
-    }.also { builder ->
-        method.arguments.forEach { arg -> arg.toAppendContentInsideObjectsStatements(objectsByName)?.let { statements -> statements.forEach { statement -> builder.append("\n    ").append(statement) } } }
-    }.also { builder ->
-        builder.append("\n}")
-    }.toString()
+    val returnType = method.returnType.toClassTypeName()
+    val returnClassName = when (returnType) {
+        is ClassName -> returnType.simpleName
+        is ParameterizedTypeName -> "${returnType.rawType.simpleName}<${(returnType.typeArguments.first() as ClassName).simpleName}>"
+        else -> returnType.toString()
+    }
+
+    val statement = buildString {
+        append("return client.postMultiPart<$returnClassName>(\"${method.name}\") {")
+        method.arguments.forEach { arg -> append("\n    ").append(arg.toAppendStatement()) }
+        method.arguments.forEach { arg -> arg.toAppendContentInsideObjectsStatements(objectsByName)?.let { statements -> statements.forEach { statement -> append("\n    ").append(statement) } } }
+        append("\n}.afterMethod(\"${method.name}\") {")
+        append(method.arguments.joinToString(separator = "") { "\n    put(\"${it.nameCamelCase}\", ${it.nameCamelCase})" })
+        append("\n}")
+    }
 
     addStatement(statement)
 

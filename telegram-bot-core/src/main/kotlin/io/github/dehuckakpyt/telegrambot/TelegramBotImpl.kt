@@ -194,7 +194,8 @@ public class TelegramBotImpl(
         limit: Int?,
         timeout: Int?,
         allowedUpdates: Iterable<String>?,
-    ): List<Update> = client.postJson<List<Update>>("getUpdates", GetUpdates(
+    ): List<Update> = client.postJson<List<Update>>("getUpdates",
+        GetUpdates(
             offset = offset, 
             limit = limit, 
             timeout = timeout, 
@@ -215,7 +216,7 @@ public class TelegramBotImpl(
         allowedUpdates: Iterable<String>?,
         dropPendingUpdates: Boolean?,
         secretToken: String?,
-    ): Boolean = client.postMultiPart("setWebhook") {
+    ): Boolean = client.postMultiPart<Boolean>("setWebhook") {
         append("url", url)
         appendContentIfNotNull("certificate", certificate)
         appendIfNotNull("ip_address", ipAddress)
@@ -223,23 +224,36 @@ public class TelegramBotImpl(
         appendIfNotNull("allowed_updates", client.toJson(allowedUpdates))
         appendIfNotNull("drop_pending_updates", dropPendingUpdates)
         appendIfNotNull("secret_token", secretToken)
+    }.afterMethod("setWebhook") {
+        put("url", url)
+        put("certificate", certificate)
+        put("ipAddress", ipAddress)
+        put("maxConnections", maxConnections)
+        put("allowedUpdates", allowedUpdates)
+        put("dropPendingUpdates", dropPendingUpdates)
+        put("secretToken", secretToken)
     }
 
     override suspend fun deleteWebhook(dropPendingUpdates: Boolean?): Boolean =
-            client.postJson<Boolean>("deleteWebhook", DeleteWebhook(
+            client.postJson<Boolean>("deleteWebhook",
+        DeleteWebhook(
             dropPendingUpdates = dropPendingUpdates
         )
     ).afterMethod("deleteWebhook") {
         put("dropPendingUpdates", dropPendingUpdates)
     }
 
-    override suspend fun getWebhookInfo(): WebhookInfo = client.get("getWebhookInfo")
+    override suspend fun getWebhookInfo(): WebhookInfo = client.get<WebhookInfo>("getWebhookInfo")
+        .afterMethod("getWebhookInfo")
 
-    override suspend fun getMe(): User = client.get("getMe")
+    override suspend fun getMe(): User = client.get<User>("getMe")
+        .afterMethod("getMe")
 
-    override suspend fun logOut(): Boolean = client.get("logOut")
+    override suspend fun logOut(): Boolean = client.get<Boolean>("logOut")
+        .afterMethod("logOut")
 
-    override suspend fun close(): Boolean = client.get("close")
+    override suspend fun close(): Boolean = client.get<Boolean>("close")
+        .afterMethod("close")
 
     override suspend fun sendMessage(
         chatId: String,
@@ -255,7 +269,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postJson<Message>("sendMessage", SendMessage(
+    ): Message = client.postJson<Message>("sendMessage",
+        SendMessage(
             chatId = chatId, 
             text = text, 
             businessConnectionId = businessConnectionId, 
@@ -293,7 +308,8 @@ public class TelegramBotImpl(
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-    ): Message = client.postJson<Message>("forwardMessage", ForwardMessage(
+    ): Message = client.postJson<Message>("forwardMessage",
+        ForwardMessage(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageId = messageId, 
@@ -317,7 +333,8 @@ public class TelegramBotImpl(
         messageThreadId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
-    ): List<MessageId> = client.postJson<List<MessageId>>("forwardMessages", ForwardMessages(
+    ): List<MessageId> = client.postJson<List<MessageId>>("forwardMessages",
+        ForwardMessages(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageIds = messageIds, 
@@ -348,7 +365,8 @@ public class TelegramBotImpl(
         allowPaidBroadcast: Boolean?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): MessageId = client.postJson<MessageId>("copyMessage", CopyMessage(
+    ): MessageId = client.postJson<MessageId>("copyMessage",
+        CopyMessage(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageId = messageId, 
@@ -387,7 +405,8 @@ public class TelegramBotImpl(
         disableNotification: Boolean?,
         protectContent: Boolean?,
         removeCaption: Boolean?,
-    ): List<MessageId> = client.postJson<List<MessageId>>("copyMessages", CopyMessages(
+    ): List<MessageId> = client.postJson<List<MessageId>>("copyMessages",
+        CopyMessages(
             chatId = chatId, 
             fromChatId = fromChatId, 
             messageIds = messageIds, 
@@ -422,7 +441,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendPhoto") {
+    ): Message = client.postMultiPart<Message>("sendPhoto") {
         append("chat_id", chatId)
         appendContent("photo", photo)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -438,6 +457,22 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendPhoto") {
+        put("chatId", chatId)
+        put("photo", photo)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("hasSpoiler", hasSpoiler)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendAudio(
@@ -458,7 +493,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendAudio") {
+    ): Message = client.postMultiPart<Message>("sendAudio") {
         append("chat_id", chatId)
         appendContent("audio", audio)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -476,6 +511,24 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendAudio") {
+        put("chatId", chatId)
+        put("audio", audio)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("duration", duration)
+        put("performer", performer)
+        put("title", title)
+        put("thumbnail", thumbnail)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendDocument(
@@ -494,7 +547,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendDocument") {
+    ): Message = client.postMultiPart<Message>("sendDocument") {
         append("chat_id", chatId)
         appendContent("document", document)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -510,6 +563,22 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendDocument") {
+        put("chatId", chatId)
+        put("document", document)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("thumbnail", thumbnail)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("disableContentTypeDetection", disableContentTypeDetection)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendVideo(
@@ -533,7 +602,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendVideo") {
+    ): Message = client.postMultiPart<Message>("sendVideo") {
         append("chat_id", chatId)
         appendContent("video", video)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -554,6 +623,27 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendVideo") {
+        put("chatId", chatId)
+        put("video", video)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("duration", duration)
+        put("width", width)
+        put("height", height)
+        put("thumbnail", thumbnail)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("hasSpoiler", hasSpoiler)
+        put("supportsStreaming", supportsStreaming)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendAnimation(
@@ -576,7 +666,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendAnimation") {
+    ): Message = client.postMultiPart<Message>("sendAnimation") {
         append("chat_id", chatId)
         appendContent("animation", animation)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -596,6 +686,26 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendAnimation") {
+        put("chatId", chatId)
+        put("animation", animation)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("duration", duration)
+        put("width", width)
+        put("height", height)
+        put("thumbnail", thumbnail)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("hasSpoiler", hasSpoiler)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendVoice(
@@ -613,7 +723,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendVoice") {
+    ): Message = client.postMultiPart<Message>("sendVoice") {
         append("chat_id", chatId)
         appendContent("voice", voice)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -628,6 +738,21 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendVoice") {
+        put("chatId", chatId)
+        put("voice", voice)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("duration", duration)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendVideoNote(
@@ -644,7 +769,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendVideoNote") {
+    ): Message = client.postMultiPart<Message>("sendVideoNote") {
         append("chat_id", chatId)
         appendContent("video_note", videoNote)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -658,6 +783,20 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendVideoNote") {
+        put("chatId", chatId)
+        put("videoNote", videoNote)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("duration", duration)
+        put("length", length)
+        put("thumbnail", thumbnail)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendPaidMedia(
@@ -675,7 +814,7 @@ public class TelegramBotImpl(
         allowPaidBroadcast: Boolean?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendPaidMedia") {
+    ): Message = client.postMultiPart<Message>("sendPaidMedia") {
         append("chat_id", chatId)
         append("star_count", starCount)
         append("media", client.toJson(media))
@@ -698,6 +837,21 @@ public class TelegramBotImpl(
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
+    }.afterMethod("sendPaidMedia") {
+        put("chatId", chatId)
+        put("starCount", starCount)
+        put("media", media)
+        put("businessConnectionId", businessConnectionId)
+        put("payload", payload)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun sendMediaGroup(
@@ -710,7 +864,7 @@ public class TelegramBotImpl(
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
-    ): List<Message> = client.postMultiPart("sendMediaGroup") {
+    ): List<Message> = client.postMultiPart<List<Message>>("sendMediaGroup") {
         append("chat_id", chatId)
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -728,6 +882,16 @@ public class TelegramBotImpl(
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
+    }.afterMethod("sendMediaGroup") {
+        put("chatId", chatId)
+        put("media", media)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
     }
 
     override suspend fun sendLocation(
@@ -746,7 +910,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postJson<Message>("sendLocation", SendLocation(
+    ): Message = client.postJson<Message>("sendLocation",
+        SendLocation(
             chatId = chatId, 
             latitude = latitude, 
             longitude = longitude, 
@@ -799,7 +964,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postJson<Message>("sendVenue", SendVenue(
+    ): Message = client.postJson<Message>("sendVenue",
+        SendVenue(
             chatId = chatId, 
             latitude = latitude, 
             longitude = longitude, 
@@ -852,7 +1018,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postJson<Message>("sendContact", SendContact(
+    ): Message = client.postJson<Message>("sendContact",
+        SendContact(
             chatId = chatId, 
             phoneNumber = phoneNumber, 
             firstName = firstName, 
@@ -907,7 +1074,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postJson<Message>("sendPoll", SendPoll(
+    ): Message = client.postJson<Message>("sendPoll",
+        SendPoll(
             chatId = chatId, 
             question = question, 
             options = options, 
@@ -969,7 +1137,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postJson<Message>("sendDice", SendDice(
+    ): Message = client.postJson<Message>("sendDice",
+        SendDice(
             chatId = chatId, 
             businessConnectionId = businessConnectionId, 
             messageThreadId = messageThreadId, 
@@ -999,7 +1168,8 @@ public class TelegramBotImpl(
         action: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
-    ): Boolean = client.postJson<Boolean>("sendChatAction", SendChatAction(
+    ): Boolean = client.postJson<Boolean>("sendChatAction",
+        SendChatAction(
             chatId = chatId, 
             action = action, 
             businessConnectionId = businessConnectionId, 
@@ -1017,7 +1187,8 @@ public class TelegramBotImpl(
         messageId: Long,
         reaction: Iterable<ReactionType>?,
         isBig: Boolean?,
-    ): Boolean = client.postJson<Boolean>("setMessageReaction", SetMessageReaction(
+    ): Boolean = client.postJson<Boolean>("setMessageReaction",
+        SetMessageReaction(
             chatId = chatId, 
             messageId = messageId, 
             reaction = reaction, 
@@ -1035,7 +1206,7 @@ public class TelegramBotImpl(
         offset: Int?,
         limit: Int?,
     ): UserProfilePhotos = client.postJson<UserProfilePhotos>("getUserProfilePhotos",
-            GetUserProfilePhotos(
+        GetUserProfilePhotos(
             userId = userId, 
             offset = offset, 
             limit = limit
@@ -1050,7 +1221,8 @@ public class TelegramBotImpl(
         userId: Long,
         emojiStatusCustomEmojiId: String?,
         emojiStatusExpirationDate: Long?,
-    ): Boolean = client.postJson<Boolean>("setUserEmojiStatus", SetUserEmojiStatus(
+    ): Boolean = client.postJson<Boolean>("setUserEmojiStatus",
+        SetUserEmojiStatus(
             userId = userId, 
             emojiStatusCustomEmojiId = emojiStatusCustomEmojiId, 
             emojiStatusExpirationDate = emojiStatusExpirationDate
@@ -1061,7 +1233,8 @@ public class TelegramBotImpl(
         put("emojiStatusExpirationDate", emojiStatusExpirationDate)
     }
 
-    override suspend fun getFile(fileId: String): File = client.postJson<File>("getFile", GetFile(
+    override suspend fun getFile(fileId: String): File = client.postJson<File>("getFile",
+        GetFile(
             fileId = fileId
         )
     ).afterMethod("getFile") {
@@ -1073,7 +1246,8 @@ public class TelegramBotImpl(
         userId: Long,
         untilDate: Long?,
         revokeMessages: Boolean?,
-    ): Boolean = client.postJson<Boolean>("banChatMember", BanChatMember(
+    ): Boolean = client.postJson<Boolean>("banChatMember",
+        BanChatMember(
             chatId = chatId, 
             userId = userId, 
             untilDate = untilDate, 
@@ -1090,7 +1264,8 @@ public class TelegramBotImpl(
         chatId: String,
         userId: Long,
         onlyIfBanned: Boolean?,
-    ): Boolean = client.postJson<Boolean>("unbanChatMember", UnbanChatMember(
+    ): Boolean = client.postJson<Boolean>("unbanChatMember",
+        UnbanChatMember(
             chatId = chatId, 
             userId = userId, 
             onlyIfBanned = onlyIfBanned
@@ -1107,7 +1282,8 @@ public class TelegramBotImpl(
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean?,
         untilDate: Long?,
-    ): Boolean = client.postJson<Boolean>("restrictChatMember", RestrictChatMember(
+    ): Boolean = client.postJson<Boolean>("restrictChatMember",
+        RestrictChatMember(
             chatId = chatId, 
             userId = userId, 
             permissions = permissions, 
@@ -1140,7 +1316,8 @@ public class TelegramBotImpl(
         canEditMessages: Boolean?,
         canPinMessages: Boolean?,
         canManageTopics: Boolean?,
-    ): Boolean = client.postJson<Boolean>("promoteChatMember", PromoteChatMember(
+    ): Boolean = client.postJson<Boolean>("promoteChatMember",
+        PromoteChatMember(
             chatId = chatId, 
             userId = userId, 
             isAnonymous = isAnonymous, 
@@ -1184,7 +1361,7 @@ public class TelegramBotImpl(
         userId: Long,
         customTitle: String,
     ): Boolean = client.postJson<Boolean>("setChatAdministratorCustomTitle",
-            SetChatAdministratorCustomTitle(
+        SetChatAdministratorCustomTitle(
             chatId = chatId, 
             userId = userId, 
             customTitle = customTitle
@@ -1196,7 +1373,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun banChatSenderChat(chatId: String, senderChatId: Long): Boolean =
-            client.postJson<Boolean>("banChatSenderChat", BanChatSenderChat(
+            client.postJson<Boolean>("banChatSenderChat",
+        BanChatSenderChat(
             chatId = chatId, 
             senderChatId = senderChatId
         )
@@ -1206,7 +1384,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun unbanChatSenderChat(chatId: String, senderChatId: Long): Boolean =
-            client.postJson<Boolean>("unbanChatSenderChat", UnbanChatSenderChat(
+            client.postJson<Boolean>("unbanChatSenderChat",
+        UnbanChatSenderChat(
             chatId = chatId, 
             senderChatId = senderChatId
         )
@@ -1219,7 +1398,8 @@ public class TelegramBotImpl(
         chatId: String,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean?,
-    ): Boolean = client.postJson<Boolean>("setChatPermissions", SetChatPermissions(
+    ): Boolean = client.postJson<Boolean>("setChatPermissions",
+        SetChatPermissions(
             chatId = chatId, 
             permissions = permissions, 
             useIndependentChatPermissions = useIndependentChatPermissions
@@ -1231,7 +1411,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun exportChatInviteLink(chatId: String): String =
-            client.postJson<String>("exportChatInviteLink", ExportChatInviteLink(
+            client.postJson<String>("exportChatInviteLink",
+        ExportChatInviteLink(
             chatId = chatId
         )
     ).afterMethod("exportChatInviteLink") {
@@ -1245,7 +1426,7 @@ public class TelegramBotImpl(
         memberLimit: Int?,
         createsJoinRequest: Boolean?,
     ): ChatInviteLink = client.postJson<ChatInviteLink>("createChatInviteLink",
-            CreateChatInviteLink(
+        CreateChatInviteLink(
             chatId = chatId, 
             name = name, 
             expireDate = expireDate, 
@@ -1267,7 +1448,8 @@ public class TelegramBotImpl(
         expireDate: Long?,
         memberLimit: Int?,
         createsJoinRequest: Boolean?,
-    ): ChatInviteLink = client.postJson<ChatInviteLink>("editChatInviteLink", EditChatInviteLink(
+    ): ChatInviteLink = client.postJson<ChatInviteLink>("editChatInviteLink",
+        EditChatInviteLink(
             chatId = chatId, 
             inviteLink = inviteLink, 
             name = name, 
@@ -1290,7 +1472,7 @@ public class TelegramBotImpl(
         subscriptionPrice: Int,
         name: String?,
     ): ChatInviteLink = client.postJson<ChatInviteLink>("createChatSubscriptionInviteLink",
-            CreateChatSubscriptionInviteLink(
+        CreateChatSubscriptionInviteLink(
             chatId = chatId, 
             subscriptionPeriod = subscriptionPeriod, 
             subscriptionPrice = subscriptionPrice, 
@@ -1308,7 +1490,7 @@ public class TelegramBotImpl(
         inviteLink: String,
         name: String?,
     ): ChatInviteLink = client.postJson<ChatInviteLink>("editChatSubscriptionInviteLink",
-            EditChatSubscriptionInviteLink(
+        EditChatSubscriptionInviteLink(
             chatId = chatId, 
             inviteLink = inviteLink, 
             name = name
@@ -1320,7 +1502,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun revokeChatInviteLink(chatId: String, inviteLink: String): ChatInviteLink =
-            client.postJson<ChatInviteLink>("revokeChatInviteLink", RevokeChatInviteLink(
+            client.postJson<ChatInviteLink>("revokeChatInviteLink",
+        RevokeChatInviteLink(
             chatId = chatId, 
             inviteLink = inviteLink
         )
@@ -1330,7 +1513,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun approveChatJoinRequest(chatId: String, userId: Long): Boolean =
-            client.postJson<Boolean>("approveChatJoinRequest", ApproveChatJoinRequest(
+            client.postJson<Boolean>("approveChatJoinRequest",
+        ApproveChatJoinRequest(
             chatId = chatId, 
             userId = userId
         )
@@ -1340,7 +1524,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun declineChatJoinRequest(chatId: String, userId: Long): Boolean =
-            client.postJson<Boolean>("declineChatJoinRequest", DeclineChatJoinRequest(
+            client.postJson<Boolean>("declineChatJoinRequest",
+        DeclineChatJoinRequest(
             chatId = chatId, 
             userId = userId
         )
@@ -1350,13 +1535,17 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setChatPhoto(chatId: String, photo: Input): Boolean =
-            client.postMultiPart("setChatPhoto") {
+            client.postMultiPart<Boolean>("setChatPhoto") {
         append("chat_id", chatId)
         appendContent("photo", photo)
+    }.afterMethod("setChatPhoto") {
+        put("chatId", chatId)
+        put("photo", photo)
     }
 
     override suspend fun deleteChatPhoto(chatId: String): Boolean =
-            client.postJson<Boolean>("deleteChatPhoto", DeleteChatPhoto(
+            client.postJson<Boolean>("deleteChatPhoto",
+        DeleteChatPhoto(
             chatId = chatId
         )
     ).afterMethod("deleteChatPhoto") {
@@ -1364,7 +1553,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setChatTitle(chatId: String, title: String): Boolean =
-            client.postJson<Boolean>("setChatTitle", SetChatTitle(
+            client.postJson<Boolean>("setChatTitle",
+        SetChatTitle(
             chatId = chatId, 
             title = title
         )
@@ -1374,7 +1564,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setChatDescription(chatId: String, description: String?): Boolean =
-            client.postJson<Boolean>("setChatDescription", SetChatDescription(
+            client.postJson<Boolean>("setChatDescription",
+        SetChatDescription(
             chatId = chatId, 
             description = description
         )
@@ -1388,7 +1579,8 @@ public class TelegramBotImpl(
         messageId: Long,
         businessConnectionId: String?,
         disableNotification: Boolean?,
-    ): Boolean = client.postJson<Boolean>("pinChatMessage", PinChatMessage(
+    ): Boolean = client.postJson<Boolean>("pinChatMessage",
+        PinChatMessage(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
@@ -1405,7 +1597,8 @@ public class TelegramBotImpl(
         chatId: String,
         businessConnectionId: String?,
         messageId: Long?,
-    ): Boolean = client.postJson<Boolean>("unpinChatMessage", UnpinChatMessage(
+    ): Boolean = client.postJson<Boolean>("unpinChatMessage",
+        UnpinChatMessage(
             chatId = chatId, 
             businessConnectionId = businessConnectionId, 
             messageId = messageId
@@ -1417,7 +1610,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun unpinAllChatMessages(chatId: String): Boolean =
-            client.postJson<Boolean>("unpinAllChatMessages", UnpinAllChatMessages(
+            client.postJson<Boolean>("unpinAllChatMessages",
+        UnpinAllChatMessages(
             chatId = chatId
         )
     ).afterMethod("unpinAllChatMessages") {
@@ -1425,7 +1619,7 @@ public class TelegramBotImpl(
     }
 
     override suspend fun leaveChat(chatId: String): Boolean = client.postJson<Boolean>("leaveChat",
-            LeaveChat(
+        LeaveChat(
             chatId = chatId
         )
     ).afterMethod("leaveChat") {
@@ -1433,7 +1627,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getChat(chatId: String): ChatFullInfo =
-            client.postJson<ChatFullInfo>("getChat", GetChat(
+            client.postJson<ChatFullInfo>("getChat",
+        GetChat(
             chatId = chatId
         )
     ).afterMethod("getChat") {
@@ -1441,7 +1636,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getChatAdministrators(chatId: String): List<ChatMember> =
-            client.postJson<List<ChatMember>>("getChatAdministrators", GetChatAdministrators(
+            client.postJson<List<ChatMember>>("getChatAdministrators",
+        GetChatAdministrators(
             chatId = chatId
         )
     ).afterMethod("getChatAdministrators") {
@@ -1449,7 +1645,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getChatMemberCount(chatId: String): Int =
-            client.postJson<Int>("getChatMemberCount", GetChatMemberCount(
+            client.postJson<Int>("getChatMemberCount",
+        GetChatMemberCount(
             chatId = chatId
         )
     ).afterMethod("getChatMemberCount") {
@@ -1457,7 +1654,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getChatMember(chatId: String, userId: Long): ChatMember =
-            client.postJson<ChatMember>("getChatMember", GetChatMember(
+            client.postJson<ChatMember>("getChatMember",
+        GetChatMember(
             chatId = chatId, 
             userId = userId
         )
@@ -1467,7 +1665,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setChatStickerSet(chatId: String, stickerSetName: String): Boolean =
-            client.postJson<Boolean>("setChatStickerSet", SetChatStickerSet(
+            client.postJson<Boolean>("setChatStickerSet",
+        SetChatStickerSet(
             chatId = chatId, 
             stickerSetName = stickerSetName
         )
@@ -1477,7 +1676,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteChatStickerSet(chatId: String): Boolean =
-            client.postJson<Boolean>("deleteChatStickerSet", DeleteChatStickerSet(
+            client.postJson<Boolean>("deleteChatStickerSet",
+        DeleteChatStickerSet(
             chatId = chatId
         )
     ).afterMethod("deleteChatStickerSet") {
@@ -1485,14 +1685,16 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getForumTopicIconStickers(): List<Sticker> =
-            client.get("getForumTopicIconStickers")
+            client.get<List<Sticker>>("getForumTopicIconStickers")
+        .afterMethod("getForumTopicIconStickers")
 
     override suspend fun createForumTopic(
         chatId: String,
         name: String,
         iconColor: Int?,
         iconCustomEmojiId: String?,
-    ): ForumTopic = client.postJson<ForumTopic>("createForumTopic", CreateForumTopic(
+    ): ForumTopic = client.postJson<ForumTopic>("createForumTopic",
+        CreateForumTopic(
             chatId = chatId, 
             name = name, 
             iconColor = iconColor, 
@@ -1510,7 +1712,8 @@ public class TelegramBotImpl(
         messageThreadId: Long,
         name: String?,
         iconCustomEmojiId: String?,
-    ): Boolean = client.postJson<Boolean>("editForumTopic", EditForumTopic(
+    ): Boolean = client.postJson<Boolean>("editForumTopic",
+        EditForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId, 
             name = name, 
@@ -1524,7 +1727,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun closeForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson<Boolean>("closeForumTopic", CloseForumTopic(
+            client.postJson<Boolean>("closeForumTopic",
+        CloseForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
@@ -1534,7 +1738,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun reopenForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson<Boolean>("reopenForumTopic", ReopenForumTopic(
+            client.postJson<Boolean>("reopenForumTopic",
+        ReopenForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
@@ -1544,7 +1749,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson<Boolean>("deleteForumTopic", DeleteForumTopic(
+            client.postJson<Boolean>("deleteForumTopic",
+        DeleteForumTopic(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
@@ -1554,7 +1760,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun unpinAllForumTopicMessages(chatId: String, messageThreadId: Long): Boolean
-            = client.postJson<Boolean>("unpinAllForumTopicMessages", UnpinAllForumTopicMessages(
+            = client.postJson<Boolean>("unpinAllForumTopicMessages",
+        UnpinAllForumTopicMessages(
             chatId = chatId, 
             messageThreadId = messageThreadId
         )
@@ -1564,7 +1771,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun editGeneralForumTopic(chatId: String, name: String): Boolean =
-            client.postJson<Boolean>("editGeneralForumTopic", EditGeneralForumTopic(
+            client.postJson<Boolean>("editGeneralForumTopic",
+        EditGeneralForumTopic(
             chatId = chatId, 
             name = name
         )
@@ -1574,7 +1782,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun closeGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("closeGeneralForumTopic", CloseGeneralForumTopic(
+            client.postJson<Boolean>("closeGeneralForumTopic",
+        CloseGeneralForumTopic(
             chatId = chatId
         )
     ).afterMethod("closeGeneralForumTopic") {
@@ -1582,7 +1791,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun reopenGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("reopenGeneralForumTopic", ReopenGeneralForumTopic(
+            client.postJson<Boolean>("reopenGeneralForumTopic",
+        ReopenGeneralForumTopic(
             chatId = chatId
         )
     ).afterMethod("reopenGeneralForumTopic") {
@@ -1590,7 +1800,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun hideGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("hideGeneralForumTopic", HideGeneralForumTopic(
+            client.postJson<Boolean>("hideGeneralForumTopic",
+        HideGeneralForumTopic(
             chatId = chatId
         )
     ).afterMethod("hideGeneralForumTopic") {
@@ -1598,7 +1809,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun unhideGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("unhideGeneralForumTopic", UnhideGeneralForumTopic(
+            client.postJson<Boolean>("unhideGeneralForumTopic",
+        UnhideGeneralForumTopic(
             chatId = chatId
         )
     ).afterMethod("unhideGeneralForumTopic") {
@@ -1607,7 +1819,7 @@ public class TelegramBotImpl(
 
     override suspend fun unpinAllGeneralForumTopicMessages(chatId: String): Boolean =
             client.postJson<Boolean>("unpinAllGeneralForumTopicMessages",
-            UnpinAllGeneralForumTopicMessages(
+        UnpinAllGeneralForumTopicMessages(
             chatId = chatId
         )
     ).afterMethod("unpinAllGeneralForumTopicMessages") {
@@ -1620,7 +1832,8 @@ public class TelegramBotImpl(
         showAlert: Boolean?,
         url: String?,
         cacheTime: Int?,
-    ): Boolean = client.postJson<Boolean>("answerCallbackQuery", AnswerCallbackQuery(
+    ): Boolean = client.postJson<Boolean>("answerCallbackQuery",
+        AnswerCallbackQuery(
             callbackQueryId = callbackQueryId, 
             text = text, 
             showAlert = showAlert, 
@@ -1636,7 +1849,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getUserChatBoosts(chatId: String, userId: Long): UserChatBoosts =
-            client.postJson<UserChatBoosts>("getUserChatBoosts", GetUserChatBoosts(
+            client.postJson<UserChatBoosts>("getUserChatBoosts",
+        GetUserChatBoosts(
             chatId = chatId, 
             userId = userId
         )
@@ -1646,7 +1860,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getBusinessConnection(businessConnectionId: String): BusinessConnection =
-            client.postJson<BusinessConnection>("getBusinessConnection", GetBusinessConnection(
+            client.postJson<BusinessConnection>("getBusinessConnection",
+        GetBusinessConnection(
             businessConnectionId = businessConnectionId
         )
     ).afterMethod("getBusinessConnection") {
@@ -1657,7 +1872,8 @@ public class TelegramBotImpl(
         commands: Iterable<BotCommand>,
         scope: BotCommandScope?,
         languageCode: String?,
-    ): Boolean = client.postJson<Boolean>("setMyCommands", SetMyCommands(
+    ): Boolean = client.postJson<Boolean>("setMyCommands",
+        SetMyCommands(
             commands = commands, 
             scope = scope, 
             languageCode = languageCode
@@ -1669,7 +1885,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteMyCommands(scope: BotCommandScope?, languageCode: String?): Boolean =
-            client.postJson<Boolean>("deleteMyCommands", DeleteMyCommands(
+            client.postJson<Boolean>("deleteMyCommands",
+        DeleteMyCommands(
             scope = scope, 
             languageCode = languageCode
         )
@@ -1679,7 +1896,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getMyCommands(scope: BotCommandScope?, languageCode: String?):
-            List<BotCommand> = client.postJson<List<BotCommand>>("getMyCommands", GetMyCommands(
+            List<BotCommand> = client.postJson<List<BotCommand>>("getMyCommands",
+        GetMyCommands(
             scope = scope, 
             languageCode = languageCode
         )
@@ -1689,7 +1907,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setMyName(name: String?, languageCode: String?): Boolean =
-            client.postJson<Boolean>("setMyName", SetMyName(
+            client.postJson<Boolean>("setMyName",
+        SetMyName(
             name = name, 
             languageCode = languageCode
         )
@@ -1699,7 +1918,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getMyName(languageCode: String?): BotName =
-            client.postJson<BotName>("getMyName", GetMyName(
+            client.postJson<BotName>("getMyName",
+        GetMyName(
             languageCode = languageCode
         )
     ).afterMethod("getMyName") {
@@ -1707,7 +1927,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setMyDescription(description: String?, languageCode: String?): Boolean =
-            client.postJson<Boolean>("setMyDescription", SetMyDescription(
+            client.postJson<Boolean>("setMyDescription",
+        SetMyDescription(
             description = description, 
             languageCode = languageCode
         )
@@ -1717,7 +1938,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getMyDescription(languageCode: String?): BotDescription =
-            client.postJson<BotDescription>("getMyDescription", GetMyDescription(
+            client.postJson<BotDescription>("getMyDescription",
+        GetMyDescription(
             languageCode = languageCode
         )
     ).afterMethod("getMyDescription") {
@@ -1725,7 +1947,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setMyShortDescription(shortDescription: String?, languageCode: String?):
-            Boolean = client.postJson<Boolean>("setMyShortDescription", SetMyShortDescription(
+            Boolean = client.postJson<Boolean>("setMyShortDescription",
+        SetMyShortDescription(
             shortDescription = shortDescription, 
             languageCode = languageCode
         )
@@ -1735,7 +1958,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getMyShortDescription(languageCode: String?): BotShortDescription =
-            client.postJson<BotShortDescription>("getMyShortDescription", GetMyShortDescription(
+            client.postJson<BotShortDescription>("getMyShortDescription",
+        GetMyShortDescription(
             languageCode = languageCode
         )
     ).afterMethod("getMyShortDescription") {
@@ -1743,7 +1967,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setChatMenuButton(chatId: Long?, menuButton: MenuButton?): Boolean =
-            client.postJson<Boolean>("setChatMenuButton", SetChatMenuButton(
+            client.postJson<Boolean>("setChatMenuButton",
+        SetChatMenuButton(
             chatId = chatId, 
             menuButton = menuButton
         )
@@ -1753,7 +1978,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getChatMenuButton(chatId: Long?): MenuButton =
-            client.postJson<MenuButton>("getChatMenuButton", GetChatMenuButton(
+            client.postJson<MenuButton>("getChatMenuButton",
+        GetChatMenuButton(
             chatId = chatId
         )
     ).afterMethod("getChatMenuButton") {
@@ -1763,7 +1989,7 @@ public class TelegramBotImpl(
     override suspend fun setMyDefaultAdministratorRights(rights: ChatAdministratorRights?,
             forChannels: Boolean?): Boolean =
             client.postJson<Boolean>("setMyDefaultAdministratorRights",
-            SetMyDefaultAdministratorRights(
+        SetMyDefaultAdministratorRights(
             rights = rights, 
             forChannels = forChannels
         )
@@ -1775,7 +2001,7 @@ public class TelegramBotImpl(
     override suspend fun getMyDefaultAdministratorRights(forChannels: Boolean?):
             ChatAdministratorRights =
             client.postJson<ChatAdministratorRights>("getMyDefaultAdministratorRights",
-            GetMyDefaultAdministratorRights(
+        GetMyDefaultAdministratorRights(
             forChannels = forChannels
         )
     ).afterMethod("getMyDefaultAdministratorRights") {
@@ -1791,7 +2017,8 @@ public class TelegramBotImpl(
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("editMessageText", EditMessageTextByChatIdAndMessageId(
+    ): Message = client.postJson<Message>("editMessageText",
+        EditMessageTextByChatIdAndMessageId(
             chatId = chatId, 
             messageId = messageId, 
             text = text, 
@@ -1822,7 +2049,7 @@ public class TelegramBotImpl(
         showCaptionAboveMedia: Boolean?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageCaption",
-            EditMessageCaptionByChatIdAndMessageId(
+        EditMessageCaptionByChatIdAndMessageId(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
@@ -1849,7 +2076,7 @@ public class TelegramBotImpl(
         media: InputMedia,
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postMultiPart("editMessageMedia") {
+    ): Message = client.postMultiPart<Message>("editMessageMedia") {
         append("chat_id", chatId)
         append("message_id", messageId)
         append("media", client.toJson(media))
@@ -1859,6 +2086,12 @@ public class TelegramBotImpl(
         appendContent(media.media)
         
         appendContentIfNotNull(media.thumbnail)
+    }.afterMethod("editMessageMedia") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("media", media)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun editMessageLiveLocation(
@@ -1873,7 +2106,7 @@ public class TelegramBotImpl(
         proximityAlertRadius: Int?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageLiveLocation",
-            EditMessageLiveLocationByChatIdAndMessageId(
+        EditMessageLiveLocationByChatIdAndMessageId(
             chatId = chatId, 
             messageId = messageId, 
             latitude = latitude, 
@@ -1904,7 +2137,7 @@ public class TelegramBotImpl(
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("stopMessageLiveLocation",
-            StopMessageLiveLocationByChatIdAndMessageId(
+        StopMessageLiveLocationByChatIdAndMessageId(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
@@ -1923,7 +2156,7 @@ public class TelegramBotImpl(
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageReplyMarkup",
-            EditMessageReplyMarkupByChatIdAndMessageId(
+        EditMessageReplyMarkupByChatIdAndMessageId(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
@@ -1941,7 +2174,8 @@ public class TelegramBotImpl(
         messageId: Long,
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Poll = client.postJson<Poll>("stopPoll", StopPoll(
+    ): Poll = client.postJson<Poll>("stopPoll",
+        StopPoll(
             chatId = chatId, 
             messageId = messageId, 
             businessConnectionId = businessConnectionId, 
@@ -1955,7 +2189,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteMessage(chatId: String, messageId: Long): Boolean =
-            client.postJson<Boolean>("deleteMessage", DeleteMessage(
+            client.postJson<Boolean>("deleteMessage",
+        DeleteMessage(
             chatId = chatId, 
             messageId = messageId
         )
@@ -1965,7 +2200,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean =
-            client.postJson<Boolean>("deleteMessages", DeleteMessages(
+            client.postJson<Boolean>("deleteMessages",
+        DeleteMessages(
             chatId = chatId, 
             messageIds = messageIds
         )
@@ -1986,7 +2222,7 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postMultiPart("sendSticker") {
+    ): Message = client.postMultiPart<Message>("sendSticker") {
         append("chat_id", chatId)
         appendContent("sticker", sticker)
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -1998,10 +2234,23 @@ public class TelegramBotImpl(
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendSticker") {
+        put("chatId", chatId)
+        put("sticker", sticker)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("emoji", emoji)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun getStickerSet(name: String): StickerSet =
-            client.postJson<StickerSet>("getStickerSet", GetStickerSet(
+            client.postJson<StickerSet>("getStickerSet",
+        GetStickerSet(
             name = name
         )
     ).afterMethod("getStickerSet") {
@@ -2009,7 +2258,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getCustomEmojiStickers(customEmojiIds: Iterable<String>): List<Sticker> =
-            client.postJson<List<Sticker>>("getCustomEmojiStickers", GetCustomEmojiStickers(
+            client.postJson<List<Sticker>>("getCustomEmojiStickers",
+        GetCustomEmojiStickers(
             customEmojiIds = customEmojiIds
         )
     ).afterMethod("getCustomEmojiStickers") {
@@ -2020,10 +2270,14 @@ public class TelegramBotImpl(
         userId: Long,
         sticker: Input,
         stickerFormat: String,
-    ): File = client.postMultiPart("uploadStickerFile") {
+    ): File = client.postMultiPart<File>("uploadStickerFile") {
         append("user_id", userId)
         appendContent("sticker", sticker)
         append("sticker_format", stickerFormat)
+    }.afterMethod("uploadStickerFile") {
+        put("userId", userId)
+        put("sticker", sticker)
+        put("stickerFormat", stickerFormat)
     }
 
     override suspend fun createNewStickerSet(
@@ -2033,7 +2287,7 @@ public class TelegramBotImpl(
         stickers: Iterable<InputSticker>,
         stickerType: String?,
         needsRepainting: Boolean?,
-    ): Boolean = client.postMultiPart("createNewStickerSet") {
+    ): Boolean = client.postMultiPart<Boolean>("createNewStickerSet") {
         append("user_id", userId)
         append("name", name)
         append("title", title)
@@ -2044,22 +2298,34 @@ public class TelegramBotImpl(
         stickers.forEach { stickers ->
             appendContent(stickers.sticker)
         }
+    }.afterMethod("createNewStickerSet") {
+        put("userId", userId)
+        put("name", name)
+        put("title", title)
+        put("stickers", stickers)
+        put("stickerType", stickerType)
+        put("needsRepainting", needsRepainting)
     }
 
     override suspend fun addStickerToSet(
         userId: Long,
         name: String,
         sticker: InputSticker,
-    ): Boolean = client.postMultiPart("addStickerToSet") {
+    ): Boolean = client.postMultiPart<Boolean>("addStickerToSet") {
         append("user_id", userId)
         append("name", name)
         append("sticker", client.toJson(sticker))
         
         appendContent(sticker.sticker)
+    }.afterMethod("addStickerToSet") {
+        put("userId", userId)
+        put("name", name)
+        put("sticker", sticker)
     }
 
     override suspend fun setStickerPositionInSet(sticker: String, position: Int): Boolean =
-            client.postJson<Boolean>("setStickerPositionInSet", SetStickerPositionInSet(
+            client.postJson<Boolean>("setStickerPositionInSet",
+        SetStickerPositionInSet(
             sticker = sticker, 
             position = position
         )
@@ -2069,7 +2335,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteStickerFromSet(sticker: String): Boolean =
-            client.postJson<Boolean>("deleteStickerFromSet", DeleteStickerFromSet(
+            client.postJson<Boolean>("deleteStickerFromSet",
+        DeleteStickerFromSet(
             sticker = sticker
         )
     ).afterMethod("deleteStickerFromSet") {
@@ -2081,17 +2348,23 @@ public class TelegramBotImpl(
         name: String,
         oldSticker: String,
         sticker: InputSticker,
-    ): Boolean = client.postMultiPart("replaceStickerInSet") {
+    ): Boolean = client.postMultiPart<Boolean>("replaceStickerInSet") {
         append("user_id", userId)
         append("name", name)
         append("old_sticker", oldSticker)
         append("sticker", client.toJson(sticker))
         
         appendContent(sticker.sticker)
+    }.afterMethod("replaceStickerInSet") {
+        put("userId", userId)
+        put("name", name)
+        put("oldSticker", oldSticker)
+        put("sticker", sticker)
     }
 
     override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean
-            = client.postJson<Boolean>("setStickerEmojiList", SetStickerEmojiList(
+            = client.postJson<Boolean>("setStickerEmojiList",
+        SetStickerEmojiList(
             sticker = sticker, 
             emojiList = emojiList
         )
@@ -2101,7 +2374,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerKeywords(sticker: String, keywords: Iterable<String>?): Boolean =
-            client.postJson<Boolean>("setStickerKeywords", SetStickerKeywords(
+            client.postJson<Boolean>("setStickerKeywords",
+        SetStickerKeywords(
             sticker = sticker, 
             keywords = keywords
         )
@@ -2111,7 +2385,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerMaskPosition(sticker: String, maskPosition: MaskPosition?):
-            Boolean = client.postJson<Boolean>("setStickerMaskPosition", SetStickerMaskPosition(
+            Boolean = client.postJson<Boolean>("setStickerMaskPosition",
+        SetStickerMaskPosition(
             sticker = sticker, 
             maskPosition = maskPosition
         )
@@ -2121,7 +2396,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerSetTitle(name: String, title: String): Boolean =
-            client.postJson<Boolean>("setStickerSetTitle", SetStickerSetTitle(
+            client.postJson<Boolean>("setStickerSetTitle",
+        SetStickerSetTitle(
             name = name, 
             title = title
         )
@@ -2135,16 +2411,21 @@ public class TelegramBotImpl(
         userId: Long,
         format: String,
         thumbnail: Input?,
-    ): Boolean = client.postMultiPart("setStickerSetThumbnail") {
+    ): Boolean = client.postMultiPart<Boolean>("setStickerSetThumbnail") {
         append("name", name)
         append("user_id", userId)
         append("format", format)
         appendContentIfNotNull("thumbnail", thumbnail)
+    }.afterMethod("setStickerSetThumbnail") {
+        put("name", name)
+        put("userId", userId)
+        put("format", format)
+        put("thumbnail", thumbnail)
     }
 
     override suspend fun setCustomEmojiStickerSetThumbnail(name: String, customEmojiId: String?):
             Boolean = client.postJson<Boolean>("setCustomEmojiStickerSetThumbnail",
-            SetCustomEmojiStickerSetThumbnail(
+        SetCustomEmojiStickerSetThumbnail(
             name = name, 
             customEmojiId = customEmojiId
         )
@@ -2154,14 +2435,16 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteStickerSet(name: String): Boolean =
-            client.postJson<Boolean>("deleteStickerSet", DeleteStickerSet(
+            client.postJson<Boolean>("deleteStickerSet",
+        DeleteStickerSet(
             name = name
         )
     ).afterMethod("deleteStickerSet") {
         put("name", name)
     }
 
-    override suspend fun getAvailableGifts(): Gifts = client.get("getAvailableGifts")
+    override suspend fun getAvailableGifts(): Gifts = client.get<Gifts>("getAvailableGifts")
+        .afterMethod("getAvailableGifts")
 
     override suspend fun sendGift(
         userId: Long,
@@ -2169,7 +2452,8 @@ public class TelegramBotImpl(
         text: String?,
         textParseMode: String?,
         textEntities: Iterable<MessageEntity>?,
-    ): Boolean = client.postJson<Boolean>("sendGift", SendGift(
+    ): Boolean = client.postJson<Boolean>("sendGift",
+        SendGift(
             userId = userId, 
             giftId = giftId, 
             text = text, 
@@ -2191,7 +2475,8 @@ public class TelegramBotImpl(
         isPersonal: Boolean?,
         nextOffset: String?,
         button: InlineQueryResultsButton?,
-    ): Boolean = client.postJson<Boolean>("answerInlineQuery", AnswerInlineQuery(
+    ): Boolean = client.postJson<Boolean>("answerInlineQuery",
+        AnswerInlineQuery(
             inlineQueryId = inlineQueryId, 
             results = results, 
             cacheTime = cacheTime, 
@@ -2210,7 +2495,7 @@ public class TelegramBotImpl(
 
     override suspend fun answerWebAppQuery(webAppQueryId: String, result: InlineQueryResult):
             SentWebAppMessage = client.postJson<SentWebAppMessage>("answerWebAppQuery",
-            AnswerWebAppQuery(
+        AnswerWebAppQuery(
             webAppQueryId = webAppQueryId, 
             result = result
         )
@@ -2227,7 +2512,7 @@ public class TelegramBotImpl(
         allowGroupChats: Boolean?,
         allowChannelChats: Boolean?,
     ): PreparedInlineMessage = client.postJson<PreparedInlineMessage>("savePreparedInlineMessage",
-            SavePreparedInlineMessage(
+        SavePreparedInlineMessage(
             userId = userId, 
             result = result, 
             allowUserChats = allowUserChats, 
@@ -2274,7 +2559,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("sendInvoice", SendInvoice(
+    ): Message = client.postJson<Message>("sendInvoice",
+        SendInvoice(
             chatId = chatId, 
             title = title, 
             description = description, 
@@ -2360,7 +2646,8 @@ public class TelegramBotImpl(
         sendPhoneNumberToProvider: Boolean?,
         sendEmailToProvider: Boolean?,
         isFlexible: Boolean?,
-    ): String = client.postJson<String>("createInvoiceLink", CreateInvoiceLink(
+    ): String = client.postJson<String>("createInvoiceLink",
+        CreateInvoiceLink(
             title = title, 
             description = description, 
             payload = payload, 
@@ -2414,7 +2701,8 @@ public class TelegramBotImpl(
         ok: Boolean,
         shippingOptions: Iterable<ShippingOption>?,
         errorMessage: String?,
-    ): Boolean = client.postJson<Boolean>("answerShippingQuery", AnswerShippingQuery(
+    ): Boolean = client.postJson<Boolean>("answerShippingQuery",
+        AnswerShippingQuery(
             shippingQueryId = shippingQueryId, 
             ok = ok, 
             shippingOptions = shippingOptions, 
@@ -2431,7 +2719,8 @@ public class TelegramBotImpl(
         preCheckoutQueryId: String,
         ok: Boolean,
         errorMessage: String?,
-    ): Boolean = client.postJson<Boolean>("answerPreCheckoutQuery", AnswerPreCheckoutQuery(
+    ): Boolean = client.postJson<Boolean>("answerPreCheckoutQuery",
+        AnswerPreCheckoutQuery(
             preCheckoutQueryId = preCheckoutQueryId, 
             ok = ok, 
             errorMessage = errorMessage
@@ -2443,7 +2732,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getStarTransactions(offset: Int?, limit: Int?): StarTransactions =
-            client.postJson<StarTransactions>("getStarTransactions", GetStarTransactions(
+            client.postJson<StarTransactions>("getStarTransactions",
+        GetStarTransactions(
             offset = offset, 
             limit = limit
         )
@@ -2453,7 +2743,8 @@ public class TelegramBotImpl(
     }
 
     override suspend fun refundStarPayment(userId: Long, telegramPaymentChargeId: String): Boolean =
-            client.postJson<Boolean>("refundStarPayment", RefundStarPayment(
+            client.postJson<Boolean>("refundStarPayment",
+        RefundStarPayment(
             userId = userId, 
             telegramPaymentChargeId = telegramPaymentChargeId
         )
@@ -2466,7 +2757,8 @@ public class TelegramBotImpl(
         userId: Long,
         telegramPaymentChargeId: String,
         isCanceled: Boolean,
-    ): Boolean = client.postJson<Boolean>("editUserStarSubscription", EditUserStarSubscription(
+    ): Boolean = client.postJson<Boolean>("editUserStarSubscription",
+        EditUserStarSubscription(
             userId = userId, 
             telegramPaymentChargeId = telegramPaymentChargeId, 
             isCanceled = isCanceled
@@ -2479,7 +2771,8 @@ public class TelegramBotImpl(
 
     override suspend fun setPassportDataErrors(userId: Long,
             errors: Iterable<PassportElementError>): Boolean =
-            client.postJson<Boolean>("setPassportDataErrors", SetPassportDataErrors(
+            client.postJson<Boolean>("setPassportDataErrors",
+        SetPassportDataErrors(
             userId = userId, 
             errors = errors
         )
@@ -2499,7 +2792,8 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("sendGame", SendGame(
+    ): Message = client.postJson<Message>("sendGame",
+        SendGame(
             chatId = chatId, 
             gameShortName = gameShortName, 
             businessConnectionId = businessConnectionId, 
@@ -2531,7 +2825,8 @@ public class TelegramBotImpl(
         messageId: Long,
         force: Boolean?,
         disableEditMessage: Boolean?,
-    ): Message = client.postJson<Message>("setGameScore", SetGameScoreByChatIdAndMessageId(
+    ): Message = client.postJson<Message>("setGameScore",
+        SetGameScoreByChatIdAndMessageId(
             userId = userId, 
             score = score, 
             chatId = chatId, 
@@ -2554,7 +2849,7 @@ public class TelegramBotImpl(
         messageId: Long?,
         inlineMessageId: String?,
     ): List<GameHighScore> = client.postJson<List<GameHighScore>>("getGameHighScores",
-            GetGameHighScores(
+        GetGameHighScores(
             userId = userId, 
             chatId = chatId, 
             messageId = messageId, 
@@ -2575,7 +2870,8 @@ public class TelegramBotImpl(
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postJson<Boolean>("editMessageText", EditMessageTextByInlineMessageId(
+    ): Boolean = client.postJson<Boolean>("editMessageText",
+        EditMessageTextByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             text = text, 
             businessConnectionId = businessConnectionId, 
@@ -2602,7 +2898,8 @@ public class TelegramBotImpl(
         captionEntities: Iterable<MessageEntity>?,
         showCaptionAboveMedia: Boolean?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postJson<Boolean>("editMessageCaption", EditMessageCaptionByInlineMessageId(
+    ): Boolean = client.postJson<Boolean>("editMessageCaption",
+        EditMessageCaptionByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             businessConnectionId = businessConnectionId, 
             caption = caption, 
@@ -2626,7 +2923,7 @@ public class TelegramBotImpl(
         media: InputMedia,
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Boolean = client.postMultiPart("editMessageMedia") {
+    ): Boolean = client.postMultiPart<Boolean>("editMessageMedia") {
         append("inline_message_id", inlineMessageId)
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
@@ -2635,6 +2932,11 @@ public class TelegramBotImpl(
         appendContent(media.media)
         
         appendContentIfNotNull(media.thumbnail)
+    }.afterMethod("editMessageMedia") {
+        put("inlineMessageId", inlineMessageId)
+        put("media", media)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
     }
 
     override suspend fun editMessageLiveLocation(
@@ -2648,7 +2950,7 @@ public class TelegramBotImpl(
         proximityAlertRadius: Int?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("editMessageLiveLocation",
-            EditMessageLiveLocationByInlineMessageId(
+        EditMessageLiveLocationByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             latitude = latitude, 
             longitude = longitude, 
@@ -2676,7 +2978,7 @@ public class TelegramBotImpl(
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("stopMessageLiveLocation",
-            StopMessageLiveLocationByInlineMessageId(
+        StopMessageLiveLocationByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             businessConnectionId = businessConnectionId, 
             replyMarkup = replyMarkup
@@ -2692,7 +2994,7 @@ public class TelegramBotImpl(
         businessConnectionId: String?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("editMessageReplyMarkup",
-            EditMessageReplyMarkupByInlineMessageId(
+        EditMessageReplyMarkupByInlineMessageId(
             inlineMessageId = inlineMessageId, 
             businessConnectionId = businessConnectionId, 
             replyMarkup = replyMarkup
@@ -2709,7 +3011,8 @@ public class TelegramBotImpl(
         inlineMessageId: String,
         force: Boolean?,
         disableEditMessage: Boolean?,
-    ): Boolean = client.postJson<Boolean>("setGameScore", SetGameScoreByInlineMessageId(
+    ): Boolean = client.postJson<Boolean>("setGameScore",
+        SetGameScoreByInlineMessageId(
             userId = userId, 
             score = score, 
             inlineMessageId = inlineMessageId, 
@@ -2725,7 +3028,7 @@ public class TelegramBotImpl(
     }
 
     private suspend inline fun <T> T.afterMethod(methodName: String, crossinline
-            collectArguments: MutableMap<String, Any?>.() -> Unit): T {
+            collectArguments: MutableMap<String, Any?>.() -> Unit = {}): T {
         eventListener.sendAfterEvent(methodName, this, collectArguments)
 
         return this
