@@ -5,7 +5,7 @@ import io.github.dehuckakpyt.telegrambot.ext.appendContent
 import io.github.dehuckakpyt.telegrambot.ext.appendContentIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.appendIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.toJson
-import io.github.dehuckakpyt.telegrambot.listener.event.TelegramBotEventListener
+import io.github.dehuckakpyt.telegrambot.event.managing.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
@@ -185,7 +185,7 @@ import kotlin.collections.MutableMap
 public class TelegramBotImpl(
     token: String,
     override val username: String,
-    private val eventListener: TelegramBotEventListener,
+    private val eventManager: TelegramBotEventManager,
 ) : TelegramBot {
     override val client: TelegramApiClient = TelegramApiClient(token)
 
@@ -196,9 +196,9 @@ public class TelegramBotImpl(
         allowedUpdates: Iterable<String>?,
     ): List<Update> = client.postJson<List<Update>>("getUpdates",
         GetUpdates(
-            offset = offset, 
-            limit = limit, 
-            timeout = timeout, 
+            offset = offset,
+            limit = limit,
+            timeout = timeout,
             allowedUpdates = allowedUpdates
         )
     ).afterMethod("getUpdates") {
@@ -271,18 +271,18 @@ public class TelegramBotImpl(
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendMessage",
         SendMessage(
-            chatId = chatId, 
-            text = text, 
-            businessConnectionId = businessConnectionId, 
-            messageThreadId = messageThreadId, 
-            parseMode = parseMode, 
-            entities = entities, 
-            linkPreviewOptions = linkPreviewOptions, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            text = text,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            parseMode = parseMode,
+            entities = entities,
+            linkPreviewOptions = linkPreviewOptions,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendMessage") {
@@ -310,11 +310,11 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
     ): Message = client.postJson<Message>("forwardMessage",
         ForwardMessage(
-            chatId = chatId, 
-            fromChatId = fromChatId, 
-            messageId = messageId, 
-            messageThreadId = messageThreadId, 
-            disableNotification = disableNotification, 
+            chatId = chatId,
+            fromChatId = fromChatId,
+            messageId = messageId,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
             protectContent = protectContent
         )
     ).afterMethod("forwardMessage") {
@@ -335,11 +335,11 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
     ): List<MessageId> = client.postJson<List<MessageId>>("forwardMessages",
         ForwardMessages(
-            chatId = chatId, 
-            fromChatId = fromChatId, 
-            messageIds = messageIds, 
-            messageThreadId = messageThreadId, 
-            disableNotification = disableNotification, 
+            chatId = chatId,
+            fromChatId = fromChatId,
+            messageIds = messageIds,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
             protectContent = protectContent
         )
     ).afterMethod("forwardMessages") {
@@ -367,18 +367,18 @@ public class TelegramBotImpl(
         replyMarkup: ReplyMarkup?,
     ): MessageId = client.postJson<MessageId>("copyMessage",
         CopyMessage(
-            chatId = chatId, 
-            fromChatId = fromChatId, 
-            messageId = messageId, 
-            messageThreadId = messageThreadId, 
-            caption = caption, 
-            parseMode = parseMode, 
-            captionEntities = captionEntities, 
-            showCaptionAboveMedia = showCaptionAboveMedia, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            fromChatId = fromChatId,
+            messageId = messageId,
+            messageThreadId = messageThreadId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("copyMessage") {
@@ -407,12 +407,12 @@ public class TelegramBotImpl(
         removeCaption: Boolean?,
     ): List<MessageId> = client.postJson<List<MessageId>>("copyMessages",
         CopyMessages(
-            chatId = chatId, 
-            fromChatId = fromChatId, 
-            messageIds = messageIds, 
-            messageThreadId = messageThreadId, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
+            chatId = chatId,
+            fromChatId = fromChatId,
+            messageIds = messageIds,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
             removeCaption = removeCaption
         )
     ).afterMethod("copyMessages") {
@@ -912,20 +912,20 @@ public class TelegramBotImpl(
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendLocation",
         SendLocation(
-            chatId = chatId, 
-            latitude = latitude, 
-            longitude = longitude, 
-            businessConnectionId = businessConnectionId, 
-            messageThreadId = messageThreadId, 
-            horizontalAccuracy = horizontalAccuracy, 
-            livePeriod = livePeriod, 
-            heading = heading, 
-            proximityAlertRadius = proximityAlertRadius, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            latitude = latitude,
+            longitude = longitude,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            horizontalAccuracy = horizontalAccuracy,
+            livePeriod = livePeriod,
+            heading = heading,
+            proximityAlertRadius = proximityAlertRadius,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendLocation") {
@@ -966,22 +966,22 @@ public class TelegramBotImpl(
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendVenue",
         SendVenue(
-            chatId = chatId, 
-            latitude = latitude, 
-            longitude = longitude, 
-            title = title, 
-            address = address, 
-            businessConnectionId = businessConnectionId, 
-            messageThreadId = messageThreadId, 
-            foursquareId = foursquareId, 
-            foursquareType = foursquareType, 
-            googlePlaceId = googlePlaceId, 
-            googlePlaceType = googlePlaceType, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            latitude = latitude,
+            longitude = longitude,
+            title = title,
+            address = address,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            foursquareId = foursquareId,
+            foursquareType = foursquareType,
+            googlePlaceId = googlePlaceId,
+            googlePlaceType = googlePlaceType,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendVenue") {
@@ -1020,18 +1020,18 @@ public class TelegramBotImpl(
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendContact",
         SendContact(
-            chatId = chatId, 
-            phoneNumber = phoneNumber, 
-            firstName = firstName, 
-            businessConnectionId = businessConnectionId, 
-            messageThreadId = messageThreadId, 
-            lastName = lastName, 
-            vcard = vcard, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            phoneNumber = phoneNumber,
+            firstName = firstName,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            lastName = lastName,
+            vcard = vcard,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendContact") {
@@ -1076,28 +1076,28 @@ public class TelegramBotImpl(
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendPoll",
         SendPoll(
-            chatId = chatId, 
-            question = question, 
-            options = options, 
-            businessConnectionId = businessConnectionId, 
-            messageThreadId = messageThreadId, 
-            questionParseMode = questionParseMode, 
-            questionEntities = questionEntities, 
-            isAnonymous = isAnonymous, 
-            type = type, 
-            allowsMultipleAnswers = allowsMultipleAnswers, 
-            correctOptionId = correctOptionId, 
-            explanation = explanation, 
-            explanationParseMode = explanationParseMode, 
-            explanationEntities = explanationEntities, 
-            openPeriod = openPeriod, 
-            closeDate = closeDate, 
-            isClosed = isClosed, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            question = question,
+            options = options,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            questionParseMode = questionParseMode,
+            questionEntities = questionEntities,
+            isAnonymous = isAnonymous,
+            type = type,
+            allowsMultipleAnswers = allowsMultipleAnswers,
+            correctOptionId = correctOptionId,
+            explanation = explanation,
+            explanationParseMode = explanationParseMode,
+            explanationEntities = explanationEntities,
+            openPeriod = openPeriod,
+            closeDate = closeDate,
+            isClosed = isClosed,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendPoll") {
@@ -1139,15 +1139,15 @@ public class TelegramBotImpl(
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendDice",
         SendDice(
-            chatId = chatId, 
-            businessConnectionId = businessConnectionId, 
-            messageThreadId = messageThreadId, 
-            emoji = emoji, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            emoji = emoji,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendDice") {
@@ -1170,9 +1170,9 @@ public class TelegramBotImpl(
         messageThreadId: Long?,
     ): Boolean = client.postJson<Boolean>("sendChatAction",
         SendChatAction(
-            chatId = chatId, 
-            action = action, 
-            businessConnectionId = businessConnectionId, 
+            chatId = chatId,
+            action = action,
+            businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId
         )
     ).afterMethod("sendChatAction") {
@@ -1189,9 +1189,9 @@ public class TelegramBotImpl(
         isBig: Boolean?,
     ): Boolean = client.postJson<Boolean>("setMessageReaction",
         SetMessageReaction(
-            chatId = chatId, 
-            messageId = messageId, 
-            reaction = reaction, 
+            chatId = chatId,
+            messageId = messageId,
+            reaction = reaction,
             isBig = isBig
         )
     ).afterMethod("setMessageReaction") {
@@ -1207,8 +1207,8 @@ public class TelegramBotImpl(
         limit: Int?,
     ): UserProfilePhotos = client.postJson<UserProfilePhotos>("getUserProfilePhotos",
         GetUserProfilePhotos(
-            userId = userId, 
-            offset = offset, 
+            userId = userId,
+            offset = offset,
             limit = limit
         )
     ).afterMethod("getUserProfilePhotos") {
@@ -1223,8 +1223,8 @@ public class TelegramBotImpl(
         emojiStatusExpirationDate: Long?,
     ): Boolean = client.postJson<Boolean>("setUserEmojiStatus",
         SetUserEmojiStatus(
-            userId = userId, 
-            emojiStatusCustomEmojiId = emojiStatusCustomEmojiId, 
+            userId = userId,
+            emojiStatusCustomEmojiId = emojiStatusCustomEmojiId,
             emojiStatusExpirationDate = emojiStatusExpirationDate
         )
     ).afterMethod("setUserEmojiStatus") {
@@ -1248,9 +1248,9 @@ public class TelegramBotImpl(
         revokeMessages: Boolean?,
     ): Boolean = client.postJson<Boolean>("banChatMember",
         BanChatMember(
-            chatId = chatId, 
-            userId = userId, 
-            untilDate = untilDate, 
+            chatId = chatId,
+            userId = userId,
+            untilDate = untilDate,
             revokeMessages = revokeMessages
         )
     ).afterMethod("banChatMember") {
@@ -1266,8 +1266,8 @@ public class TelegramBotImpl(
         onlyIfBanned: Boolean?,
     ): Boolean = client.postJson<Boolean>("unbanChatMember",
         UnbanChatMember(
-            chatId = chatId, 
-            userId = userId, 
+            chatId = chatId,
+            userId = userId,
             onlyIfBanned = onlyIfBanned
         )
     ).afterMethod("unbanChatMember") {
@@ -1284,10 +1284,10 @@ public class TelegramBotImpl(
         untilDate: Long?,
     ): Boolean = client.postJson<Boolean>("restrictChatMember",
         RestrictChatMember(
-            chatId = chatId, 
-            userId = userId, 
-            permissions = permissions, 
-            useIndependentChatPermissions = useIndependentChatPermissions, 
+            chatId = chatId,
+            userId = userId,
+            permissions = permissions,
+            useIndependentChatPermissions = useIndependentChatPermissions,
             untilDate = untilDate
         )
     ).afterMethod("restrictChatMember") {
@@ -1318,22 +1318,22 @@ public class TelegramBotImpl(
         canManageTopics: Boolean?,
     ): Boolean = client.postJson<Boolean>("promoteChatMember",
         PromoteChatMember(
-            chatId = chatId, 
-            userId = userId, 
-            isAnonymous = isAnonymous, 
-            canManageChat = canManageChat, 
-            canDeleteMessages = canDeleteMessages, 
-            canManageVideoChats = canManageVideoChats, 
-            canRestrictMembers = canRestrictMembers, 
-            canPromoteMembers = canPromoteMembers, 
-            canChangeInfo = canChangeInfo, 
-            canInviteUsers = canInviteUsers, 
-            canPostStories = canPostStories, 
-            canEditStories = canEditStories, 
-            canDeleteStories = canDeleteStories, 
-            canPostMessages = canPostMessages, 
-            canEditMessages = canEditMessages, 
-            canPinMessages = canPinMessages, 
+            chatId = chatId,
+            userId = userId,
+            isAnonymous = isAnonymous,
+            canManageChat = canManageChat,
+            canDeleteMessages = canDeleteMessages,
+            canManageVideoChats = canManageVideoChats,
+            canRestrictMembers = canRestrictMembers,
+            canPromoteMembers = canPromoteMembers,
+            canChangeInfo = canChangeInfo,
+            canInviteUsers = canInviteUsers,
+            canPostStories = canPostStories,
+            canEditStories = canEditStories,
+            canDeleteStories = canDeleteStories,
+            canPostMessages = canPostMessages,
+            canEditMessages = canEditMessages,
+            canPinMessages = canPinMessages,
             canManageTopics = canManageTopics
         )
     ).afterMethod("promoteChatMember") {
@@ -1362,8 +1362,8 @@ public class TelegramBotImpl(
         customTitle: String,
     ): Boolean = client.postJson<Boolean>("setChatAdministratorCustomTitle",
         SetChatAdministratorCustomTitle(
-            chatId = chatId, 
-            userId = userId, 
+            chatId = chatId,
+            userId = userId,
             customTitle = customTitle
         )
     ).afterMethod("setChatAdministratorCustomTitle") {
@@ -1375,7 +1375,7 @@ public class TelegramBotImpl(
     override suspend fun banChatSenderChat(chatId: String, senderChatId: Long): Boolean =
             client.postJson<Boolean>("banChatSenderChat",
         BanChatSenderChat(
-            chatId = chatId, 
+            chatId = chatId,
             senderChatId = senderChatId
         )
     ).afterMethod("banChatSenderChat") {
@@ -1386,7 +1386,7 @@ public class TelegramBotImpl(
     override suspend fun unbanChatSenderChat(chatId: String, senderChatId: Long): Boolean =
             client.postJson<Boolean>("unbanChatSenderChat",
         UnbanChatSenderChat(
-            chatId = chatId, 
+            chatId = chatId,
             senderChatId = senderChatId
         )
     ).afterMethod("unbanChatSenderChat") {
@@ -1400,8 +1400,8 @@ public class TelegramBotImpl(
         useIndependentChatPermissions: Boolean?,
     ): Boolean = client.postJson<Boolean>("setChatPermissions",
         SetChatPermissions(
-            chatId = chatId, 
-            permissions = permissions, 
+            chatId = chatId,
+            permissions = permissions,
             useIndependentChatPermissions = useIndependentChatPermissions
         )
     ).afterMethod("setChatPermissions") {
@@ -1427,10 +1427,10 @@ public class TelegramBotImpl(
         createsJoinRequest: Boolean?,
     ): ChatInviteLink = client.postJson<ChatInviteLink>("createChatInviteLink",
         CreateChatInviteLink(
-            chatId = chatId, 
-            name = name, 
-            expireDate = expireDate, 
-            memberLimit = memberLimit, 
+            chatId = chatId,
+            name = name,
+            expireDate = expireDate,
+            memberLimit = memberLimit,
             createsJoinRequest = createsJoinRequest
         )
     ).afterMethod("createChatInviteLink") {
@@ -1450,11 +1450,11 @@ public class TelegramBotImpl(
         createsJoinRequest: Boolean?,
     ): ChatInviteLink = client.postJson<ChatInviteLink>("editChatInviteLink",
         EditChatInviteLink(
-            chatId = chatId, 
-            inviteLink = inviteLink, 
-            name = name, 
-            expireDate = expireDate, 
-            memberLimit = memberLimit, 
+            chatId = chatId,
+            inviteLink = inviteLink,
+            name = name,
+            expireDate = expireDate,
+            memberLimit = memberLimit,
             createsJoinRequest = createsJoinRequest
         )
     ).afterMethod("editChatInviteLink") {
@@ -1473,9 +1473,9 @@ public class TelegramBotImpl(
         name: String?,
     ): ChatInviteLink = client.postJson<ChatInviteLink>("createChatSubscriptionInviteLink",
         CreateChatSubscriptionInviteLink(
-            chatId = chatId, 
-            subscriptionPeriod = subscriptionPeriod, 
-            subscriptionPrice = subscriptionPrice, 
+            chatId = chatId,
+            subscriptionPeriod = subscriptionPeriod,
+            subscriptionPrice = subscriptionPrice,
             name = name
         )
     ).afterMethod("createChatSubscriptionInviteLink") {
@@ -1491,8 +1491,8 @@ public class TelegramBotImpl(
         name: String?,
     ): ChatInviteLink = client.postJson<ChatInviteLink>("editChatSubscriptionInviteLink",
         EditChatSubscriptionInviteLink(
-            chatId = chatId, 
-            inviteLink = inviteLink, 
+            chatId = chatId,
+            inviteLink = inviteLink,
             name = name
         )
     ).afterMethod("editChatSubscriptionInviteLink") {
@@ -1504,7 +1504,7 @@ public class TelegramBotImpl(
     override suspend fun revokeChatInviteLink(chatId: String, inviteLink: String): ChatInviteLink =
             client.postJson<ChatInviteLink>("revokeChatInviteLink",
         RevokeChatInviteLink(
-            chatId = chatId, 
+            chatId = chatId,
             inviteLink = inviteLink
         )
     ).afterMethod("revokeChatInviteLink") {
@@ -1515,7 +1515,7 @@ public class TelegramBotImpl(
     override suspend fun approveChatJoinRequest(chatId: String, userId: Long): Boolean =
             client.postJson<Boolean>("approveChatJoinRequest",
         ApproveChatJoinRequest(
-            chatId = chatId, 
+            chatId = chatId,
             userId = userId
         )
     ).afterMethod("approveChatJoinRequest") {
@@ -1526,7 +1526,7 @@ public class TelegramBotImpl(
     override suspend fun declineChatJoinRequest(chatId: String, userId: Long): Boolean =
             client.postJson<Boolean>("declineChatJoinRequest",
         DeclineChatJoinRequest(
-            chatId = chatId, 
+            chatId = chatId,
             userId = userId
         )
     ).afterMethod("declineChatJoinRequest") {
@@ -1555,7 +1555,7 @@ public class TelegramBotImpl(
     override suspend fun setChatTitle(chatId: String, title: String): Boolean =
             client.postJson<Boolean>("setChatTitle",
         SetChatTitle(
-            chatId = chatId, 
+            chatId = chatId,
             title = title
         )
     ).afterMethod("setChatTitle") {
@@ -1566,7 +1566,7 @@ public class TelegramBotImpl(
     override suspend fun setChatDescription(chatId: String, description: String?): Boolean =
             client.postJson<Boolean>("setChatDescription",
         SetChatDescription(
-            chatId = chatId, 
+            chatId = chatId,
             description = description
         )
     ).afterMethod("setChatDescription") {
@@ -1581,9 +1581,9 @@ public class TelegramBotImpl(
         disableNotification: Boolean?,
     ): Boolean = client.postJson<Boolean>("pinChatMessage",
         PinChatMessage(
-            chatId = chatId, 
-            messageId = messageId, 
-            businessConnectionId = businessConnectionId, 
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
             disableNotification = disableNotification
         )
     ).afterMethod("pinChatMessage") {
@@ -1599,8 +1599,8 @@ public class TelegramBotImpl(
         messageId: Long?,
     ): Boolean = client.postJson<Boolean>("unpinChatMessage",
         UnpinChatMessage(
-            chatId = chatId, 
-            businessConnectionId = businessConnectionId, 
+            chatId = chatId,
+            businessConnectionId = businessConnectionId,
             messageId = messageId
         )
     ).afterMethod("unpinChatMessage") {
@@ -1656,7 +1656,7 @@ public class TelegramBotImpl(
     override suspend fun getChatMember(chatId: String, userId: Long): ChatMember =
             client.postJson<ChatMember>("getChatMember",
         GetChatMember(
-            chatId = chatId, 
+            chatId = chatId,
             userId = userId
         )
     ).afterMethod("getChatMember") {
@@ -1667,7 +1667,7 @@ public class TelegramBotImpl(
     override suspend fun setChatStickerSet(chatId: String, stickerSetName: String): Boolean =
             client.postJson<Boolean>("setChatStickerSet",
         SetChatStickerSet(
-            chatId = chatId, 
+            chatId = chatId,
             stickerSetName = stickerSetName
         )
     ).afterMethod("setChatStickerSet") {
@@ -1695,9 +1695,9 @@ public class TelegramBotImpl(
         iconCustomEmojiId: String?,
     ): ForumTopic = client.postJson<ForumTopic>("createForumTopic",
         CreateForumTopic(
-            chatId = chatId, 
-            name = name, 
-            iconColor = iconColor, 
+            chatId = chatId,
+            name = name,
+            iconColor = iconColor,
             iconCustomEmojiId = iconCustomEmojiId
         )
     ).afterMethod("createForumTopic") {
@@ -1714,9 +1714,9 @@ public class TelegramBotImpl(
         iconCustomEmojiId: String?,
     ): Boolean = client.postJson<Boolean>("editForumTopic",
         EditForumTopic(
-            chatId = chatId, 
-            messageThreadId = messageThreadId, 
-            name = name, 
+            chatId = chatId,
+            messageThreadId = messageThreadId,
+            name = name,
             iconCustomEmojiId = iconCustomEmojiId
         )
     ).afterMethod("editForumTopic") {
@@ -1729,7 +1729,7 @@ public class TelegramBotImpl(
     override suspend fun closeForumTopic(chatId: String, messageThreadId: Long): Boolean =
             client.postJson<Boolean>("closeForumTopic",
         CloseForumTopic(
-            chatId = chatId, 
+            chatId = chatId,
             messageThreadId = messageThreadId
         )
     ).afterMethod("closeForumTopic") {
@@ -1740,7 +1740,7 @@ public class TelegramBotImpl(
     override suspend fun reopenForumTopic(chatId: String, messageThreadId: Long): Boolean =
             client.postJson<Boolean>("reopenForumTopic",
         ReopenForumTopic(
-            chatId = chatId, 
+            chatId = chatId,
             messageThreadId = messageThreadId
         )
     ).afterMethod("reopenForumTopic") {
@@ -1751,7 +1751,7 @@ public class TelegramBotImpl(
     override suspend fun deleteForumTopic(chatId: String, messageThreadId: Long): Boolean =
             client.postJson<Boolean>("deleteForumTopic",
         DeleteForumTopic(
-            chatId = chatId, 
+            chatId = chatId,
             messageThreadId = messageThreadId
         )
     ).afterMethod("deleteForumTopic") {
@@ -1762,7 +1762,7 @@ public class TelegramBotImpl(
     override suspend fun unpinAllForumTopicMessages(chatId: String, messageThreadId: Long): Boolean
             = client.postJson<Boolean>("unpinAllForumTopicMessages",
         UnpinAllForumTopicMessages(
-            chatId = chatId, 
+            chatId = chatId,
             messageThreadId = messageThreadId
         )
     ).afterMethod("unpinAllForumTopicMessages") {
@@ -1773,7 +1773,7 @@ public class TelegramBotImpl(
     override suspend fun editGeneralForumTopic(chatId: String, name: String): Boolean =
             client.postJson<Boolean>("editGeneralForumTopic",
         EditGeneralForumTopic(
-            chatId = chatId, 
+            chatId = chatId,
             name = name
         )
     ).afterMethod("editGeneralForumTopic") {
@@ -1834,10 +1834,10 @@ public class TelegramBotImpl(
         cacheTime: Int?,
     ): Boolean = client.postJson<Boolean>("answerCallbackQuery",
         AnswerCallbackQuery(
-            callbackQueryId = callbackQueryId, 
-            text = text, 
-            showAlert = showAlert, 
-            url = url, 
+            callbackQueryId = callbackQueryId,
+            text = text,
+            showAlert = showAlert,
+            url = url,
             cacheTime = cacheTime
         )
     ).afterMethod("answerCallbackQuery") {
@@ -1851,7 +1851,7 @@ public class TelegramBotImpl(
     override suspend fun getUserChatBoosts(chatId: String, userId: Long): UserChatBoosts =
             client.postJson<UserChatBoosts>("getUserChatBoosts",
         GetUserChatBoosts(
-            chatId = chatId, 
+            chatId = chatId,
             userId = userId
         )
     ).afterMethod("getUserChatBoosts") {
@@ -1874,8 +1874,8 @@ public class TelegramBotImpl(
         languageCode: String?,
     ): Boolean = client.postJson<Boolean>("setMyCommands",
         SetMyCommands(
-            commands = commands, 
-            scope = scope, 
+            commands = commands,
+            scope = scope,
             languageCode = languageCode
         )
     ).afterMethod("setMyCommands") {
@@ -1887,7 +1887,7 @@ public class TelegramBotImpl(
     override suspend fun deleteMyCommands(scope: BotCommandScope?, languageCode: String?): Boolean =
             client.postJson<Boolean>("deleteMyCommands",
         DeleteMyCommands(
-            scope = scope, 
+            scope = scope,
             languageCode = languageCode
         )
     ).afterMethod("deleteMyCommands") {
@@ -1898,7 +1898,7 @@ public class TelegramBotImpl(
     override suspend fun getMyCommands(scope: BotCommandScope?, languageCode: String?):
             List<BotCommand> = client.postJson<List<BotCommand>>("getMyCommands",
         GetMyCommands(
-            scope = scope, 
+            scope = scope,
             languageCode = languageCode
         )
     ).afterMethod("getMyCommands") {
@@ -1909,7 +1909,7 @@ public class TelegramBotImpl(
     override suspend fun setMyName(name: String?, languageCode: String?): Boolean =
             client.postJson<Boolean>("setMyName",
         SetMyName(
-            name = name, 
+            name = name,
             languageCode = languageCode
         )
     ).afterMethod("setMyName") {
@@ -1929,7 +1929,7 @@ public class TelegramBotImpl(
     override suspend fun setMyDescription(description: String?, languageCode: String?): Boolean =
             client.postJson<Boolean>("setMyDescription",
         SetMyDescription(
-            description = description, 
+            description = description,
             languageCode = languageCode
         )
     ).afterMethod("setMyDescription") {
@@ -1949,7 +1949,7 @@ public class TelegramBotImpl(
     override suspend fun setMyShortDescription(shortDescription: String?, languageCode: String?):
             Boolean = client.postJson<Boolean>("setMyShortDescription",
         SetMyShortDescription(
-            shortDescription = shortDescription, 
+            shortDescription = shortDescription,
             languageCode = languageCode
         )
     ).afterMethod("setMyShortDescription") {
@@ -1969,7 +1969,7 @@ public class TelegramBotImpl(
     override suspend fun setChatMenuButton(chatId: Long?, menuButton: MenuButton?): Boolean =
             client.postJson<Boolean>("setChatMenuButton",
         SetChatMenuButton(
-            chatId = chatId, 
+            chatId = chatId,
             menuButton = menuButton
         )
     ).afterMethod("setChatMenuButton") {
@@ -1990,7 +1990,7 @@ public class TelegramBotImpl(
             forChannels: Boolean?): Boolean =
             client.postJson<Boolean>("setMyDefaultAdministratorRights",
         SetMyDefaultAdministratorRights(
-            rights = rights, 
+            rights = rights,
             forChannels = forChannels
         )
     ).afterMethod("setMyDefaultAdministratorRights") {
@@ -2019,13 +2019,13 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageText",
         EditMessageTextByChatIdAndMessageId(
-            chatId = chatId, 
-            messageId = messageId, 
-            text = text, 
-            businessConnectionId = businessConnectionId, 
-            parseMode = parseMode, 
-            entities = entities, 
-            linkPreviewOptions = linkPreviewOptions, 
+            chatId = chatId,
+            messageId = messageId,
+            text = text,
+            businessConnectionId = businessConnectionId,
+            parseMode = parseMode,
+            entities = entities,
+            linkPreviewOptions = linkPreviewOptions,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageText") {
@@ -2050,13 +2050,13 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageCaption",
         EditMessageCaptionByChatIdAndMessageId(
-            chatId = chatId, 
-            messageId = messageId, 
-            businessConnectionId = businessConnectionId, 
-            caption = caption, 
-            parseMode = parseMode, 
-            captionEntities = captionEntities, 
-            showCaptionAboveMedia = showCaptionAboveMedia, 
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageCaption") {
@@ -2107,15 +2107,15 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageLiveLocation",
         EditMessageLiveLocationByChatIdAndMessageId(
-            chatId = chatId, 
-            messageId = messageId, 
-            latitude = latitude, 
-            longitude = longitude, 
-            businessConnectionId = businessConnectionId, 
-            livePeriod = livePeriod, 
-            horizontalAccuracy = horizontalAccuracy, 
-            heading = heading, 
-            proximityAlertRadius = proximityAlertRadius, 
+            chatId = chatId,
+            messageId = messageId,
+            latitude = latitude,
+            longitude = longitude,
+            businessConnectionId = businessConnectionId,
+            livePeriod = livePeriod,
+            horizontalAccuracy = horizontalAccuracy,
+            heading = heading,
+            proximityAlertRadius = proximityAlertRadius,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageLiveLocation") {
@@ -2138,9 +2138,9 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("stopMessageLiveLocation",
         StopMessageLiveLocationByChatIdAndMessageId(
-            chatId = chatId, 
-            messageId = messageId, 
-            businessConnectionId = businessConnectionId, 
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
             replyMarkup = replyMarkup
         )
     ).afterMethod("stopMessageLiveLocation") {
@@ -2157,9 +2157,9 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageReplyMarkup",
         EditMessageReplyMarkupByChatIdAndMessageId(
-            chatId = chatId, 
-            messageId = messageId, 
-            businessConnectionId = businessConnectionId, 
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageReplyMarkup") {
@@ -2176,9 +2176,9 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Poll = client.postJson<Poll>("stopPoll",
         StopPoll(
-            chatId = chatId, 
-            messageId = messageId, 
-            businessConnectionId = businessConnectionId, 
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
             replyMarkup = replyMarkup
         )
     ).afterMethod("stopPoll") {
@@ -2191,7 +2191,7 @@ public class TelegramBotImpl(
     override suspend fun deleteMessage(chatId: String, messageId: Long): Boolean =
             client.postJson<Boolean>("deleteMessage",
         DeleteMessage(
-            chatId = chatId, 
+            chatId = chatId,
             messageId = messageId
         )
     ).afterMethod("deleteMessage") {
@@ -2202,7 +2202,7 @@ public class TelegramBotImpl(
     override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean =
             client.postJson<Boolean>("deleteMessages",
         DeleteMessages(
-            chatId = chatId, 
+            chatId = chatId,
             messageIds = messageIds
         )
     ).afterMethod("deleteMessages") {
@@ -2326,7 +2326,7 @@ public class TelegramBotImpl(
     override suspend fun setStickerPositionInSet(sticker: String, position: Int): Boolean =
             client.postJson<Boolean>("setStickerPositionInSet",
         SetStickerPositionInSet(
-            sticker = sticker, 
+            sticker = sticker,
             position = position
         )
     ).afterMethod("setStickerPositionInSet") {
@@ -2365,7 +2365,7 @@ public class TelegramBotImpl(
     override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean
             = client.postJson<Boolean>("setStickerEmojiList",
         SetStickerEmojiList(
-            sticker = sticker, 
+            sticker = sticker,
             emojiList = emojiList
         )
     ).afterMethod("setStickerEmojiList") {
@@ -2376,7 +2376,7 @@ public class TelegramBotImpl(
     override suspend fun setStickerKeywords(sticker: String, keywords: Iterable<String>?): Boolean =
             client.postJson<Boolean>("setStickerKeywords",
         SetStickerKeywords(
-            sticker = sticker, 
+            sticker = sticker,
             keywords = keywords
         )
     ).afterMethod("setStickerKeywords") {
@@ -2387,7 +2387,7 @@ public class TelegramBotImpl(
     override suspend fun setStickerMaskPosition(sticker: String, maskPosition: MaskPosition?):
             Boolean = client.postJson<Boolean>("setStickerMaskPosition",
         SetStickerMaskPosition(
-            sticker = sticker, 
+            sticker = sticker,
             maskPosition = maskPosition
         )
     ).afterMethod("setStickerMaskPosition") {
@@ -2398,7 +2398,7 @@ public class TelegramBotImpl(
     override suspend fun setStickerSetTitle(name: String, title: String): Boolean =
             client.postJson<Boolean>("setStickerSetTitle",
         SetStickerSetTitle(
-            name = name, 
+            name = name,
             title = title
         )
     ).afterMethod("setStickerSetTitle") {
@@ -2426,7 +2426,7 @@ public class TelegramBotImpl(
     override suspend fun setCustomEmojiStickerSetThumbnail(name: String, customEmojiId: String?):
             Boolean = client.postJson<Boolean>("setCustomEmojiStickerSetThumbnail",
         SetCustomEmojiStickerSetThumbnail(
-            name = name, 
+            name = name,
             customEmojiId = customEmojiId
         )
     ).afterMethod("setCustomEmojiStickerSetThumbnail") {
@@ -2454,10 +2454,10 @@ public class TelegramBotImpl(
         textEntities: Iterable<MessageEntity>?,
     ): Boolean = client.postJson<Boolean>("sendGift",
         SendGift(
-            userId = userId, 
-            giftId = giftId, 
-            text = text, 
-            textParseMode = textParseMode, 
+            userId = userId,
+            giftId = giftId,
+            text = text,
+            textParseMode = textParseMode,
             textEntities = textEntities
         )
     ).afterMethod("sendGift") {
@@ -2477,11 +2477,11 @@ public class TelegramBotImpl(
         button: InlineQueryResultsButton?,
     ): Boolean = client.postJson<Boolean>("answerInlineQuery",
         AnswerInlineQuery(
-            inlineQueryId = inlineQueryId, 
-            results = results, 
-            cacheTime = cacheTime, 
-            isPersonal = isPersonal, 
-            nextOffset = nextOffset, 
+            inlineQueryId = inlineQueryId,
+            results = results,
+            cacheTime = cacheTime,
+            isPersonal = isPersonal,
+            nextOffset = nextOffset,
             button = button
         )
     ).afterMethod("answerInlineQuery") {
@@ -2496,7 +2496,7 @@ public class TelegramBotImpl(
     override suspend fun answerWebAppQuery(webAppQueryId: String, result: InlineQueryResult):
             SentWebAppMessage = client.postJson<SentWebAppMessage>("answerWebAppQuery",
         AnswerWebAppQuery(
-            webAppQueryId = webAppQueryId, 
+            webAppQueryId = webAppQueryId,
             result = result
         )
     ).afterMethod("answerWebAppQuery") {
@@ -2513,11 +2513,11 @@ public class TelegramBotImpl(
         allowChannelChats: Boolean?,
     ): PreparedInlineMessage = client.postJson<PreparedInlineMessage>("savePreparedInlineMessage",
         SavePreparedInlineMessage(
-            userId = userId, 
-            result = result, 
-            allowUserChats = allowUserChats, 
-            allowBotChats = allowBotChats, 
-            allowGroupChats = allowGroupChats, 
+            userId = userId,
+            result = result,
+            allowUserChats = allowUserChats,
+            allowBotChats = allowBotChats,
+            allowGroupChats = allowGroupChats,
             allowChannelChats = allowChannelChats
         )
     ).afterMethod("savePreparedInlineMessage") {
@@ -2561,34 +2561,34 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("sendInvoice",
         SendInvoice(
-            chatId = chatId, 
-            title = title, 
-            description = description, 
-            payload = payload, 
-            currency = currency, 
-            prices = prices, 
-            messageThreadId = messageThreadId, 
-            providerToken = providerToken, 
-            maxTipAmount = maxTipAmount, 
-            suggestedTipAmounts = suggestedTipAmounts, 
-            startParameter = startParameter, 
-            providerData = providerData, 
-            photoUrl = photoUrl, 
-            photoSize = photoSize, 
-            photoWidth = photoWidth, 
-            photoHeight = photoHeight, 
-            needName = needName, 
-            needPhoneNumber = needPhoneNumber, 
-            needEmail = needEmail, 
-            needShippingAddress = needShippingAddress, 
-            sendPhoneNumberToProvider = sendPhoneNumberToProvider, 
-            sendEmailToProvider = sendEmailToProvider, 
-            isFlexible = isFlexible, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            title = title,
+            description = description,
+            payload = payload,
+            currency = currency,
+            prices = prices,
+            messageThreadId = messageThreadId,
+            providerToken = providerToken,
+            maxTipAmount = maxTipAmount,
+            suggestedTipAmounts = suggestedTipAmounts,
+            startParameter = startParameter,
+            providerData = providerData,
+            photoUrl = photoUrl,
+            photoSize = photoSize,
+            photoWidth = photoWidth,
+            photoHeight = photoHeight,
+            needName = needName,
+            needPhoneNumber = needPhoneNumber,
+            needEmail = needEmail,
+            needShippingAddress = needShippingAddress,
+            sendPhoneNumberToProvider = sendPhoneNumberToProvider,
+            sendEmailToProvider = sendEmailToProvider,
+            isFlexible = isFlexible,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendInvoice") {
@@ -2648,27 +2648,27 @@ public class TelegramBotImpl(
         isFlexible: Boolean?,
     ): String = client.postJson<String>("createInvoiceLink",
         CreateInvoiceLink(
-            title = title, 
-            description = description, 
-            payload = payload, 
-            currency = currency, 
-            prices = prices, 
-            businessConnectionId = businessConnectionId, 
-            providerToken = providerToken, 
-            subscriptionPeriod = subscriptionPeriod, 
-            maxTipAmount = maxTipAmount, 
-            suggestedTipAmounts = suggestedTipAmounts, 
-            providerData = providerData, 
-            photoUrl = photoUrl, 
-            photoSize = photoSize, 
-            photoWidth = photoWidth, 
-            photoHeight = photoHeight, 
-            needName = needName, 
-            needPhoneNumber = needPhoneNumber, 
-            needEmail = needEmail, 
-            needShippingAddress = needShippingAddress, 
-            sendPhoneNumberToProvider = sendPhoneNumberToProvider, 
-            sendEmailToProvider = sendEmailToProvider, 
+            title = title,
+            description = description,
+            payload = payload,
+            currency = currency,
+            prices = prices,
+            businessConnectionId = businessConnectionId,
+            providerToken = providerToken,
+            subscriptionPeriod = subscriptionPeriod,
+            maxTipAmount = maxTipAmount,
+            suggestedTipAmounts = suggestedTipAmounts,
+            providerData = providerData,
+            photoUrl = photoUrl,
+            photoSize = photoSize,
+            photoWidth = photoWidth,
+            photoHeight = photoHeight,
+            needName = needName,
+            needPhoneNumber = needPhoneNumber,
+            needEmail = needEmail,
+            needShippingAddress = needShippingAddress,
+            sendPhoneNumberToProvider = sendPhoneNumberToProvider,
+            sendEmailToProvider = sendEmailToProvider,
             isFlexible = isFlexible
         )
     ).afterMethod("createInvoiceLink") {
@@ -2703,9 +2703,9 @@ public class TelegramBotImpl(
         errorMessage: String?,
     ): Boolean = client.postJson<Boolean>("answerShippingQuery",
         AnswerShippingQuery(
-            shippingQueryId = shippingQueryId, 
-            ok = ok, 
-            shippingOptions = shippingOptions, 
+            shippingQueryId = shippingQueryId,
+            ok = ok,
+            shippingOptions = shippingOptions,
             errorMessage = errorMessage
         )
     ).afterMethod("answerShippingQuery") {
@@ -2721,8 +2721,8 @@ public class TelegramBotImpl(
         errorMessage: String?,
     ): Boolean = client.postJson<Boolean>("answerPreCheckoutQuery",
         AnswerPreCheckoutQuery(
-            preCheckoutQueryId = preCheckoutQueryId, 
-            ok = ok, 
+            preCheckoutQueryId = preCheckoutQueryId,
+            ok = ok,
             errorMessage = errorMessage
         )
     ).afterMethod("answerPreCheckoutQuery") {
@@ -2734,7 +2734,7 @@ public class TelegramBotImpl(
     override suspend fun getStarTransactions(offset: Int?, limit: Int?): StarTransactions =
             client.postJson<StarTransactions>("getStarTransactions",
         GetStarTransactions(
-            offset = offset, 
+            offset = offset,
             limit = limit
         )
     ).afterMethod("getStarTransactions") {
@@ -2745,7 +2745,7 @@ public class TelegramBotImpl(
     override suspend fun refundStarPayment(userId: Long, telegramPaymentChargeId: String): Boolean =
             client.postJson<Boolean>("refundStarPayment",
         RefundStarPayment(
-            userId = userId, 
+            userId = userId,
             telegramPaymentChargeId = telegramPaymentChargeId
         )
     ).afterMethod("refundStarPayment") {
@@ -2759,8 +2759,8 @@ public class TelegramBotImpl(
         isCanceled: Boolean,
     ): Boolean = client.postJson<Boolean>("editUserStarSubscription",
         EditUserStarSubscription(
-            userId = userId, 
-            telegramPaymentChargeId = telegramPaymentChargeId, 
+            userId = userId,
+            telegramPaymentChargeId = telegramPaymentChargeId,
             isCanceled = isCanceled
         )
     ).afterMethod("editUserStarSubscription") {
@@ -2773,7 +2773,7 @@ public class TelegramBotImpl(
             errors: Iterable<PassportElementError>): Boolean =
             client.postJson<Boolean>("setPassportDataErrors",
         SetPassportDataErrors(
-            userId = userId, 
+            userId = userId,
             errors = errors
         )
     ).afterMethod("setPassportDataErrors") {
@@ -2794,15 +2794,15 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("sendGame",
         SendGame(
-            chatId = chatId, 
-            gameShortName = gameShortName, 
-            businessConnectionId = businessConnectionId, 
-            messageThreadId = messageThreadId, 
-            disableNotification = disableNotification, 
-            protectContent = protectContent, 
-            allowPaidBroadcast = allowPaidBroadcast, 
-            messageEffectId = messageEffectId, 
-            replyParameters = replyParameters, 
+            chatId = chatId,
+            gameShortName = gameShortName,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
     ).afterMethod("sendGame") {
@@ -2827,11 +2827,11 @@ public class TelegramBotImpl(
         disableEditMessage: Boolean?,
     ): Message = client.postJson<Message>("setGameScore",
         SetGameScoreByChatIdAndMessageId(
-            userId = userId, 
-            score = score, 
-            chatId = chatId, 
-            messageId = messageId, 
-            force = force, 
+            userId = userId,
+            score = score,
+            chatId = chatId,
+            messageId = messageId,
+            force = force,
             disableEditMessage = disableEditMessage
         )
     ).afterMethod("setGameScore") {
@@ -2850,9 +2850,9 @@ public class TelegramBotImpl(
         inlineMessageId: String?,
     ): List<GameHighScore> = client.postJson<List<GameHighScore>>("getGameHighScores",
         GetGameHighScores(
-            userId = userId, 
-            chatId = chatId, 
-            messageId = messageId, 
+            userId = userId,
+            chatId = chatId,
+            messageId = messageId,
             inlineMessageId = inlineMessageId
         )
     ).afterMethod("getGameHighScores") {
@@ -2872,12 +2872,12 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("editMessageText",
         EditMessageTextByInlineMessageId(
-            inlineMessageId = inlineMessageId, 
-            text = text, 
-            businessConnectionId = businessConnectionId, 
-            parseMode = parseMode, 
-            entities = entities, 
-            linkPreviewOptions = linkPreviewOptions, 
+            inlineMessageId = inlineMessageId,
+            text = text,
+            businessConnectionId = businessConnectionId,
+            parseMode = parseMode,
+            entities = entities,
+            linkPreviewOptions = linkPreviewOptions,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageText") {
@@ -2900,12 +2900,12 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("editMessageCaption",
         EditMessageCaptionByInlineMessageId(
-            inlineMessageId = inlineMessageId, 
-            businessConnectionId = businessConnectionId, 
-            caption = caption, 
-            parseMode = parseMode, 
-            captionEntities = captionEntities, 
-            showCaptionAboveMedia = showCaptionAboveMedia, 
+            inlineMessageId = inlineMessageId,
+            businessConnectionId = businessConnectionId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageCaption") {
@@ -2951,14 +2951,14 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("editMessageLiveLocation",
         EditMessageLiveLocationByInlineMessageId(
-            inlineMessageId = inlineMessageId, 
-            latitude = latitude, 
-            longitude = longitude, 
-            businessConnectionId = businessConnectionId, 
-            livePeriod = livePeriod, 
-            horizontalAccuracy = horizontalAccuracy, 
-            heading = heading, 
-            proximityAlertRadius = proximityAlertRadius, 
+            inlineMessageId = inlineMessageId,
+            latitude = latitude,
+            longitude = longitude,
+            businessConnectionId = businessConnectionId,
+            livePeriod = livePeriod,
+            horizontalAccuracy = horizontalAccuracy,
+            heading = heading,
+            proximityAlertRadius = proximityAlertRadius,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageLiveLocation") {
@@ -2979,8 +2979,8 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("stopMessageLiveLocation",
         StopMessageLiveLocationByInlineMessageId(
-            inlineMessageId = inlineMessageId, 
-            businessConnectionId = businessConnectionId, 
+            inlineMessageId = inlineMessageId,
+            businessConnectionId = businessConnectionId,
             replyMarkup = replyMarkup
         )
     ).afterMethod("stopMessageLiveLocation") {
@@ -2995,8 +2995,8 @@ public class TelegramBotImpl(
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("editMessageReplyMarkup",
         EditMessageReplyMarkupByInlineMessageId(
-            inlineMessageId = inlineMessageId, 
-            businessConnectionId = businessConnectionId, 
+            inlineMessageId = inlineMessageId,
+            businessConnectionId = businessConnectionId,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageReplyMarkup") {
@@ -3013,10 +3013,10 @@ public class TelegramBotImpl(
         disableEditMessage: Boolean?,
     ): Boolean = client.postJson<Boolean>("setGameScore",
         SetGameScoreByInlineMessageId(
-            userId = userId, 
-            score = score, 
-            inlineMessageId = inlineMessageId, 
-            force = force, 
+            userId = userId,
+            score = score,
+            inlineMessageId = inlineMessageId,
+            force = force,
             disableEditMessage = disableEditMessage
         )
     ).afterMethod("setGameScore") {
@@ -3029,7 +3029,7 @@ public class TelegramBotImpl(
 
     private suspend inline fun <T> T.afterMethod(methodName: String, crossinline
             collectArguments: MutableMap<String, Any?>.() -> Unit = {}): T {
-        eventListener.sendAfterEvent(methodName, this, collectArguments)
+        eventManager.sendAfterMethodEvent(methodName, this, collectArguments)
 
         return this
     }

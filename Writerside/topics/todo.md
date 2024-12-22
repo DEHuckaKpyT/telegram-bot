@@ -6,12 +6,14 @@
 
 ## Medium priority
 - Add post process after send messages (and after receive messages).
+- Add mini DI to config initialization.
+- Save users like messages.
 - Add more tests.
 - Complete documentation in code (classes and methods).
 - Add to documentation info about `currentContainerContext()`, `InputFactory`.
-- Create custom `@ConditionalOnMissingBean` for `source-jpa` `io.github.dehuckakpyt.telegrambot.config`
-- Add `ConfigExpression` for all interfaces in TelegramBotConfig (at least for Spring)
-- Configure dependencies with [refreshVersions](https://github.com/Splitties/refreshVersions)
+- Add validation to `command()`, `step()`, `callback()` at initialization.
+- Create custom `@ConditionalOnMissingBean` for `source-jpa` `io.github.dehuckakpyt.telegrambot.config`.
+- Add `ConfigExpression` for all interfaces in TelegramBotConfig (at least for Spring).
 
 ## Low priority
 - Figure out how to send messages longer than 4096 characters.

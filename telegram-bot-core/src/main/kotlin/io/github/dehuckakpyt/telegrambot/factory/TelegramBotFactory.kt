@@ -18,7 +18,7 @@ import io.github.dehuckakpyt.telegrambot.factory.input.InputFactoryImpl
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactoryImpl
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
-import io.github.dehuckakpyt.telegrambot.listener.event.TelegramBotEventListener
+import io.github.dehuckakpyt.telegrambot.listener.event.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
@@ -53,7 +53,7 @@ object TelegramBotFactory {
      * @return telegram bot instance for making requests
      */
     fun createTelegramBot(token: String, username: String, messageSource: MessageSource = MessageSource.empty): TelegramBot =
-        TelegramBotImpl(token, username, TelegramBotEventListener())
+        TelegramBotImpl(token, username, TelegramBotEventManager())
 
     /**
      * Create telegram bot with related isolated context.
@@ -71,7 +71,7 @@ object TelegramBotFactory {
         actual.token = config.token ?: throw IllegalArgumentException("Telegram-bot TOKEN must not be empty!")
         actual.username = config.username ?: throw IllegalArgumentException("Telegram-bot USERNAME must not be empty!")
         actual.messageSource = config.messageSource?.invoke(actual) ?: EmptyMessageSource()
-        actual.telegramBot = TelegramBotImpl(actual.token, actual.username,TelegramBotEventListener())
+        actual.telegramBot = TelegramBotImpl(actual.token, actual.username,TelegramBotEventManager())
         actual.templater = config.templater?.invoke(actual) ?: RegexTemplater()
 
         context.messageSource = actual.messageSource

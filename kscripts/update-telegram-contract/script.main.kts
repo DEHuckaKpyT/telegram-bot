@@ -318,13 +318,13 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                 .primaryConstructor(FunSpec.constructorBuilder()
                     .addParameter("token", String::class)
                     .addParameter("username", String::class)
-                    .addParameter("eventListener", ClassName("io.github.dehuckakpyt.telegrambot.listener.event", "TelegramBotEventListener"))
+                    .addParameter("eventManager", ClassName("io.github.dehuckakpyt.telegrambot.listener.event", "TelegramBotEventManager"))
                     .build())
                 .addProperty(PropertySpec.builder("username", String::class, OVERRIDE)
                     .initializer("username")
                     .build())
-                .addProperty(PropertySpec.builder("eventListener", ClassName("io.github.dehuckakpyt.telegrambot.listener.event", "TelegramBotEventListener"), PRIVATE)
-                    .initializer("eventListener")
+                .addProperty(PropertySpec.builder("eventManager", ClassName("io.github.dehuckakpyt.telegrambot.event.managing", "TelegramBotEventManager"), PRIVATE)
+                    .initializer("eventManager")
                     .build())
                 .addProperty(PropertySpec.builder("client", ClassName("io.github.dehuckakpyt.telegrambot.api.client", "TelegramApiClient"), OVERRIDE)
                     .initializer("TelegramApiClient(token)")
@@ -425,10 +425,10 @@ suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpe
 
     addStatement("return client.postJson<$returnClassName>(\"${method.name}\"," +
             "\n    ${obj.name}(" +
-            obj.properties.joinToString { "\n        ${it.nameCamelCase} = ${it.nameCamelCase}" } +
+            obj.properties.joinToString(",") { "\n        ${it.nameCamelCase} = ${it.nameCamelCase}" } +
             "\n    )\n)" +
             ".afterMethod(\"${method.name}\") {" +
-            obj.properties.joinToString(separator = "") { "\n    put(\"${it.nameCamelCase}\", ${it.nameCamelCase})" } +
+            obj.properties.joinToString("") { "\n    put(\"${it.nameCamelCase}\", ${it.nameCamelCase})" } +
             "\n}")
 
     return this
