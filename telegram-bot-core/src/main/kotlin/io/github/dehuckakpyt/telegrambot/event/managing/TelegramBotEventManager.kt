@@ -9,12 +9,12 @@ package io.github.dehuckakpyt.telegrambot.event.managing
 class TelegramBotEventManager {
     private val actionsAfterMethodCalledByMethodName: Map<String, MutableList<suspend (Map<String, Any?>) -> Unit>> = mutableMapOf()
 
-    internal suspend inline fun <T> sendAfterMethodEvent(methodName: String, returnValue: T, crossinline block: MutableMap<String, Any?>.() -> Unit): Unit {
+    internal suspend inline fun <T> sendAfterMethodEvent(methodName: String, returnedValue: T, crossinline block: MutableMap<String, Any?>.() -> Unit): Unit {
         if (methodName !in actionsAfterMethodCalledByMethodName.keys) return
 
         val args = buildMap {
             block()
-            put("returnedValue", returnValue)
+            put("returnedValue", returnedValue)
         }
         actionsAfterMethodCalledByMethodName[methodName]?.forEach { action -> action.invoke(args) }
     }
