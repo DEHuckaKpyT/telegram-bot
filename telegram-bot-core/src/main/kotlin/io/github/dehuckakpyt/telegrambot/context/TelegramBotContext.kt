@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.context
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
@@ -37,6 +38,9 @@ interface TelegramBotContext {
 
     /** Factory for make text by template. */
     val templater: Templater
+
+    /** Listening for react to telegram bot's events. */
+    val telegramBotEventListening: TelegramBotEventListening
 
     /** Factory for creating buttons. */
     val buttonFactory: ButtonFactory

@@ -1,7 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.ext.event.listening
 
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
-import io.github.dehuckakpyt.telegrambot.event.listening.after
 import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import io.github.dehuckakpyt.telegrambot.model.telegram.PhotoSize
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
@@ -12,6 +11,12 @@ import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
  *
  * @author Denis Matytsin
  */
+public typealias after = After
+
+public object After
+
+public class AfterMethod(internal val methodName: String)
+
 internal fun TelegramBotEventListening.defaults(messageSource: MessageSource) {
     after method "sendMessage" called { args ->
         val text: String by args

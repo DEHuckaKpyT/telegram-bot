@@ -45,7 +45,7 @@ class TelegramBotInitializationConfig(
     @Value("\${telegram-bot.username}") botUsername: String?,
     telegramBotConfig: TelegramBotConfig?,
 ) : DisposableBean {
-    private final val logger = LoggerFactory.getLogger(javaClass)
+    private final val logger = LoggerFactory.getLogger(TelegramBotInitializationConfig::class.java)
     private final val botContext: TelegramBotContext
 
     init {

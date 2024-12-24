@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
  */
 internal class EventUpdateResolver {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger = LoggerFactory.getLogger(EventUpdateResolver::class.java)
 
     internal var message: (suspend Message.() -> Unit)? = null
     internal var editedMessage: (suspend Message.() -> Unit)? = null

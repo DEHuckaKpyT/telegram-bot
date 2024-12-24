@@ -11,14 +11,14 @@ import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContextImpl
 import io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.SimpleCallbackSerializer
+import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
+import io.github.dehuckakpyt.telegrambot.event.managing.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandlerImpl
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandlerImpl
-import io.github.dehuckakpyt.telegrambot.ext.empty
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactoryImpl
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactoryImpl
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
-import io.github.dehuckakpyt.telegrambot.listener.event.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
@@ -27,7 +27,6 @@ import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolverImpl
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.RegexTemplater
 
@@ -48,11 +47,10 @@ object TelegramBotFactory {
      *
      * @param token telegram bot token
      * @param username telegram bot username
-     * @param messageSource source for saving sent messages
      *
      * @return telegram bot instance for making requests
      */
-    fun createTelegramBot(token: String, username: String, messageSource: MessageSource = MessageSource.empty): TelegramBot =
+    fun createTelegramBot(token: String, username: String): TelegramBot =
         TelegramBotImpl(token, username, TelegramBotEventManager())
 
     /**
@@ -71,12 +69,17 @@ object TelegramBotFactory {
         actual.token = config.token ?: throw IllegalArgumentException("Telegram-bot TOKEN must not be empty!")
         actual.username = config.username ?: throw IllegalArgumentException("Telegram-bot USERNAME must not be empty!")
         actual.messageSource = config.messageSource?.invoke(actual) ?: EmptyMessageSource()
-        actual.telegramBot = TelegramBotImpl(actual.token, actual.username,TelegramBotEventManager())
+        val telegramBotEventManager = TelegramBotEventManager()
+        actual.telegramBot = TelegramBotImpl(actual.token, actual.username, telegramBotEventManager)
         actual.templater = config.templater?.invoke(actual) ?: RegexTemplater()
+
+        val telegramBotEventListening = TelegramBotEventListening(telegramBotEventManager, actual.messageSource, config.eventListeningPreventDefaults)
+        config.eventListening?.invoke(telegramBotEventListening)
 
         context.messageSource = actual.messageSource
         context.telegramBot = actual.telegramBot
         context.templater = actual.templater
+        context.telegramBotEventListening = telegramBotEventListening
 
         buildReceiving(config, actual, context)
 

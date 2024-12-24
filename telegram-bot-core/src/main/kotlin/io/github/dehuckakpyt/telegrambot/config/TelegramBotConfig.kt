@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
+import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 
@@ -30,20 +31,24 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
  *
  * @author Denis Matytsin
  */
-class TelegramBotConfig(
+class TelegramBotConfig {
 
     /** Telegram bot token */
-    var token: String? = null,
+    var token: String? = null
 
     /** Telegram bot username */
-    var username: String? = null,
+    var username: String? = null
 
     /** Source for saving messages */
-    var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null,
+    var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null
 
     /** Templater for build message templates */
-    var templater: (TelegramBotActualConfig.() -> Templater)? = null,
-) {
+    var templater: (TelegramBotActualConfig.() -> Templater)? = null
+
+    /** Listening for react to telegram bot's events */
+    internal var eventListening: (TelegramBotEventListening.() -> Unit)? = null
+    internal var eventListeningPreventDefaults: Boolean = false
+
     var receiving: UpdateReceiverConfig = UpdateReceiverConfig()
 
     /** Configure receiving */

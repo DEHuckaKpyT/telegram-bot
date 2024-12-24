@@ -2,14 +2,17 @@ package io.github.dehuckakpyt.telegrambotexample.config
 
 import io.github.dehuckakpyt.telegrambot.annotation.EnableTelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.eventListening
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.handling
 import io.github.dehuckakpyt.telegrambot.ext.dynamicFreeMarker
+import io.github.dehuckakpyt.telegrambot.ext.event.listening.after
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.buttonCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.exceptionCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.templateCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.withArgsCommand
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -23,10 +26,22 @@ import org.springframework.context.annotation.Configuration
 @EnableTelegramBot
 @Configuration
 class BotConfig {
+    private val logger = LoggerFactory.getLogger(BotConfig::class.java)
 
     @Bean
     fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
         templater = { Templater.dynamicFreeMarker }
+
+        eventListening {
+            after method "getUpdates" called { args ->
+                val offset: Long? by args
+                val limit: Int? by args
+                val timeout: Int? by args
+                val allowedUpdates: Iterable<String>? by args
+
+                logger.info("Called \"getUpdates\" while long polling with offset = $offset, limit = $limit, timeout = $timeout, allowedUpdates = $allowedUpdates")
+            }
+        }
 
         receiving {
             exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }
