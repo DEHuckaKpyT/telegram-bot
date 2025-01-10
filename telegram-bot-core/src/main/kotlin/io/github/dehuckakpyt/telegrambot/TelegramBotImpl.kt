@@ -1,11 +1,11 @@
 package io.github.dehuckakpyt.telegrambot
 
 import io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient
+import io.github.dehuckakpyt.telegrambot.event.managing.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.ext.appendContent
 import io.github.dehuckakpyt.telegrambot.ext.appendContentIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.appendIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.toJson
-import io.github.dehuckakpyt.telegrambot.event.managing.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
@@ -117,6 +117,8 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.LeaveChat
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.PinChatMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.PromoteChatMember
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RefundStarPayment
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RemoveChatVerification
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RemoveUserVerification
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenGeneralForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RestrictChatMember
@@ -164,6 +166,8 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllChatM
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllForumTopicMessages
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllGeneralForumTopicMessages
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinChatMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.VerifyChat
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.VerifyUser
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
 import kotlin.Any
@@ -178,7 +182,7 @@ import kotlin.collections.List
 import kotlin.collections.MutableMap
 
 /**
- * Created on 22.12.2024.
+ * Created on 10.01.2025.
  *
  * @author KScript
  */
@@ -2449,6 +2453,7 @@ public class TelegramBotImpl(
     override suspend fun sendGift(
         userId: Long,
         giftId: String,
+        payForUpgrade: Boolean?,
         text: String?,
         textParseMode: String?,
         textEntities: Iterable<MessageEntity>?,
@@ -2456,6 +2461,7 @@ public class TelegramBotImpl(
         SendGift(
             userId = userId,
             giftId = giftId,
+            payForUpgrade = payForUpgrade,
             text = text,
             textParseMode = textParseMode,
             textEntities = textEntities
@@ -2463,9 +2469,50 @@ public class TelegramBotImpl(
     ).afterMethod("sendGift") {
         put("userId", userId)
         put("giftId", giftId)
+        put("payForUpgrade", payForUpgrade)
         put("text", text)
         put("textParseMode", textParseMode)
         put("textEntities", textEntities)
+    }
+
+    override suspend fun verifyUser(userId: Long, customDescription: String?): Boolean =
+            client.postJson<Boolean>("verifyUser",
+        VerifyUser(
+            userId = userId,
+            customDescription = customDescription
+        )
+    ).afterMethod("verifyUser") {
+        put("userId", userId)
+        put("customDescription", customDescription)
+    }
+
+    override suspend fun verifyChat(chatId: String, customDescription: String?): Boolean =
+            client.postJson<Boolean>("verifyChat",
+        VerifyChat(
+            chatId = chatId,
+            customDescription = customDescription
+        )
+    ).afterMethod("verifyChat") {
+        put("chatId", chatId)
+        put("customDescription", customDescription)
+    }
+
+    override suspend fun removeUserVerification(userId: Long): Boolean =
+            client.postJson<Boolean>("removeUserVerification",
+        RemoveUserVerification(
+            userId = userId
+        )
+    ).afterMethod("removeUserVerification") {
+        put("userId", userId)
+    }
+
+    override suspend fun removeChatVerification(chatId: String): Boolean =
+            client.postJson<Boolean>("removeChatVerification",
+        RemoveChatVerification(
+            chatId = chatId
+        )
+    ).afterMethod("removeChatVerification") {
+        put("chatId", chatId)
     }
 
     override suspend fun answerInlineQuery(

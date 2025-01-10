@@ -318,7 +318,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                 .primaryConstructor(FunSpec.constructorBuilder()
                     .addParameter("token", String::class)
                     .addParameter("username", String::class)
-                    .addParameter("eventManager", ClassName("io.github.dehuckakpyt.telegrambot.listener.event", "TelegramBotEventManager"))
+                    .addParameter("eventManager", ClassName("io.github.dehuckakpyt.telegrambot.event.managing", "TelegramBotEventManager"))
                     .build())
                 .addProperty(PropertySpec.builder("username", String::class, OVERRIDE)
                     .initializer("username")
@@ -338,7 +338,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                     .addParameter("methodName", String::class)
                     .addParameter(ParameterSpec.builder("collectArguments", LambdaTypeName.get(receiver = ClassName("kotlin.collections", "MutableMap").parameterizedBy(String::class.asTypeName(), Any::class.asTypeName().copy(nullable = true)), returnType = Unit::class.asTypeName()), CROSSINLINE).defaultValue("{}").build())
                     .addCode("""
-                        |eventListener.sendAfterEvent(methodName, this, collectArguments)
+                        |eventManager.sendAfterMethodEvent(methodName, this, collectArguments)
                         |
                         |return this
                     """.trimMargin())

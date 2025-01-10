@@ -81,8 +81,8 @@ public interface TelegramBotApi {
      * except *chat_member*, *message_reaction*, and *message_reaction_count* (default). If not
      * specified, the previous setting will be used.  
      *
-     * Please note that this parameter doesn't affect updates created before the call to the
-     * getUpdates, so unwanted updates may be received for a short period of time.
+     * Please note that this parameter doesn't affect updates created before the call to getUpdates,
+     * so unwanted updates may be received for a short period of time.
      */
     public suspend fun getUpdates(
         offset: Long? = null,
@@ -95,8 +95,9 @@ public interface TelegramBotApi {
      * Use this method to specify a URL and receive incoming updates via an outgoing webhook.
      * Whenever there is an update for the bot, we will send an HTTPS POST request to the specified
      * URL, containing a JSON-serialized [Update](https://core.telegram.org/bots/api/#update). In case
-     * of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns
-     * *True* on success.
+     * of an unsuccessful request (a request with response [HTTP status
+     * code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) different from `2XY`), we will
+     * repeat the request and give up after a reasonable amount of attempts. Returns *True* on success.
      *
      * If you'd like to make sure that the webhook was set by you, you can specify secret data in
      * the parameter *secret_token*. If specified, the request will contain a header
@@ -2607,12 +2608,12 @@ public interface TelegramBotApi {
      * @param name Sticker set name
      * @param userId User identifier of the sticker set owner
      * @param format Format of the thumbnail, must be one of “static” for a **.WEBP** or **.PNG**
-     * image, “animated” for a **.TGS** animation, or “video” for a **WEBM** video
+     * image, “animated” for a **.TGS** animation, or “video” for a **.WEBM** video
      * @param thumbnail A **.WEBP** or **.PNG** image with the thumbnail, must be up to 128
      * kilobytes in size and have a width and height of exactly 100px, or a **.TGS** animation with a
      * thumbnail up to 32 kilobytes in size (see
      * [https://core.telegram.org/stickers#animation-requirements](https://core.telegram.org/stickers#animation-requirements)
-     * for animated sticker technical requirements), or a **WEBM** video with the thumbnail up to 32
+     * for animated sticker technical requirements), or a **.WEBM** video with the thumbnail up to 32
      * kilobytes in size; see
      * [https://core.telegram.org/stickers#video-requirements](https://core.telegram.org/stickers#video-requirements)
      * for video sticker technical requirements. Pass a *file_id* as a String to send a file that
@@ -2660,6 +2661,8 @@ public interface TelegramBotApi {
      *
      * @param userId Unique identifier of the target user that will receive the gift
      * @param giftId Identifier of the gift
+     * @param payForUpgrade Pass *True* to pay for the gift upgrade from the bot's balance, thereby
+     * making the upgrade free for the receiver
      * @param text Text that will be shown along with the gift; 0-255 characters
      * @param textParseMode Mode for parsing entities in the text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
@@ -2672,10 +2675,53 @@ public interface TelegramBotApi {
     public suspend fun sendGift(
         userId: Long,
         giftId: String,
+        payForUpgrade: Boolean? = null,
         text: String? = null,
         textParseMode: String? = null,
         textEntities: Iterable<MessageEntity>? = null,
     ): Boolean
+
+    /**
+     * Verifies a user [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
+     * bot. Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user
+     * @param customDescription Custom description for the verification; 0-70 characters. Must be
+     * empty if the organization isn't allowed to provide a custom verification description.
+     */
+    public suspend fun verifyUser(userId: Long, customDescription: String? = null): Boolean
+
+    /**
+     * Verifies a chat [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
+     * bot. Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     * @param customDescription Custom description for the verification; 0-70 characters. Must be
+     * empty if the organization isn't allowed to provide a custom verification description.
+     */
+    public suspend fun verifyChat(chatId: String, customDescription: String? = null): Boolean
+
+    /**
+     * Removes verification from a user who is currently verified [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+     * Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user
+     */
+    public suspend fun removeUserVerification(userId: Long): Boolean
+
+    /**
+     * Removes verification from a chat that is currently verified [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+     * Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     */
+    public suspend fun removeChatVerification(chatId: String): Boolean
 
     /**
      * Use this method to send answers to an inline query. On success, *True* is returned.  
@@ -2934,8 +2980,8 @@ public interface TelegramBotApi {
      * @param shippingOptions Required if *ok* is *True*. A JSON-serialized array of available
      * shipping options.
      * @param errorMessage Required if *ok* is *False*. Error message in human readable form that
-     * explains why it is impossible to complete the order (e.g. "Sorry, delivery to your desired
-     * address is unavailable'). Telegram will display this message to the user.
+     * explains why it is impossible to complete the order (e.g. “Sorry, delivery to your desired
+     * address is unavailable”). Telegram will display this message to the user.
      */
     public suspend fun answerShippingQuery(
         shippingQueryId: String,

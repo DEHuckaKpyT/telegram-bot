@@ -14,6 +14,8 @@ import kotlin.String
  * @param id Unique identifier of the gift
  * @param sticker The sticker that represents the gift
  * @param starCount The number of Telegram Stars that must be paid to send the sticker
+ * @param upgradeStarCount *Optional*. The number of Telegram Stars that must be paid to upgrade the
+ * gift to a unique one
  * @param totalCount *Optional*. The total number of the gifts of this type that can be sent; for
  * limited gifts only
  * @param remainingCount *Optional*. The number of remaining gifts of this type that can be sent;
@@ -38,6 +40,13 @@ public data class Gift(
     @get:JsonProperty("star_count")
     @param:JsonProperty("star_count")
     public val starCount: Int,
+    /**
+     * *Optional*. The number of Telegram Stars that must be paid to upgrade the gift to a unique
+     * one
+     */
+    @get:JsonProperty("upgrade_star_count")
+    @param:JsonProperty("upgrade_star_count")
+    public val upgradeStarCount: Int? = null,
     /**
      * *Optional*. The total number of the gifts of this type that can be sent; for limited gifts
      * only

@@ -16,7 +16,7 @@ import kotlin.collections.List
  * @author KScript
  *
  * @param id Unique identifier for this result, 1-64 bytes
- * @param mpeg4Url A valid URL for the MPEG4 file. File size must not exceed 1MB
+ * @param mpeg4Url A valid URL for the MPEG4 file
  * @param mpeg4Width *Optional*. Video width
  * @param mpeg4Height *Optional*. Video height
  * @param mpeg4Duration *Optional*. Video duration in seconds
@@ -45,7 +45,7 @@ public data class InlineQueryResultMpeg4Gif(
     @param:JsonProperty("id")
     override val id: String,
     /**
-     * A valid URL for the MPEG4 file. File size must not exceed 1MB
+     * A valid URL for the MPEG4 file
      */
     @get:JsonProperty("mpeg4_url")
     @param:JsonProperty("mpeg4_url")

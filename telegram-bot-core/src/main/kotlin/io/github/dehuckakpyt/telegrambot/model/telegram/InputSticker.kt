@@ -20,7 +20,7 @@ import kotlin.collections.List
  * uploaded via HTTP URL. [More information on Sending Files
  * ](https://core.telegram.org/bots/api/#sending-files)
  * @param format Format of the added sticker, must be one of “static” for a **.WEBP** or **.PNG**
- * image, “animated” for a **.TGS** animation, “video” for a **WEBM** video
+ * image, “animated” for a **.TGS** animation, “video” for a **.WEBM** video
  * @param emojiList List of 1-20 emoji associated with the sticker
  * @param maskPosition *Optional*. Position where the mask should be placed on faces. For “mask”
  * stickers only.
@@ -41,7 +41,7 @@ public data class InputSticker(
     public val sticker: Input,
     /**
      * Format of the added sticker, must be one of “static” for a **.WEBP** or **.PNG** image,
-     * “animated” for a **.TGS** animation, “video” for a **WEBM** video
+     * “animated” for a **.TGS** animation, “video” for a **.WEBM** video
      */
     @get:JsonProperty("format")
     @param:JsonProperty("format")

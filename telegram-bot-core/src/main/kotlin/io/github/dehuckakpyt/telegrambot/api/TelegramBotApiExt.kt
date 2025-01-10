@@ -4238,12 +4238,12 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * @param name Sticker set name
      * @param userId User identifier of the sticker set owner
      * @param format Format of the thumbnail, must be one of “static” for a **.WEBP** or **.PNG**
-     * image, “animated” for a **.TGS** animation, or “video” for a **WEBM** video
+     * image, “animated” for a **.TGS** animation, or “video” for a **.WEBM** video
      * @param thumbnail A **.WEBP** or **.PNG** image with the thumbnail, must be up to 128
      * kilobytes in size and have a width and height of exactly 100px, or a **.TGS** animation with a
      * thumbnail up to 32 kilobytes in size (see
      * [https://core.telegram.org/stickers#animation-requirements](https://core.telegram.org/stickers#animation-requirements)
-     * for animated sticker technical requirements), or a **WEBM** video with the thumbnail up to 32
+     * for animated sticker technical requirements), or a **.WEBM** video with the thumbnail up to 32
      * kilobytes in size; see
      * [https://core.telegram.org/stickers#video-requirements](https://core.telegram.org/stickers#video-requirements)
      * for video sticker technical requirements. Pass a *file_id* as a String to send a file that
@@ -4263,6 +4263,34 @@ public interface TelegramBotApiExt : TelegramBotApi {
         userId = userId,
         format = format,
         thumbnail = thumbnail?.let { StringInput(thumbnail) },
+    )
+
+    /**
+     * Verifies a chat [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
+     * bot. Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     * @param customDescription Custom description for the verification; 0-70 characters. Must be
+     * empty if the organization isn't allowed to provide a custom verification description.
+     */
+    public suspend fun verifyChat(chatId: Long, customDescription: String? = null): Boolean =
+            verifyChat(
+        chatId = chatId.toString(),
+        customDescription = customDescription,
+    )
+
+    /**
+     * Removes verification from a chat that is currently verified [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+     * Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     */
+    public suspend fun removeChatVerification(chatId: Long): Boolean = removeChatVerification(
+        chatId = chatId.toString(),
     )
 
     /**

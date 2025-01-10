@@ -1,7 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
-import kotlin.Boolean
 import kotlin.Int
 import kotlin.String
 
@@ -18,7 +17,6 @@ import kotlin.String
  * @param replyMarkup *Optional*. [Inline
  * keyboard](https://core.telegram.org/bots/features#inline-keyboards) attached to the message
  * @param url *Optional*. URL of the result
- * @param hideUrl *Optional*. Pass *True* if you don't want the URL to be shown in the message
  * @param description *Optional*. Short description of the result
  * @param thumbnailUrl *Optional*. Url of the thumbnail for the result
  * @param thumbnailWidth *Optional*. Thumbnail width
@@ -56,12 +54,6 @@ public data class InlineQueryResultArticle(
     @get:JsonProperty("url")
     @param:JsonProperty("url")
     public val url: String? = null,
-    /**
-     * *Optional*. Pass *True* if you don't want the URL to be shown in the message
-     */
-    @get:JsonProperty("hide_url")
-    @param:JsonProperty("hide_url")
-    public val hideUrl: Boolean? = null,
     /**
      * *Optional*. Short description of the result
      */

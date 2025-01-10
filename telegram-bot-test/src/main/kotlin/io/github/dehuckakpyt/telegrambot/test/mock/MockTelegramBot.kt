@@ -806,10 +806,19 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun sendGift(
         userId: Long,
         giftId: String,
+        payForUpgrade: Boolean?,
         text: String?,
         textParseMode: String?,
         textEntities: Iterable<MessageEntity>?,
     ): Boolean = mockk()
+
+    override suspend fun verifyUser(userId: Long, customDescription: String?): Boolean = mockk()
+
+    override suspend fun verifyChat(chatId: String, customDescription: String?): Boolean = mockk()
+
+    override suspend fun removeUserVerification(userId: Long): Boolean = mockk()
+
+    override suspend fun removeChatVerification(chatId: String): Boolean = mockk()
 
     override suspend fun answerInlineQuery(
         inlineQueryId: String,

@@ -16,7 +16,7 @@ import kotlin.collections.List
  * @author KScript
  *
  * @param id Unique identifier for this result, 1-64 bytes
- * @param gifUrl A valid URL for the GIF file. File size must not exceed 1MB
+ * @param gifUrl A valid URL for the GIF file
  * @param gifWidth *Optional*. Width of the GIF
  * @param gifHeight *Optional*. Height of the GIF
  * @param gifDuration *Optional*. Duration of the GIF in seconds
@@ -45,7 +45,7 @@ public data class InlineQueryResultGif(
     @param:JsonProperty("id")
     override val id: String,
     /**
-     * A valid URL for the GIF file. File size must not exceed 1MB
+     * A valid URL for the GIF file
      */
     @get:JsonProperty("gif_url")
     @param:JsonProperty("gif_url")
