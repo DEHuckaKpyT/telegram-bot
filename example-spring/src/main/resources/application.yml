@@ -2,6 +2,11 @@ dollar: $
 telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}
   username: ${TELEGRAM_BOT_USERNAME}
+
+  spring:
+    update-receiver.webhook.enabled: true
+    update-receiver.webhook.url: "127.0.0.1:8080"
+
   template:
     start: "Start command."
 

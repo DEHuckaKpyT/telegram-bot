@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
+import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
@@ -25,4 +26,5 @@ interface TelegramBotReceiverActualConfig {
     val invocationStrategy: HandlerInvocationStrategy
     val exceptionHandler: ExceptionHandler
     val chainExceptionHandler: ChainExceptionHandler
+    val updateResolver: UpdateResolver
 }

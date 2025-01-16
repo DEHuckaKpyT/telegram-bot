@@ -8,7 +8,6 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionH
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
-import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
@@ -49,7 +48,7 @@ data class UpdateReceiverConfig(
     var chainExceptionHandler: (TelegramBotActualConfig.() -> ChainExceptionHandler)? = null,
 
     /** Receiver for getting and handling updates */
-    var updateReceiver: (TelegramBotActualConfig.(UpdateResolver) -> UpdateReceiver)? = null,
+    var updateReceiver: (TelegramBotActualConfig.() -> UpdateReceiver)? = null,
 
     /** Handlers declaration */
     var handling: BotHandling.() -> Unit = {},

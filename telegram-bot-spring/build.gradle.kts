@@ -8,16 +8,17 @@ plugins {
 dependencies {
     //region springframework
     api(libs.spring.boot.starter)
-    api(libs.spring.boot.starter.web)
+    api(libs.spring.boot.starter.webflux)
     //endregion springframework
 
     //region dehuckakpyt
     implementation(project(":telegram-bot-core"))
     //endregion dehuckakpyt
 
-    //region other
+    //region kotlin
     api(libs.kotlin.reflect)
-    //endregion other
+    api(libs.kotlinx.coroutines.reactor)
+    //endregion kotlin
 
     //region springframework
     testApi(libs.spring.boot.starter.test)

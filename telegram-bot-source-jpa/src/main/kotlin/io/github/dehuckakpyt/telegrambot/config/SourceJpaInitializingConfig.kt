@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import io.github.dehuckakpyt.telegrambot.config.constant.PropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
+import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionActionImpl
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

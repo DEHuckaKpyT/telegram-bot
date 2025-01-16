@@ -17,12 +17,15 @@ import org.slf4j.LoggerFactory
 internal class LongPollingUpdateReceiver(
     private val bot: TelegramBot,
     private val updateResolver: UpdateResolver,
-    private val config: LongPollingConfig,
+    config: LongPollingConfig,
 ) : UpdateReceiver {
 
-    private val scope = CoroutineScope(Dispatchers.Default + CoroutineName("TelegramBot"))
+    private val limit: Int? = config.limit
+    private val timeout: Int = config.timeout ?: 30
+    private val retryDelay: Long = config.retryDelay ?: 5_000
+    private val scope = config.scope ?: CoroutineScope(Dispatchers.Default + CoroutineName("TelegramBot"))
+
     private val logger = LoggerFactory.getLogger(LongPollingUpdateReceiver::class.java)
-    private val delayBetweenTries: Long = 5000
     private var lastUpdateId: Long? = null
     private var running: Boolean = false
 
@@ -43,8 +46,8 @@ internal class LongPollingUpdateReceiver(
                     return
                 }
 
-                logger.error("Internal error. Receiving updates will be resumed after $delayBetweenTries milliseconds.", throwable)
-                delay(delayBetweenTries)
+                logger.error("Internal error. Receiving updates will be resumed after $retryDelay milliseconds.", throwable)
+                delay(retryDelay)
             }
         }
     }
@@ -60,8 +63,8 @@ internal class LongPollingUpdateReceiver(
             val updates = bot.getUpdates(
                 offset = offset,
                 allowedUpdates = allowedUpdates,
-                timeout = config.timeout,
-                limit = config.limit
+                timeout = timeout,
+                limit = limit
             )
 
             if (updates.isEmpty()) continue

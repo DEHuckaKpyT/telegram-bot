@@ -117,10 +117,11 @@ object TelegramBotFactory {
 
         val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templater, buttonFactory)
         val botUpdateHandling = BotUpdateHandling(actual.telegramBot, eventUpdateResolver, actualReceiving.chainSource, actual.templater, buttonFactory)
+        val updateResolver = UpdateResolverImpl(dialogUpdateResolver, eventUpdateResolver)
+        actualReceiving.updateResolver = updateResolver
+
         handling.invoke(botHandling)
         updateHandling.invoke(botUpdateHandling)
-
-        val updateResolver = UpdateResolverImpl(dialogUpdateResolver, eventUpdateResolver)
 
         context.callbackContentSource = actualReceiving.callbackContentSource
         context.chainSource = actualReceiving.chainSource
@@ -128,6 +129,6 @@ object TelegramBotFactory {
         context.botUpdateHandling = botUpdateHandling
         context.buttonFactory = buttonFactory
         context.inputFactory = InputFactoryImpl()
-        context.updateReceiver = updateReceiver?.invoke(actual, updateResolver) ?: LongPollingUpdateReceiver(actual.telegramBot, updateResolver, LongPollingConfig())
+        context.updateReceiver = updateReceiver?.invoke(actual) ?: LongPollingUpdateReceiver(actual.telegramBot, updateResolver, LongPollingConfig())
     }
 }

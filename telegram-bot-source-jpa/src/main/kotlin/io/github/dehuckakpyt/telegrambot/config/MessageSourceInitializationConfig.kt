@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import io.github.dehuckakpyt.telegrambot.config.constant.PropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
-import io.github.dehuckakpyt.telegrambot.config.constant.PropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_MESSAGE_SOURCE
+import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
+import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_MESSAGE_SOURCE
 import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
 import io.github.dehuckakpyt.telegrambot.repository.message.JpaTelegramMessageRepository
 import io.github.dehuckakpyt.telegrambot.source.message.JpaTelegramMessageSource

@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import io.github.dehuckakpyt.telegrambot.config.constant.PropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
-import io.github.dehuckakpyt.telegrambot.config.constant.PropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_CALLBACK_CONTENT_SOURCE
-import io.github.dehuckakpyt.telegrambot.config.constant.PropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_CALLBACK_CONTENT_SOURCE_PER_USER
+import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
+import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_CALLBACK_CONTENT_SOURCE
+import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_CALLBACK_CONTENT_SOURCE_PER_USER
 import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
 import io.github.dehuckakpyt.telegrambot.repository.callback.JpaCallbackContentRepository
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
