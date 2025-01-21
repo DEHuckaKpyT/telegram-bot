@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.receiver.WebhookConfig
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.getSecretTokenOrGenerateOrNull
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.getValidUrl
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.secretTokenRandomGenerationPrintOnStartupOrDefault
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.urlPathOrDefault
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
@@ -32,26 +33,27 @@ internal class WebhookUpdateReceiver(
 
     private val logger: Logger = LoggerFactory.getLogger(WebhookUpdateReceiver::class.java)
     private val url: String = config.getValidUrl()
-    private val secretToken: String? = config.getSecretTokenOrGenerateOrNull()
+    private val secretToken: String? = config.getSecretTokenOrGenerateOrNull(config.secretTokenRandomGenerationPrintOnStartupOrDefault)
 
     init {
         applicationContext.registerBean { receiveUpdatesRoute() }
     }
 
     override fun start(): Unit = runBlocking(Dispatchers.Default) {
-//        bot.setWebhook(
-//            url = url,
-//            certificate = config.certificate,
-//            ipAddress = config.ipAddress,
-//            maxConnections = config.maxConnections,
-//            allowedUpdates = updateResolver.allowedUpdates,
-//            dropPendingUpdates = config.dropPendingUpdates,
-//            secretToken = secretToken,
-//        )
+        bot.setWebhook(
+            url = url,
+            certificate = config.certificate,
+            ipAddress = config.ipAddress,
+            maxConnections = config.maxConnections,
+            allowedUpdates = updateResolver.allowedUpdates,
+            dropPendingUpdates = config.dropPendingUpdates,
+            secretToken = secretToken,
+        )
         logger.info("Started webhook update receiver.")
     }
 
     private fun receiveUpdatesRoute() = coRouter {
+
         if (secretToken == null) {
             POST(config.urlPathOrDefault) { request ->
                 updateResolver.processUpdate(request.awaitBody<Update>())
@@ -72,16 +74,16 @@ internal class WebhookUpdateReceiver(
         }
 
         onError<Throwable> { throwable, request ->
-            logger.error("Error processing update:\n${request.awaitBody<String>()}", throwable)
+            logger.error("Error while processing update $request.", throwable)
 
             return@onError INTERNAL_SERVER_ERROR_RESPONSE
         }
     }
 
     override fun stop(): Unit = runBlocking(Dispatchers.Default) {
-//        bot.deleteWebhook(
-//            dropPendingUpdates = config.dropPendingUpdates
-//        )
+        bot.deleteWebhook(
+            dropPendingUpdates = config.dropPendingUpdates
+        )
     }
 
     private val ServerRequest.secretToken: String? get() = headers().firstHeader("X-Telegram-Bot-Api-Secret-Token")

@@ -41,6 +41,16 @@ class BotConfig {
 
                 logger.info("Called \"getUpdates\" while long polling with offset = $offset, limit = $limit, timeout = $timeout, allowedUpdates = $allowedUpdates")
             }
+            after method "setWebhook" called { args ->
+                val url: String by args
+                val ipAddress: String? by args
+                val maxConnections: Int? by args
+                val allowedUpdates: Iterable<String>? by args
+                val dropPendingUpdates: Boolean? by args
+                val secretToken: String? by args
+
+                logger.info("Called \"getUpdates\" while long polling with\n    url: $url\n    ipAddress: $ipAddress\n    maxConnections: $maxConnections\n    allowedUpdates: $allowedUpdates\n    dropPendingUpdates: $dropPendingUpdates\n    secretToken: $secretToken")
+            }
         }
 
         receiving {

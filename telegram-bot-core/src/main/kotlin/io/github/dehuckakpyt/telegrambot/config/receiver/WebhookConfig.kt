@@ -47,13 +47,20 @@ data class WebhookConfig(
     var secretToken: String? = null,
 
     /**
-     * Generation random secret token at start.
+     * Generation random secret token.
      * Defaults `RANDOM256CHARS`.
      */
     var secretTokenRandomGeneration: SecretTokenRandomGeneration? = null,
+
+    /**
+     * Printing to log generated secret token.
+     * Defaults `false`.
+     */
+    var secretTokenRandomGenerationPrintOnStartup: Boolean? = null,
 ) {
     public enum class SecretTokenRandomGeneration {
         NONE,
-        RANDOM256CHARS,
+        RANDOM_UUID,
+        RANDOM_256_CHARS,
     }
 }

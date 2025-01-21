@@ -3,9 +3,10 @@ telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}
   username: ${TELEGRAM_BOT_USERNAME}
 
-#  spring:
-#    update-receiver.webhook.enabled: true
-#    update-receiver.webhook.url.host: "http://127.0.0.1:8080"
+  spring:
+    update-receiver: webhook
+    update-receiver.webhook.url.host: "https://my.domain.com"
+    update-receiver.webhook.secret-token-random-generation.print-on-startup: true
 
   template:
     start: "Start command."
