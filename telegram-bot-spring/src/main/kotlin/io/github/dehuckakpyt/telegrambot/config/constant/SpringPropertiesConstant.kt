@@ -6,7 +6,8 @@ package io.github.dehuckakpyt.telegrambot.config.constant
  */
 internal object SpringPropertiesConstant {
     internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER = "telegram-bot.spring.update-receiver.webhook.enabled"
-    internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER_URL = "telegram-bot.spring.update-receiver.webhook.url"
+    internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER_URL_HOST = "telegram-bot.spring.update-receiver.webhook.url.host"
+    internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER_URL_PATH = "telegram-bot.spring.update-receiver.webhook.url.path"
     internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER_CERTIFICATE_PATH = "telegram-bot.spring.update-receiver.webhook.certificate-path"
     internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER_IP_ADDRESS = "telegram-bot.spring.update-receiver.webhook.ip-address"
     internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER_MAX_CONNECTIONS = "telegram-bot.spring.update-receiver.webhook.max-connections"

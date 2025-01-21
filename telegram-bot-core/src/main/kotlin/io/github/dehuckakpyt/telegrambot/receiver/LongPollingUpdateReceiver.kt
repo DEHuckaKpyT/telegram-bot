@@ -1,6 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.receiver
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.config.constants.receiver.LongPollingUpdateReceiverConstant.LONG_POLLING_RECEIVER_DEFAULT_RETRY_DELAY
+import io.github.dehuckakpyt.telegrambot.config.constants.receiver.LongPollingUpdateReceiverConstant.LONG_POLLING_RECEIVER_DEFAULT_TIMEOUT
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import kotlinx.coroutines.*
@@ -21,9 +23,9 @@ internal class LongPollingUpdateReceiver(
 ) : UpdateReceiver {
 
     private val limit: Int? = config.limit
-    private val timeout: Int = config.timeout ?: 30
-    private val retryDelay: Long = config.retryDelay ?: 5_000
-    private val scope = config.scope ?: CoroutineScope(Dispatchers.Default + CoroutineName("TelegramBot"))
+    private val timeout: Int = config.timeout ?: LONG_POLLING_RECEIVER_DEFAULT_TIMEOUT
+    private val retryDelay: Long = config.retryDelay ?: LONG_POLLING_RECEIVER_DEFAULT_RETRY_DELAY
+    private val scope = config.scope ?: CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineName("TelegramBot"))
 
     private val logger = LoggerFactory.getLogger(LongPollingUpdateReceiver::class.java)
     private var lastUpdateId: Long? = null
@@ -53,7 +55,7 @@ internal class LongPollingUpdateReceiver(
     }
 
     private suspend fun receiveUpdates() {
-        logger.info("Started update receiver")
+        logger.info("Started long polling update receiver.")
 
         val allowedUpdates: Set<String> = updateResolver.allowedUpdates
 

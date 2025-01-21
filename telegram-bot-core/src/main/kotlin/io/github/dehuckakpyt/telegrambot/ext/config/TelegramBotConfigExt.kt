@@ -1,4 +1,4 @@
-package io.github.dehuckakpyt.telegrambot.ext.config.receiver
+package io.github.dehuckakpyt.telegrambot.ext.config
 
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening

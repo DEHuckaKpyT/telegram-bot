@@ -8,8 +8,18 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
  */
 data class WebhookConfig(
 
-    /** HTTPS URL to send updates to. Use an empty string to remove webhook integration. */
-    var url: String? = null,
+    /**
+     * Host for HTTPS URL to send updates to. Will be concatenated with `urlPath`.
+     * For Example, `https://my.domain.com/api/awesome-telegram-bot`.
+     */
+    var urlHost: String? = null,
+
+    /**
+     * Path for HTTPS URL to send updates to. Will be concatenated with `urlHost`.
+     * For Example, `/updates/receive`.
+     * Defaults `/updates/receive`.
+     */
+    var urlPath: String? = null,
 
     /**
      * Upload your public key certificate so that the root certificate in use can be checked.
@@ -35,4 +45,15 @@ data class WebhookConfig(
      * The header is useful to ensure that the request comes from a webhook set by you.
      */
     var secretToken: String? = null,
-)
+
+    /**
+     * Generation random secret token at start.
+     * Defaults `RANDOM256CHARS`.
+     */
+    var secretTokenRandomGeneration: SecretTokenRandomGeneration? = null,
+) {
+    public enum class SecretTokenRandomGeneration {
+        NONE,
+        RANDOM256CHARS,
+    }
+}
