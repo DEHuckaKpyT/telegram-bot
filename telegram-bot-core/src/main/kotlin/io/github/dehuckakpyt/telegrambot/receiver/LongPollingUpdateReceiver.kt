@@ -20,7 +20,7 @@ internal class LongPollingUpdateReceiver(
     private val config: LongPollingConfig,
 ) : UpdateReceiver {
 
-    private val scope = CoroutineScope(Dispatchers.Default + CoroutineName("TelegramBot"))
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineName("TelegramBot"))
     private val logger = LoggerFactory.getLogger(LongPollingUpdateReceiver::class.java)
     private val delayBetweenTries: Long = 5000
     private var lastUpdateId: Long? = null
