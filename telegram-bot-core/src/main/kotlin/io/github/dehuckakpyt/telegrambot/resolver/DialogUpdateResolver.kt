@@ -8,12 +8,20 @@ import io.github.dehuckakpyt.telegrambot.context.container.ContainerCoroutineCon
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
+import io.github.dehuckakpyt.telegrambot.ext.source.chat.save
 import io.github.dehuckakpyt.telegrambot.ext.update.message.chatId
 import io.github.dehuckakpyt.telegrambot.ext.update.message.fetchCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.CallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMemberUpdated
 import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.source.chat.EmptyTelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.EmptyTelegramChatStatusEventSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.user.EmptyTelegramUserSource
+import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 
@@ -32,9 +40,11 @@ internal class DialogUpdateResolver(
     private val chainExceptionHandler: ChainExceptionHandler,
     private val messageArgumentFactories: List<MessageContainerFactory>,
     private val messageSource: MessageSource,
+    private val telegramUserSource: TelegramUserSource,
+    private val telegramChatSource: TelegramChatSource,
+    private val telegramChatStatusEventSource: TelegramChatStatusEventSource,
     private val username: String,
 ) {
-
     private val logger = LoggerFactory.getLogger(DialogUpdateResolver::class.java)
 
     suspend fun processMessage(message: Message): Unit {
@@ -67,6 +77,7 @@ internal class DialogUpdateResolver(
             stepContainerType = "COMMAND",
             text = text
         )
+        if (command == "/start") telegramUserSource.save(message.from!!, available = true)
 
         chainResolver.getCommand(command).let { action ->
             invokeWithContainerContext(CommandContainer(message, step = command), action)
@@ -109,7 +120,26 @@ internal class DialogUpdateResolver(
         }
     }
 
-    internal val allowedUpdates: Set<String> get() = chainResolver.allowedUpdates
+    suspend fun processMyChatMember(myChatMember: ChatMemberUpdated): Unit {
+        if (myChatMember.chat.type == "private") {
+            // status "member" skipping because of it saving when received command "/start"
+            if (myChatMember.newChatMember.status == "kicked") telegramUserSource.save(myChatMember.newChatMember.user, available = false)
+        } else {
+            telegramChatSource.save(myChatMember)
+        }
+
+        telegramChatStatusEventSource.save(myChatMember)
+    }
+
+    internal val allowedUpdates: Set<String>
+        get() = buildSet {
+            addAll(chainResolver.allowedUpdates)
+
+            // If at least one implementation is not "Empty", needs to receive "my_chat_member" update
+            if (telegramUserSource !is EmptyTelegramUserSource || telegramChatSource !is EmptyTelegramChatSource || telegramChatStatusEventSource !is EmptyTelegramChatStatusEventSource) {
+                add("my_chat_member")
+            }
+        }
 
     private val Message.messageContainerFactory: MessageContainerFactory
         get() = messageArgumentFactories.firstOrNull { it.matches(this) }

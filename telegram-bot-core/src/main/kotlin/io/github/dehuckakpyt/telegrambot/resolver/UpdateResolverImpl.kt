@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.resolver
 
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
+import org.slf4j.LoggerFactory
 
 
 /**
@@ -13,19 +14,24 @@ class UpdateResolverImpl internal constructor(
     private val dialogUpdateResolver: DialogUpdateResolver,
     private val eventUpdateResolver: EventUpdateResolver,
 ) : UpdateResolver {
+    private val logger = LoggerFactory.getLogger(UpdateResolverImpl::class.java)
 
     override suspend fun processUpdate(update: Update): Unit = with(update) {
-        eventUpdateResolver.processUpdate(this)
+        try {
+            eventUpdateResolver.processUpdate(this)
 
-        when {
-            message != null -> dialogUpdateResolver.processMessage(message)
-            callbackQuery != null -> dialogUpdateResolver.processCallback(callbackQuery)
+            when {
+                message != null -> dialogUpdateResolver.processMessage(message)
+                callbackQuery != null -> dialogUpdateResolver.processCallback(callbackQuery)
+                myChatMember != null -> dialogUpdateResolver.processMyChatMember(myChatMember)
+            }
+        } catch (throwable: Throwable) {
+            logger.error("Error while processing Update:\n$update", throwable)
         }
     }
 
-    override val allowedUpdates: Set<String>
-        get() = buildSet {
-            addAll(eventUpdateResolver.allowedUpdates)
-            addAll(dialogUpdateResolver.allowedUpdates)
-        }
+    override val allowedUpdates: Set<String> = buildSet {
+        addAll(eventUpdateResolver.allowedUpdates)
+        addAll(dialogUpdateResolver.allowedUpdates)
+    }
 }

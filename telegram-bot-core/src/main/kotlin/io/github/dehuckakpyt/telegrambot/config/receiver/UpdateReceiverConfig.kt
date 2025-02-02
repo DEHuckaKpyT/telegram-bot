@@ -11,6 +11,9 @@ import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
+import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambot.strategy.invocation.HandlerInvocationStrategy
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 
@@ -29,6 +32,15 @@ data class UpdateReceiverConfig(
 
     /** Source for saving chain state */
     var chainSource: (TelegramBotActualConfig.() -> ChainSource)? = null,
+
+    /** Source for saving users */
+    var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource)? = null,
+
+    /** Source for saving chats (except private) */
+    var telegramChatSource: (TelegramBotActualConfig.() -> TelegramChatSource)? = null,
+
+    /** Source for saving all changes of bot`s status in all chats */
+    var telegramChatStatusEventSource: (TelegramBotActualConfig.() -> TelegramChatStatusEventSource)? = null,
 
     /** Converter from object to string and back */
     var contentConverter: (TelegramBotActualConfig.() -> ContentConverter)? = null,
