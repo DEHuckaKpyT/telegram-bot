@@ -35,7 +35,12 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     if (pluginConfig.username == null) pluginConfig.username = appConfig.tryGetString("telegram-bot.username")
     if (pluginConfig.receiving.messageTemplate == null) pluginConfig.receiving.messageTemplate = { KtorMessageTemplate() }
 
-    InternalKoinContext.koin.declare<ApplicationConfig>(appConfig.config("telegram-bot.template"), named("telegramBotTemplate"))
+    try {
+        InternalKoinContext.koin.declare<ApplicationConfig>(appConfig.config("telegram-bot.template"), named("telegramBotTemplate"))
+    } catch (e: ApplicationConfigurationException) {
+        application.log.warn("No telegram-bot.template configuration found. Using empty configuration.")
+        InternalKoinContext.koin.declare<ApplicationConfig>(MapApplicationConfig(), named("telegramBotTemplate"))
+    }
 
     val context = TelegramBotFactory.createTelegramBotContext(pluginConfig)
     val telegramBot = context.telegramBot
