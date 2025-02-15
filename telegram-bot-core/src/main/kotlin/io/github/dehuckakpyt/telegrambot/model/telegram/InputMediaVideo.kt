@@ -27,6 +27,12 @@ import kotlin.collections.List
  * can pass “attach://\<file_attach_name\>” if the thumbnail was uploaded using multipart/form-data
  * under \<file_attach_name\>. [More information on Sending Files
  * ](https://core.telegram.org/bots/api/#sending-files)
+ * @param cover *Optional*. Cover for the video in the message. Pass a file_id to send a file that
+ * exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the
+ * Internet, or pass “attach://\<file_attach_name\>” to upload a new one using multipart/form-data
+ * under \<file_attach_name\> name. [More information on Sending Files
+ * ](https://core.telegram.org/bots/api/#sending-files)
+ * @param startTimestamp *Optional*. Start timestamp for the video in the message
  * @param caption *Optional*. Caption of the video to be sent, 0-1024 characters after entities
  * parsing
  * @param parseMode *Optional*. Mode for parsing entities in the video caption. See [formatting
@@ -65,6 +71,22 @@ public data class InputMediaVideo(
     @get:JsonProperty("thumbnail")
     @param:JsonProperty("thumbnail")
     override val thumbnail: Input? = null,
+    /**
+     * *Optional*. Cover for the video in the message. Pass a file_id to send a file that exists on
+     * the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the
+     * Internet, or pass “attach://\<file_attach_name\>” to upload a new one using multipart/form-data
+     * under \<file_attach_name\> name. [More information on Sending Files
+     * ](https://core.telegram.org/bots/api/#sending-files)
+     */
+    @get:JsonProperty("cover")
+    @param:JsonProperty("cover")
+    override val cover: Input? = null,
+    /**
+     * *Optional*. Start timestamp for the video in the message
+     */
+    @get:JsonProperty("start_timestamp")
+    @param:JsonProperty("start_timestamp")
+    public val startTimestamp: Int? = null,
     /**
      * *Optional*. Caption of the video to be sent, 0-1024 characters after entities parsing
      */
@@ -128,6 +150,8 @@ public data class InputMediaVideo(
     public constructor(
         media: String,
         thumbnail: Input? = null,
+        cover: Input? = null,
+        startTimestamp: Int? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: List<MessageEntity>? = null,
@@ -137,6 +161,7 @@ public data class InputMediaVideo(
         duration: Int? = null,
         supportsStreaming: Boolean? = null,
         hasSpoiler: Boolean? = null,
-    ) : this(StringInput(media), thumbnail, caption, parseMode, captionEntities,
-            showCaptionAboveMedia, width, height, duration, supportsStreaming, hasSpoiler)
+    ) : this(StringInput(media), thumbnail, cover, startTimestamp, caption, parseMode,
+            captionEntities, showCaptionAboveMedia, width, height, duration, supportsStreaming,
+            hasSpoiler)
 }

@@ -5,6 +5,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
 import kotlin.Boolean
+import kotlin.Int
 import kotlin.Long
 import kotlin.String
 import kotlin.collections.Iterable
@@ -21,6 +22,8 @@ internal data class CopyMessage(
     public val messageId: Long,
     @get:JsonProperty("message_thread_id")
     public val messageThreadId: Long? = null,
+    @get:JsonProperty("video_start_timestamp")
+    public val videoStartTimestamp: Int? = null,
     @get:JsonProperty("caption")
     public val caption: String? = null,
     @get:JsonProperty("parse_mode")

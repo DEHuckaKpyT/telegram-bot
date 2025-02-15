@@ -19,4 +19,6 @@ public sealed interface InputPaidMedia {
     public val media: Input
 
     public val thumbnail: Input?
+
+    public val cover: Input?
 }

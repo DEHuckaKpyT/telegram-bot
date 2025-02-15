@@ -6,7 +6,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
-import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
 import kotlin.Boolean
 import kotlin.Int
@@ -29,6 +29,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param videoStartTimestamp New start timestamp for the forwarded video in the message
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -39,12 +40,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         fromChatId: Long,
         messageId: Long,
         messageThreadId: Long? = null,
+        videoStartTimestamp: Int? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ): Message = forwardMessage(
         fromChatId = fromChatId.toString(),
         messageId = messageId,
         messageThreadId = messageThreadId,
+        videoStartTimestamp = videoStartTimestamp,
         disableNotification = disableNotification,
         protectContent = protectContent,
     )
@@ -95,6 +98,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param videoStartTimestamp New start timestamp for the copied video in the message
      * @param caption New caption for media, 0-1024 characters after entities parsing. If not
      * specified, the original caption is kept
      * @param parseMode Mode for parsing entities in the new caption. See [formatting
@@ -122,6 +126,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         fromChatId: Long,
         messageId: Long,
         messageThreadId: Long? = null,
+        videoStartTimestamp: Int? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -135,6 +140,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         fromChatId = fromChatId.toString(),
         messageId = messageId,
         messageThreadId = messageThreadId,
+        videoStartTimestamp = videoStartTimestamp,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -316,7 +322,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         duration: Int? = null,
         performer: String? = null,
         title: String? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
@@ -391,7 +397,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         document: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -443,6 +449,12 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * you can pass “attach://\<file_attach_name\>” if the thumbnail was uploaded using
      * multipart/form-data under \<file_attach_name\>. [More information on Sending Files
      * ](https://core.telegram.org/bots/api/#sending-files)
+     * @param cover Cover for the video in the message. Pass a file_id to send a file that exists on
+     * the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the
+     * Internet, or pass “attach://\<file_attach_name\>” to upload a new one using multipart/form-data
+     * under \<file_attach_name\> name. [More information on Sending Files
+     * ](https://core.telegram.org/bots/api/#sending-files)
+     * @param startTimestamp Start timestamp for the video in the message
      * @param caption Video caption (may also be used when resending videos by *file_id*), 0-1024
      * characters after entities parsing
      * @param parseMode Mode for parsing entities in the video caption. See [formatting
@@ -477,7 +489,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
+        cover: Input? = null,
+        startTimestamp: Int? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -498,6 +512,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         width = width,
         height = height,
         thumbnail = thumbnail,
+        cover = cover,
+        startTimestamp = startTimestamp,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -568,7 +584,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -717,7 +733,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         messageThreadId: Long? = null,
         duration: Int? = null,
         length: Int? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,

@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
+import com.fasterxml.jackson.`annotation`.JsonIgnore
 import com.fasterxml.jackson.`annotation`.JsonProperty
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
@@ -89,6 +90,9 @@ public data class InputMediaDocument(
 ) : InputMedia {
     @get:JsonProperty("type")
     override val type: String = "document"
+
+    @get:JsonIgnore
+    override val cover: Input? = null
 
     public constructor(
         media: String,

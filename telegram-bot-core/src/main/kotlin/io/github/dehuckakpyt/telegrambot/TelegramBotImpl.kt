@@ -182,7 +182,7 @@ import kotlin.collections.List
 import kotlin.collections.MutableMap
 
 /**
- * Created on 10.01.2025.
+ * Created on 15.02.2025.
  *
  * @author KScript
  */
@@ -310,6 +310,7 @@ public class TelegramBotImpl(
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long?,
+        videoStartTimestamp: Int?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
     ): Message = client.postJson<Message>("forwardMessage",
@@ -318,6 +319,7 @@ public class TelegramBotImpl(
             fromChatId = fromChatId,
             messageId = messageId,
             messageThreadId = messageThreadId,
+            videoStartTimestamp = videoStartTimestamp,
             disableNotification = disableNotification,
             protectContent = protectContent
         )
@@ -326,6 +328,7 @@ public class TelegramBotImpl(
         put("fromChatId", fromChatId)
         put("messageId", messageId)
         put("messageThreadId", messageThreadId)
+        put("videoStartTimestamp", videoStartTimestamp)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
     }
@@ -360,6 +363,7 @@ public class TelegramBotImpl(
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long?,
+        videoStartTimestamp: Int?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -375,6 +379,7 @@ public class TelegramBotImpl(
             fromChatId = fromChatId,
             messageId = messageId,
             messageThreadId = messageThreadId,
+            videoStartTimestamp = videoStartTimestamp,
             caption = caption,
             parseMode = parseMode,
             captionEntities = captionEntities,
@@ -390,6 +395,7 @@ public class TelegramBotImpl(
         put("fromChatId", fromChatId)
         put("messageId", messageId)
         put("messageThreadId", messageThreadId)
+        put("videoStartTimestamp", videoStartTimestamp)
         put("caption", caption)
         put("parseMode", parseMode)
         put("captionEntities", captionEntities)
@@ -490,7 +496,7 @@ public class TelegramBotImpl(
         duration: Int?,
         performer: String?,
         title: String?,
-        thumbnail: ContentInput?,
+        thumbnail: Input?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
@@ -540,7 +546,7 @@ public class TelegramBotImpl(
         document: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
-        thumbnail: ContentInput?,
+        thumbnail: Input?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -593,7 +599,9 @@ public class TelegramBotImpl(
         duration: Int?,
         width: Int?,
         height: Int?,
-        thumbnail: ContentInput?,
+        thumbnail: Input?,
+        cover: Input?,
+        startTimestamp: Int?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -615,6 +623,8 @@ public class TelegramBotImpl(
         appendIfNotNull("width", width)
         appendIfNotNull("height", height)
         appendContentIfNotNull("thumbnail", thumbnail)
+        appendContentIfNotNull("cover", cover)
+        appendIfNotNull("start_timestamp", startTimestamp)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
         appendIfNotNull("caption_entities", client.toJson(captionEntities))
@@ -636,6 +646,8 @@ public class TelegramBotImpl(
         put("width", width)
         put("height", height)
         put("thumbnail", thumbnail)
+        put("cover", cover)
+        put("startTimestamp", startTimestamp)
         put("caption", caption)
         put("parseMode", parseMode)
         put("captionEntities", captionEntities)
@@ -658,7 +670,7 @@ public class TelegramBotImpl(
         duration: Int?,
         width: Int?,
         height: Int?,
-        thumbnail: ContentInput?,
+        thumbnail: Input?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -766,7 +778,7 @@ public class TelegramBotImpl(
         messageThreadId: Long?,
         duration: Int?,
         length: Int?,
-        thumbnail: ContentInput?,
+        thumbnail: Input?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
@@ -841,6 +853,10 @@ public class TelegramBotImpl(
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
+        
+        media.forEach { media ->
+            appendContentIfNotNull(media.cover)
+        }
     }.afterMethod("sendPaidMedia") {
         put("chatId", chatId)
         put("starCount", starCount)
@@ -885,6 +901,10 @@ public class TelegramBotImpl(
         
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
+        }
+        
+        media.forEach { media ->
+            appendContentIfNotNull(media.cover)
         }
     }.afterMethod("sendMediaGroup") {
         put("chatId", chatId)
@@ -2090,6 +2110,8 @@ public class TelegramBotImpl(
         appendContent(media.media)
         
         appendContentIfNotNull(media.thumbnail)
+        
+        appendContentIfNotNull(media.cover)
     }.afterMethod("editMessageMedia") {
         put("chatId", chatId)
         put("messageId", messageId)
@@ -2451,24 +2473,27 @@ public class TelegramBotImpl(
         .afterMethod("getAvailableGifts")
 
     override suspend fun sendGift(
-        userId: Long,
         giftId: String,
+        userId: Long?,
+        chatId: String?,
         payForUpgrade: Boolean?,
         text: String?,
         textParseMode: String?,
         textEntities: Iterable<MessageEntity>?,
     ): Boolean = client.postJson<Boolean>("sendGift",
         SendGift(
-            userId = userId,
             giftId = giftId,
+            userId = userId,
+            chatId = chatId,
             payForUpgrade = payForUpgrade,
             text = text,
             textParseMode = textParseMode,
             textEntities = textEntities
         )
     ).afterMethod("sendGift") {
-        put("userId", userId)
         put("giftId", giftId)
+        put("userId", userId)
+        put("chatId", chatId)
         put("payForUpgrade", payForUpgrade)
         put("text", text)
         put("textParseMode", textParseMode)
@@ -2979,6 +3004,8 @@ public class TelegramBotImpl(
         appendContent(media.media)
         
         appendContentIfNotNull(media.thumbnail)
+        
+        appendContentIfNotNull(media.cover)
     }.afterMethod("editMessageMedia") {
         put("inlineMessageId", inlineMessageId)
         put("media", media)

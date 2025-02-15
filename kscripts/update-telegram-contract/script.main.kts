@@ -1023,9 +1023,13 @@ suspend fun Contract.replaceMethodTypes() {
             if (argument.description.contains("exists on the Telegram servers")) {
                 arguments[i] = argument.copy(typeInfo = AnyOfType("any_of", mutableListOf(StringType("string"), ReferenceType("reference", "Input"))))
             }
+            // covers needs be Input
+            if (argument.name == "cover" && argument.description.contains("exists on the Telegram servers")) {
+                arguments[i] = argument.copy(typeInfo = ReferenceType("reference", "Input"))
+            }
             // thumbnails you can upload only
             if (argument.name == "thumbnail" && argument.description.contains("Thumbnails can't be reused and can be only uploaded as a new file")) {
-                arguments[i] = argument.copy(typeInfo = ReferenceType("reference", "ContentInput"))
+                arguments[i] = argument.copy(typeInfo = ReferenceType("reference", "Input"))
             }
             // certificates you can upload only
             if (argument.name == "certificate" && argument.typeInfo is ReferenceType && (argument.typeInfo as ReferenceType).reference == "InputFile") {
@@ -1148,9 +1152,14 @@ fun Contract.replaceObjectTypes() {
                 properties[i] = _property.copy(typeInfo = AnyOfType("any_of", mutableListOf(StringType("string"), ReferenceType("reference", "InputFile"))))
                 _property = properties[i]
             }
+            // covers needs be Input
+            if (_property.name == "cover" && _property.description.contains("exists on the Telegram servers")) {
+                properties[i] = _property.copy(typeInfo = ReferenceType("reference", "Input"))
+                _property = properties[i]
+            }
             // thumbnail's you can upload only
             if (_property.name == "thumbnail" && _property.description.contains("Thumbnails can't be reused and can be only uploaded as a new file")) {
-                properties[i] = _property.copy(typeInfo = ReferenceType("reference", "InputFile"))
+                properties[i] = _property.copy(typeInfo = ReferenceType("reference", "Input"))
                 _property = properties[i]
             }
             // all ids can be greater than Int.MAX
