@@ -38,7 +38,7 @@ class SimpleCallbackSerializer(
 
         val data = dataConverter.toContent(instance)
 
-        if (data.length + next.length <= 62) {
+        if ((data + next).toByteArray().size <= 62) {
             //will be string stepName|scallbackData (string)
             return "$next$delimiter${CallbackDataType.STRING}$data"
         }
