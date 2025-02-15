@@ -14,7 +14,7 @@ import kotlin.properties.PropertyDelegateProvider
  * @author Denis Matytsin
  */
 object TemplateFactory {
-    private val telegramBotTemplate = InternalKoinContext.koin.get<ApplicationConfig>(named("telegramBotTemplate"))
+    private val telegramBotTemplate = InternalKoinContext.koin.getOrNull<ApplicationConfig>(named("telegramBotTemplate")) ?: MapApplicationConfig()
 
     fun property(): PropertyDelegateProvider<Any?, Lazy<String>> = PropertyDelegateProvider { _, property ->
         lazy { getProperty(property.name.toKebabCase()) }
