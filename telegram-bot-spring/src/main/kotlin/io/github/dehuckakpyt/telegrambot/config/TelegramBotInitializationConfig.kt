@@ -106,8 +106,10 @@ class TelegramBotInitializationConfig(
     @EventListener(ApplicationReadyEvent::class)
     fun startTelegramBot() {
         // initialize all handlers
-        applicationContext.getBeansOfType(BotHandler::class.java)
-        applicationContext.getBeansOfType(BotUpdateHandler::class.java)
+        val botHandling = applicationContext.getBean(BotHandling::class.java)
+        applicationContext.getBeansOfType(BotHandler::class.java).forEach { (_, handler) -> handler.block(botHandling) }
+        val botUpdateHandling = applicationContext.getBean(BotUpdateHandling::class.java)
+        applicationContext.getBeansOfType(BotUpdateHandler::class.java).forEach { (_, updateHandler) -> updateHandler.block(botUpdateHandling) }
 
         // start receiving updates
         logger.info("Starting telegram-bot '${botContext.telegramBot.username}'..")

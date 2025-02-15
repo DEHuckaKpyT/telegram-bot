@@ -30,8 +30,9 @@ class UpdateResolverImpl internal constructor(
         }
     }
 
-    override val allowedUpdates: Set<String> = buildSet {
-        addAll(eventUpdateResolver.allowedUpdates)
-        addAll(dialogUpdateResolver.allowedUpdates)
-    }
+    override val allowedUpdates: Set<String>
+        get() = buildSet {
+            addAll(eventUpdateResolver.allowedUpdates)
+            addAll(dialogUpdateResolver.allowedUpdates)
+        }
 }

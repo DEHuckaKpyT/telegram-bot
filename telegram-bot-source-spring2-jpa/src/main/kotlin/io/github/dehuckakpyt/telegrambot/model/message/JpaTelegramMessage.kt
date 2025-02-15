@@ -22,6 +22,7 @@ import javax.persistence.Table
 @Table(name = "telegram_message")
 @TypeDef(name = "list-array", typeClass = ListArrayType::class)
 class JpaTelegramMessage(
+
     @Column(nullable = false)
     override val chatId: Long,
 

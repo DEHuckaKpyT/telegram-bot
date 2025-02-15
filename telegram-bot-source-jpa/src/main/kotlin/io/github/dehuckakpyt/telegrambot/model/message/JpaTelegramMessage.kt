@@ -19,6 +19,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "telegram_message")
 class JpaTelegramMessage(
+
     @Column(nullable = false)
     override val chatId: Long,
 

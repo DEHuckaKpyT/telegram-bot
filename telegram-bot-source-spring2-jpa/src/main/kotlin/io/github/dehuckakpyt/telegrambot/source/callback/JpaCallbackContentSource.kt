@@ -35,7 +35,7 @@ open class JpaCallbackContentSource(
 
     override suspend fun get(callbackId: UUID): CallbackContent = transactional(readOnly = true) {
         repository.findFirstByCallbackId(callbackId)
-            ?: throw ChatException("Содержание для callback'а не найдено :(")
+            ?: throw ChatException("Content for callback not found by callbackId: '$callbackId' :(")
     }
 
     private fun findLast(chatId: Long, fromId: Long): JpaCallbackContent? {
