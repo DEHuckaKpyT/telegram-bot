@@ -27,6 +27,9 @@ interface TelegramChat {
     /** False if bot was kicked from chat. True if bot can send messages to chat. */
     public val available: Boolean
 
+    /** Date/time when chat with bot was changed last time. */
+    public val updateDate: LocalDateTime
+
     /** Date/time when bot was added to chat. */
     public val createDate: LocalDateTime
 }

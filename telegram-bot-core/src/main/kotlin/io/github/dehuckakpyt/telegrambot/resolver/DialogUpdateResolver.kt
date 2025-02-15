@@ -123,7 +123,7 @@ internal class DialogUpdateResolver(
     suspend fun processMyChatMember(myChatMember: ChatMemberUpdated): Unit {
         if (myChatMember.chat.type == "private") {
             // status "member" skipping because of it saving when received command "/start"
-            if (myChatMember.newChatMember.status == "kicked") telegramUserSource.save(myChatMember.newChatMember.user, available = false)
+            if (myChatMember.newChatMember.status == "kicked") telegramUserSource.save(myChatMember.from, available = false)
         } else {
             telegramChatSource.save(myChatMember)
         }

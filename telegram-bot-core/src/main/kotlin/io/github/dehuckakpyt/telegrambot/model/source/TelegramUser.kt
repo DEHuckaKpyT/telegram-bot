@@ -30,6 +30,9 @@ interface TelegramUser {
     /** False if user blocked this bot. True if bot can send messages to user. */
     public val available: Boolean
 
-    /** Date/time when user started this bot. */
+    /** Date/time when user started this bot last time. */
+    public val updateDate: LocalDateTime
+
+    /** Date/time when user started this bot first time. */
     public val createDate: LocalDateTime
 }

@@ -17,4 +17,6 @@ public interface TelegramUserSource {
      * @param available new user status (available now or not)
      */
     public suspend fun save(user: User, available: Boolean = true): Unit
+
+    companion object
 }

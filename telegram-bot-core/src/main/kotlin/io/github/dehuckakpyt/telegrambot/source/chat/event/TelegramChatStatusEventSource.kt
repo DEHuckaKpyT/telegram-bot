@@ -9,4 +9,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMemberUpdated
 public interface TelegramChatStatusEventSource {
 
     public suspend fun save(chatMemberUpdated: ChatMemberUpdated): Unit
+
+    companion object
 }

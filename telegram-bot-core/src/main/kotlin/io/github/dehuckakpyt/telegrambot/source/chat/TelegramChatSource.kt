@@ -9,4 +9,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
 interface TelegramChatSource {
 
     public suspend fun save(chat: Chat, available: Boolean = true): Unit
+
+    companion object
 }

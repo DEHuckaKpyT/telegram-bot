@@ -6,7 +6,6 @@ import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
-import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 
@@ -47,6 +46,5 @@ class JpaTelegramMessage(
     override val fileIds: List<String>?,
 
     @Column(nullable = false)
-    @ColumnDefault("'now()'")
-    override val createDate: LocalDateTime = LocalDateTime.now(),
+    override val createDate: LocalDateTime,
 ) : UUIDTable(), TelegramMessage
