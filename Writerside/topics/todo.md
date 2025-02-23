@@ -5,9 +5,7 @@
 - Add webhook.
 
 ## Medium priority
-- Add post process after send messages (and after receive messages).
 - Add mini DI to config initialization.
-- Save users like messages.
 - Add more tests.
 - Complete documentation in code (classes and methods).
 - Add to documentation info about `currentContainerContext()`, `InputFactory`.
