@@ -12,12 +12,11 @@ dependencies {
 val config = TelegramBotConfig().apply {
     messageSource = { MessageSource.inDatabase }
     receiving {
-        callbackContentSource = {
-            CallbackContentSource.inDatabase(
-                maxCallbackContentsPerUser = 20
-            )
-        }
+        callbackContentSource = { CallbackContentSource.inDatabase(maxCallbackContentsPerUser = 20) }
         chainSource = { ChainSource.inDatabase }
+        telegramUserSource = { TelegramUserSource.inDatabase }
+        telegramChatSource = { TelegramChatSource.inDatabase }
+        telegramChatStatusEventSource = { TelegramChatStatusEventSource.inDatabase }
     }
 }
 ```

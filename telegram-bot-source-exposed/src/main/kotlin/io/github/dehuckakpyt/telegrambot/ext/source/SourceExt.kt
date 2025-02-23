@@ -1,15 +1,19 @@
 package io.github.dehuckakpyt.telegrambot.ext.source
 
 import io.github.dehuckakpyt.telegrambot.config.constants.source.callback.CallbackContentSourceConstant.CALLBACK_CONTENT_SOURCE_MAX_CONTENTS_PER_USER
-import io.github.dehuckakpyt.telegrambot.model.CallbackContents
-import io.github.dehuckakpyt.telegrambot.model.Chains
-import io.github.dehuckakpyt.telegrambot.model.TelegramMessages
+import io.github.dehuckakpyt.telegrambot.model.*
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.DatabaseCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chain.DatabaseChainSource
+import io.github.dehuckakpyt.telegrambot.source.chat.DatabaseTelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.DatabaseTelegramChatStatusEventSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.DatabaseMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.user.DatabaseTelegramUserSource
+import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -60,4 +64,31 @@ val MessageSource.Companion.inDatabase: MessageSource
         }
 
         return DatabaseMessageSource()
+    }
+
+val TelegramUserSource.Companion.inDatabase: TelegramUserSource
+    get() {
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(TelegramUsers)
+        }
+
+        return DatabaseTelegramUserSource()
+    }
+
+val TelegramChatSource.Companion.inDatabase: TelegramChatSource
+    get() {
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(TelegramChats)
+        }
+
+        return DatabaseTelegramChatSource()
+    }
+
+val TelegramChatStatusEventSource.Companion.inDatabase: TelegramChatStatusEventSource
+    get() {
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(TelegramChatStatusEvents)
+        }
+
+        return DatabaseTelegramChatStatusEventSource()
     }

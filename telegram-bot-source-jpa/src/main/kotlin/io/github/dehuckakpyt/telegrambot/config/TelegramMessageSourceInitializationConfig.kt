@@ -22,7 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @EntityScan(basePackages = ["io.github.dehuckakpyt.telegrambot.model.message"])
 @EnableJpaRepositories(basePackages = ["io.github.dehuckakpyt.telegrambot.repository.message"])
 @ConditionalOnProperty(name = [TELEGRAM_BOT_SOURCE_JPA, TELEGRAM_BOT_SOURCE_JPA_MESSAGE_SOURCE], havingValue = "true", matchIfMissing = true)
-class MessageSourceInitializationConfig {
+class TelegramMessageSourceInitializationConfig {
 
     @Bean
     //TODO create custom @ConditionalOnMissingBean

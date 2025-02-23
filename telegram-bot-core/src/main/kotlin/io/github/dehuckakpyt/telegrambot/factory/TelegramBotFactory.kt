@@ -26,7 +26,10 @@ import io.github.dehuckakpyt.telegrambot.resolver.EventUpdateResolver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolverImpl
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
+import io.github.dehuckakpyt.telegrambot.source.chat.EmptyTelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.EmptyTelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
+import io.github.dehuckakpyt.telegrambot.source.user.EmptyTelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.RegexTemplater
 
@@ -93,6 +96,9 @@ object TelegramBotFactory {
         actualReceiving.contentConverter = contentConverter?.invoke(actual) ?: JsonContentConverter()
         actualReceiving.callbackContentSource = callbackContentSource?.invoke(actual) ?: InMemoryCallbackContentSource()
         actualReceiving.chainSource = chainSource?.invoke(actual) ?: InMemoryChainSource()
+        actualReceiving.telegramUserSource = telegramUserSource?.invoke(actual) ?: EmptyTelegramUserSource()
+        actualReceiving.telegramChatSource = telegramChatSource?.invoke(actual) ?: EmptyTelegramChatSource()
+        actualReceiving.telegramChatStatusEventSource = telegramChatStatusEventSource?.invoke(actual) ?: EmptyTelegramChatStatusEventSource()
         actualReceiving.callbackSerializer = callbackSerializer?.invoke(actual) ?: SimpleCallbackSerializer(actualReceiving.callbackContentSource, actualReceiving.contentConverter)
         val buttonFactory = ButtonFactoryImpl(actualReceiving.callbackSerializer)
         actualReceiving.exceptionHandler = exceptionHandler?.invoke(actual) ?: ExceptionHandlerImpl(actual.telegramBot, actualReceiving.messageTemplate, actual.templater)
@@ -111,8 +117,10 @@ object TelegramBotFactory {
             ContactMessageContainerFactory(),
             LocationMessageContainerFactory(),
             WebAppDataMessageContainerFactory(),
+            LeftChatMemberMessageContainerFactory(),
+            NewChatMembersMessageContainerFactory(),
         )
-        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.messageSource, actual.telegramBot.username)
+        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.messageSource, actual.receiving.telegramUserSource, actual.receiving.telegramChatSource, actual.receiving.telegramChatStatusEventSource, actual.telegramBot.username)
         val eventUpdateResolver = EventUpdateResolver()
 
         val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templater, buttonFactory)

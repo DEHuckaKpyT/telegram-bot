@@ -35,5 +35,5 @@ class TransactionActionImpl(
     }
 
     private fun getTemplate(definition: SimpleTransactionDefinition): TransactionTemplate =
-        templates.getOrPut(definition) { TransactionTemplate(transactionManager) }
+        templates.getOrPut(definition) { TransactionTemplate(transactionManager, definition) }
 }

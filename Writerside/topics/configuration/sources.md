@@ -6,6 +6,12 @@
 
 `messageSource: MessageSource` - is used to store the history of all messages.
 
+`telegramUserSource: TelegramUserSource` - is used to store all users which send `/start` and blocks bot.
+
+`telegramChatSource: TelegramChatSource` - is used to store all chats in which bot was added and bot was kicked.
+
+`telegramChatStatusEventSource: TelegramChatStatusEventSource` - is used to store the history of all chat adding and kicking.
+
 
 By default, everything is stored in memory and will become inaccessible after the application is terminated.
 It may be convenient for quick testing of bot's work.
@@ -16,6 +22,9 @@ val config = TelegramBotConfig().apply {
     receiving {
         callbackContentSource = { CallbackContentSource.inMemory }
         chainSource = { ChainSource.inMemory }
+        telegramUserSource = { TelegramUserSource.empty }
+        telegramChatSource = { TelegramChatSource.empty }
+        telegramChatStatusEventSource = { TelegramChatStatusEventSource.empty }
     }
 }
 ```
@@ -40,4 +49,16 @@ You can create beans as `ConfigExpression<..Source>` also:
     @Bean
     fun callbackContentSourceExpression(): ConfigExpression<CallbackContentSource> = 
         ConfigExpression { CustomCallbackContentSource() }
+
+    @Bean
+    fun telegramUserSourceExpression(): ConfigExpression<TelegramUserSource> =
+        ConfigExpression { CustomTelegramUserSource() }
+
+    @Bean
+    fun telegramChatSourceExpression(): ConfigExpression<TelegramChatSource> = 
+        ConfigExpression { CustomTelegramChatSource() }
+
+    @Bean
+    fun telegramChatStatusEventSourceExpression(): ConfigExpression<TelegramChatStatusEventSource> = 
+        ConfigExpression { CustomTelegramChatStatusEventSource() }
 ```

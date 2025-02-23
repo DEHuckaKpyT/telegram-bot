@@ -2,6 +2,11 @@ dollar: $
 telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}
   username: ${TELEGRAM_BOT_USERNAME}
+
+  source-jpa:
+    chat-source.enabled: true
+    chat-status-event-source.enabled: true
+
   template:
     start: "Start command."
 
