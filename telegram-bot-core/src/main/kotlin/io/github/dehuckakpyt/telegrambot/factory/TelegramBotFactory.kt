@@ -32,6 +32,8 @@ import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
 import io.github.dehuckakpyt.telegrambot.source.user.EmptyTelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.RegexTemplater
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
 
 
 /**
@@ -53,8 +55,8 @@ object TelegramBotFactory {
      *
      * @return telegram bot instance for making requests
      */
-    fun createTelegramBot(token: String, username: String): TelegramBot =
-        TelegramBotImpl(token, username, TelegramBotEventManager())
+    fun createTelegramBot(token: String, username: String, clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null): TelegramBot =
+        TelegramBotImpl(token, username, clientConfiguration, TelegramBotEventManager())
 
     /**
      * Create telegram bot with related isolated context.
@@ -70,10 +72,11 @@ object TelegramBotFactory {
         val context = TelegramBotContextImpl()
 
         actual.token = config.token ?: throw IllegalArgumentException("Telegram-bot TOKEN must not be empty!")
-        actual.username = config.username ?: throw IllegalArgumentException("Telegram-bot USERNAME must not be empty!")
+        actual.username = config.username
+        actual.clientConfiguration = config.clientConfiguration
         actual.messageSource = config.messageSource?.invoke(actual) ?: EmptyMessageSource()
         val telegramBotEventManager = TelegramBotEventManager()
-        actual.telegramBot = TelegramBotImpl(actual.token, actual.username, telegramBotEventManager)
+        actual.telegramBot = TelegramBotImpl(actual.token, actual.username, actual.clientConfiguration, telegramBotEventManager)
         actual.templater = config.templater?.invoke(actual) ?: RegexTemplater()
 
         val telegramBotEventListening = TelegramBotEventListening(telegramBotEventManager, actual.messageSource, config.eventListeningPreventDefaults)

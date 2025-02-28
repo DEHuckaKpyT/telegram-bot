@@ -6,180 +6,14 @@ import io.github.dehuckakpyt.telegrambot.ext.appendContent
 import io.github.dehuckakpyt.telegrambot.ext.appendContentIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.appendIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.toJson
-import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
-import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
-import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
-import io.github.dehuckakpyt.telegrambot.model.telegram.BotName
-import io.github.dehuckakpyt.telegrambot.model.telegram.BotShortDescription
-import io.github.dehuckakpyt.telegrambot.model.telegram.BusinessConnection
-import io.github.dehuckakpyt.telegrambot.model.telegram.ChatAdministratorRights
-import io.github.dehuckakpyt.telegrambot.model.telegram.ChatFullInfo
-import io.github.dehuckakpyt.telegrambot.model.telegram.ChatInviteLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMember
-import io.github.dehuckakpyt.telegrambot.model.telegram.ChatPermissions
-import io.github.dehuckakpyt.telegrambot.model.telegram.File
-import io.github.dehuckakpyt.telegrambot.model.telegram.ForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.GameHighScore
-import io.github.dehuckakpyt.telegrambot.model.telegram.Gifts
-import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
-import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
-import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
-import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
-import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
-import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
-import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
-import io.github.dehuckakpyt.telegrambot.model.telegram.LabeledPrice
-import io.github.dehuckakpyt.telegrambot.model.telegram.LinkPreviewOptions
-import io.github.dehuckakpyt.telegrambot.model.telegram.MaskPosition
-import io.github.dehuckakpyt.telegrambot.model.telegram.MenuButton
-import io.github.dehuckakpyt.telegrambot.model.telegram.Message
-import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
-import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.PassportElementError
-import io.github.dehuckakpyt.telegrambot.model.telegram.Poll
-import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedInlineMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
-import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
-import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
-import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
-import io.github.dehuckakpyt.telegrambot.model.telegram.StarTransactions
-import io.github.dehuckakpyt.telegrambot.model.telegram.Sticker
-import io.github.dehuckakpyt.telegrambot.model.telegram.StickerSet
-import io.github.dehuckakpyt.telegrambot.model.telegram.Update
-import io.github.dehuckakpyt.telegrambot.model.telegram.User
-import io.github.dehuckakpyt.telegrambot.model.telegram.UserChatBoosts
-import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfilePhotos
-import io.github.dehuckakpyt.telegrambot.model.telegram.WebhookInfo
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerCallbackQuery
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerInlineQuery
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerPreCheckoutQuery
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerShippingQuery
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerWebAppQuery
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ApproveChatJoinRequest
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.BanChatMember
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.BanChatSenderChat
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CloseForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CloseGeneralForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CopyMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CopyMessages
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateChatInviteLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateChatSubscriptionInviteLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateInvoiceLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeclineChatJoinRequest
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteChatPhoto
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteChatStickerSet
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMessages
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMyCommands
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteStickerFromSet
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteStickerSet
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteWebhook
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditChatInviteLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditChatSubscriptionInviteLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditGeneralForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageCaptionByChatIdAndMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageCaptionByInlineMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageLiveLocationByChatIdAndMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageLiveLocationByInlineMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageReplyMarkupByChatIdAndMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageReplyMarkupByInlineMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageTextByChatIdAndMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageTextByInlineMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditUserStarSubscription
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ExportChatInviteLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ForwardMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ForwardMessages
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetBusinessConnection
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChat
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatAdministrators
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatMember
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatMemberCount
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatMenuButton
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetCustomEmojiStickers
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetFile
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetGameHighScores
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyCommands
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyDefaultAdministratorRights
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyDescription
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyName
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyShortDescription
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetStarTransactions
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetStickerSet
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUpdates
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserChatBoosts
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserProfilePhotos
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.HideGeneralForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.LeaveChat
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.PinChatMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.PromoteChatMember
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RefundStarPayment
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RemoveChatVerification
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RemoveUserVerification
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenGeneralForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RestrictChatMember
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RevokeChatInviteLink
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SavePreparedInlineMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendChatAction
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendContact
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendDice
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendGame
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendGift
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendInvoice
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendLocation
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendPoll
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendVenue
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatAdministratorCustomTitle
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatDescription
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatMenuButton
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatPermissions
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatStickerSet
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatTitle
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetCustomEmojiStickerSetThumbnail
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetGameScoreByChatIdAndMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetGameScoreByInlineMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMessageReaction
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyCommands
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyDefaultAdministratorRights
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyDescription
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyName
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyShortDescription
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetPassportDataErrors
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerEmojiList
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerKeywords
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerMaskPosition
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerPositionInSet
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerSetTitle
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetUserEmojiStatus
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopMessageLiveLocationByChatIdAndMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopMessageLiveLocationByInlineMessageId
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopPoll
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnbanChatMember
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnbanChatSenderChat
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnhideGeneralForumTopic
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllChatMessages
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllForumTopicMessages
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllGeneralForumTopicMessages
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinChatMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.VerifyChat
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.VerifyUser
+import io.github.dehuckakpyt.telegrambot.model.telegram.*
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
-import kotlin.Any
-import kotlin.Boolean
-import kotlin.Double
-import kotlin.Int
-import kotlin.Long
-import kotlin.String
-import kotlin.Unit
-import kotlin.collections.Iterable
-import kotlin.collections.List
-import kotlin.collections.MutableMap
+import io.github.dehuckakpyt.telegrambot.model.telegram.internal.*
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * Created on 15.02.2025.
@@ -188,10 +22,12 @@ import kotlin.collections.MutableMap
  */
 public class TelegramBotImpl(
     token: String,
-    override val username: String,
+    username: String? = null,
+    clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
     private val eventManager: TelegramBotEventManager,
 ) : TelegramBot {
-    override val client: TelegramApiClient = TelegramApiClient(token)
+    override val client: TelegramApiClient = TelegramApiClient(token, clientConfiguration)
+    override val username: String = username ?: runBlocking(Dispatchers.Default) { getMe() }.username!!
 
     override suspend fun getUpdates(
         offset: Long?,
@@ -239,13 +75,13 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteWebhook(dropPendingUpdates: Boolean?): Boolean =
-            client.postJson<Boolean>("deleteWebhook",
-        DeleteWebhook(
-            dropPendingUpdates = dropPendingUpdates
-        )
-    ).afterMethod("deleteWebhook") {
-        put("dropPendingUpdates", dropPendingUpdates)
-    }
+        client.postJson<Boolean>("deleteWebhook",
+            DeleteWebhook(
+                dropPendingUpdates = dropPendingUpdates
+            )
+        ).afterMethod("deleteWebhook") {
+            put("dropPendingUpdates", dropPendingUpdates)
+        }
 
     override suspend fun getWebhookInfo(): WebhookInfo = client.get<WebhookInfo>("getWebhookInfo")
         .afterMethod("getWebhookInfo")
@@ -845,15 +681,15 @@ public class TelegramBotImpl(
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-        
+
         media.forEach { media ->
             appendContent(media.media)
         }
-        
+
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
-        
+
         media.forEach { media ->
             appendContentIfNotNull(media.cover)
         }
@@ -894,15 +730,15 @@ public class TelegramBotImpl(
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
-        
+
         media.forEach { media ->
             appendContent(media.media)
         }
-        
+
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
-        
+
         media.forEach { media ->
             appendContentIfNotNull(media.cover)
         }
@@ -1397,26 +1233,26 @@ public class TelegramBotImpl(
     }
 
     override suspend fun banChatSenderChat(chatId: String, senderChatId: Long): Boolean =
-            client.postJson<Boolean>("banChatSenderChat",
-        BanChatSenderChat(
-            chatId = chatId,
-            senderChatId = senderChatId
-        )
-    ).afterMethod("banChatSenderChat") {
-        put("chatId", chatId)
-        put("senderChatId", senderChatId)
-    }
+        client.postJson<Boolean>("banChatSenderChat",
+            BanChatSenderChat(
+                chatId = chatId,
+                senderChatId = senderChatId
+            )
+        ).afterMethod("banChatSenderChat") {
+            put("chatId", chatId)
+            put("senderChatId", senderChatId)
+        }
 
     override suspend fun unbanChatSenderChat(chatId: String, senderChatId: Long): Boolean =
-            client.postJson<Boolean>("unbanChatSenderChat",
-        UnbanChatSenderChat(
-            chatId = chatId,
-            senderChatId = senderChatId
-        )
-    ).afterMethod("unbanChatSenderChat") {
-        put("chatId", chatId)
-        put("senderChatId", senderChatId)
-    }
+        client.postJson<Boolean>("unbanChatSenderChat",
+            UnbanChatSenderChat(
+                chatId = chatId,
+                senderChatId = senderChatId
+            )
+        ).afterMethod("unbanChatSenderChat") {
+            put("chatId", chatId)
+            put("senderChatId", senderChatId)
+        }
 
     override suspend fun setChatPermissions(
         chatId: String,
@@ -1435,13 +1271,13 @@ public class TelegramBotImpl(
     }
 
     override suspend fun exportChatInviteLink(chatId: String): String =
-            client.postJson<String>("exportChatInviteLink",
-        ExportChatInviteLink(
-            chatId = chatId
-        )
-    ).afterMethod("exportChatInviteLink") {
-        put("chatId", chatId)
-    }
+        client.postJson<String>("exportChatInviteLink",
+            ExportChatInviteLink(
+                chatId = chatId
+            )
+        ).afterMethod("exportChatInviteLink") {
+            put("chatId", chatId)
+        }
 
     override suspend fun createChatInviteLink(
         chatId: String,
@@ -1526,77 +1362,77 @@ public class TelegramBotImpl(
     }
 
     override suspend fun revokeChatInviteLink(chatId: String, inviteLink: String): ChatInviteLink =
-            client.postJson<ChatInviteLink>("revokeChatInviteLink",
-        RevokeChatInviteLink(
-            chatId = chatId,
-            inviteLink = inviteLink
-        )
-    ).afterMethod("revokeChatInviteLink") {
-        put("chatId", chatId)
-        put("inviteLink", inviteLink)
-    }
+        client.postJson<ChatInviteLink>("revokeChatInviteLink",
+            RevokeChatInviteLink(
+                chatId = chatId,
+                inviteLink = inviteLink
+            )
+        ).afterMethod("revokeChatInviteLink") {
+            put("chatId", chatId)
+            put("inviteLink", inviteLink)
+        }
 
     override suspend fun approveChatJoinRequest(chatId: String, userId: Long): Boolean =
-            client.postJson<Boolean>("approveChatJoinRequest",
-        ApproveChatJoinRequest(
-            chatId = chatId,
-            userId = userId
-        )
-    ).afterMethod("approveChatJoinRequest") {
-        put("chatId", chatId)
-        put("userId", userId)
-    }
+        client.postJson<Boolean>("approveChatJoinRequest",
+            ApproveChatJoinRequest(
+                chatId = chatId,
+                userId = userId
+            )
+        ).afterMethod("approveChatJoinRequest") {
+            put("chatId", chatId)
+            put("userId", userId)
+        }
 
     override suspend fun declineChatJoinRequest(chatId: String, userId: Long): Boolean =
-            client.postJson<Boolean>("declineChatJoinRequest",
-        DeclineChatJoinRequest(
-            chatId = chatId,
-            userId = userId
-        )
-    ).afterMethod("declineChatJoinRequest") {
-        put("chatId", chatId)
-        put("userId", userId)
-    }
+        client.postJson<Boolean>("declineChatJoinRequest",
+            DeclineChatJoinRequest(
+                chatId = chatId,
+                userId = userId
+            )
+        ).afterMethod("declineChatJoinRequest") {
+            put("chatId", chatId)
+            put("userId", userId)
+        }
 
     override suspend fun setChatPhoto(chatId: String, photo: Input): Boolean =
-            client.postMultiPart<Boolean>("setChatPhoto") {
-        append("chat_id", chatId)
-        appendContent("photo", photo)
-    }.afterMethod("setChatPhoto") {
-        put("chatId", chatId)
-        put("photo", photo)
-    }
+        client.postMultiPart<Boolean>("setChatPhoto") {
+            append("chat_id", chatId)
+            appendContent("photo", photo)
+        }.afterMethod("setChatPhoto") {
+            put("chatId", chatId)
+            put("photo", photo)
+        }
 
     override suspend fun deleteChatPhoto(chatId: String): Boolean =
-            client.postJson<Boolean>("deleteChatPhoto",
-        DeleteChatPhoto(
-            chatId = chatId
-        )
-    ).afterMethod("deleteChatPhoto") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("deleteChatPhoto",
+            DeleteChatPhoto(
+                chatId = chatId
+            )
+        ).afterMethod("deleteChatPhoto") {
+            put("chatId", chatId)
+        }
 
     override suspend fun setChatTitle(chatId: String, title: String): Boolean =
-            client.postJson<Boolean>("setChatTitle",
-        SetChatTitle(
-            chatId = chatId,
-            title = title
-        )
-    ).afterMethod("setChatTitle") {
-        put("chatId", chatId)
-        put("title", title)
-    }
+        client.postJson<Boolean>("setChatTitle",
+            SetChatTitle(
+                chatId = chatId,
+                title = title
+            )
+        ).afterMethod("setChatTitle") {
+            put("chatId", chatId)
+            put("title", title)
+        }
 
     override suspend fun setChatDescription(chatId: String, description: String?): Boolean =
-            client.postJson<Boolean>("setChatDescription",
-        SetChatDescription(
-            chatId = chatId,
-            description = description
-        )
-    ).afterMethod("setChatDescription") {
-        put("chatId", chatId)
-        put("description", description)
-    }
+        client.postJson<Boolean>("setChatDescription",
+            SetChatDescription(
+                chatId = chatId,
+                description = description
+            )
+        ).afterMethod("setChatDescription") {
+            put("chatId", chatId)
+            put("description", description)
+        }
 
     override suspend fun pinChatMessage(
         chatId: String,
@@ -1634,13 +1470,13 @@ public class TelegramBotImpl(
     }
 
     override suspend fun unpinAllChatMessages(chatId: String): Boolean =
-            client.postJson<Boolean>("unpinAllChatMessages",
-        UnpinAllChatMessages(
-            chatId = chatId
-        )
-    ).afterMethod("unpinAllChatMessages") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("unpinAllChatMessages",
+            UnpinAllChatMessages(
+                chatId = chatId
+            )
+        ).afterMethod("unpinAllChatMessages") {
+            put("chatId", chatId)
+        }
 
     override suspend fun leaveChat(chatId: String): Boolean = client.postJson<Boolean>("leaveChat",
         LeaveChat(
@@ -1651,66 +1487,66 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getChat(chatId: String): ChatFullInfo =
-            client.postJson<ChatFullInfo>("getChat",
-        GetChat(
-            chatId = chatId
-        )
-    ).afterMethod("getChat") {
-        put("chatId", chatId)
-    }
+        client.postJson<ChatFullInfo>("getChat",
+            GetChat(
+                chatId = chatId
+            )
+        ).afterMethod("getChat") {
+            put("chatId", chatId)
+        }
 
     override suspend fun getChatAdministrators(chatId: String): List<ChatMember> =
-            client.postJson<List<ChatMember>>("getChatAdministrators",
-        GetChatAdministrators(
-            chatId = chatId
-        )
-    ).afterMethod("getChatAdministrators") {
-        put("chatId", chatId)
-    }
+        client.postJson<List<ChatMember>>("getChatAdministrators",
+            GetChatAdministrators(
+                chatId = chatId
+            )
+        ).afterMethod("getChatAdministrators") {
+            put("chatId", chatId)
+        }
 
     override suspend fun getChatMemberCount(chatId: String): Int =
-            client.postJson<Int>("getChatMemberCount",
-        GetChatMemberCount(
-            chatId = chatId
-        )
-    ).afterMethod("getChatMemberCount") {
-        put("chatId", chatId)
-    }
+        client.postJson<Int>("getChatMemberCount",
+            GetChatMemberCount(
+                chatId = chatId
+            )
+        ).afterMethod("getChatMemberCount") {
+            put("chatId", chatId)
+        }
 
     override suspend fun getChatMember(chatId: String, userId: Long): ChatMember =
-            client.postJson<ChatMember>("getChatMember",
-        GetChatMember(
-            chatId = chatId,
-            userId = userId
-        )
-    ).afterMethod("getChatMember") {
-        put("chatId", chatId)
-        put("userId", userId)
-    }
+        client.postJson<ChatMember>("getChatMember",
+            GetChatMember(
+                chatId = chatId,
+                userId = userId
+            )
+        ).afterMethod("getChatMember") {
+            put("chatId", chatId)
+            put("userId", userId)
+        }
 
     override suspend fun setChatStickerSet(chatId: String, stickerSetName: String): Boolean =
-            client.postJson<Boolean>("setChatStickerSet",
-        SetChatStickerSet(
-            chatId = chatId,
-            stickerSetName = stickerSetName
-        )
-    ).afterMethod("setChatStickerSet") {
-        put("chatId", chatId)
-        put("stickerSetName", stickerSetName)
-    }
+        client.postJson<Boolean>("setChatStickerSet",
+            SetChatStickerSet(
+                chatId = chatId,
+                stickerSetName = stickerSetName
+            )
+        ).afterMethod("setChatStickerSet") {
+            put("chatId", chatId)
+            put("stickerSetName", stickerSetName)
+        }
 
     override suspend fun deleteChatStickerSet(chatId: String): Boolean =
-            client.postJson<Boolean>("deleteChatStickerSet",
-        DeleteChatStickerSet(
-            chatId = chatId
-        )
-    ).afterMethod("deleteChatStickerSet") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("deleteChatStickerSet",
+            DeleteChatStickerSet(
+                chatId = chatId
+            )
+        ).afterMethod("deleteChatStickerSet") {
+            put("chatId", chatId)
+        }
 
     override suspend fun getForumTopicIconStickers(): List<Sticker> =
-            client.get<List<Sticker>>("getForumTopicIconStickers")
-        .afterMethod("getForumTopicIconStickers")
+        client.get<List<Sticker>>("getForumTopicIconStickers")
+            .afterMethod("getForumTopicIconStickers")
 
     override suspend fun createForumTopic(
         chatId: String,
@@ -1751,40 +1587,39 @@ public class TelegramBotImpl(
     }
 
     override suspend fun closeForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson<Boolean>("closeForumTopic",
-        CloseForumTopic(
-            chatId = chatId,
-            messageThreadId = messageThreadId
-        )
-    ).afterMethod("closeForumTopic") {
-        put("chatId", chatId)
-        put("messageThreadId", messageThreadId)
-    }
+        client.postJson<Boolean>("closeForumTopic",
+            CloseForumTopic(
+                chatId = chatId,
+                messageThreadId = messageThreadId
+            )
+        ).afterMethod("closeForumTopic") {
+            put("chatId", chatId)
+            put("messageThreadId", messageThreadId)
+        }
 
     override suspend fun reopenForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson<Boolean>("reopenForumTopic",
-        ReopenForumTopic(
-            chatId = chatId,
-            messageThreadId = messageThreadId
-        )
-    ).afterMethod("reopenForumTopic") {
-        put("chatId", chatId)
-        put("messageThreadId", messageThreadId)
-    }
+        client.postJson<Boolean>("reopenForumTopic",
+            ReopenForumTopic(
+                chatId = chatId,
+                messageThreadId = messageThreadId
+            )
+        ).afterMethod("reopenForumTopic") {
+            put("chatId", chatId)
+            put("messageThreadId", messageThreadId)
+        }
 
     override suspend fun deleteForumTopic(chatId: String, messageThreadId: Long): Boolean =
-            client.postJson<Boolean>("deleteForumTopic",
-        DeleteForumTopic(
-            chatId = chatId,
-            messageThreadId = messageThreadId
-        )
-    ).afterMethod("deleteForumTopic") {
-        put("chatId", chatId)
-        put("messageThreadId", messageThreadId)
-    }
+        client.postJson<Boolean>("deleteForumTopic",
+            DeleteForumTopic(
+                chatId = chatId,
+                messageThreadId = messageThreadId
+            )
+        ).afterMethod("deleteForumTopic") {
+            put("chatId", chatId)
+            put("messageThreadId", messageThreadId)
+        }
 
-    override suspend fun unpinAllForumTopicMessages(chatId: String, messageThreadId: Long): Boolean
-            = client.postJson<Boolean>("unpinAllForumTopicMessages",
+    override suspend fun unpinAllForumTopicMessages(chatId: String, messageThreadId: Long): Boolean = client.postJson<Boolean>("unpinAllForumTopicMessages",
         UnpinAllForumTopicMessages(
             chatId = chatId,
             messageThreadId = messageThreadId
@@ -1795,60 +1630,60 @@ public class TelegramBotImpl(
     }
 
     override suspend fun editGeneralForumTopic(chatId: String, name: String): Boolean =
-            client.postJson<Boolean>("editGeneralForumTopic",
-        EditGeneralForumTopic(
-            chatId = chatId,
-            name = name
-        )
-    ).afterMethod("editGeneralForumTopic") {
-        put("chatId", chatId)
-        put("name", name)
-    }
+        client.postJson<Boolean>("editGeneralForumTopic",
+            EditGeneralForumTopic(
+                chatId = chatId,
+                name = name
+            )
+        ).afterMethod("editGeneralForumTopic") {
+            put("chatId", chatId)
+            put("name", name)
+        }
 
     override suspend fun closeGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("closeGeneralForumTopic",
-        CloseGeneralForumTopic(
-            chatId = chatId
-        )
-    ).afterMethod("closeGeneralForumTopic") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("closeGeneralForumTopic",
+            CloseGeneralForumTopic(
+                chatId = chatId
+            )
+        ).afterMethod("closeGeneralForumTopic") {
+            put("chatId", chatId)
+        }
 
     override suspend fun reopenGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("reopenGeneralForumTopic",
-        ReopenGeneralForumTopic(
-            chatId = chatId
-        )
-    ).afterMethod("reopenGeneralForumTopic") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("reopenGeneralForumTopic",
+            ReopenGeneralForumTopic(
+                chatId = chatId
+            )
+        ).afterMethod("reopenGeneralForumTopic") {
+            put("chatId", chatId)
+        }
 
     override suspend fun hideGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("hideGeneralForumTopic",
-        HideGeneralForumTopic(
-            chatId = chatId
-        )
-    ).afterMethod("hideGeneralForumTopic") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("hideGeneralForumTopic",
+            HideGeneralForumTopic(
+                chatId = chatId
+            )
+        ).afterMethod("hideGeneralForumTopic") {
+            put("chatId", chatId)
+        }
 
     override suspend fun unhideGeneralForumTopic(chatId: String): Boolean =
-            client.postJson<Boolean>("unhideGeneralForumTopic",
-        UnhideGeneralForumTopic(
-            chatId = chatId
-        )
-    ).afterMethod("unhideGeneralForumTopic") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("unhideGeneralForumTopic",
+            UnhideGeneralForumTopic(
+                chatId = chatId
+            )
+        ).afterMethod("unhideGeneralForumTopic") {
+            put("chatId", chatId)
+        }
 
     override suspend fun unpinAllGeneralForumTopicMessages(chatId: String): Boolean =
-            client.postJson<Boolean>("unpinAllGeneralForumTopicMessages",
-        UnpinAllGeneralForumTopicMessages(
-            chatId = chatId
-        )
-    ).afterMethod("unpinAllGeneralForumTopicMessages") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("unpinAllGeneralForumTopicMessages",
+            UnpinAllGeneralForumTopicMessages(
+                chatId = chatId
+            )
+        ).afterMethod("unpinAllGeneralForumTopicMessages") {
+            put("chatId", chatId)
+        }
 
     override suspend fun answerCallbackQuery(
         callbackQueryId: String,
@@ -1873,24 +1708,24 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getUserChatBoosts(chatId: String, userId: Long): UserChatBoosts =
-            client.postJson<UserChatBoosts>("getUserChatBoosts",
-        GetUserChatBoosts(
-            chatId = chatId,
-            userId = userId
-        )
-    ).afterMethod("getUserChatBoosts") {
-        put("chatId", chatId)
-        put("userId", userId)
-    }
+        client.postJson<UserChatBoosts>("getUserChatBoosts",
+            GetUserChatBoosts(
+                chatId = chatId,
+                userId = userId
+            )
+        ).afterMethod("getUserChatBoosts") {
+            put("chatId", chatId)
+            put("userId", userId)
+        }
 
     override suspend fun getBusinessConnection(businessConnectionId: String): BusinessConnection =
-            client.postJson<BusinessConnection>("getBusinessConnection",
-        GetBusinessConnection(
-            businessConnectionId = businessConnectionId
-        )
-    ).afterMethod("getBusinessConnection") {
-        put("businessConnectionId", businessConnectionId)
-    }
+        client.postJson<BusinessConnection>("getBusinessConnection",
+            GetBusinessConnection(
+                businessConnectionId = businessConnectionId
+            )
+        ).afterMethod("getBusinessConnection") {
+            put("businessConnectionId", businessConnectionId)
+        }
 
     override suspend fun setMyCommands(
         commands: Iterable<BotCommand>,
@@ -1909,15 +1744,15 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteMyCommands(scope: BotCommandScope?, languageCode: String?): Boolean =
-            client.postJson<Boolean>("deleteMyCommands",
-        DeleteMyCommands(
-            scope = scope,
-            languageCode = languageCode
-        )
-    ).afterMethod("deleteMyCommands") {
-        put("scope", scope)
-        put("languageCode", languageCode)
-    }
+        client.postJson<Boolean>("deleteMyCommands",
+            DeleteMyCommands(
+                scope = scope,
+                languageCode = languageCode
+            )
+        ).afterMethod("deleteMyCommands") {
+            put("scope", scope)
+            put("languageCode", languageCode)
+        }
 
     override suspend fun getMyCommands(scope: BotCommandScope?, languageCode: String?):
             List<BotCommand> = client.postJson<List<BotCommand>>("getMyCommands",
@@ -1931,44 +1766,44 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setMyName(name: String?, languageCode: String?): Boolean =
-            client.postJson<Boolean>("setMyName",
-        SetMyName(
-            name = name,
-            languageCode = languageCode
-        )
-    ).afterMethod("setMyName") {
-        put("name", name)
-        put("languageCode", languageCode)
-    }
+        client.postJson<Boolean>("setMyName",
+            SetMyName(
+                name = name,
+                languageCode = languageCode
+            )
+        ).afterMethod("setMyName") {
+            put("name", name)
+            put("languageCode", languageCode)
+        }
 
     override suspend fun getMyName(languageCode: String?): BotName =
-            client.postJson<BotName>("getMyName",
-        GetMyName(
-            languageCode = languageCode
-        )
-    ).afterMethod("getMyName") {
-        put("languageCode", languageCode)
-    }
+        client.postJson<BotName>("getMyName",
+            GetMyName(
+                languageCode = languageCode
+            )
+        ).afterMethod("getMyName") {
+            put("languageCode", languageCode)
+        }
 
     override suspend fun setMyDescription(description: String?, languageCode: String?): Boolean =
-            client.postJson<Boolean>("setMyDescription",
-        SetMyDescription(
-            description = description,
-            languageCode = languageCode
-        )
-    ).afterMethod("setMyDescription") {
-        put("description", description)
-        put("languageCode", languageCode)
-    }
+        client.postJson<Boolean>("setMyDescription",
+            SetMyDescription(
+                description = description,
+                languageCode = languageCode
+            )
+        ).afterMethod("setMyDescription") {
+            put("description", description)
+            put("languageCode", languageCode)
+        }
 
     override suspend fun getMyDescription(languageCode: String?): BotDescription =
-            client.postJson<BotDescription>("getMyDescription",
-        GetMyDescription(
-            languageCode = languageCode
-        )
-    ).afterMethod("getMyDescription") {
-        put("languageCode", languageCode)
-    }
+        client.postJson<BotDescription>("getMyDescription",
+            GetMyDescription(
+                languageCode = languageCode
+            )
+        ).afterMethod("getMyDescription") {
+            put("languageCode", languageCode)
+        }
 
     override suspend fun setMyShortDescription(shortDescription: String?, languageCode: String?):
             Boolean = client.postJson<Boolean>("setMyShortDescription",
@@ -1982,55 +1817,57 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getMyShortDescription(languageCode: String?): BotShortDescription =
-            client.postJson<BotShortDescription>("getMyShortDescription",
-        GetMyShortDescription(
-            languageCode = languageCode
-        )
-    ).afterMethod("getMyShortDescription") {
-        put("languageCode", languageCode)
-    }
+        client.postJson<BotShortDescription>("getMyShortDescription",
+            GetMyShortDescription(
+                languageCode = languageCode
+            )
+        ).afterMethod("getMyShortDescription") {
+            put("languageCode", languageCode)
+        }
 
     override suspend fun setChatMenuButton(chatId: Long?, menuButton: MenuButton?): Boolean =
-            client.postJson<Boolean>("setChatMenuButton",
-        SetChatMenuButton(
-            chatId = chatId,
-            menuButton = menuButton
-        )
-    ).afterMethod("setChatMenuButton") {
-        put("chatId", chatId)
-        put("menuButton", menuButton)
-    }
+        client.postJson<Boolean>("setChatMenuButton",
+            SetChatMenuButton(
+                chatId = chatId,
+                menuButton = menuButton
+            )
+        ).afterMethod("setChatMenuButton") {
+            put("chatId", chatId)
+            put("menuButton", menuButton)
+        }
 
     override suspend fun getChatMenuButton(chatId: Long?): MenuButton =
-            client.postJson<MenuButton>("getChatMenuButton",
-        GetChatMenuButton(
-            chatId = chatId
-        )
-    ).afterMethod("getChatMenuButton") {
-        put("chatId", chatId)
-    }
+        client.postJson<MenuButton>("getChatMenuButton",
+            GetChatMenuButton(
+                chatId = chatId
+            )
+        ).afterMethod("getChatMenuButton") {
+            put("chatId", chatId)
+        }
 
-    override suspend fun setMyDefaultAdministratorRights(rights: ChatAdministratorRights?,
-            forChannels: Boolean?): Boolean =
-            client.postJson<Boolean>("setMyDefaultAdministratorRights",
-        SetMyDefaultAdministratorRights(
-            rights = rights,
-            forChannels = forChannels
-        )
-    ).afterMethod("setMyDefaultAdministratorRights") {
-        put("rights", rights)
-        put("forChannels", forChannels)
-    }
+    override suspend fun setMyDefaultAdministratorRights(
+        rights: ChatAdministratorRights?,
+        forChannels: Boolean?,
+    ): Boolean =
+        client.postJson<Boolean>("setMyDefaultAdministratorRights",
+            SetMyDefaultAdministratorRights(
+                rights = rights,
+                forChannels = forChannels
+            )
+        ).afterMethod("setMyDefaultAdministratorRights") {
+            put("rights", rights)
+            put("forChannels", forChannels)
+        }
 
     override suspend fun getMyDefaultAdministratorRights(forChannels: Boolean?):
             ChatAdministratorRights =
-            client.postJson<ChatAdministratorRights>("getMyDefaultAdministratorRights",
-        GetMyDefaultAdministratorRights(
-            forChannels = forChannels
-        )
-    ).afterMethod("getMyDefaultAdministratorRights") {
-        put("forChannels", forChannels)
-    }
+        client.postJson<ChatAdministratorRights>("getMyDefaultAdministratorRights",
+            GetMyDefaultAdministratorRights(
+                forChannels = forChannels
+            )
+        ).afterMethod("getMyDefaultAdministratorRights") {
+            put("forChannels", forChannels)
+        }
 
     override suspend fun editMessageText(
         chatId: String,
@@ -2106,11 +1943,11 @@ public class TelegramBotImpl(
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-        
+
         appendContent(media.media)
-        
+
         appendContentIfNotNull(media.thumbnail)
-        
+
         appendContentIfNotNull(media.cover)
     }.afterMethod("editMessageMedia") {
         put("chatId", chatId)
@@ -2215,26 +2052,26 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteMessage(chatId: String, messageId: Long): Boolean =
-            client.postJson<Boolean>("deleteMessage",
-        DeleteMessage(
-            chatId = chatId,
-            messageId = messageId
-        )
-    ).afterMethod("deleteMessage") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-    }
+        client.postJson<Boolean>("deleteMessage",
+            DeleteMessage(
+                chatId = chatId,
+                messageId = messageId
+            )
+        ).afterMethod("deleteMessage") {
+            put("chatId", chatId)
+            put("messageId", messageId)
+        }
 
     override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean =
-            client.postJson<Boolean>("deleteMessages",
-        DeleteMessages(
-            chatId = chatId,
-            messageIds = messageIds
-        )
-    ).afterMethod("deleteMessages") {
-        put("chatId", chatId)
-        put("messageIds", messageIds)
-    }
+        client.postJson<Boolean>("deleteMessages",
+            DeleteMessages(
+                chatId = chatId,
+                messageIds = messageIds
+            )
+        ).afterMethod("deleteMessages") {
+            put("chatId", chatId)
+            put("messageIds", messageIds)
+        }
 
     override suspend fun sendSticker(
         chatId: String,
@@ -2275,22 +2112,22 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getStickerSet(name: String): StickerSet =
-            client.postJson<StickerSet>("getStickerSet",
-        GetStickerSet(
-            name = name
-        )
-    ).afterMethod("getStickerSet") {
-        put("name", name)
-    }
+        client.postJson<StickerSet>("getStickerSet",
+            GetStickerSet(
+                name = name
+            )
+        ).afterMethod("getStickerSet") {
+            put("name", name)
+        }
 
     override suspend fun getCustomEmojiStickers(customEmojiIds: Iterable<String>): List<Sticker> =
-            client.postJson<List<Sticker>>("getCustomEmojiStickers",
-        GetCustomEmojiStickers(
-            customEmojiIds = customEmojiIds
-        )
-    ).afterMethod("getCustomEmojiStickers") {
-        put("customEmojiIds", customEmojiIds)
-    }
+        client.postJson<List<Sticker>>("getCustomEmojiStickers",
+            GetCustomEmojiStickers(
+                customEmojiIds = customEmojiIds
+            )
+        ).afterMethod("getCustomEmojiStickers") {
+            put("customEmojiIds", customEmojiIds)
+        }
 
     override suspend fun uploadStickerFile(
         userId: Long,
@@ -2320,7 +2157,7 @@ public class TelegramBotImpl(
         append("stickers", client.toJson(stickers))
         appendIfNotNull("sticker_type", stickerType)
         appendIfNotNull("needs_repainting", needsRepainting)
-        
+
         stickers.forEach { stickers ->
             appendContent(stickers.sticker)
         }
@@ -2341,7 +2178,7 @@ public class TelegramBotImpl(
         append("user_id", userId)
         append("name", name)
         append("sticker", client.toJson(sticker))
-        
+
         appendContent(sticker.sticker)
     }.afterMethod("addStickerToSet") {
         put("userId", userId)
@@ -2350,24 +2187,24 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerPositionInSet(sticker: String, position: Int): Boolean =
-            client.postJson<Boolean>("setStickerPositionInSet",
-        SetStickerPositionInSet(
-            sticker = sticker,
-            position = position
-        )
-    ).afterMethod("setStickerPositionInSet") {
-        put("sticker", sticker)
-        put("position", position)
-    }
+        client.postJson<Boolean>("setStickerPositionInSet",
+            SetStickerPositionInSet(
+                sticker = sticker,
+                position = position
+            )
+        ).afterMethod("setStickerPositionInSet") {
+            put("sticker", sticker)
+            put("position", position)
+        }
 
     override suspend fun deleteStickerFromSet(sticker: String): Boolean =
-            client.postJson<Boolean>("deleteStickerFromSet",
-        DeleteStickerFromSet(
-            sticker = sticker
-        )
-    ).afterMethod("deleteStickerFromSet") {
-        put("sticker", sticker)
-    }
+        client.postJson<Boolean>("deleteStickerFromSet",
+            DeleteStickerFromSet(
+                sticker = sticker
+            )
+        ).afterMethod("deleteStickerFromSet") {
+            put("sticker", sticker)
+        }
 
     override suspend fun replaceStickerInSet(
         userId: Long,
@@ -2379,7 +2216,7 @@ public class TelegramBotImpl(
         append("name", name)
         append("old_sticker", oldSticker)
         append("sticker", client.toJson(sticker))
-        
+
         appendContent(sticker.sticker)
     }.afterMethod("replaceStickerInSet") {
         put("userId", userId)
@@ -2388,8 +2225,7 @@ public class TelegramBotImpl(
         put("sticker", sticker)
     }
 
-    override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean
-            = client.postJson<Boolean>("setStickerEmojiList",
+    override suspend fun setStickerEmojiList(sticker: String, emojiList: Iterable<String>): Boolean = client.postJson<Boolean>("setStickerEmojiList",
         SetStickerEmojiList(
             sticker = sticker,
             emojiList = emojiList
@@ -2400,15 +2236,15 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerKeywords(sticker: String, keywords: Iterable<String>?): Boolean =
-            client.postJson<Boolean>("setStickerKeywords",
-        SetStickerKeywords(
-            sticker = sticker,
-            keywords = keywords
-        )
-    ).afterMethod("setStickerKeywords") {
-        put("sticker", sticker)
-        put("keywords", keywords)
-    }
+        client.postJson<Boolean>("setStickerKeywords",
+            SetStickerKeywords(
+                sticker = sticker,
+                keywords = keywords
+            )
+        ).afterMethod("setStickerKeywords") {
+            put("sticker", sticker)
+            put("keywords", keywords)
+        }
 
     override suspend fun setStickerMaskPosition(sticker: String, maskPosition: MaskPosition?):
             Boolean = client.postJson<Boolean>("setStickerMaskPosition",
@@ -2422,15 +2258,15 @@ public class TelegramBotImpl(
     }
 
     override suspend fun setStickerSetTitle(name: String, title: String): Boolean =
-            client.postJson<Boolean>("setStickerSetTitle",
-        SetStickerSetTitle(
-            name = name,
-            title = title
-        )
-    ).afterMethod("setStickerSetTitle") {
-        put("name", name)
-        put("title", title)
-    }
+        client.postJson<Boolean>("setStickerSetTitle",
+            SetStickerSetTitle(
+                name = name,
+                title = title
+            )
+        ).afterMethod("setStickerSetTitle") {
+            put("name", name)
+            put("title", title)
+        }
 
     override suspend fun setStickerSetThumbnail(
         name: String,
@@ -2461,13 +2297,13 @@ public class TelegramBotImpl(
     }
 
     override suspend fun deleteStickerSet(name: String): Boolean =
-            client.postJson<Boolean>("deleteStickerSet",
-        DeleteStickerSet(
-            name = name
-        )
-    ).afterMethod("deleteStickerSet") {
-        put("name", name)
-    }
+        client.postJson<Boolean>("deleteStickerSet",
+            DeleteStickerSet(
+                name = name
+            )
+        ).afterMethod("deleteStickerSet") {
+            put("name", name)
+        }
 
     override suspend fun getAvailableGifts(): Gifts = client.get<Gifts>("getAvailableGifts")
         .afterMethod("getAvailableGifts")
@@ -2501,44 +2337,44 @@ public class TelegramBotImpl(
     }
 
     override suspend fun verifyUser(userId: Long, customDescription: String?): Boolean =
-            client.postJson<Boolean>("verifyUser",
-        VerifyUser(
-            userId = userId,
-            customDescription = customDescription
-        )
-    ).afterMethod("verifyUser") {
-        put("userId", userId)
-        put("customDescription", customDescription)
-    }
+        client.postJson<Boolean>("verifyUser",
+            VerifyUser(
+                userId = userId,
+                customDescription = customDescription
+            )
+        ).afterMethod("verifyUser") {
+            put("userId", userId)
+            put("customDescription", customDescription)
+        }
 
     override suspend fun verifyChat(chatId: String, customDescription: String?): Boolean =
-            client.postJson<Boolean>("verifyChat",
-        VerifyChat(
-            chatId = chatId,
-            customDescription = customDescription
-        )
-    ).afterMethod("verifyChat") {
-        put("chatId", chatId)
-        put("customDescription", customDescription)
-    }
+        client.postJson<Boolean>("verifyChat",
+            VerifyChat(
+                chatId = chatId,
+                customDescription = customDescription
+            )
+        ).afterMethod("verifyChat") {
+            put("chatId", chatId)
+            put("customDescription", customDescription)
+        }
 
     override suspend fun removeUserVerification(userId: Long): Boolean =
-            client.postJson<Boolean>("removeUserVerification",
-        RemoveUserVerification(
-            userId = userId
-        )
-    ).afterMethod("removeUserVerification") {
-        put("userId", userId)
-    }
+        client.postJson<Boolean>("removeUserVerification",
+            RemoveUserVerification(
+                userId = userId
+            )
+        ).afterMethod("removeUserVerification") {
+            put("userId", userId)
+        }
 
     override suspend fun removeChatVerification(chatId: String): Boolean =
-            client.postJson<Boolean>("removeChatVerification",
-        RemoveChatVerification(
-            chatId = chatId
-        )
-    ).afterMethod("removeChatVerification") {
-        put("chatId", chatId)
-    }
+        client.postJson<Boolean>("removeChatVerification",
+            RemoveChatVerification(
+                chatId = chatId
+            )
+        ).afterMethod("removeChatVerification") {
+            put("chatId", chatId)
+        }
 
     override suspend fun answerInlineQuery(
         inlineQueryId: String,
@@ -2804,26 +2640,26 @@ public class TelegramBotImpl(
     }
 
     override suspend fun getStarTransactions(offset: Int?, limit: Int?): StarTransactions =
-            client.postJson<StarTransactions>("getStarTransactions",
-        GetStarTransactions(
-            offset = offset,
-            limit = limit
-        )
-    ).afterMethod("getStarTransactions") {
-        put("offset", offset)
-        put("limit", limit)
-    }
+        client.postJson<StarTransactions>("getStarTransactions",
+            GetStarTransactions(
+                offset = offset,
+                limit = limit
+            )
+        ).afterMethod("getStarTransactions") {
+            put("offset", offset)
+            put("limit", limit)
+        }
 
     override suspend fun refundStarPayment(userId: Long, telegramPaymentChargeId: String): Boolean =
-            client.postJson<Boolean>("refundStarPayment",
-        RefundStarPayment(
-            userId = userId,
-            telegramPaymentChargeId = telegramPaymentChargeId
-        )
-    ).afterMethod("refundStarPayment") {
-        put("userId", userId)
-        put("telegramPaymentChargeId", telegramPaymentChargeId)
-    }
+        client.postJson<Boolean>("refundStarPayment",
+            RefundStarPayment(
+                userId = userId,
+                telegramPaymentChargeId = telegramPaymentChargeId
+            )
+        ).afterMethod("refundStarPayment") {
+            put("userId", userId)
+            put("telegramPaymentChargeId", telegramPaymentChargeId)
+        }
 
     override suspend fun editUserStarSubscription(
         userId: Long,
@@ -2841,17 +2677,19 @@ public class TelegramBotImpl(
         put("isCanceled", isCanceled)
     }
 
-    override suspend fun setPassportDataErrors(userId: Long,
-            errors: Iterable<PassportElementError>): Boolean =
-            client.postJson<Boolean>("setPassportDataErrors",
-        SetPassportDataErrors(
-            userId = userId,
-            errors = errors
-        )
-    ).afterMethod("setPassportDataErrors") {
-        put("userId", userId)
-        put("errors", errors)
-    }
+    override suspend fun setPassportDataErrors(
+        userId: Long,
+        errors: Iterable<PassportElementError>,
+    ): Boolean =
+        client.postJson<Boolean>("setPassportDataErrors",
+            SetPassportDataErrors(
+                userId = userId,
+                errors = errors
+            )
+        ).afterMethod("setPassportDataErrors") {
+            put("userId", userId)
+            put("errors", errors)
+        }
 
     override suspend fun sendGame(
         chatId: Long,
@@ -3000,11 +2838,11 @@ public class TelegramBotImpl(
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-        
+
         appendContent(media.media)
-        
+
         appendContentIfNotNull(media.thumbnail)
-        
+
         appendContentIfNotNull(media.cover)
     }.afterMethod("editMessageMedia") {
         put("inlineMessageId", inlineMessageId)
@@ -3101,8 +2939,11 @@ public class TelegramBotImpl(
         put("disableEditMessage", disableEditMessage)
     }
 
-    private suspend inline fun <T> T.afterMethod(methodName: String, crossinline
-            collectArguments: MutableMap<String, Any?>.() -> Unit = {}): T {
+    private suspend inline fun <T> T.afterMethod(
+        methodName: String,
+        crossinline
+        collectArguments: MutableMap<String, Any?>.() -> Unit = {},
+    ): T {
         eventManager.sendAfterMethodEvent(methodName, this, collectArguments)
 
         return this

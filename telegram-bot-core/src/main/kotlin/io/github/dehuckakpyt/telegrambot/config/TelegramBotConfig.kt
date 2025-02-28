@@ -4,6 +4,8 @@ import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
 
 
 /**
@@ -39,6 +41,9 @@ class TelegramBotConfig {
     /** Telegram bot username */
     var username: String? = null
 
+    /** Telegram bot client additional configuration */
+    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null
+
     /** Source for saving messages */
     var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null
 
@@ -54,5 +59,9 @@ class TelegramBotConfig {
     /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit) {
         receiving.apply(block)
+    }
+
+    fun client(block: HttpClientConfig<ApacheEngineConfig>.() -> Unit) {
+        clientConfiguration = block
     }
 }

@@ -12,6 +12,7 @@ import io.github.dehuckakpyt.telegrambotexample.handler.buttonCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.exceptionCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.templateCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.withArgsCommand
+import io.ktor.client.plugins.*
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,6 +32,14 @@ class BotConfig {
     @Bean
     fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
         templater = { Templater.dynamicFreeMarker }
+
+        client {
+            defaultRequest {
+                url {
+                    host = "api.telegram.org"
+                }
+            }
+        }
 
         eventListening {
             after method "getUpdates" called { args ->
