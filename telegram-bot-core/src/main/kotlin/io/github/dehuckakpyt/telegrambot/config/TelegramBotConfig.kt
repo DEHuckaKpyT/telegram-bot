@@ -38,7 +38,7 @@ class TelegramBotConfig {
     /** Telegram bot token */
     var token: String? = null
 
-    /** Telegram bot username */
+    /** Telegram bot username (optional, but recommended) */
     var username: String? = null
 
     /** Telegram bot client additional configuration */
@@ -59,9 +59,5 @@ class TelegramBotConfig {
     /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit) {
         receiving.apply(block)
-    }
-
-    fun client(block: HttpClientConfig<ApacheEngineConfig>.() -> Unit) {
-        clientConfiguration = block
     }
 }

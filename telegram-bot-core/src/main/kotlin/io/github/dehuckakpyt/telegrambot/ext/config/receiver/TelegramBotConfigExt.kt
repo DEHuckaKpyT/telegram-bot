@@ -2,6 +2,8 @@ package io.github.dehuckakpyt.telegrambot.ext.config.receiver
 
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
 
 
 /**
@@ -14,4 +16,9 @@ import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListeni
 fun TelegramBotConfig.eventListening(preventDefaults: Boolean = false, block: TelegramBotEventListening.() -> Unit = {}) {
     eventListeningPreventDefaults = preventDefaults
     eventListening = block
+}
+
+/** Customize telegram bot's client */
+fun TelegramBotConfig.client(block: HttpClientConfig<ApacheEngineConfig>.() -> Unit) {
+    clientConfiguration = block
 }

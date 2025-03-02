@@ -1,6 +1,6 @@
 # Get started
 
-To use the library, all you need to do is add a dependency, build a config, specify token and username and create the bot and its context.
+To use the library, all you need to do is add a dependency, build a config, specify token and create the bot context.
 
 <tabs id="bot-creating" group="telegram-bot-code">
     <tab title="Spring" group-key="spring">
@@ -30,6 +30,7 @@ To use the library, all you need to do is add a dependency, build a config, spec
         <code>resources/application.properties</code>
         <code-block>
             telegram-bot.token=${TELEGRAM_BOT_TOKEN}
+            # Username optional, but recommended
             telegram-bot.username=${TELEGRAM_BOT_USERNAME}
         </code-block>
         <code>com/example/myproject/handler/StartHandler.kt</code>
