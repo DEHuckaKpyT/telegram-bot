@@ -122,6 +122,7 @@ object TelegramBotFactory {
             WebAppDataMessageContainerFactory(),
             LeftChatMemberMessageContainerFactory(),
             NewChatMembersMessageContainerFactory(),
+            PrivateMessageContainerFactory()
         )
         val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.messageSource, actual.receiving.telegramUserSource, actual.receiving.telegramChatSource, actual.receiving.telegramChatStatusEventSource, actual.telegramBot.username)
         val eventUpdateResolver = EventUpdateResolver()

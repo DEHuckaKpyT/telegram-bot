@@ -21,4 +21,5 @@ object MessageType {
     val WEB_APP_DATA = WebAppDataMessageContainer::class
     val LEFT_CHAT_MEMBER = LeftChatMemberMessageContainer::class
     val NEW_CHAT_MEMBERS = NewChatMembersMessageContainer::class
+    val PRIVATE = PrivateMessageContainer::class
 }

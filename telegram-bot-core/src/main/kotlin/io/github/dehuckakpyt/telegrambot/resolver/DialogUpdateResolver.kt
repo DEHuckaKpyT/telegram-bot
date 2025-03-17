@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.container.CallbackContainer
 import io.github.dehuckakpyt.telegrambot.container.Container
 import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
 import io.github.dehuckakpyt.telegrambot.container.message.factory.MessageContainerFactory
+import io.github.dehuckakpyt.telegrambot.container.message.factory.PrivateMessageContainerFactory
 import io.github.dehuckakpyt.telegrambot.context.container.ContainerCoroutineContext
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
@@ -99,6 +100,8 @@ internal class DialogUpdateResolver(
         )
 
         val action = chain?.step?.let { chainResolver.getStep(it, factory.type) }
+
+        if (factory is PrivateMessageContainerFactory) return@with
 
         if (action == null) {
             if (chat.type == "private") chainExceptionHandler.whenStepNotFound() else return
