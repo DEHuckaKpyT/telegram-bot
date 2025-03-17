@@ -88,6 +88,11 @@ internal class DialogUpdateResolver(
         val chain = chainSource.get(chatId, from!!.id)
         val factory = message.messageContainerFactory
 
+        if (factory == null) {
+            logger.warn("Received message of unknown type. You can see 'io.github.dehuckakpyt.telegrambot.container.message.MessageType' for available message types. If you need new type, please create issue on github https://github.com/DEHuckaKpyT/telegram-bot/issues\nReceived message: $message.")
+            return@with
+        }
+
         messageSource.save(
             message = message,
             fromBot = false,
@@ -141,9 +146,8 @@ internal class DialogUpdateResolver(
             }
         }
 
-    private val Message.messageContainerFactory: MessageContainerFactory
+    private val Message.messageContainerFactory: MessageContainerFactory?
         get() = messageArgumentFactories.firstOrNull { it.matches(this) }
-            ?: throw RuntimeException("Not found factory for received argument type.")
 
 
     private suspend fun <T : Container> invokeWithContainerContext(container: T, action: suspend T.() -> Unit) =
