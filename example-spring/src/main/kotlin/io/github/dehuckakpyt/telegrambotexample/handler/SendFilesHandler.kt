@@ -50,10 +50,16 @@ class SendFilesHandler : BotHandler({
 
     command("/documents") {
         sendMediaGroup(listOf(
-            InputMediaDocument(media = input("cat123.jpg", "/files/cat.jpg")),
+            InputMediaDocument(caption="asdasd1",media = input("cat123.jpg", "/files/cat.jpg")),
             InputMediaDocument(media = input("cat111.gif", "/files/cat.gif")),
-            InputMediaDocument(media = input("named file.docx", "/files/test doc.docx")),
+            InputMediaDocument(caption="asdasd2",media = input("named file.docx", "/files/test doc.docx")),
             InputMediaDocument(media = input("named video.mp4", "/files/wow.mp4")),
+        ))
+    }
+
+    command("/document_in_group") {
+        sendMediaGroup(listOf(
+            InputMediaDocument(media = input("cat123.jpg", "/files/cat.jpg")),
         ))
     }
 })
