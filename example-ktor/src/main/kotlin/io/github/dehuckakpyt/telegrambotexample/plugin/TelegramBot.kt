@@ -6,7 +6,10 @@ import io.github.dehuckakpyt.telegrambot.ext.source.inDatabase
 import io.github.dehuckakpyt.telegrambot.plugin.TelegramBot
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.*
 import io.ktor.server.application.*
@@ -28,12 +31,11 @@ fun Application.configureTelegramBot() {
                 timeout = 25
             }
 
-            callbackContentSource = {
-                CallbackContentSource.inDatabase(
-                    maxCallbackContentsPerUser = 2
-                )
-            }
+            callbackContentSource = { CallbackContentSource.inDatabase(maxCallbackContentsPerUser = 2) }
             chainSource = { ChainSource.inDatabase }
+            telegramUserSource = { TelegramUserSource.inDatabase }
+            telegramChatSource = { TelegramChatSource.inDatabase }
+            telegramChatStatusEventSource = { TelegramChatStatusEventSource.inDatabase }
 
             // Handling custom exceptions
             exceptionHandler = { CustomExceptionHandler(telegramBot, receiving.messageTemplate, templater) }

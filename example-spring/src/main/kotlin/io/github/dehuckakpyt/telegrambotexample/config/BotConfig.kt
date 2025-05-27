@@ -2,6 +2,8 @@ package io.github.dehuckakpyt.telegrambotexample.config
 
 import io.github.dehuckakpyt.telegrambot.annotation.EnableTelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.client
+import io.github.dehuckakpyt.telegrambot.ext.config.receiver.eventListening
 import io.github.dehuckakpyt.telegrambot.ext.config.eventListening
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.handling
 import io.github.dehuckakpyt.telegrambot.ext.dynamicFreeMarker
@@ -12,6 +14,7 @@ import io.github.dehuckakpyt.telegrambotexample.handler.buttonCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.exceptionCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.templateCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.withArgsCommand
+import io.ktor.client.plugins.*
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -32,6 +35,14 @@ class BotConfig {
     fun telegramBotConfig(): TelegramBotConfig = TelegramBotConfig().apply {
         templater = { Templater.dynamicFreeMarker }
 
+        client {
+            defaultRequest {
+                url {
+                    host = "api.telegram.org"
+                }
+            }
+        }
+
         eventListening {
             after method "getUpdates" called { args ->
                 val offset: Long? by args
@@ -49,7 +60,7 @@ class BotConfig {
                 val dropPendingUpdates: Boolean? by args
                 val secretToken: String? by args
 
-                logger.info("Called \"getUpdates\" while long polling with\n    url: $url\n    ipAddress: $ipAddress\n    maxConnections: $maxConnections\n    allowedUpdates: $allowedUpdates\n    dropPendingUpdates: $dropPendingUpdates\n    secretToken: $secretToken")
+                logger.info("Called \"setWebhook\" with\n    url: $url\n    ipAddress: $ipAddress\n    maxConnections: $maxConnections\n    allowedUpdates: $allowedUpdates\n    dropPendingUpdates: $dropPendingUpdates\n    secretToken: $secretToken")
             }
         }
 

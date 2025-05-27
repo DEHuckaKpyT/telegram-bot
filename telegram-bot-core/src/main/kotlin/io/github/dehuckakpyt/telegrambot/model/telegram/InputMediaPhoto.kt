@@ -81,6 +81,9 @@ public data class InputMediaPhoto(
     @get:JsonIgnore
     override val thumbnail: Input? = null
 
+    @get:JsonIgnore
+    override val cover: Input? = null
+
     public constructor(
         media: String,
         caption: String? = null,

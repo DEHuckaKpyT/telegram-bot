@@ -20,3 +20,5 @@ public fun InputFactory.input(byteArray: ByteArray): ContentInput = ByteArrayCon
 public fun InputFactory.input(name: String, resource: String): NamedContentInput = NamedResourceContent(name, resource)
 public fun InputFactory.input(name: String, file: File): NamedContentInput = NamedFileContent(name, file)
 public fun InputFactory.input(name: String, byteArray: ByteArray): NamedContentInput = NamedByteArrayContent(name, byteArray)
+
+public fun InputFactory.fileId(fileId: String): StringInput = StringInput(fileId)

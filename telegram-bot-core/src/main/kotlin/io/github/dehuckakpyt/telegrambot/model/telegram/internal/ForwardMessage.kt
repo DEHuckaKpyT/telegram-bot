@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.telegram.`internal`
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Boolean
+import kotlin.Int
 import kotlin.Long
 import kotlin.String
 
@@ -17,6 +18,8 @@ internal data class ForwardMessage(
     public val messageId: Long,
     @get:JsonProperty("message_thread_id")
     public val messageThreadId: Long? = null,
+    @get:JsonProperty("video_start_timestamp")
+    public val videoStartTimestamp: Int? = null,
     @get:JsonProperty("disable_notification")
     public val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content")

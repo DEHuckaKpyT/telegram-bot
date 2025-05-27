@@ -37,5 +37,8 @@ public data class InputPaidMediaPhoto(
     @get:JsonIgnore
     override val thumbnail: Input? = null
 
+    @get:JsonIgnore
+    override val cover: Input? = null
+
     public constructor(media: String) : this(StringInput(media))
 }

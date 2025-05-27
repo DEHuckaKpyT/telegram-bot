@@ -81,9 +81,9 @@ internal fun TelegramBotEventListening.defaults(messageSource: MessageSource) {
     }
 
     after method "sendMediaGroup" called { args ->
-        val returnedValue: Message by args
+        val returnedValue: List<Message> by args
 
-        messageSource.save(message = returnedValue, fromBot = true, type = "MEDIA_GROUP")
+        messageSource.save(message = returnedValue.first(), fromBot = true, type = "MEDIA_GROUP")
     }
 
     after method "sendLocation" called { args ->

@@ -29,4 +29,6 @@ public sealed interface InputMedia {
     public val captionEntities: List<MessageEntity>?
 
     public val thumbnail: Input?
+
+    public val cover: Input?
 }

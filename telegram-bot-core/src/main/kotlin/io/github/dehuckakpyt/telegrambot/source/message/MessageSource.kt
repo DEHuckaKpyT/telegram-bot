@@ -28,8 +28,6 @@ interface MessageSource {
      * @param step the step when the message saving
      * @param stepContainerType type of the container, which process user message
      * @param text content of the message
-     *
-     * @see io.github.dehuckakpyt.telegrambot.TelegramBotImpl
      */
     suspend fun save(
         message: Message,
@@ -48,8 +46,6 @@ interface MessageSource {
      * @param fromBot true if bot sent message
      * @param type type of the message (like 'TEXT', 'PHOTO', 'AUDIO') (can find all in TelegramBotImpl)
      * @param text content of the message
-     *
-     * @see io.github.dehuckakpyt.telegrambot.TelegramBotImpl
      */
     suspend fun save(
         message: Message,

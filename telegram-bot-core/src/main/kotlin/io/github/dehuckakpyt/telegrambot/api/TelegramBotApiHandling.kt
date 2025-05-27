@@ -268,6 +268,7 @@ public abstract class TelegramBotApiHandling {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param videoStartTimestamp New start timestamp for the forwarded video in the message
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -278,6 +279,7 @@ public abstract class TelegramBotApiHandling {
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long? = null,
+        videoStartTimestamp: Int? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ): Message = bot.forwardMessage(
@@ -285,6 +287,7 @@ public abstract class TelegramBotApiHandling {
         fromChatId = fromChatId,
         messageId = messageId,
         messageThreadId = messageThreadId,
+        videoStartTimestamp = videoStartTimestamp,
         disableNotification = disableNotification,
         protectContent = protectContent,
     )
@@ -336,6 +339,7 @@ public abstract class TelegramBotApiHandling {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param videoStartTimestamp New start timestamp for the copied video in the message
      * @param caption New caption for media, 0-1024 characters after entities parsing. If not
      * specified, the original caption is kept
      * @param parseMode Mode for parsing entities in the new caption. See [formatting
@@ -363,6 +367,7 @@ public abstract class TelegramBotApiHandling {
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long? = null,
+        videoStartTimestamp: Int? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -377,6 +382,7 @@ public abstract class TelegramBotApiHandling {
         fromChatId = fromChatId,
         messageId = messageId,
         messageThreadId = messageThreadId,
+        videoStartTimestamp = videoStartTimestamp,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -560,7 +566,7 @@ public abstract class TelegramBotApiHandling {
         duration: Int? = null,
         performer: String? = null,
         title: String? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
@@ -636,7 +642,7 @@ public abstract class TelegramBotApiHandling {
         document: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -689,6 +695,12 @@ public abstract class TelegramBotApiHandling {
      * you can pass “attach://\<file_attach_name\>” if the thumbnail was uploaded using
      * multipart/form-data under \<file_attach_name\>. [More information on Sending Files
      * ](https://core.telegram.org/bots/api/#sending-files)
+     * @param cover Cover for the video in the message. Pass a file_id to send a file that exists on
+     * the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the
+     * Internet, or pass “attach://\<file_attach_name\>” to upload a new one using multipart/form-data
+     * under \<file_attach_name\> name. [More information on Sending Files
+     * ](https://core.telegram.org/bots/api/#sending-files)
+     * @param startTimestamp Start timestamp for the video in the message
      * @param caption Video caption (may also be used when resending videos by *file_id*), 0-1024
      * characters after entities parsing
      * @param parseMode Mode for parsing entities in the video caption. See [formatting
@@ -723,7 +735,9 @@ public abstract class TelegramBotApiHandling {
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
+        cover: Input? = null,
+        startTimestamp: Int? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -745,6 +759,8 @@ public abstract class TelegramBotApiHandling {
         width = width,
         height = height,
         thumbnail = thumbnail,
+        cover = cover,
+        startTimestamp = startTimestamp,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -815,7 +831,7 @@ public abstract class TelegramBotApiHandling {
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -966,7 +982,7 @@ public abstract class TelegramBotApiHandling {
         messageThreadId: Long? = null,
         duration: Int? = null,
         length: Int? = null,
-        thumbnail: ContentInput? = null,
+        thumbnail: Input? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
@@ -1488,10 +1504,10 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Use this method to change the chosen reactions on a message. Service messages can't be
-     * reacted to. Automatically forwarded messages from a channel to its discussion group have the
-     * same available reactions as messages in the channel. Bots can't use paid reactions. Returns
-     * *True* on success.
+     * Use this method to change the chosen reactions on a message. Service messages of some types
+     * can't be reacted to. Automatically forwarded messages from a channel to its discussion group
+     * have the same available reactions as messages in the channel. Bots can't use paid reactions.
+     * Returns *True* on success.
      *
      * @param messageId Identifier of the target message. If the message belongs to a media group,
      * the reaction is set to the first non-deleted message in the group instead.
@@ -3097,21 +3113,22 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Returns the list of gifts that can be sent by the bot to users. Requires no parameters.
-     * Returns a [Gifts](https://core.telegram.org/bots/api/#gifts) object.
+     * Returns the list of gifts that can be sent by the bot to users and channel chats. Requires no
+     * parameters. Returns a [Gifts](https://core.telegram.org/bots/api/#gifts) object.
      */
     public suspend fun Container.getAvailableGifts(): Gifts = bot.getAvailableGifts(
     )
 
     /**
-     * Sends a gift to the given user. The gift can't be converted to Telegram Stars by the user.
-     * Returns *True* on success.
+     * Sends a gift to the given user or channel chat. The gift can't be converted to Telegram Stars
+     * by the receiver. Returns *True* on success.
      *
-     * @param userId Unique identifier of the target user that will receive the gift
      * @param giftId Identifier of the gift
+     * @param userId Required if *chat_id* is not specified. Unique identifier of the target user
+     * who will receive the gift.
      * @param payForUpgrade Pass *True* to pay for the gift upgrade from the bot's balance, thereby
      * making the upgrade free for the receiver
-     * @param text Text that will be shown along with the gift; 0-255 characters
+     * @param text Text that will be shown along with the gift; 0-128 characters
      * @param textParseMode Mode for parsing entities in the text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
      * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
@@ -3121,15 +3138,16 @@ public abstract class TelegramBotApiHandling {
      * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
      */
     public suspend fun Container.sendGift(
-        userId: Long,
         giftId: String,
+        userId: Long? = null,
         payForUpgrade: Boolean? = null,
         text: String? = null,
         textParseMode: String? = null,
         textEntities: Iterable<MessageEntity>? = null,
     ): Boolean = bot.sendGift(
-        userId = userId,
         giftId = giftId,
+        userId = userId,
+        chatId = chat.id,
         payForUpgrade = payForUpgrade,
         text = text,
         textParseMode = textParseMode,

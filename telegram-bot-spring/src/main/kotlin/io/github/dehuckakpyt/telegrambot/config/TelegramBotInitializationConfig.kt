@@ -12,9 +12,13 @@ import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
+import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.SpringMessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
@@ -42,6 +46,9 @@ class TelegramBotInitializationConfig(
     callbackContentSourceExpression: ConfigExpression<CallbackContentSource>?,
     chainSourceExpression: ConfigExpression<ChainSource>?,
     telegramMessageSourceExpression: ConfigExpression<MessageSource>?,
+    telegramUserSourceExpression: ConfigExpression<TelegramUserSource>?,
+    telegramChatSourceExpression: ConfigExpression<TelegramChatSource>?,
+    telegramChatStatusEventSourceExpression: ConfigExpression<TelegramChatStatusEventSource>?,
     updateReceiverExpression: ConfigExpression<UpdateReceiver>?,
     @Value("\${telegram-bot.token}") botToken: String?,
     @Value("\${telegram-bot.username}") botUsername: String?,
@@ -64,6 +71,9 @@ class TelegramBotInitializationConfig(
             if (messageSource == null && telegramMessageSourceExpression != null) messageSource = telegramMessageSourceExpression::configure
             if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
             if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
+            if (receiving.telegramUserSource == null && telegramUserSourceExpression != null) receiving.telegramUserSource = telegramUserSourceExpression::configure
+            if (receiving.telegramChatSource == null && telegramChatSourceExpression != null) receiving.telegramChatSource = telegramChatSourceExpression::configure
+            if (receiving.telegramChatStatusEventSource == null && telegramChatStatusEventSourceExpression != null) receiving.telegramChatStatusEventSource = telegramChatStatusEventSourceExpression::configure
             if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
         }
 
@@ -100,8 +110,10 @@ class TelegramBotInitializationConfig(
     @EventListener(ApplicationReadyEvent::class)
     fun startTelegramBot() {
         // initialize all handlers
-        applicationContext.getBeansOfType(BotHandler::class.java)
-        applicationContext.getBeansOfType(BotUpdateHandler::class.java)
+        val botHandling = applicationContext.getBean(BotHandling::class.java)
+        applicationContext.getBeansOfType(BotHandler::class.java).forEach { (_, handler) -> handler.block(botHandling) }
+        val botUpdateHandling = applicationContext.getBean(BotUpdateHandling::class.java)
+        applicationContext.getBeansOfType(BotUpdateHandler::class.java).forEach { (_, updateHandler) -> updateHandler.block(botUpdateHandling) }
 
         // start receiving updates
         logger.info("Starting telegram-bot '${botContext.telegramBot.username}'..")

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import kotlin.Int
 import kotlin.Long
 import kotlin.String
+import kotlin.collections.List
 
 /**
  * This object represents a video file.
@@ -19,6 +20,9 @@ import kotlin.String
  * @param height Video height as defined by the sender
  * @param duration Duration of the video in seconds as defined by the sender
  * @param thumbnail *Optional*. Video thumbnail
+ * @param cover *Optional*. Available sizes of the cover of the video in the message
+ * @param startTimestamp *Optional*. Timestamp in seconds from which the video will play in the
+ * message
  * @param fileName *Optional*. Original filename as defined by the sender
  * @param mimeType *Optional*. MIME type of the file as defined by the sender
  * @param fileSize *Optional*. File size in bytes. It can be bigger than 2^31 and some programming
@@ -63,6 +67,18 @@ public data class Video(
     @get:JsonProperty("thumbnail")
     @param:JsonProperty("thumbnail")
     public val thumbnail: PhotoSize? = null,
+    /**
+     * *Optional*. Available sizes of the cover of the video in the message
+     */
+    @get:JsonProperty("cover")
+    @param:JsonProperty("cover")
+    public val cover: List<PhotoSize>? = null,
+    /**
+     * *Optional*. Timestamp in seconds from which the video will play in the message
+     */
+    @get:JsonProperty("start_timestamp")
+    @param:JsonProperty("start_timestamp")
+    public val startTimestamp: Int? = null,
     /**
      * *Optional*. Original filename as defined by the sender
      */

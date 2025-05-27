@@ -4,6 +4,8 @@ import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
 
 
 /**
@@ -36,8 +38,11 @@ class TelegramBotConfig {
     /** Telegram bot token */
     var token: String? = null
 
-    /** Telegram bot username */
+    /** Telegram bot username (optional, but recommended) */
     var username: String? = null
+
+    /** Telegram bot client additional configuration */
+    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null
 
     /** Source for saving messages */
     var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null

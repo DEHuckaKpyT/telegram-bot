@@ -9,7 +9,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Update
  *
  * @author Denis Matytsin
  */
-interface UpdateResolver {
-    suspend fun processUpdate(update: Update): Unit
-    val allowedUpdates: Set<String>
+public interface UpdateResolver {
+    public suspend fun processUpdate(update: Update): Unit
+    public val allowedUpdates: Set<String>
 }

@@ -8,6 +8,10 @@ telegram-bot:
     update-receiver.webhook.url.host: "https://my.domain.com"
     update-receiver.webhook.secret-token-random-generation.print-on-startup: true
 
+  source-jpa:
+    chat-source.enabled: true
+    chat-status-event-source.enabled: true
+
   template:
     start: "Start command."
 

@@ -34,22 +34,11 @@ import io.ktor.serialization.jackson.*
  */
 public class TelegramApiClient(
     private val token: String,
+    clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
 ) {
-
     val client = HttpClient(Apache) {
-        install(ContentNegotiation) {
-            register(Json, JacksonConverter(MAPPER))
-        }
-        engine {
-            socketTimeout = 600_000
-        }
-        defaultRequest {
-            url {
-                protocol = HTTPS
-                host = "api.telegram.org"
-                path("/bot$token/")
-            }
-        }
+        DEFAULT_CLIENT_CONFIGURATION(token)
+        clientConfiguration?.invoke(this)
     }
 
     private val hiddenToken: String = buildString {
@@ -121,12 +110,12 @@ public class TelegramApiClient(
         return client.get("https://api.telegram.org/file/bot$token/${path}")
     }
 
-    fun toJson(any: Any): String = MAPPER.writeValueAsString(any)
+    fun toJson(any: Any): String = DEFAULT_MAPPER.writeValueAsString(any)
 
     fun close(): Unit = client.close()
 
     companion object {
-        private val MAPPER = jacksonMapperBuilder().apply {
+        private val DEFAULT_MAPPER = jacksonMapperBuilder().apply {
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }.build().apply {
             setSerializationInclusion(JsonInclude.Include.NON_NULL)
@@ -146,6 +135,22 @@ public class TelegramApiClient(
                     .configure(KotlinFeature.StrictNullChecks, false)
                     .build()
             )
+        }
+
+        private val DEFAULT_CLIENT_CONFIGURATION: HttpClientConfig<ApacheEngineConfig>.(String) -> Unit = { token ->
+            install(ContentNegotiation) {
+                register(Json, JacksonConverter(DEFAULT_MAPPER))
+            }
+            engine {
+                socketTimeout = 600_000
+            }
+            defaultRequest {
+                url {
+                    protocol = HTTPS
+                    host = "api.telegram.org"
+                    path("/bot$token/")
+                }
+            }
         }
     }
 

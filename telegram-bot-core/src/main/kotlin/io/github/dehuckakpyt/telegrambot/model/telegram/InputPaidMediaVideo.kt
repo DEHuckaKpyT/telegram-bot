@@ -26,6 +26,12 @@ import kotlin.String
  * can pass “attach://\<file_attach_name\>” if the thumbnail was uploaded using multipart/form-data
  * under \<file_attach_name\>. [More information on Sending Files
  * ](https://core.telegram.org/bots/api/#sending-files)
+ * @param cover *Optional*. Cover for the video in the message. Pass a file_id to send a file that
+ * exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the
+ * Internet, or pass “attach://\<file_attach_name\>” to upload a new one using multipart/form-data
+ * under \<file_attach_name\> name. [More information on Sending Files
+ * ](https://core.telegram.org/bots/api/#sending-files)
+ * @param startTimestamp *Optional*. Start timestamp for the video in the message
  * @param width *Optional*. Video width
  * @param height *Optional*. Video height
  * @param duration *Optional*. Video duration in seconds
@@ -54,6 +60,22 @@ public data class InputPaidMediaVideo(
     @get:JsonProperty("thumbnail")
     @param:JsonProperty("thumbnail")
     override val thumbnail: Input? = null,
+    /**
+     * *Optional*. Cover for the video in the message. Pass a file_id to send a file that exists on
+     * the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the
+     * Internet, or pass “attach://\<file_attach_name\>” to upload a new one using multipart/form-data
+     * under \<file_attach_name\> name. [More information on Sending Files
+     * ](https://core.telegram.org/bots/api/#sending-files)
+     */
+    @get:JsonProperty("cover")
+    @param:JsonProperty("cover")
+    override val cover: Input? = null,
+    /**
+     * *Optional*. Start timestamp for the video in the message
+     */
+    @get:JsonProperty("start_timestamp")
+    @param:JsonProperty("start_timestamp")
+    public val startTimestamp: Int? = null,
     /**
      * *Optional*. Video width
      */
@@ -85,9 +107,12 @@ public data class InputPaidMediaVideo(
     public constructor(
         media: String,
         thumbnail: Input? = null,
+        cover: Input? = null,
+        startTimestamp: Int? = null,
         width: Int? = null,
         height: Int? = null,
         duration: Int? = null,
         supportsStreaming: Boolean? = null,
-    ) : this(StringInput(media), thumbnail, width, height, duration, supportsStreaming)
+    ) : this(StringInput(media), thumbnail, cover, startTimestamp, width, height, duration,
+            supportsStreaming)
 }
