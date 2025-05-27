@@ -53,7 +53,6 @@ internal class WebhookUpdateReceiver(
     }
 
     private fun receiveUpdatesRoute() = coRouter {
-
         if (secretToken == null) {
             POST(config.urlPathOrDefault) { request ->
                 updateResolver.processUpdate(request.awaitBody<Update>())

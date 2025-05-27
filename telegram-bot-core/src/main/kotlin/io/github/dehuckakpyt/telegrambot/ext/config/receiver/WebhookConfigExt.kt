@@ -6,7 +6,6 @@ import io.github.dehuckakpyt.telegrambot.config.constants.receiver.WebhookUpdate
 import io.github.dehuckakpyt.telegrambot.config.receiver.WebhookConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.WebhookConfig.SecretTokenRandomGeneration.*
 import io.github.dehuckakpyt.telegrambot.factory.string.StringFactory
-import io.ktor.http.*
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -20,14 +19,14 @@ public val WebhookConfig.urlPathOrDefault: String get() = urlPath ?: WEBHOOK_REC
 public val WebhookConfig.secretTokenRandomGenerationPrintOnStartupOrDefault: Boolean get() = secretTokenRandomGenerationPrintOnStartup ?: WEBHOOK_RECEIVER_DEFAULT_SECRET_TOKEN_RANDOM_GENERATION_PRINT_ON_STARTUP
 
 public fun WebhookConfig.getValidUrl(): String {
-    val url = buildUrl {
-        takeFrom(urlHost ?: throw IllegalArgumentException("WebhookConfig.urlHost is required."))
-        path(urlPathOrDefault)
-    }
+    val urlHost = urlHost ?: throw IllegalArgumentException("WebhookConfig.urlHost is required.")
+    val url = urlHost + urlPathOrDefault
 
-    if (url.protocol != URLProtocol.HTTPS) throw IllegalArgumentException("WebhookConfig.urlHost must be https.")
+    if (url.startsWith("https").not()) throw IllegalArgumentException("WebhookConfig.urlHost must be https.")
 
-    return url.toString()
+    logger.info("Configured webhook url is '$url'.")
+
+    return url
 }
 
 public fun WebhookConfig.getSecretTokenOrGenerateOrNull(printGenerated: Boolean = false): String? {

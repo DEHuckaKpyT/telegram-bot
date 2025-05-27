@@ -10,12 +10,14 @@ data class WebhookConfig(
 
     /**
      * Host for HTTPS URL to send updates to. Will be concatenated with `urlPath`.
+     * URL directly to your application.
      * For Example, `https://my.domain.com/api/awesome-telegram-bot`.
      */
     var urlHost: String? = null,
 
     /**
      * Path for HTTPS URL to send updates to. Will be concatenated with `urlHost`.
+     * API mapping in your application.
      * For Example, `/updates/receive`.
      * Defaults `/updates/receive`.
      */
@@ -48,7 +50,7 @@ data class WebhookConfig(
 
     /**
      * Generation random secret token.
-     * Defaults `RANDOM256CHARS`.
+     * Defaults `RANDOM_UUID`.
      */
     var secretTokenRandomGeneration: SecretTokenRandomGeneration? = null,
 
