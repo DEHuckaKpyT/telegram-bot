@@ -20,11 +20,12 @@ public val WebhookConfig.secretTokenRandomGenerationPrintOnStartupOrDefault: Boo
 
 public fun WebhookConfig.getValidUrl(): String {
     val urlHost = urlHost ?: throw IllegalArgumentException("WebhookConfig.urlHost is required.")
-    val url = urlHost + urlPathOrDefault
+    val urlPath = urlPathOrDefault
+    val url = urlHost + urlPath
 
     if (url.startsWith("https").not()) throw IllegalArgumentException("WebhookConfig.urlHost must be https.")
 
-    logger.info("Configured webhook url is '$url'.")
+    logger.info("Configured webhook url is '$url' (api part is '$urlPath').")
 
     return url
 }

@@ -25,7 +25,7 @@ internal object TelegramBotUpdateManager {
     internal val updatesChannel = Channel<List<Update>>()
     internal lateinit var updateResolver: UpdateResolver
     internal val objectMapper = Class.forName("io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient")
-        .getDeclaredField("MAPPER")
+        .getDeclaredField("DEFAULT_MAPPER")
         .apply { isAccessible = true }
         .get(null) as JsonMapper
 
@@ -36,9 +36,9 @@ internal object TelegramBotUpdateManager {
         every { anyConstructed(telegramBotActualConfigClass) getProperty "telegramBot" } returns mockTelegramBot
 
         mockkConstructor(UpdateReceiverConfig::class)
-        val mockUpdateReceiver: (TelegramBotActualConfig.(UpdateResolver) -> UpdateReceiver) = { resolver ->
-            updateResolver = resolver
-            MockUpdateReceiver(resolver)
+        val mockUpdateReceiver: (TelegramBotActualConfig.() -> UpdateReceiver) = {
+            updateResolver = receiving.updateResolver
+            MockUpdateReceiver(receiving.updateResolver)
         }
         every { anyConstructed<UpdateReceiverConfig>() getProperty "updateReceiver" } returns mockUpdateReceiver
     }

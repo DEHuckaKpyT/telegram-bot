@@ -38,7 +38,8 @@ class DatabaseCallbackContentSource(
         return DatabaseCallbackContent.find {
             (CallbackContents.chatId eq chatId) and (CallbackContents.fromId eq fromId)
         }.orderBy(CallbackContents.updateDate to SortOrder.DESC)
-            .limit(1, maxCallbackContentsPerUser - 1)
+            .limit(1)
+            .offset(maxCallbackContentsPerUser - 1)
             .firstOrNull()
     }
 

@@ -12,7 +12,6 @@ import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
-import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
@@ -74,7 +73,7 @@ class TelegramBotInitializationConfig(
             if (receiving.telegramUserSource == null && telegramUserSourceExpression != null) receiving.telegramUserSource = telegramUserSourceExpression::configure
             if (receiving.telegramChatSource == null && telegramChatSourceExpression != null) receiving.telegramChatSource = telegramChatSourceExpression::configure
             if (receiving.telegramChatStatusEventSource == null && telegramChatStatusEventSourceExpression != null) receiving.telegramChatStatusEventSource = telegramChatStatusEventSourceExpression::configure
-            if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
+//            if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
         }
 
         botContext = TelegramBotFactory.createTelegramBotContext(config)

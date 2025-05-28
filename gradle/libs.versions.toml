@@ -15,19 +15,19 @@ io-spring-dependency-management = { id = "io.spring.dependency-management", vers
 
 [versions]
 
-kotlin = "1.8.22"
-kotlinx-coroutines = "1.7.3"
-google-ksp = "1.8.22-1.0.11"
-ktor = "3.0.3"
-jackson = "2.18.2"
-spring = "3.4.1"
-koin = "4.0.0"
-koin-additional = "1.4.0"
-jetbrains-exposed = "0.57.0"
-hypersistence = "3.9.0"
+kotlin = "2.1.21"
+kotlinx-coroutines = "1.10.2"
+google-ksp = "2.1.21-2.0.1"
+ktor = "3.1.3"
+jackson = "2.19.0"
+spring = "3.5.0"
+koin = "4.0.4"
+koin-additional = "2.0.0"
+jetbrains-exposed = "0.61.0"
+hypersistence = "3.9.10"
 kotest = "5.9.1"
 kotest-extensions-spring = "1.3.0"
-mockk = "1.13.14"
+mockk = "1.14.2"
 
 [libraries]
 
@@ -74,20 +74,19 @@ exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version
 exposed-java-time = { group = "org.jetbrains.exposed", name = "exposed-java-time", version.ref = "jetbrains-exposed" }
 
 hypersistence-utils-hibernate-v63 = { group = "io.hypersistence", name = "hypersistence-utils-hibernate-63", version.ref = "hypersistence" }
-hypersistence-utils-hibernate-v55 = { group = "io.hypersistence", name = "hypersistence-utils-hibernate-55", version.ref = "hypersistence" }
 
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 kotest-extensions-spring = { group = "io.kotest.extensions", name = "kotest-extensions-spring", version.ref = "kotest-extensions-spring" }
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
-logback-classic = "ch.qos.logback:logback-classic:1.5.14"
-slf4j-nop = "org.slf4j:slf4j-nop:2.0.16"
-jsoup = "org.jsoup:jsoup:1.18.3"
-org-postgresql-postgresql = "org.postgresql:postgresql:42.7.4"
-hibernate-core = "org.hibernate:hibernate-core:6.6.4.Final"
-hikaricp = "com.zaxxer:HikariCP:6.2.1"
-freemarker = "org.freemarker:freemarker:2.3.33"
+logback-classic = "ch.qos.logback:logback-classic:1.5.18"
+slf4j-nop = "org.slf4j:slf4j-nop:2.0.17"
+jsoup = "org.jsoup:jsoup:1.20.1"
+org-postgresql-postgresql = "org.postgresql:postgresql:42.7.5"
+hibernate-core = "org.hibernate:hibernate-core:7.0.0.Final"
+hikaricp = "com.zaxxer:HikariCP:6.3.0"
+freemarker = "org.freemarker:freemarker:2.3.34"
 springmockk = "com.ninja-squad:springmockk:4.0.2"
 rider-spring = "com.github.database-rider:rider-spring:1.44.0"
-org-testcontainers-postgresql = "org.testcontainers:postgresql:1.20.4"
+org-testcontainers-postgresql = "org.testcontainers:postgresql:1.21.0"

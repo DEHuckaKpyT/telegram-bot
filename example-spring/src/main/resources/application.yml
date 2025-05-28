@@ -4,9 +4,9 @@ telegram-bot:
   username: ${TELEGRAM_BOT_USERNAME}
 
   spring:
-    update-receiver: webhook
-    update-receiver.webhook.url.host: "https://my.domain.com"
-    update-receiver.webhook.secret-token-random-generation.print-on-startup: true
+#    update-receiver: webhook
+#    update-receiver.webhook.url.host: "https://my.domain.com"
+#    update-receiver.webhook.secret-token-random-generation.print-on-startup: true
 
   source-jpa:
     chat-source.enabled: true
