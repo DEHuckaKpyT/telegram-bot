@@ -25,11 +25,10 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 ## ⚠️ Limitations (will be resolved) ⚠️
 - Now available only long polling (will be added webhook also).
 
-## Prerequisites
+## Tested with
 
-- JDK 17 or higher
-- Kotlin 1.8 or higher
-- Gradle or Maven
+- JDK 17
+- Kotlin 2.1.21
 
 
 ## Quick start
