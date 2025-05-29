@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
-import io.github.dehuckakpyt.telegrambot.context.SpringContext
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
@@ -57,10 +56,6 @@ class TelegramBotInitializationConfig(
     private final val botContext: TelegramBotContext
 
     init {
-        SpringContext.context = applicationContext
-    }
-
-    init {
         val config: TelegramBotConfig = (telegramBotConfig ?: TelegramBotConfig()).apply {
             if (token == null) token = botToken
             if (username == null) username = botUsername
@@ -73,7 +68,7 @@ class TelegramBotInitializationConfig(
             if (receiving.telegramUserSource == null && telegramUserSourceExpression != null) receiving.telegramUserSource = telegramUserSourceExpression::configure
             if (receiving.telegramChatSource == null && telegramChatSourceExpression != null) receiving.telegramChatSource = telegramChatSourceExpression::configure
             if (receiving.telegramChatStatusEventSource == null && telegramChatStatusEventSourceExpression != null) receiving.telegramChatStatusEventSource = telegramChatStatusEventSourceExpression::configure
-//            if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
+            if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
         }
 
         botContext = TelegramBotFactory.createTelegramBotContext(config)

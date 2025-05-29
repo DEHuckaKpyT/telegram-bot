@@ -83,6 +83,7 @@ internal class WebhookUpdateReceiver(
         bot.deleteWebhook(
             dropPendingUpdates = config.dropPendingUpdates
         )
+        logger.info("Stopped webhook update receiver.")
     }
 
     private val ServerRequest.secretToken: String? get() = headers().firstHeader("X-Telegram-Bot-Api-Secret-Token")
