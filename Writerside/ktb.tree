@@ -35,4 +35,7 @@
         <toc-element topic="exposed.md"/>
     </toc-element>
     <toc-element topic="todo.md"/>
+    <toc-element topic="how-to.md">
+        <toc-element topic="use-webhook-without-domain.md"/>
+    </toc-element>
 </instance-profile>
