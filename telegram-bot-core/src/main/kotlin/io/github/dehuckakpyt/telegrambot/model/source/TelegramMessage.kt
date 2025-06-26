@@ -16,7 +16,7 @@ interface TelegramMessage {
     val chatId: Long
 
     /** Who was sent message. */
-    val fromId: Long
+    val fromId: Long?
 
     /** True if bot sent message. */
     val fromBot: Boolean

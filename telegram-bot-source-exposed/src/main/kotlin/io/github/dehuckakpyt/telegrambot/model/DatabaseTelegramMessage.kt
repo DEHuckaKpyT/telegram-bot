@@ -20,7 +20,7 @@ import java.util.*
 object TelegramMessages : UUIDTable("telegram_message") {
 
     val chatId = long("chat_id")
-    val fromId = long("from_id")
+    val fromId = long("from_id").nullable()
     val fromBot = bool("from_bot")
     val messageId = long("message_id")
     val type = varchar("type", 255)

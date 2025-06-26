@@ -15,7 +15,7 @@ open class JpaTelegramMessageSource(
         repository.save(
             JpaTelegramMessage(
                 chatId = message.chat.id,
-                fromId = message.from!!.id,
+                fromId = message.from?.id,
                 fromBot = fromBot,
                 messageId = message.messageId,
                 type = type,
