@@ -24,7 +24,7 @@ import kotlin.String
  * @param canSendVideos *True*, if the user is allowed to send videos
  * @param canSendVideoNotes *True*, if the user is allowed to send video notes
  * @param canSendVoiceNotes *True*, if the user is allowed to send voice notes
- * @param canSendPolls *True*, if the user is allowed to send polls
+ * @param canSendPolls *True*, if the user is allowed to send polls and checklists
  * @param canSendOtherMessages *True*, if the user is allowed to send animations, games, stickers
  * and use inline bots
  * @param canAddWebPagePreviews *True*, if the user is allowed to add web page previews to their
@@ -100,7 +100,7 @@ public data class ChatMemberRestricted(
     @param:JsonProperty("can_send_voice_notes")
     public val canSendVoiceNotes: Boolean,
     /**
-     * *True*, if the user is allowed to send polls
+     * *True*, if the user is allowed to send polls and checklists
      */
     @get:JsonProperty("can_send_polls")
     @param:JsonProperty("can_send_polls")

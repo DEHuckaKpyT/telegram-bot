@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /**
- * Created on 15.02.2025.
+ * Created on 12.07.2025.
  *
  * @author KScript
  */
@@ -981,6 +981,35 @@ public class TelegramBotImpl(
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun sendChecklist(
+        businessConnectionId: String,
+        chatId: Long,
+        checklist: InputChecklist,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        messageEffectId: String?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postMultiPart<Message>("sendChecklist") {
+        append("business_connection_id", businessConnectionId)
+        append("chat_id", chatId)
+        append("checklist", client.toJson(checklist))
+        appendIfNotNull("disable_notification", disableNotification)
+        appendIfNotNull("protect_content", protectContent)
+        appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("reply_parameters", client.toJson(replyParameters))
+        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendChecklist") {
+        put("businessConnectionId", businessConnectionId)
+        put("chatId", chatId)
+        put("checklist", checklist)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
         put("messageEffectId", messageEffectId)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
@@ -2013,6 +2042,26 @@ public class TelegramBotImpl(
         put("replyMarkup", replyMarkup)
     }
 
+    override suspend fun editMessageChecklist(
+        businessConnectionId: String,
+        chatId: Long,
+        messageId: Long,
+        checklist: InputChecklist,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postMultiPart<Message>("editMessageChecklist") {
+        append("business_connection_id", businessConnectionId)
+        append("chat_id", chatId)
+        append("message_id", messageId)
+        append("checklist", client.toJson(checklist))
+        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("editMessageChecklist") {
+        put("businessConnectionId", businessConnectionId)
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("checklist", checklist)
+        put("replyMarkup", replyMarkup)
+    }
+
     override suspend fun editMessageReplyMarkup(
         chatId: String,
         messageId: Long,
@@ -2071,6 +2120,387 @@ public class TelegramBotImpl(
         ).afterMethod("deleteMessages") {
             put("chatId", chatId)
             put("messageIds", messageIds)
+        }
+
+    override suspend fun getAvailableGifts(): Gifts = client.get<Gifts>("getAvailableGifts")
+        .afterMethod("getAvailableGifts")
+
+    override suspend fun sendGift(
+        giftId: String,
+        userId: Long?,
+        chatId: String?,
+        payForUpgrade: Boolean?,
+        text: String?,
+        textParseMode: String?,
+        textEntities: Iterable<MessageEntity>?,
+    ): Boolean = client.postJson<Boolean>("sendGift",
+        SendGift(
+            giftId = giftId,
+            userId = userId,
+            chatId = chatId,
+            payForUpgrade = payForUpgrade,
+            text = text,
+            textParseMode = textParseMode,
+            textEntities = textEntities
+        )
+    ).afterMethod("sendGift") {
+        put("giftId", giftId)
+        put("userId", userId)
+        put("chatId", chatId)
+        put("payForUpgrade", payForUpgrade)
+        put("text", text)
+        put("textParseMode", textParseMode)
+        put("textEntities", textEntities)
+    }
+
+    override suspend fun giftPremiumSubscription(
+        userId: Long,
+        monthCount: Int,
+        starCount: Int,
+        text: String?,
+        textParseMode: String?,
+        textEntities: Iterable<MessageEntity>?,
+    ): Boolean = client.postJson<Boolean>("giftPremiumSubscription",
+        GiftPremiumSubscription(
+            userId = userId,
+            monthCount = monthCount,
+            starCount = starCount,
+            text = text,
+            textParseMode = textParseMode,
+            textEntities = textEntities
+        )
+    ).afterMethod("giftPremiumSubscription") {
+        put("userId", userId)
+        put("monthCount", monthCount)
+        put("starCount", starCount)
+        put("text", text)
+        put("textParseMode", textParseMode)
+        put("textEntities", textEntities)
+    }
+
+    override suspend fun verifyUser(userId: Long, customDescription: String?): Boolean =
+        client.postJson<Boolean>("verifyUser",
+            VerifyUser(
+                userId = userId,
+                customDescription = customDescription
+            )
+        ).afterMethod("verifyUser") {
+            put("userId", userId)
+            put("customDescription", customDescription)
+        }
+
+    override suspend fun verifyChat(chatId: String, customDescription: String?): Boolean =
+        client.postJson<Boolean>("verifyChat",
+            VerifyChat(
+                chatId = chatId,
+                customDescription = customDescription
+            )
+        ).afterMethod("verifyChat") {
+            put("chatId", chatId)
+            put("customDescription", customDescription)
+        }
+
+    override suspend fun removeUserVerification(userId: Long): Boolean =
+        client.postJson<Boolean>("removeUserVerification",
+            RemoveUserVerification(
+                userId = userId
+            )
+        ).afterMethod("removeUserVerification") {
+            put("userId", userId)
+        }
+
+    override suspend fun removeChatVerification(chatId: String): Boolean =
+        client.postJson<Boolean>("removeChatVerification",
+            RemoveChatVerification(
+                chatId = chatId
+            )
+        ).afterMethod("removeChatVerification") {
+            put("chatId", chatId)
+        }
+
+    override suspend fun readBusinessMessage(
+        businessConnectionId: String,
+        chatId: Long,
+        messageId: Long,
+    ): Boolean = client.postJson<Boolean>("readBusinessMessage",
+        ReadBusinessMessage(
+            businessConnectionId = businessConnectionId,
+            chatId = chatId,
+            messageId = messageId
+        )
+    ).afterMethod("readBusinessMessage") {
+        put("businessConnectionId", businessConnectionId)
+        put("chatId", chatId)
+        put("messageId", messageId)
+    }
+
+    override suspend fun deleteBusinessMessages(
+        businessConnectionId: String,
+        messageIds: Iterable<Long>,
+    ): Boolean =
+        client.postJson<Boolean>("deleteBusinessMessages",
+            DeleteBusinessMessages(
+                businessConnectionId = businessConnectionId,
+                messageIds = messageIds
+            )
+        ).afterMethod("deleteBusinessMessages") {
+            put("businessConnectionId", businessConnectionId)
+            put("messageIds", messageIds)
+        }
+
+    override suspend fun setBusinessAccountName(
+        businessConnectionId: String,
+        firstName: String,
+        lastName: String?,
+    ): Boolean = client.postJson<Boolean>("setBusinessAccountName",
+        SetBusinessAccountName(
+            businessConnectionId = businessConnectionId,
+            firstName = firstName,
+            lastName = lastName
+        )
+    ).afterMethod("setBusinessAccountName") {
+        put("businessConnectionId", businessConnectionId)
+        put("firstName", firstName)
+        put("lastName", lastName)
+    }
+
+    override suspend fun setBusinessAccountUsername(
+        businessConnectionId: String,
+        username: String?,
+    ): Boolean = client.postJson<Boolean>("setBusinessAccountUsername",
+        SetBusinessAccountUsername(
+            businessConnectionId = businessConnectionId,
+            username = username
+        )
+    ).afterMethod("setBusinessAccountUsername") {
+        put("businessConnectionId", businessConnectionId)
+        put("username", username)
+    }
+
+    override suspend fun setBusinessAccountBio(businessConnectionId: String, bio: String?): Boolean = client.postJson<Boolean>("setBusinessAccountBio",
+        SetBusinessAccountBio(
+            businessConnectionId = businessConnectionId,
+            bio = bio
+        )
+    ).afterMethod("setBusinessAccountBio") {
+        put("businessConnectionId", businessConnectionId)
+        put("bio", bio)
+    }
+
+    override suspend fun setBusinessAccountProfilePhoto(
+        businessConnectionId: String,
+        photo: InputProfilePhoto,
+        isPublic: Boolean?,
+    ): Boolean = client.postMultiPart<Boolean>("setBusinessAccountProfilePhoto") {
+        append("business_connection_id", businessConnectionId)
+        append("photo", client.toJson(photo))
+        appendIfNotNull("is_public", isPublic)
+    }.afterMethod("setBusinessAccountProfilePhoto") {
+        put("businessConnectionId", businessConnectionId)
+        put("photo", photo)
+        put("isPublic", isPublic)
+    }
+
+    override suspend fun removeBusinessAccountProfilePhoto(
+        businessConnectionId: String,
+        isPublic: Boolean?,
+    ): Boolean =
+        client.postJson<Boolean>("removeBusinessAccountProfilePhoto",
+            RemoveBusinessAccountProfilePhoto(
+                businessConnectionId = businessConnectionId,
+                isPublic = isPublic
+            )
+        ).afterMethod("removeBusinessAccountProfilePhoto") {
+            put("businessConnectionId", businessConnectionId)
+            put("isPublic", isPublic)
+        }
+
+    override suspend fun setBusinessAccountGiftSettings(
+        businessConnectionId: String,
+        showGiftButton: Boolean,
+        acceptedGiftTypes: AcceptedGiftTypes,
+    ): Boolean = client.postJson<Boolean>("setBusinessAccountGiftSettings",
+        SetBusinessAccountGiftSettings(
+            businessConnectionId = businessConnectionId,
+            showGiftButton = showGiftButton,
+            acceptedGiftTypes = acceptedGiftTypes
+        )
+    ).afterMethod("setBusinessAccountGiftSettings") {
+        put("businessConnectionId", businessConnectionId)
+        put("showGiftButton", showGiftButton)
+        put("acceptedGiftTypes", acceptedGiftTypes)
+    }
+
+    override suspend fun getBusinessAccountStarBalance(businessConnectionId: String): StarAmount =
+        client.postJson<StarAmount>("getBusinessAccountStarBalance",
+            GetBusinessAccountStarBalance(
+                businessConnectionId = businessConnectionId
+            )
+        ).afterMethod("getBusinessAccountStarBalance") {
+            put("businessConnectionId", businessConnectionId)
+        }
+
+    override suspend fun transferBusinessAccountStars(businessConnectionId: String, starCount: Int):
+            Boolean = client.postJson<Boolean>("transferBusinessAccountStars",
+        TransferBusinessAccountStars(
+            businessConnectionId = businessConnectionId,
+            starCount = starCount
+        )
+    ).afterMethod("transferBusinessAccountStars") {
+        put("businessConnectionId", businessConnectionId)
+        put("starCount", starCount)
+    }
+
+    override suspend fun getBusinessAccountGifts(
+        businessConnectionId: String,
+        excludeUnsaved: Boolean?,
+        excludeSaved: Boolean?,
+        excludeUnlimited: Boolean?,
+        excludeLimited: Boolean?,
+        excludeUnique: Boolean?,
+        sortByPrice: Boolean?,
+        offset: String?,
+        limit: Int?,
+    ): OwnedGifts = client.postJson<OwnedGifts>("getBusinessAccountGifts",
+        GetBusinessAccountGifts(
+            businessConnectionId = businessConnectionId,
+            excludeUnsaved = excludeUnsaved,
+            excludeSaved = excludeSaved,
+            excludeUnlimited = excludeUnlimited,
+            excludeLimited = excludeLimited,
+            excludeUnique = excludeUnique,
+            sortByPrice = sortByPrice,
+            offset = offset,
+            limit = limit
+        )
+    ).afterMethod("getBusinessAccountGifts") {
+        put("businessConnectionId", businessConnectionId)
+        put("excludeUnsaved", excludeUnsaved)
+        put("excludeSaved", excludeSaved)
+        put("excludeUnlimited", excludeUnlimited)
+        put("excludeLimited", excludeLimited)
+        put("excludeUnique", excludeUnique)
+        put("sortByPrice", sortByPrice)
+        put("offset", offset)
+        put("limit", limit)
+    }
+
+    override suspend fun convertGiftToStars(businessConnectionId: String, ownedGiftId: String):
+            Boolean = client.postJson<Boolean>("convertGiftToStars",
+        ConvertGiftToStars(
+            businessConnectionId = businessConnectionId,
+            ownedGiftId = ownedGiftId
+        )
+    ).afterMethod("convertGiftToStars") {
+        put("businessConnectionId", businessConnectionId)
+        put("ownedGiftId", ownedGiftId)
+    }
+
+    override suspend fun upgradeGift(
+        businessConnectionId: String,
+        ownedGiftId: String,
+        keepOriginalDetails: Boolean?,
+        starCount: Int?,
+    ): Boolean = client.postJson<Boolean>("upgradeGift",
+        UpgradeGift(
+            businessConnectionId = businessConnectionId,
+            ownedGiftId = ownedGiftId,
+            keepOriginalDetails = keepOriginalDetails,
+            starCount = starCount
+        )
+    ).afterMethod("upgradeGift") {
+        put("businessConnectionId", businessConnectionId)
+        put("ownedGiftId", ownedGiftId)
+        put("keepOriginalDetails", keepOriginalDetails)
+        put("starCount", starCount)
+    }
+
+    override suspend fun transferGift(
+        businessConnectionId: String,
+        ownedGiftId: String,
+        newOwnerChatId: Long,
+        starCount: Int?,
+    ): Boolean = client.postJson<Boolean>("transferGift",
+        TransferGift(
+            businessConnectionId = businessConnectionId,
+            ownedGiftId = ownedGiftId,
+            newOwnerChatId = newOwnerChatId,
+            starCount = starCount
+        )
+    ).afterMethod("transferGift") {
+        put("businessConnectionId", businessConnectionId)
+        put("ownedGiftId", ownedGiftId)
+        put("newOwnerChatId", newOwnerChatId)
+        put("starCount", starCount)
+    }
+
+    override suspend fun postStory(
+        businessConnectionId: String,
+        content: InputStoryContent,
+        activePeriod: Int,
+        caption: String?,
+        parseMode: String?,
+        captionEntities: Iterable<MessageEntity>?,
+        areas: Iterable<StoryArea>?,
+        postToChatPage: Boolean?,
+        protectContent: Boolean?,
+    ): Story = client.postMultiPart<Story>("postStory") {
+        append("business_connection_id", businessConnectionId)
+        append("content", client.toJson(content))
+        append("active_period", activePeriod)
+        appendIfNotNull("caption", caption)
+        appendIfNotNull("parse_mode", parseMode)
+        appendIfNotNull("caption_entities", client.toJson(captionEntities))
+        appendIfNotNull("areas", client.toJson(areas))
+        appendIfNotNull("post_to_chat_page", postToChatPage)
+        appendIfNotNull("protect_content", protectContent)
+    }.afterMethod("postStory") {
+        put("businessConnectionId", businessConnectionId)
+        put("content", content)
+        put("activePeriod", activePeriod)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("areas", areas)
+        put("postToChatPage", postToChatPage)
+        put("protectContent", protectContent)
+    }
+
+    override suspend fun editStory(
+        businessConnectionId: String,
+        storyId: Long,
+        content: InputStoryContent,
+        caption: String?,
+        parseMode: String?,
+        captionEntities: Iterable<MessageEntity>?,
+        areas: Iterable<StoryArea>?,
+    ): Story = client.postMultiPart<Story>("editStory") {
+        append("business_connection_id", businessConnectionId)
+        append("story_id", storyId)
+        append("content", client.toJson(content))
+        appendIfNotNull("caption", caption)
+        appendIfNotNull("parse_mode", parseMode)
+        appendIfNotNull("caption_entities", client.toJson(captionEntities))
+        appendIfNotNull("areas", client.toJson(areas))
+    }.afterMethod("editStory") {
+        put("businessConnectionId", businessConnectionId)
+        put("storyId", storyId)
+        put("content", content)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("areas", areas)
+    }
+
+    override suspend fun deleteStory(businessConnectionId: String, storyId: Long): Boolean =
+        client.postJson<Boolean>("deleteStory",
+            DeleteStory(
+                businessConnectionId = businessConnectionId,
+                storyId = storyId
+            )
+        ).afterMethod("deleteStory") {
+            put("businessConnectionId", businessConnectionId)
+            put("storyId", storyId)
         }
 
     override suspend fun sendSticker(
@@ -2303,77 +2733,6 @@ public class TelegramBotImpl(
             )
         ).afterMethod("deleteStickerSet") {
             put("name", name)
-        }
-
-    override suspend fun getAvailableGifts(): Gifts = client.get<Gifts>("getAvailableGifts")
-        .afterMethod("getAvailableGifts")
-
-    override suspend fun sendGift(
-        giftId: String,
-        userId: Long?,
-        chatId: String?,
-        payForUpgrade: Boolean?,
-        text: String?,
-        textParseMode: String?,
-        textEntities: Iterable<MessageEntity>?,
-    ): Boolean = client.postJson<Boolean>("sendGift",
-        SendGift(
-            giftId = giftId,
-            userId = userId,
-            chatId = chatId,
-            payForUpgrade = payForUpgrade,
-            text = text,
-            textParseMode = textParseMode,
-            textEntities = textEntities
-        )
-    ).afterMethod("sendGift") {
-        put("giftId", giftId)
-        put("userId", userId)
-        put("chatId", chatId)
-        put("payForUpgrade", payForUpgrade)
-        put("text", text)
-        put("textParseMode", textParseMode)
-        put("textEntities", textEntities)
-    }
-
-    override suspend fun verifyUser(userId: Long, customDescription: String?): Boolean =
-        client.postJson<Boolean>("verifyUser",
-            VerifyUser(
-                userId = userId,
-                customDescription = customDescription
-            )
-        ).afterMethod("verifyUser") {
-            put("userId", userId)
-            put("customDescription", customDescription)
-        }
-
-    override suspend fun verifyChat(chatId: String, customDescription: String?): Boolean =
-        client.postJson<Boolean>("verifyChat",
-            VerifyChat(
-                chatId = chatId,
-                customDescription = customDescription
-            )
-        ).afterMethod("verifyChat") {
-            put("chatId", chatId)
-            put("customDescription", customDescription)
-        }
-
-    override suspend fun removeUserVerification(userId: Long): Boolean =
-        client.postJson<Boolean>("removeUserVerification",
-            RemoveUserVerification(
-                userId = userId
-            )
-        ).afterMethod("removeUserVerification") {
-            put("userId", userId)
-        }
-
-    override suspend fun removeChatVerification(chatId: String): Boolean =
-        client.postJson<Boolean>("removeChatVerification",
-            RemoveChatVerification(
-                chatId = chatId
-            )
-        ).afterMethod("removeChatVerification") {
-            put("chatId", chatId)
         }
 
     override suspend fun answerInlineQuery(
@@ -2638,6 +2997,9 @@ public class TelegramBotImpl(
         put("ok", ok)
         put("errorMessage", errorMessage)
     }
+
+    override suspend fun getMyStarBalance(): StarAmount = client.get<StarAmount>("getMyStarBalance")
+        .afterMethod("getMyStarBalance")
 
     override suspend fun getStarTransactions(offset: Int?, limit: Int?): StarTransactions =
         client.postJson<StarTransactions>("getStarTransactions",

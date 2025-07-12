@@ -17,8 +17,8 @@ import kotlin.String
  * @param canBeEdited *True*, if the bot is allowed to edit administrator privileges of that user
  * @param isAnonymous *True*, if the user's presence in the chat is hidden
  * @param canManageChat *True*, if the administrator can access the chat event log, get boost list,
- * see hidden supergroup and channel members, report spam messages and ignore slow mode. Implied by any
- * other administrator privilege.
+ * see hidden supergroup and channel members, report spam messages, ignore slow mode, and send messages
+ * to the chat without paying Telegram Stars. Implied by any other administrator privilege.
  * @param canDeleteMessages *True*, if the administrator can delete messages of other users
  * @param canManageVideoChats *True*, if the administrator can manage video chats
  * @param canRestrictMembers *True*, if the administrator can restrict, ban or unban chat members,
@@ -34,7 +34,7 @@ import kotlin.String
  * stories to the chat page, pin chat stories, and access the chat's story archive
  * @param canDeleteStories *True*, if the administrator can delete stories posted by other users
  * @param canPostMessages *Optional*. *True*, if the administrator can post messages in the channel,
- * or access channel statistics; for channels only
+ * approve suggested posts, or access channel statistics; for channels only
  * @param canEditMessages *Optional*. *True*, if the administrator can edit messages of other users
  * and can pin messages; for channels only
  * @param canPinMessages *Optional*. *True*, if the user is allowed to pin messages; for groups and
@@ -70,8 +70,8 @@ public data class ChatMemberAdministrator(
     public val isAnonymous: Boolean,
     /**
      * *True*, if the administrator can access the chat event log, get boost list, see hidden
-     * supergroup and channel members, report spam messages and ignore slow mode. Implied by any other
-     * administrator privilege.
+     * supergroup and channel members, report spam messages, ignore slow mode, and send messages to the
+     * chat without paying Telegram Stars. Implied by any other administrator privilege.
      */
     @get:JsonProperty("can_manage_chat")
     @param:JsonProperty("can_manage_chat")
@@ -135,8 +135,8 @@ public data class ChatMemberAdministrator(
     @param:JsonProperty("can_delete_stories")
     public val canDeleteStories: Boolean,
     /**
-     * *Optional*. *True*, if the administrator can post messages in the channel, or access channel
-     * statistics; for channels only
+     * *Optional*. *True*, if the administrator can post messages in the channel, approve suggested
+     * posts, or access channel statistics; for channels only
      */
     @get:JsonProperty("can_post_messages")
     @param:JsonProperty("can_post_messages")

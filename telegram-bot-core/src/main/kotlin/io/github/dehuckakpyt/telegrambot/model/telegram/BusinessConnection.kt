@@ -19,9 +19,8 @@ import kotlin.String
  * difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit
  * integer or double-precision float type are safe for storing this identifier.
  * @param date Date the connection was established in Unix time
- * @param canReply True, if the bot can act on behalf of the business account in chats that were
- * active in the last 24 hours
- * @param isEnabled True, if the connection is active
+ * @param rights *Optional*. Rights of the business bot
+ * @param isEnabled *True*, if the connection is active
  */
 public data class BusinessConnection(
     /**
@@ -52,14 +51,13 @@ public data class BusinessConnection(
     @param:JsonProperty("date")
     public val date: Long,
     /**
-     * True, if the bot can act on behalf of the business account in chats that were active in the
-     * last 24 hours
+     * *Optional*. Rights of the business bot
      */
-    @get:JsonProperty("can_reply")
-    @param:JsonProperty("can_reply")
-    public val canReply: Boolean,
+    @get:JsonProperty("rights")
+    @param:JsonProperty("rights")
+    public val rights: BusinessBotRights? = null,
     /**
-     * True, if the connection is active
+     * *True*, if the connection is active
      */
     @get:JsonProperty("is_enabled")
     @param:JsonProperty("is_enabled")

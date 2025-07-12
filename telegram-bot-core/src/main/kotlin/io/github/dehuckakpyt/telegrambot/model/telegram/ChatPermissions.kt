@@ -18,7 +18,7 @@ import kotlin.Boolean
  * @param canSendVideos *Optional*. *True*, if the user is allowed to send videos
  * @param canSendVideoNotes *Optional*. *True*, if the user is allowed to send video notes
  * @param canSendVoiceNotes *Optional*. *True*, if the user is allowed to send voice notes
- * @param canSendPolls *Optional*. *True*, if the user is allowed to send polls
+ * @param canSendPolls *Optional*. *True*, if the user is allowed to send polls and checklists
  * @param canSendOtherMessages *Optional*. *True*, if the user is allowed to send animations, games,
  * stickers and use inline bots
  * @param canAddWebPagePreviews *Optional*. *True*, if the user is allowed to add web page previews
@@ -76,7 +76,7 @@ public data class ChatPermissions(
     @param:JsonProperty("can_send_voice_notes")
     public val canSendVoiceNotes: Boolean? = null,
     /**
-     * *Optional*. *True*, if the user is allowed to send polls
+     * *Optional*. *True*, if the user is allowed to send polls and checklists
      */
     @get:JsonProperty("can_send_polls")
     @param:JsonProperty("can_send_polls")

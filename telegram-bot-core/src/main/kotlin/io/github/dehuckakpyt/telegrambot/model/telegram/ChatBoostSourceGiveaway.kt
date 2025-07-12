@@ -23,8 +23,8 @@ import kotlin.String
  * giveaways only
  * @param prizeStarCount *Optional*. The number of Telegram Stars to be split between giveaway
  * winners; for Telegram Star giveaways only
- * @param isUnclaimed *Optional*. True, if the giveaway was completed, but there was no user to win
- * the prize
+ * @param isUnclaimed *Optional*. *True*, if the giveaway was completed, but there was no user to
+ * win the prize
  */
 public data class ChatBoostSourceGiveaway(
     /**
@@ -55,7 +55,7 @@ public data class ChatBoostSourceGiveaway(
     @param:JsonProperty("prize_star_count")
     public val prizeStarCount: Int? = null,
     /**
-     * *Optional*. True, if the giveaway was completed, but there was no user to win the prize
+     * *Optional*. *True*, if the giveaway was completed, but there was no user to win the prize
      */
     @get:JsonProperty("is_unclaimed")
     @param:JsonProperty("is_unclaimed")

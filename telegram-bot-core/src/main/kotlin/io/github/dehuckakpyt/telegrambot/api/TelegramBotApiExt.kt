@@ -2444,7 +2444,7 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * format `@channelusername`). If the chat is a channel, all Telegram Star proceeds from this media
      * will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
      * @param starCount The number of Telegram Stars that must be paid to buy access to the media;
-     * 1-2500
+     * 1-10000
      * @param media A JSON-serialized array describing the media to be sent; up to 10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
@@ -2767,7 +2767,7 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
      * @param question Poll question, 1-300 characters
-     * @param options A JSON-serialized list of 2-10 answer options
+     * @param options A JSON-serialized list of 2-12 answer options
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
@@ -3081,8 +3081,9 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * @param userId Unique identifier of the target user
      * @param isAnonymous Pass *True* if the administrator's presence in the chat is hidden
      * @param canManageChat Pass *True* if the administrator can access the chat event log, get
-     * boost list, see hidden supergroup and channel members, report spam messages and ignore slow
-     * mode. Implied by any other administrator privilege.
+     * boost list, see hidden supergroup and channel members, report spam messages, ignore slow mode,
+     * and send messages to the chat without paying Telegram Stars. Implied by any other administrator
+     * privilege.
      * @param canDeleteMessages Pass *True* if the administrator can delete messages of other users
      * @param canManageVideoChats Pass *True* if the administrator can manage video chats
      * @param canRestrictMembers Pass *True* if the administrator can restrict, ban or unban chat
@@ -3098,8 +3099,8 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * users, post stories to the chat page, pin chat stories, and access the chat's story archive
      * @param canDeleteStories Pass *True* if the administrator can delete stories posted by other
      * users
-     * @param canPostMessages Pass *True* if the administrator can post messages in the channel, or
-     * access channel statistics; for channels only
+     * @param canPostMessages Pass *True* if the administrator can post messages in the channel,
+     * approve suggested posts, or access channel statistics; for channels only
      * @param canEditMessages Pass *True* if the administrator can edit messages of other users and
      * can pin messages; for channels only
      * @param canPinMessages Pass *True* if the administrator can pin messages; for supergroups only
@@ -3310,7 +3311,7 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * @param subscriptionPeriod The number of seconds the subscription will be active for before
      * the next payment. Currently, it must always be 2592000 (30 days).
      * @param subscriptionPrice The amount of Telegram Stars a user must pay initially and after
-     * each subsequent subscription period to be a member of the chat; 1-2500
+     * each subsequent subscription period to be a member of the chat; 1-10000
      * @param name Invite link name; 0-32 characters
      */
     public suspend fun createChatSubscriptionInviteLink(
@@ -4099,6 +4100,72 @@ public interface TelegramBotApiExt : TelegramBotApi {
     )
 
     /**
+     * Sends a gift to the given user or channel chat. The gift can't be converted to Telegram Stars
+     * by the receiver. Returns *True* on success.
+     *
+     * @param giftId Identifier of the gift
+     * @param userId Required if *chat_id* is not specified. Unique identifier of the target user
+     * who will receive the gift.
+     * @param chatId Required if *user_id* is not specified. Unique identifier for the chat or
+     * username of the channel (in the format `@channelusername`) that will receive the gift.
+     * @param payForUpgrade Pass *True* to pay for the gift upgrade from the bot's balance, thereby
+     * making the upgrade free for the receiver
+     * @param text Text that will be shown along with the gift; 0-128 characters
+     * @param textParseMode Mode for parsing entities in the text. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
+     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
+     * ignored.
+     * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
+     * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
+     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+     */
+    public suspend fun sendGift(
+        giftId: String,
+        userId: Long? = null,
+        chatId: Long? = null,
+        payForUpgrade: Boolean? = null,
+        text: String? = null,
+        textParseMode: String? = null,
+        textEntities: Iterable<MessageEntity>? = null,
+    ): Boolean = sendGift(
+        giftId = giftId,
+        userId = userId,
+        chatId = chatId?.let { chatId.toString() },
+        payForUpgrade = payForUpgrade,
+        text = text,
+        textParseMode = textParseMode,
+        textEntities = textEntities,
+    )
+
+    /**
+     * Verifies a chat [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
+     * bot. Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     * @param customDescription Custom description for the verification; 0-70 characters. Must be
+     * empty if the organization isn't allowed to provide a custom verification description.
+     */
+    public suspend fun verifyChat(chatId: Long, customDescription: String? = null): Boolean =
+            verifyChat(
+        chatId = chatId.toString(),
+        customDescription = customDescription,
+    )
+
+    /**
+     * Removes verification from a chat that is currently verified [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+     * Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     */
+    public suspend fun removeChatVerification(chatId: Long): Boolean = removeChatVerification(
+        chatId = chatId.toString(),
+    )
+
+    /**
      * Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers)
      * .TGS, or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On
      * success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
@@ -4310,72 +4377,6 @@ public interface TelegramBotApiExt : TelegramBotApi {
         userId = userId,
         format = format,
         thumbnail = thumbnail?.let { StringInput(thumbnail) },
-    )
-
-    /**
-     * Sends a gift to the given user or channel chat. The gift can't be converted to Telegram Stars
-     * by the receiver. Returns *True* on success.
-     *
-     * @param giftId Identifier of the gift
-     * @param userId Required if *chat_id* is not specified. Unique identifier of the target user
-     * who will receive the gift.
-     * @param chatId Required if *user_id* is not specified. Unique identifier for the chat or
-     * username of the channel (in the format `@channelusername`) that will receive the gift.
-     * @param payForUpgrade Pass *True* to pay for the gift upgrade from the bot's balance, thereby
-     * making the upgrade free for the receiver
-     * @param text Text that will be shown along with the gift; 0-128 characters
-     * @param textParseMode Mode for parsing entities in the text. See [formatting
-     * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
-     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
-     * ignored.
-     * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
-     * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
-     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
-     */
-    public suspend fun sendGift(
-        giftId: String,
-        userId: Long? = null,
-        chatId: Long? = null,
-        payForUpgrade: Boolean? = null,
-        text: String? = null,
-        textParseMode: String? = null,
-        textEntities: Iterable<MessageEntity>? = null,
-    ): Boolean = sendGift(
-        giftId = giftId,
-        userId = userId,
-        chatId = chatId?.let { chatId.toString() },
-        payForUpgrade = payForUpgrade,
-        text = text,
-        textParseMode = textParseMode,
-        textEntities = textEntities,
-    )
-
-    /**
-     * Verifies a chat [on behalf of the
-     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
-     * bot. Returns *True* on success.
-     *
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
-     * @param customDescription Custom description for the verification; 0-70 characters. Must be
-     * empty if the organization isn't allowed to provide a custom verification description.
-     */
-    public suspend fun verifyChat(chatId: Long, customDescription: String? = null): Boolean =
-            verifyChat(
-        chatId = chatId.toString(),
-        customDescription = customDescription,
-    )
-
-    /**
-     * Removes verification from a chat that is currently verified [on behalf of the
-     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
-     * Returns *True* on success.
-     *
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
-     */
-    public suspend fun removeChatVerification(chatId: Long): Boolean = removeChatVerification(
-        chatId = chatId.toString(),
     )
 
     /**

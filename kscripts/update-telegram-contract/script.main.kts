@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.com.google.common.base.CaseFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.Path
+import kotlin.io.path.readText
 
 val getDefaultValueFromDescriptionRegex = Regex("^(?:Always (.+)\\..+)|(?:.+, always “([a-z0-9_]+)”)$")
 val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*?$")
@@ -45,8 +46,8 @@ val client = HttpClient(Apache5) {
 }
 
 runBlocking {
-    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").bodyAsText()
-//    val contract = Path("./custom_v2.json").readText()
+//    val contract = client.get("https://ark0f.github.io/tg-bot-api/custom_v2.json").bodyAsText()
+    val contract = Path("./custom_v2.json").readText()
         .replace("\"reference\": \"Telegram\"", "\"reference\": \"StarTransactions\"")
         .replace("\\\\_", "_")
         .replace("\\'", "'")
@@ -1216,7 +1217,7 @@ fun Contract.replaceObjectTypes() {
         val propertiesByName = referenceObjects.flatMap { it.properties }.groupBy { it.name }
 
         for ((propertyName, properties) in propertiesByName) {
-            if (properties.size != referenceObjects.size) continue
+            if (properties.size != referenceObjects.size || propertyName == "gift") continue
 
             if (obj.properties == null) obj.properties = mutableListOf()
             val parentProperty = Property(

@@ -25,8 +25,9 @@ import kotlin.String
  * @param invoicePayload Bot-specified invoice payload
  * @param subscriptionExpirationDate *Optional*. Expiration date of the subscription, in Unix time;
  * for recurring payments only
- * @param isRecurring *Optional*. True, if the payment is a recurring payment for a subscription
- * @param isFirstRecurring *Optional*. True, if the payment is the first payment for a subscription
+ * @param isRecurring *Optional*. *True*, if the payment is a recurring payment for a subscription
+ * @param isFirstRecurring *Optional*. *True*, if the payment is the first payment for a
+ * subscription
  * @param shippingOptionId *Optional*. Identifier of the shipping option chosen by the user
  * @param orderInfo *Optional*. Order information provided by the user
  * @param telegramPaymentChargeId Telegram payment identifier
@@ -63,13 +64,13 @@ public data class SuccessfulPayment(
     @param:JsonProperty("subscription_expiration_date")
     public val subscriptionExpirationDate: Long? = null,
     /**
-     * *Optional*. True, if the payment is a recurring payment for a subscription
+     * *Optional*. *True*, if the payment is a recurring payment for a subscription
      */
     @get:JsonProperty("is_recurring")
     @param:JsonProperty("is_recurring")
     public val isRecurring: Boolean? = null,
     /**
-     * *Optional*. True, if the payment is the first payment for a subscription
+     * *Optional*. *True*, if the payment is the first payment for a subscription
      */
     @get:JsonProperty("is_first_recurring")
     @param:JsonProperty("is_first_recurring")

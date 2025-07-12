@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.api
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.Container
+import io.github.dehuckakpyt.telegrambot.model.telegram.AcceptedGiftTypes
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
@@ -20,10 +21,13 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Gifts
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputChecklist
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContent
 import io.github.dehuckakpyt.telegrambot.model.telegram.LabeledPrice
 import io.github.dehuckakpyt.telegrambot.model.telegram.LinkPreviewOptions
 import io.github.dehuckakpyt.telegrambot.model.telegram.MaskPosition
@@ -31,6 +35,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.MenuButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.OwnedGifts
 import io.github.dehuckakpyt.telegrambot.model.telegram.PassportElementError
 import io.github.dehuckakpyt.telegrambot.model.telegram.Poll
 import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedInlineMessage
@@ -39,9 +44,12 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
 import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.StarAmount
 import io.github.dehuckakpyt.telegrambot.model.telegram.StarTransactions
 import io.github.dehuckakpyt.telegrambot.model.telegram.Sticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.StickerSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.Story
+import io.github.dehuckakpyt.telegrambot.model.telegram.StoryArea
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserChatBoosts
@@ -1010,7 +1018,7 @@ public abstract class TelegramBotApiHandling {
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
      * @param starCount The number of Telegram Stars that must be paid to buy access to the media;
-     * 1-2500
+     * 1-10000
      * @param media A JSON-serialized array describing the media to be sent; up to 10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
@@ -1318,7 +1326,7 @@ public abstract class TelegramBotApiHandling {
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
      * @param question Poll question, 1-300 characters
-     * @param options A JSON-serialized list of 2-10 answer options
+     * @param options A JSON-serialized list of 2-12 answer options
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
@@ -1409,6 +1417,39 @@ public abstract class TelegramBotApiHandling {
         disableNotification = disableNotification,
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
+        messageEffectId = messageEffectId,
+        replyParameters = replyParameters,
+        replyMarkup = replyMarkup,
+    )
+
+    /**
+     * Use this method to send a checklist on behalf of a connected business account. On success,
+     * the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param checklist A JSON-serialized object for the checklist to send
+     * @param disableNotification Sends the message silently. Users will receive a notification with
+     * no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param messageEffectId Unique identifier of the message effect to be added to the message
+     * @param replyParameters A JSON-serialized object for description of the message to reply to
+     * @param replyMarkup A JSON-serialized object for an inline keyboard
+     */
+    public suspend fun Container.sendChecklist(
+        businessConnectionId: String,
+        checklist: InputChecklist,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        messageEffectId: String? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message = bot.sendChecklist(
+        businessConnectionId = businessConnectionId,
+        chatId = chat.id,
+        checklist = checklist,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
         messageEffectId = messageEffectId,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -1665,8 +1706,9 @@ public abstract class TelegramBotApiHandling {
      * @param userId Unique identifier of the target user
      * @param isAnonymous Pass *True* if the administrator's presence in the chat is hidden
      * @param canManageChat Pass *True* if the administrator can access the chat event log, get
-     * boost list, see hidden supergroup and channel members, report spam messages and ignore slow
-     * mode. Implied by any other administrator privilege.
+     * boost list, see hidden supergroup and channel members, report spam messages, ignore slow mode,
+     * and send messages to the chat without paying Telegram Stars. Implied by any other administrator
+     * privilege.
      * @param canDeleteMessages Pass *True* if the administrator can delete messages of other users
      * @param canManageVideoChats Pass *True* if the administrator can manage video chats
      * @param canRestrictMembers Pass *True* if the administrator can restrict, ban or unban chat
@@ -1682,8 +1724,8 @@ public abstract class TelegramBotApiHandling {
      * users, post stories to the chat page, pin chat stories, and access the chat's story archive
      * @param canDeleteStories Pass *True* if the administrator can delete stories posted by other
      * users
-     * @param canPostMessages Pass *True* if the administrator can post messages in the channel, or
-     * access channel statistics; for channels only
+     * @param canPostMessages Pass *True* if the administrator can post messages in the channel,
+     * approve suggested posts, or access channel statistics; for channels only
      * @param canEditMessages Pass *True* if the administrator can edit messages of other users and
      * can pin messages; for channels only
      * @param canPinMessages Pass *True* if the administrator can pin messages; for supergroups only
@@ -1868,7 +1910,7 @@ public abstract class TelegramBotApiHandling {
      * @param subscriptionPeriod The number of seconds the subscription will be active for before
      * the next payment. Currently, it must always be 2592000 (30 days).
      * @param subscriptionPrice The amount of Telegram Stars a user must pay initially and after
-     * each subsequent subscription period to be a member of the chat; 1-2500
+     * each subsequent subscription period to be a member of the chat; 1-10000
      * @param name Invite link name; 0-32 characters
      */
     public suspend fun Container.createChatSubscriptionInviteLink(
@@ -2713,6 +2755,29 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
+     * Use this method to edit a checklist on behalf of a connected business account. On success,
+     * the edited [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param messageId Unique identifier for the target message
+     * @param checklist A JSON-serialized object for the new checklist
+     * @param replyMarkup A JSON-serialized object for the new inline keyboard for the message
+     */
+    public suspend fun Container.editMessageChecklist(
+        businessConnectionId: String,
+        messageId: Long,
+        checklist: InputChecklist,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message = bot.editMessageChecklist(
+        businessConnectionId = businessConnectionId,
+        chatId = chat.id,
+        messageId = messageId,
+        checklist = checklist,
+        replyMarkup = replyMarkup,
+    )
+
+    /**
      * Use this method to edit only the reply markup of messages. On success, if the edited message
      * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
      * returned, otherwise *True* is returned. Note that business messages that were not sent by the
@@ -2792,6 +2857,483 @@ public abstract class TelegramBotApiHandling {
             bot.deleteMessages(
         chatId = chat.id,
         messageIds = messageIds,
+    )
+
+    /**
+     * Returns the list of gifts that can be sent by the bot to users and channel chats. Requires no
+     * parameters. Returns a [Gifts](https://core.telegram.org/bots/api/#gifts) object.
+     */
+    public suspend fun Container.getAvailableGifts(): Gifts = bot.getAvailableGifts(
+    )
+
+    /**
+     * Sends a gift to the given user or channel chat. The gift can't be converted to Telegram Stars
+     * by the receiver. Returns *True* on success.
+     *
+     * @param giftId Identifier of the gift
+     * @param userId Required if *chat_id* is not specified. Unique identifier of the target user
+     * who will receive the gift.
+     * @param payForUpgrade Pass *True* to pay for the gift upgrade from the bot's balance, thereby
+     * making the upgrade free for the receiver
+     * @param text Text that will be shown along with the gift; 0-128 characters
+     * @param textParseMode Mode for parsing entities in the text. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
+     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
+     * ignored.
+     * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
+     * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
+     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+     */
+    public suspend fun Container.sendGift(
+        giftId: String,
+        userId: Long? = null,
+        payForUpgrade: Boolean? = null,
+        text: String? = null,
+        textParseMode: String? = null,
+        textEntities: Iterable<MessageEntity>? = null,
+    ): Boolean = bot.sendGift(
+        giftId = giftId,
+        userId = userId,
+        chatId = chat.id,
+        payForUpgrade = payForUpgrade,
+        text = text,
+        textParseMode = textParseMode,
+        textEntities = textEntities,
+    )
+
+    /**
+     * Gifts a Telegram Premium subscription to the given user. Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user who will receive a Telegram Premium
+     * subscription
+     * @param monthCount Number of months the Telegram Premium subscription will be active for the
+     * user; must be one of 3, 6, or 12
+     * @param starCount Number of Telegram Stars to pay for the Telegram Premium subscription; must
+     * be 1000 for 3 months, 1500 for 6 months, and 2500 for 12 months
+     * @param text Text that will be shown along with the service message about the subscription;
+     * 0-128 characters
+     * @param textParseMode Mode for parsing entities in the text. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
+     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
+     * ignored.
+     * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
+     * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
+     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+     */
+    public suspend fun Container.giftPremiumSubscription(
+        userId: Long,
+        monthCount: Int,
+        starCount: Int,
+        text: String? = null,
+        textParseMode: String? = null,
+        textEntities: Iterable<MessageEntity>? = null,
+    ): Boolean = bot.giftPremiumSubscription(
+        userId = userId,
+        monthCount = monthCount,
+        starCount = starCount,
+        text = text,
+        textParseMode = textParseMode,
+        textEntities = textEntities,
+    )
+
+    /**
+     * Verifies a user [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
+     * bot. Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user
+     * @param customDescription Custom description for the verification; 0-70 characters. Must be
+     * empty if the organization isn't allowed to provide a custom verification description.
+     */
+    public suspend fun Container.verifyUser(userId: Long, customDescription: String? = null):
+            Boolean = bot.verifyUser(
+        userId = userId,
+        customDescription = customDescription,
+    )
+
+    /**
+     * Verifies a chat [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
+     * bot. Returns *True* on success.
+     *
+     * @param customDescription Custom description for the verification; 0-70 characters. Must be
+     * empty if the organization isn't allowed to provide a custom verification description.
+     */
+    public suspend fun Container.verifyChat(customDescription: String? = null): Boolean =
+            bot.verifyChat(
+        chatId = chat.id,
+        customDescription = customDescription,
+    )
+
+    /**
+     * Removes verification from a user who is currently verified [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+     * Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user
+     */
+    public suspend fun Container.removeUserVerification(userId: Long): Boolean =
+            bot.removeUserVerification(
+        userId = userId,
+    )
+
+    /**
+     * Removes verification from a chat that is currently verified [on behalf of the
+     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+     * Returns *True* on success.
+     */
+    public suspend fun Container.removeChatVerification(): Boolean = bot.removeChatVerification(
+        chatId = chat.id,
+    )
+
+    /**
+     * Marks incoming message as read on behalf of a business account. Requires the
+     * *can_read_messages* business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * to read the message
+     * @param messageId Unique identifier of the message to mark as read
+     */
+    public suspend fun Container.readBusinessMessage(businessConnectionId: String, messageId: Long):
+            Boolean = bot.readBusinessMessage(
+        businessConnectionId = businessConnectionId,
+        chatId = chat.id,
+        messageId = messageId,
+    )
+
+    /**
+     * Delete messages on behalf of a business account. Requires the *can_delete_sent_messages*
+     * business bot right to delete messages sent by the bot itself, or the *can_delete_all_messages*
+     * business bot right to delete any message. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * to delete the messages
+     * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. All
+     * messages must be from the same chat. See
+     * [deleteMessage](https://core.telegram.org/bots/api/#deletemessage) for limitations on which
+     * messages can be deleted
+     */
+    public suspend fun Container.deleteBusinessMessages(businessConnectionId: String,
+            messageIds: Iterable<Long>): Boolean = bot.deleteBusinessMessages(
+        businessConnectionId = businessConnectionId,
+        messageIds = messageIds,
+    )
+
+    /**
+     * Changes the first and last name of a managed business account. Requires the *can_change_name*
+     * business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param firstName The new value of the first name for the business account; 1-64 characters
+     * @param lastName The new value of the last name for the business account; 0-64 characters
+     */
+    public suspend fun Container.setBusinessAccountName(
+        businessConnectionId: String,
+        firstName: String,
+        lastName: String? = null,
+    ): Boolean = bot.setBusinessAccountName(
+        businessConnectionId = businessConnectionId,
+        firstName = firstName,
+        lastName = lastName,
+    )
+
+    /**
+     * Changes the username of a managed business account. Requires the *can_change_username*
+     * business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param username The new value of the username for the business account; 0-32 characters
+     */
+    public suspend fun Container.setBusinessAccountUsername(businessConnectionId: String,
+            username: String? = null): Boolean = bot.setBusinessAccountUsername(
+        businessConnectionId = businessConnectionId,
+        username = username,
+    )
+
+    /**
+     * Changes the bio of a managed business account. Requires the *can_change_bio* business bot
+     * right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param bio The new value of the bio for the business account; 0-140 characters
+     */
+    public suspend fun Container.setBusinessAccountBio(businessConnectionId: String, bio: String? =
+            null): Boolean = bot.setBusinessAccountBio(
+        businessConnectionId = businessConnectionId,
+        bio = bio,
+    )
+
+    /**
+     * Changes the profile photo of a managed business account. Requires the
+     * *can_edit_profile_photo* business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param photo The new profile photo to set
+     * @param isPublic Pass *True* to set the public photo, which will be visible even if the main
+     * photo is hidden by the business account's privacy settings. An account can have only one public
+     * photo.
+     */
+    public suspend fun Container.setBusinessAccountProfilePhoto(
+        businessConnectionId: String,
+        photo: InputProfilePhoto,
+        isPublic: Boolean? = null,
+    ): Boolean = bot.setBusinessAccountProfilePhoto(
+        businessConnectionId = businessConnectionId,
+        photo = photo,
+        isPublic = isPublic,
+    )
+
+    /**
+     * Removes the current profile photo of a managed business account. Requires the
+     * *can_edit_profile_photo* business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param isPublic Pass *True* to remove the public photo, which is visible even if the main
+     * photo is hidden by the business account's privacy settings. After the main photo is removed, the
+     * previous profile photo (if present) becomes the main photo.
+     */
+    public suspend fun Container.removeBusinessAccountProfilePhoto(businessConnectionId: String,
+            isPublic: Boolean? = null): Boolean = bot.removeBusinessAccountProfilePhoto(
+        businessConnectionId = businessConnectionId,
+        isPublic = isPublic,
+    )
+
+    /**
+     * Changes the privacy settings pertaining to incoming gifts in a managed business account.
+     * Requires the *can_change_gift_settings* business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param showGiftButton Pass *True*, if a button for sending a gift to the user or by the
+     * business account must always be shown in the input field
+     * @param acceptedGiftTypes Types of gifts accepted by the business account
+     */
+    public suspend fun Container.setBusinessAccountGiftSettings(
+        businessConnectionId: String,
+        showGiftButton: Boolean,
+        acceptedGiftTypes: AcceptedGiftTypes,
+    ): Boolean = bot.setBusinessAccountGiftSettings(
+        businessConnectionId = businessConnectionId,
+        showGiftButton = showGiftButton,
+        acceptedGiftTypes = acceptedGiftTypes,
+    )
+
+    /**
+     * Returns the amount of Telegram Stars owned by a managed business account. Requires the
+     * *can_view_gifts_and_stars* business bot right. Returns
+     * [StarAmount](https://core.telegram.org/bots/api/#staramount) on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     */
+    public suspend fun Container.getBusinessAccountStarBalance(businessConnectionId: String):
+            StarAmount = bot.getBusinessAccountStarBalance(
+        businessConnectionId = businessConnectionId,
+    )
+
+    /**
+     * Transfers Telegram Stars from the business account balance to the bot's balance. Requires the
+     * *can_transfer_stars* business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param starCount Number of Telegram Stars to transfer; 1-10000
+     */
+    public suspend fun Container.transferBusinessAccountStars(businessConnectionId: String,
+            starCount: Int): Boolean = bot.transferBusinessAccountStars(
+        businessConnectionId = businessConnectionId,
+        starCount = starCount,
+    )
+
+    /**
+     * Returns the gifts received and owned by a managed business account. Requires the
+     * *can_view_gifts_and_stars* business bot right. Returns
+     * [OwnedGifts](https://core.telegram.org/bots/api/#ownedgifts) on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param excludeUnsaved Pass *True* to exclude gifts that aren't saved to the account's profile
+     * page
+     * @param excludeSaved Pass *True* to exclude gifts that are saved to the account's profile page
+     * @param excludeUnlimited Pass *True* to exclude gifts that can be purchased an unlimited
+     * number of times
+     * @param excludeLimited Pass *True* to exclude gifts that can be purchased a limited number of
+     * times
+     * @param excludeUnique Pass *True* to exclude unique gifts
+     * @param sortByPrice Pass *True* to sort results by gift price instead of send date. Sorting is
+     * applied before pagination.
+     * @param offset Offset of the first entry to return as received from the previous request; use
+     * empty string to get the first chunk of results
+     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100
+     */
+    public suspend fun Container.getBusinessAccountGifts(
+        businessConnectionId: String,
+        excludeUnsaved: Boolean? = null,
+        excludeSaved: Boolean? = null,
+        excludeUnlimited: Boolean? = null,
+        excludeLimited: Boolean? = null,
+        excludeUnique: Boolean? = null,
+        sortByPrice: Boolean? = null,
+        offset: String? = null,
+        limit: Int? = null,
+    ): OwnedGifts = bot.getBusinessAccountGifts(
+        businessConnectionId = businessConnectionId,
+        excludeUnsaved = excludeUnsaved,
+        excludeSaved = excludeSaved,
+        excludeUnlimited = excludeUnlimited,
+        excludeLimited = excludeLimited,
+        excludeUnique = excludeUnique,
+        sortByPrice = sortByPrice,
+        offset = offset,
+        limit = limit,
+    )
+
+    /**
+     * Converts a given regular gift to Telegram Stars. Requires the *can_convert_gifts_to_stars*
+     * business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param ownedGiftId Unique identifier of the regular gift that should be converted to Telegram
+     * Stars
+     */
+    public suspend fun Container.convertGiftToStars(businessConnectionId: String,
+            ownedGiftId: String): Boolean = bot.convertGiftToStars(
+        businessConnectionId = businessConnectionId,
+        ownedGiftId = ownedGiftId,
+    )
+
+    /**
+     * Upgrades a given regular gift to a unique gift. Requires the *can_transfer_and_upgrade_gifts*
+     * business bot right. Additionally requires the *can_transfer_stars* business bot right if the
+     * upgrade is paid. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param ownedGiftId Unique identifier of the regular gift that should be upgraded to a unique
+     * one
+     * @param keepOriginalDetails Pass *True* to keep the original gift text, sender and receiver in
+     * the upgraded gift
+     * @param starCount The amount of Telegram Stars that will be paid for the upgrade from the
+     * business account balance. If `gift.prepaid_upgrade_star_count > 0`, then pass 0, otherwise, the
+     * *can_transfer_stars* business bot right is required and `gift.upgrade_star_count` must be
+     * passed.
+     */
+    public suspend fun Container.upgradeGift(
+        businessConnectionId: String,
+        ownedGiftId: String,
+        keepOriginalDetails: Boolean? = null,
+        starCount: Int? = null,
+    ): Boolean = bot.upgradeGift(
+        businessConnectionId = businessConnectionId,
+        ownedGiftId = ownedGiftId,
+        keepOriginalDetails = keepOriginalDetails,
+        starCount = starCount,
+    )
+
+    /**
+     * Transfers an owned unique gift to another user. Requires the *can_transfer_and_upgrade_gifts*
+     * business bot right. Requires *can_transfer_stars* business bot right if the transfer is paid.
+     * Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param ownedGiftId Unique identifier of the regular gift that should be transferred
+     * @param newOwnerChatId Unique identifier of the chat which will own the gift. The chat must be
+     * active in the last 24 hours.
+     * @param starCount The amount of Telegram Stars that will be paid for the transfer from the
+     * business account balance. If positive, then the *can_transfer_stars* business bot right is
+     * required.
+     */
+    public suspend fun Container.transferGift(
+        businessConnectionId: String,
+        ownedGiftId: String,
+        newOwnerChatId: Long,
+        starCount: Int? = null,
+    ): Boolean = bot.transferGift(
+        businessConnectionId = businessConnectionId,
+        ownedGiftId = ownedGiftId,
+        newOwnerChatId = newOwnerChatId,
+        starCount = starCount,
+    )
+
+    /**
+     * Posts a story on behalf of a managed business account. Requires the *can_manage_stories*
+     * business bot right. Returns [Story](https://core.telegram.org/bots/api/#story) on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param content Content of the story
+     * @param activePeriod Period after which the story is moved to the archive, in seconds; must be
+     * one of `6 * 3600`, `12 * 3600`, `86400`, or `2 * 86400`
+     * @param caption Caption of the story, 0-2048 characters after entities parsing
+     * @param parseMode Mode for parsing entities in the story caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param areas A JSON-serialized list of clickable areas to be shown on the story
+     * @param postToChatPage Pass *True* to keep the story accessible after it expires
+     * @param protectContent Pass *True* if the content of the story must be protected from
+     * forwarding and screenshotting
+     */
+    public suspend fun Container.postStory(
+        businessConnectionId: String,
+        content: InputStoryContent,
+        activePeriod: Int,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        areas: Iterable<StoryArea>? = null,
+        postToChatPage: Boolean? = null,
+        protectContent: Boolean? = null,
+    ): Story = bot.postStory(
+        businessConnectionId = businessConnectionId,
+        content = content,
+        activePeriod = activePeriod,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        areas = areas,
+        postToChatPage = postToChatPage,
+        protectContent = protectContent,
+    )
+
+    /**
+     * Edits a story previously posted by the bot on behalf of a managed business account. Requires
+     * the *can_manage_stories* business bot right. Returns
+     * [Story](https://core.telegram.org/bots/api/#story) on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param storyId Unique identifier of the story to edit
+     * @param content Content of the story
+     * @param caption Caption of the story, 0-2048 characters after entities parsing
+     * @param parseMode Mode for parsing entities in the story caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param areas A JSON-serialized list of clickable areas to be shown on the story
+     */
+    public suspend fun Container.editStory(
+        businessConnectionId: String,
+        storyId: Long,
+        content: InputStoryContent,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        areas: Iterable<StoryArea>? = null,
+    ): Story = bot.editStory(
+        businessConnectionId = businessConnectionId,
+        storyId = storyId,
+        content = content,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        areas = areas,
+    )
+
+    /**
+     * Deletes a story previously posted by the bot on behalf of a managed business account.
+     * Requires the *can_manage_stories* business bot right. Returns *True* on success.
+     *
+     * @param businessConnectionId Unique identifier of the business connection
+     * @param storyId Unique identifier of the story to delete
+     */
+    public suspend fun Container.deleteStory(businessConnectionId: String, storyId: Long): Boolean =
+            bot.deleteStory(
+        businessConnectionId = businessConnectionId,
+        storyId = storyId,
     )
 
     /**
@@ -3113,98 +3655,6 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Returns the list of gifts that can be sent by the bot to users and channel chats. Requires no
-     * parameters. Returns a [Gifts](https://core.telegram.org/bots/api/#gifts) object.
-     */
-    public suspend fun Container.getAvailableGifts(): Gifts = bot.getAvailableGifts(
-    )
-
-    /**
-     * Sends a gift to the given user or channel chat. The gift can't be converted to Telegram Stars
-     * by the receiver. Returns *True* on success.
-     *
-     * @param giftId Identifier of the gift
-     * @param userId Required if *chat_id* is not specified. Unique identifier of the target user
-     * who will receive the gift.
-     * @param payForUpgrade Pass *True* to pay for the gift upgrade from the bot's balance, thereby
-     * making the upgrade free for the receiver
-     * @param text Text that will be shown along with the gift; 0-128 characters
-     * @param textParseMode Mode for parsing entities in the text. See [formatting
-     * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
-     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
-     * ignored.
-     * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
-     * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
-     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
-     */
-    public suspend fun Container.sendGift(
-        giftId: String,
-        userId: Long? = null,
-        payForUpgrade: Boolean? = null,
-        text: String? = null,
-        textParseMode: String? = null,
-        textEntities: Iterable<MessageEntity>? = null,
-    ): Boolean = bot.sendGift(
-        giftId = giftId,
-        userId = userId,
-        chatId = chat.id,
-        payForUpgrade = payForUpgrade,
-        text = text,
-        textParseMode = textParseMode,
-        textEntities = textEntities,
-    )
-
-    /**
-     * Verifies a user [on behalf of the
-     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
-     * bot. Returns *True* on success.
-     *
-     * @param userId Unique identifier of the target user
-     * @param customDescription Custom description for the verification; 0-70 characters. Must be
-     * empty if the organization isn't allowed to provide a custom verification description.
-     */
-    public suspend fun Container.verifyUser(userId: Long, customDescription: String? = null):
-            Boolean = bot.verifyUser(
-        userId = userId,
-        customDescription = customDescription,
-    )
-
-    /**
-     * Verifies a chat [on behalf of the
-     * organization](https://telegram.org/verify#third-party-verification) which is represented by the
-     * bot. Returns *True* on success.
-     *
-     * @param customDescription Custom description for the verification; 0-70 characters. Must be
-     * empty if the organization isn't allowed to provide a custom verification description.
-     */
-    public suspend fun Container.verifyChat(customDescription: String? = null): Boolean =
-            bot.verifyChat(
-        chatId = chat.id,
-        customDescription = customDescription,
-    )
-
-    /**
-     * Removes verification from a user who is currently verified [on behalf of the
-     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
-     * Returns *True* on success.
-     *
-     * @param userId Unique identifier of the target user
-     */
-    public suspend fun Container.removeUserVerification(userId: Long): Boolean =
-            bot.removeUserVerification(
-        userId = userId,
-    )
-
-    /**
-     * Removes verification from a chat that is currently verified [on behalf of the
-     * organization](https://telegram.org/verify#third-party-verification) represented by the bot.
-     * Returns *True* on success.
-     */
-    public suspend fun Container.removeChatVerification(): Boolean = bot.removeChatVerification(
-        chatId = chat.id,
-    )
-
-    /**
      * Use this method to send answers to an inline query. On success, *True* is returned.  
      * No more than **50** results per query are allowed.
      *
@@ -3434,7 +3884,7 @@ public abstract class TelegramBotApiHandling {
      * the next payment. The currency must be set to “XTR” (Telegram Stars) if the parameter is used.
      * Currently, it must always be 2592000 (30 days) if specified. Any number of subscriptions can be
      * active for a given bot at the same time, including multiple concurrent subscriptions from the
-     * same user. Subscription price must no exceed 2500 Telegram Stars.
+     * same user. Subscription price must no exceed 10000 Telegram Stars.
      * @param maxTipAmount The maximum accepted amount for tips in the *smallest units* of the
      * currency (integer, **not** float/double). For example, for a maximum tip of `US$ 1.45` pass
      * `max_tip_amount = 145`. See the *exp* parameter in
@@ -3566,6 +4016,13 @@ public abstract class TelegramBotApiHandling {
         preCheckoutQueryId = preCheckoutQueryId,
         ok = ok,
         errorMessage = errorMessage,
+    )
+
+    /**
+     * A method to get the current Telegram Stars balance of the bot. Requires no parameters. On
+     * success, returns a [StarAmount](https://core.telegram.org/bots/api/#staramount) object.
+     */
+    public suspend fun Container.getMyStarBalance(): StarAmount = bot.getMyStarBalance(
     )
 
     /**

@@ -18,9 +18,9 @@ import kotlin.Long
  * @param newChatMember New information about the chat member
  * @param inviteLink *Optional*. Chat invite link, which was used by the user to join the chat; for
  * joining by invite link events only.
- * @param viaJoinRequest *Optional*. True, if the user joined the chat after sending a direct join
+ * @param viaJoinRequest *Optional*. *True*, if the user joined the chat after sending a direct join
  * request without using an invite link and being approved by an administrator
- * @param viaChatFolderInviteLink *Optional*. True, if the user joined the chat via a chat folder
+ * @param viaChatFolderInviteLink *Optional*. *True*, if the user joined the chat via a chat folder
  * invite link
  */
 public data class ChatMemberUpdated(
@@ -62,14 +62,14 @@ public data class ChatMemberUpdated(
     @param:JsonProperty("invite_link")
     public val inviteLink: ChatInviteLink? = null,
     /**
-     * *Optional*. True, if the user joined the chat after sending a direct join request without
+     * *Optional*. *True*, if the user joined the chat after sending a direct join request without
      * using an invite link and being approved by an administrator
      */
     @get:JsonProperty("via_join_request")
     @param:JsonProperty("via_join_request")
     public val viaJoinRequest: Boolean? = null,
     /**
-     * *Optional*. True, if the user joined the chat via a chat folder invite link
+     * *Optional*. *True*, if the user joined the chat via a chat folder invite link
      */
     @get:JsonProperty("via_chat_folder_invite_link")
     @param:JsonProperty("via_chat_folder_invite_link")

@@ -54,12 +54,14 @@ import kotlin.collections.List
  * @param viaBot *Optional*. Bot through which the message was sent
  * @param editDate *Optional*. Date the message was last edited in Unix time
  * @param hasProtectedContent *Optional*. *True*, if the message can't be forwarded
- * @param isFromOffline *Optional*. True, if the message was sent by an implicit action, for
+ * @param isFromOffline *Optional*. *True*, if the message was sent by an implicit action, for
  * example, as an away or a greeting business message, or as a scheduled message
  * @param mediaGroupId *Optional*. The unique identifier of a media message group this message
  * belongs to
  * @param authorSignature *Optional*. Signature of the post author for messages in channels, or the
  * custom title of an anonymous group administrator
+ * @param paidStarCount *Optional*. The number of Telegram Stars that were paid by the sender of the
+ * message to send it
  * @param text *Optional*. For text messages, the actual UTF-8 text of the message
  * @param entities *Optional*. For text messages, special entities like usernames, URLs, bot
  * commands, etc. that appear in the text
@@ -82,9 +84,10 @@ import kotlin.collections.List
  * or voice
  * @param captionEntities *Optional*. For messages with a caption, special entities like usernames,
  * URLs, bot commands, etc. that appear in the caption
- * @param showCaptionAboveMedia *Optional*. True, if the caption must be shown above the message
+ * @param showCaptionAboveMedia *Optional*. *True*, if the caption must be shown above the message
  * media
  * @param hasMediaSpoiler *Optional*. *True*, if the message media is covered by a spoiler animation
+ * @param checklist *Optional*. Message is a checklist
  * @param contact *Optional*. Message is a shared contact, information about the contact
  * @param dice *Optional*. Message is a dice with random value
  * @param game *Optional*. Message is a game, information about the game. [More about games
@@ -131,6 +134,8 @@ import kotlin.collections.List
  * information about the payment. [More about payments ](https://core.telegram.org/bots/api/#payments)
  * @param usersShared *Optional*. Service message: users were shared with the bot
  * @param chatShared *Optional*. Service message: a chat was shared with the bot
+ * @param gift *Optional*. Service message: a regular gift was sent or received
+ * @param uniqueGift *Optional*. Service message: a unique gift was sent or received
  * @param connectedWebsite *Optional*. The domain name of the website on which the user has logged
  * in. [More about Telegram Login ](https://core.telegram.org/widgets/login)
  * @param writeAccessAllowed *Optional*. Service message: the user allowed the bot to write messages
@@ -142,6 +147,11 @@ import kotlin.collections.List
  * user's proximity alert while sharing Live Location.
  * @param boostAdded *Optional*. Service message: user boosted the chat
  * @param chatBackgroundSet *Optional*. Service message: chat background set
+ * @param checklistTasksDone *Optional*. Service message: some tasks in a checklist were marked as
+ * done or not done
+ * @param checklistTasksAdded *Optional*. Service message: tasks were added to a checklist
+ * @param directMessagePriceChanged *Optional*. Service message: the price for paid messages in the
+ * corresponding direct messages chat of a channel has changed
  * @param forumTopicCreated *Optional*. Service message: forum topic created
  * @param forumTopicEdited *Optional*. Service message: forum topic edited
  * @param forumTopicClosed *Optional*. Service message: forum topic closed
@@ -153,6 +163,8 @@ import kotlin.collections.List
  * @param giveawayWinners *Optional*. A giveaway with public winners was completed
  * @param giveawayCompleted *Optional*. Service message: a giveaway without public winners was
  * completed
+ * @param paidMessagePriceChanged *Optional*. Service message: the price for paid messages has
+ * changed in the chat
  * @param videoChatScheduled *Optional*. Service message: video chat scheduled
  * @param videoChatStarted *Optional*. Service message: video chat started
  * @param videoChatEnded *Optional*. Service message: video chat ended
@@ -298,8 +310,8 @@ public data class Message(
     @param:JsonProperty("has_protected_content")
     public val hasProtectedContent: Boolean? = null,
     /**
-     * *Optional*. True, if the message was sent by an implicit action, for example, as an away or a
-     * greeting business message, or as a scheduled message
+     * *Optional*. *True*, if the message was sent by an implicit action, for example, as an away or
+     * a greeting business message, or as a scheduled message
      */
     @get:JsonProperty("is_from_offline")
     @param:JsonProperty("is_from_offline")
@@ -317,6 +329,13 @@ public data class Message(
     @get:JsonProperty("author_signature")
     @param:JsonProperty("author_signature")
     public val authorSignature: String? = null,
+    /**
+     * *Optional*. The number of Telegram Stars that were paid by the sender of the message to send
+     * it
+     */
+    @get:JsonProperty("paid_star_count")
+    @param:JsonProperty("paid_star_count")
+    public val paidStarCount: Int? = null,
     /**
      * *Optional*. For text messages, the actual UTF-8 text of the message
      */
@@ -420,7 +439,7 @@ public data class Message(
     @param:JsonProperty("caption_entities")
     public val captionEntities: List<MessageEntity>? = null,
     /**
-     * *Optional*. True, if the caption must be shown above the message media
+     * *Optional*. *True*, if the caption must be shown above the message media
      */
     @get:JsonProperty("show_caption_above_media")
     @param:JsonProperty("show_caption_above_media")
@@ -431,6 +450,12 @@ public data class Message(
     @get:JsonProperty("has_media_spoiler")
     @param:JsonProperty("has_media_spoiler")
     public val hasMediaSpoiler: Boolean? = null,
+    /**
+     * *Optional*. Message is a checklist
+     */
+    @get:JsonProperty("checklist")
+    @param:JsonProperty("checklist")
+    public val checklist: Checklist? = null,
     /**
      * *Optional*. Message is a shared contact, information about the contact
      */
@@ -591,6 +616,18 @@ public data class Message(
     @param:JsonProperty("chat_shared")
     public val chatShared: ChatShared? = null,
     /**
+     * *Optional*. Service message: a regular gift was sent or received
+     */
+    @get:JsonProperty("gift")
+    @param:JsonProperty("gift")
+    public val gift: GiftInfo? = null,
+    /**
+     * *Optional*. Service message: a unique gift was sent or received
+     */
+    @get:JsonProperty("unique_gift")
+    @param:JsonProperty("unique_gift")
+    public val uniqueGift: UniqueGiftInfo? = null,
+    /**
      * *Optional*. The domain name of the website on which the user has logged in. [More about
      * Telegram Login ](https://core.telegram.org/widgets/login)
      */
@@ -631,6 +668,25 @@ public data class Message(
     @get:JsonProperty("chat_background_set")
     @param:JsonProperty("chat_background_set")
     public val chatBackgroundSet: ChatBackground? = null,
+    /**
+     * *Optional*. Service message: some tasks in a checklist were marked as done or not done
+     */
+    @get:JsonProperty("checklist_tasks_done")
+    @param:JsonProperty("checklist_tasks_done")
+    public val checklistTasksDone: ChecklistTasksDone? = null,
+    /**
+     * *Optional*. Service message: tasks were added to a checklist
+     */
+    @get:JsonProperty("checklist_tasks_added")
+    @param:JsonProperty("checklist_tasks_added")
+    public val checklistTasksAdded: ChecklistTasksAdded? = null,
+    /**
+     * *Optional*. Service message: the price for paid messages in the corresponding direct messages
+     * chat of a channel has changed
+     */
+    @get:JsonProperty("direct_message_price_changed")
+    @param:JsonProperty("direct_message_price_changed")
+    public val directMessagePriceChanged: DirectMessagePriceChanged? = null,
     /**
      * *Optional*. Service message: forum topic created
      */
@@ -691,6 +747,12 @@ public data class Message(
     @get:JsonProperty("giveaway_completed")
     @param:JsonProperty("giveaway_completed")
     public val giveawayCompleted: GiveawayCompleted? = null,
+    /**
+     * *Optional*. Service message: the price for paid messages has changed in the chat
+     */
+    @get:JsonProperty("paid_message_price_changed")
+    @param:JsonProperty("paid_message_price_changed")
+    public val paidMessagePriceChanged: PaidMessagePriceChanged? = null,
     /**
      * *Optional*. Service message: video chat scheduled
      */

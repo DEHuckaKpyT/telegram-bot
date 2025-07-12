@@ -32,6 +32,7 @@ import kotlin.collections.List
  * note](https://telegram.org/blog/video-messages-and-telescope), information about the video message
  * @param voice *Optional*. Message is a voice message, information about the file
  * @param hasMediaSpoiler *Optional*. *True*, if the message media is covered by a spoiler animation
+ * @param checklist *Optional*. Message is a checklist
  * @param contact *Optional*. Message is a shared contact, information about the contact
  * @param dice *Optional*. Message is a dice with random value
  * @param game *Optional*. Message is a game, information about the game. [More about games
@@ -141,6 +142,12 @@ public data class ExternalReplyInfo(
     @get:JsonProperty("has_media_spoiler")
     @param:JsonProperty("has_media_spoiler")
     public val hasMediaSpoiler: Boolean? = null,
+    /**
+     * *Optional*. Message is a checklist
+     */
+    @get:JsonProperty("checklist")
+    @param:JsonProperty("checklist")
+    public val checklist: Checklist? = null,
     /**
      * *Optional*. Message is a shared contact, information about the contact
      */

@@ -19,7 +19,7 @@ import kotlin.collections.List
  * *italic*, *underline*, *strikethrough*, *spoiler*, and *custom_emoji* entities are kept in quotes.
  * @param position Approximate quote position in the original message in UTF-16 code units as
  * specified by the sender
- * @param isManual *Optional*. True, if the quote was chosen manually by the message sender.
+ * @param isManual *Optional*. *True*, if the quote was chosen manually by the message sender.
  * Otherwise, the quote was added automatically by the server.
  */
 public data class TextQuote(
@@ -44,7 +44,7 @@ public data class TextQuote(
     @param:JsonProperty("position")
     public val position: Int,
     /**
-     * *Optional*. True, if the quote was chosen manually by the message sender. Otherwise, the
+     * *Optional*. *True*, if the quote was chosen manually by the message sender. Otherwise, the
      * quote was added automatically by the server.
      */
     @get:JsonProperty("is_manual")
