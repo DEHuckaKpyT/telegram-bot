@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
+import io.github.dehuckakpyt.telegrambot.model.telegram.SuggestedPostParameters
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
 import kotlin.Boolean
@@ -29,27 +30,35 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be forwarded; required if the message is forwarded to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the forwarded video in the message
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the forwarded message from forwarding and
      * saving
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only
      */
     public suspend fun Container.forwardMessage(
         fromChatId: Long,
         messageId: Long,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         videoStartTimestamp: Int? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
     ): Message = forwardMessage(
         fromChatId = fromChatId.toString(),
         messageId = messageId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         videoStartTimestamp = videoStartTimestamp,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        suggestedPostParameters = suggestedPostParameters,
     )
 
     /**
@@ -64,6 +73,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * *from_chat_id* to forward. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the messages
+     * will be forwarded; required if the messages are forwarded to a direct messages chat
      * @param disableNotification Sends the messages
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -74,12 +85,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         fromChatId: Long,
         messageIds: Iterable<Long>,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ): List<MessageId> = forwardMessages(
         fromChatId = fromChatId.toString(),
         messageIds = messageIds,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         disableNotification = disableNotification,
         protectContent = protectContent,
     )
@@ -98,6 +111,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the copied video in the message
      * @param caption New caption for media, 0-1024 characters after entities parsing. If not
      * specified, the original caption is kept
@@ -116,6 +131,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
      * balance
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -126,6 +144,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         fromChatId: Long,
         messageId: Long,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         videoStartTimestamp: Int? = null,
         caption: String? = null,
         parseMode: String? = null,
@@ -134,12 +153,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): MessageId = copyMessage(
         fromChatId = fromChatId.toString(),
         messageId = messageId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         videoStartTimestamp = videoStartTimestamp,
         caption = caption,
         parseMode = parseMode,
@@ -148,6 +169,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         disableNotification = disableNotification,
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -169,6 +191,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * *from_chat_id* to copy. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the messages
+     * will be sent; required if the messages are sent to a direct messages chat
      * @param disableNotification Sends the messages
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -179,6 +203,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         fromChatId: Long,
         messageIds: Iterable<Long>,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         removeCaption: Boolean? = null,
@@ -186,6 +211,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         fromChatId = fromChatId.toString(),
         messageIds = messageIds,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         disableNotification = disableNotification,
         protectContent = protectContent,
         removeCaption = removeCaption,
@@ -205,6 +231,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param caption Photo caption (may also be used when resending photos by *file_id*), 0-1024
      * characters after entities parsing
      * @param parseMode Mode for parsing entities in the photo caption. See [formatting
@@ -225,6 +253,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -235,6 +266,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         photo: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -244,12 +276,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendPhoto(
         photo = StringInput(photo),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -259,6 +293,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -280,6 +315,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param caption Audio caption, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the audio caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -306,6 +343,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -316,6 +356,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         audio: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -327,12 +368,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendAudio(
         audio = StringInput(audio),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -344,6 +387,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -361,6 +405,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the
      * file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in
      * size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded
@@ -387,6 +433,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -397,6 +446,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         document: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         thumbnail: Input? = null,
         caption: String? = null,
         parseMode: String? = null,
@@ -406,12 +456,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendDocument(
         document = StringInput(document),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         thumbnail = thumbnail,
         caption = caption,
         parseMode = parseMode,
@@ -421,6 +473,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -439,6 +492,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent video in seconds
      * @param width Video width
      * @param height Video height
@@ -476,6 +531,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -486,6 +544,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         video: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
@@ -502,12 +561,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendVideo(
         video = StringInput(video),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         duration = duration,
         width = width,
         height = height,
@@ -524,6 +585,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -541,6 +603,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent animation in seconds
      * @param width Animation width
      * @param height Animation height
@@ -571,6 +635,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -581,6 +648,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         animation: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
@@ -594,12 +662,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendAnimation(
         animation = StringInput(animation),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         duration = duration,
         width = width,
         height = height,
@@ -613,6 +683,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -634,6 +705,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param caption Voice message caption, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the voice message caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -651,6 +724,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -661,6 +737,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         voice: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -669,12 +746,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendVoice(
         voice = StringInput(voice),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         caption = caption,
         parseMode = parseMode,
         captionEntities = captionEntities,
@@ -683,6 +762,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -701,6 +781,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent video in seconds
      * @param length Video width and height, i.e. diameter of the video message
      * @param thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the
@@ -721,6 +803,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -731,6 +816,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         videoNote: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         duration: Int? = null,
         length: Int? = null,
         thumbnail: Input? = null,
@@ -738,12 +824,14 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendVideoNote(
         videoNote = StringInput(videoNote),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         duration = duration,
         length = length,
         thumbnail = thumbnail,
@@ -751,6 +839,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )
@@ -769,6 +858,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param emoji Emoji associated with the sticker; only for just uploaded stickers
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
@@ -781,6 +872,9 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -791,22 +885,26 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         sticker: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendSticker(
         sticker = StringInput(sticker),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
         emoji = emoji,
         disableNotification = disableNotification,
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
         messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
     )

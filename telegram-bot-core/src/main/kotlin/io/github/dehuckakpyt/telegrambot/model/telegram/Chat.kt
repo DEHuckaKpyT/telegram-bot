@@ -23,6 +23,7 @@ import kotlin.String
  * @param lastName *Optional*. Last name of the other party in a private chat
  * @param isForum *Optional*. *True*, if the supergroup chat is a forum (has
  * [topics](https://telegram.org/blog/topics-in-groups-collectible-usernames#topics-in-groups) enabled)
+ * @param isDirectMessages *Optional*. *True*, if the chat is the direct messages chat of a channel
  */
 public data class Chat(
     /**
@@ -72,4 +73,10 @@ public data class Chat(
     @get:JsonProperty("is_forum")
     @param:JsonProperty("is_forum")
     public val isForum: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the chat is the direct messages chat of a channel
+     */
+    @get:JsonProperty("is_direct_messages")
+    @param:JsonProperty("is_direct_messages")
+    public val isDirectMessages: Boolean? = null,
 )

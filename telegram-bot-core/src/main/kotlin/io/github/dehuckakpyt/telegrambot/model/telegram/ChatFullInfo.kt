@@ -25,6 +25,7 @@ import kotlin.collections.List
  * @param lastName *Optional*. Last name of the other party in a private chat
  * @param isForum *Optional*. *True*, if the supergroup chat is a forum (has
  * [topics](https://telegram.org/blog/topics-in-groups-collectible-usernames#topics-in-groups) enabled)
+ * @param isDirectMessages *Optional*. *True*, if the chat is the direct messages chat of a channel
  * @param accentColorId Identifier of the accent color for the chat name and backgrounds of the chat
  * photo, reply header, and link preview. See [accent
  * colors](https://core.telegram.org/bots/api/#accent-colors) for more details.
@@ -41,6 +42,8 @@ import kotlin.collections.List
  * @param businessOpeningHours *Optional*. For private chats with business accounts, the opening
  * hours of the business
  * @param personalChat *Optional*. For private chats, the personal channel of the user
+ * @param parentChat *Optional*. Information about the corresponding channel chat; for direct
+ * messages chats only
  * @param availableReactions *Optional*. List of available reactions allowed in the chat. If
  * omitted, then all [emoji reactions](https://core.telegram.org/bots/api/#reactiontypeemoji) are
  * allowed.
@@ -146,6 +149,12 @@ public data class ChatFullInfo(
     @param:JsonProperty("is_forum")
     public val isForum: Boolean? = null,
     /**
+     * *Optional*. *True*, if the chat is the direct messages chat of a channel
+     */
+    @get:JsonProperty("is_direct_messages")
+    @param:JsonProperty("is_direct_messages")
+    public val isDirectMessages: Boolean? = null,
+    /**
      * Identifier of the accent color for the chat name and backgrounds of the chat photo, reply
      * header, and link preview. See [accent colors](https://core.telegram.org/bots/api/#accent-colors)
      * for more details.
@@ -203,6 +212,12 @@ public data class ChatFullInfo(
     @get:JsonProperty("personal_chat")
     @param:JsonProperty("personal_chat")
     public val personalChat: Chat? = null,
+    /**
+     * *Optional*. Information about the corresponding channel chat; for direct messages chats only
+     */
+    @get:JsonProperty("parent_chat")
+    @param:JsonProperty("parent_chat")
+    public val parentChat: Chat? = null,
     /**
      * *Optional*. List of available reactions allowed in the chat. If omitted, then all [emoji
      * reactions](https://core.telegram.org/bots/api/#reactiontypeemoji) are allowed.

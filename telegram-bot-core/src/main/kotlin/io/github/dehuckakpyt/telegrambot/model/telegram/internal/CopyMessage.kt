@@ -4,6 +4,7 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
+import io.github.dehuckakpyt.telegrambot.model.telegram.SuggestedPostParameters
 import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
@@ -22,6 +23,8 @@ internal data class CopyMessage(
     public val messageId: Long,
     @get:JsonProperty("message_thread_id")
     public val messageThreadId: Long? = null,
+    @get:JsonProperty("direct_messages_topic_id")
+    public val directMessagesTopicId: Long? = null,
     @get:JsonProperty("video_start_timestamp")
     public val videoStartTimestamp: Int? = null,
     @get:JsonProperty("caption")
@@ -38,6 +41,8 @@ internal data class CopyMessage(
     public val protectContent: Boolean? = null,
     @get:JsonProperty("allow_paid_broadcast")
     public val allowPaidBroadcast: Boolean? = null,
+    @get:JsonProperty("suggested_post_parameters")
+    public val suggestedPostParameters: SuggestedPostParameters? = null,
     @get:JsonProperty("reply_parameters")
     public val replyParameters: ReplyParameters? = null,
     @get:JsonProperty("reply_markup")

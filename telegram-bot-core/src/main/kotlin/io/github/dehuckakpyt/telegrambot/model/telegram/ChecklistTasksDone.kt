@@ -12,16 +12,16 @@ import kotlin.collections.List
  * @author KScript
  *
  * @param checklistMessage *Optional*. Message containing the checklist whose tasks were marked as
- * done or not done. Note that the Message object in this field will not contain the *reply_to_message*
- * field even if it itself is a reply.
+ * done or not done. Note that the [Message](https://core.telegram.org/bots/api/#message) object in
+ * this field will not contain the *reply_to_message* field even if it itself is a reply.
  * @param markedAsDoneTaskIds *Optional*. Identifiers of the tasks that were marked as done
  * @param markedAsNotDoneTaskIds *Optional*. Identifiers of the tasks that were marked as not done
  */
 public data class ChecklistTasksDone(
     /**
      * *Optional*. Message containing the checklist whose tasks were marked as done or not done.
-     * Note that the Message object in this field will not contain the *reply_to_message* field even if
-     * it itself is a reply.
+     * Note that the [Message](https://core.telegram.org/bots/api/#message) object in this field will
+     * not contain the *reply_to_message* field even if it itself is a reply.
      */
     @get:JsonProperty("checklist_message")
     @param:JsonProperty("checklist_message")

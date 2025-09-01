@@ -48,6 +48,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Sticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.StickerSet
 import io.github.dehuckakpyt.telegrambot.model.telegram.Story
 import io.github.dehuckakpyt.telegrambot.model.telegram.StoryArea
+import io.github.dehuckakpyt.telegrambot.model.telegram.SuggestedPostParameters
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserChatBoosts
@@ -193,6 +194,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param parseMode Mode for parsing entities in the message text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which
@@ -209,6 +212,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -220,6 +226,7 @@ public interface TelegramBotApi {
         text: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         parseMode: String? = null,
         entities: Iterable<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
@@ -227,6 +234,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -243,21 +251,27 @@ public interface TelegramBotApi {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be forwarded; required if the message is forwarded to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the forwarded video in the message
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
      * @param protectContent Protects the contents of the forwarded message from forwarding and
      * saving
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only
      */
     public suspend fun forwardMessage(
         chatId: String,
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         videoStartTimestamp: Int? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
     ): Message
 
     /**
@@ -274,6 +288,8 @@ public interface TelegramBotApi {
      * *from_chat_id* to forward. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the messages
+     * will be forwarded; required if the messages are forwarded to a direct messages chat
      * @param disableNotification Sends the messages
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -285,6 +301,7 @@ public interface TelegramBotApi {
         fromChatId: String,
         messageIds: Iterable<Long>,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
     ): List<MessageId>
@@ -305,6 +322,8 @@ public interface TelegramBotApi {
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the copied video in the message
      * @param caption New caption for media, 0-1024 characters after entities parsing. If not
      * specified, the original caption is kept
@@ -323,6 +342,9 @@ public interface TelegramBotApi {
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
      * balance
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -334,6 +356,7 @@ public interface TelegramBotApi {
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         videoStartTimestamp: Int? = null,
         caption: String? = null,
         parseMode: String? = null,
@@ -342,6 +365,7 @@ public interface TelegramBotApi {
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): MessageId
@@ -365,6 +389,8 @@ public interface TelegramBotApi {
      * *from_chat_id* to copy. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the messages
+     * will be sent; required if the messages are sent to a direct messages chat
      * @param disableNotification Sends the messages
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -376,6 +402,7 @@ public interface TelegramBotApi {
         fromChatId: String,
         messageIds: Iterable<Long>,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         removeCaption: Boolean? = null,
@@ -397,6 +424,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param caption Photo caption (may also be used when resending photos by *file_id*), 0-1024
      * characters after entities parsing
      * @param parseMode Mode for parsing entities in the photo caption. See [formatting
@@ -417,6 +446,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -428,6 +460,7 @@ public interface TelegramBotApi {
         photo: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -437,6 +470,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -460,6 +494,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param caption Audio caption, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the audio caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -486,6 +522,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -497,6 +536,7 @@ public interface TelegramBotApi {
         audio: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -508,6 +548,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -527,6 +568,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the
      * file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in
      * size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded
@@ -553,6 +596,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -564,6 +610,7 @@ public interface TelegramBotApi {
         document: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         thumbnail: Input? = null,
         caption: String? = null,
         parseMode: String? = null,
@@ -573,6 +620,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -593,6 +641,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent video in seconds
      * @param width Video width
      * @param height Video height
@@ -630,6 +680,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -641,6 +694,7 @@ public interface TelegramBotApi {
         video: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
@@ -657,6 +711,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -676,6 +731,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent animation in seconds
      * @param width Animation width
      * @param height Animation height
@@ -706,6 +763,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -717,6 +777,7 @@ public interface TelegramBotApi {
         animation: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         duration: Int? = null,
         width: Int? = null,
         height: Int? = null,
@@ -730,6 +791,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -753,6 +815,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param caption Voice message caption, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the voice message caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
@@ -770,6 +834,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -781,6 +848,7 @@ public interface TelegramBotApi {
         voice: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         caption: String? = null,
         parseMode: String? = null,
         captionEntities: Iterable<MessageEntity>? = null,
@@ -789,6 +857,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -809,6 +878,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent video in seconds
      * @param length Video width and height, i.e. diameter of the video message
      * @param thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the
@@ -829,6 +900,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -840,6 +914,7 @@ public interface TelegramBotApi {
         videoNote: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         duration: Int? = null,
         length: Int? = null,
         thumbnail: Input? = null,
@@ -847,6 +922,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -863,6 +939,10 @@ public interface TelegramBotApi {
      * @param media A JSON-serialized array describing the media to be sent; up to 10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
+     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
+     * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param payload Bot-defined paid media payload, 0-128 bytes. This will not be displayed to the
      * user, use it for your internal processes.
      * @param caption Media caption, 0-1024 characters after entities parsing
@@ -881,6 +961,9 @@ public interface TelegramBotApi {
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
      * balance
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -892,6 +975,8 @@ public interface TelegramBotApi {
         starCount: Int,
         media: Iterable<InputPaidMedia>,
         businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         payload: String? = null,
         caption: String? = null,
         parseMode: String? = null,
@@ -900,6 +985,7 @@ public interface TelegramBotApi {
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -907,7 +993,8 @@ public interface TelegramBotApi {
     /**
      * Use this method to send a group of photos, videos, documents or audios as an album. Documents
      * and audio files can be only grouped in an album with messages of the same type. On success, an
-     * array of [Messages](https://core.telegram.org/bots/api/#message) that were sent is returned.
+     * array of [Message](https://core.telegram.org/bots/api/#message) objects that were sent is
+     * returned.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
@@ -916,6 +1003,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the messages
+     * will be sent; required if the messages are sent to a direct messages chat
      * @param disableNotification Sends messages
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -934,6 +1023,7 @@ public interface TelegramBotApi {
         media: Iterable<InputMedia>,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
@@ -953,6 +1043,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param horizontalAccuracy The radius of uncertainty for the location, measured in meters;
      * 0-1500
      * @param livePeriod Period in seconds during which the location will be updated (see [Live
@@ -973,6 +1065,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -985,6 +1080,7 @@ public interface TelegramBotApi {
         longitude: Double,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         horizontalAccuracy: Double? = null,
         livePeriod: Int? = null,
         heading: Int? = null,
@@ -993,6 +1089,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -1011,6 +1108,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param foursquareId Foursquare identifier of the venue
      * @param foursquareType Foursquare type of the venue, if known. (For example,
      * “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
@@ -1028,6 +1127,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -1042,6 +1144,7 @@ public interface TelegramBotApi {
         address: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         foursquareId: String? = null,
         foursquareType: String? = null,
         googlePlaceId: String? = null,
@@ -1050,6 +1153,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -1066,6 +1170,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param lastName Contact's last name
      * @param vcard Additional data about the contact in the form of a
      * [vCard](https://en.wikipedia.org/wiki/VCard), 0-2048 bytes
@@ -1080,6 +1186,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -1092,12 +1201,14 @@ public interface TelegramBotApi {
         firstName: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         lastName: String? = null,
         vcard: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -1107,7 +1218,7 @@ public interface TelegramBotApi {
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
+     * format `@channelusername`). Polls can't be sent to channel direct messages chats.
      * @param question Poll question, 1-300 characters
      * @param options A JSON-serialized list of 2-12 answer options
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
@@ -1218,6 +1329,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param emoji Emoji on which the dice throw animation is based. Currently, must be one of
      * “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values
      * 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
@@ -1232,6 +1345,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -1242,11 +1358,13 @@ public interface TelegramBotApi {
         chatId: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -1264,8 +1382,9 @@ public interface TelegramBotApi {
      * We only recommend using this method when a response from the bot will take a **noticeable**
      * amount of time to arrive.
      *
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup (in
+     * the format `@supergroupusername`). Channel chats and channel direct messages chats aren't
+     * supported.
      * @param action Type of action to broadcast. Choose one, depending on what the user is about to
      * receive: *typing* for [text messages](https://core.telegram.org/bots/api/#sendmessage),
      * *upload_photo* for [photos](https://core.telegram.org/bots/api/#sendphoto), *record_video* or
@@ -1460,6 +1579,8 @@ public interface TelegramBotApi {
      * @param canPinMessages Pass *True* if the administrator can pin messages; for supergroups only
      * @param canManageTopics Pass *True* if the user is allowed to create, rename, close, and
      * reopen forum topics; for supergroups only
+     * @param canManageDirectMessages Pass *True* if the administrator can manage direct messages
+     * within the channel and decline suggested posts; for channels only
      */
     public suspend fun promoteChatMember(
         chatId: String,
@@ -1479,6 +1600,7 @@ public interface TelegramBotApi {
         canEditMessages: Boolean? = null,
         canPinMessages: Boolean? = null,
         canManageTopics: Boolean? = null,
+        canManageDirectMessages: Boolean? = null,
     ): Boolean
 
     /**
@@ -1720,10 +1842,10 @@ public interface TelegramBotApi {
     public suspend fun setChatDescription(chatId: String, description: String? = null): Boolean
 
     /**
-     * Use this method to add a message to the list of pinned messages in a chat. If the chat is not
-     * a private chat, the bot must be an administrator in the chat for this to work and must have the
-     * 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator
-     * right in a channel. Returns *True* on success.
+     * Use this method to add a message to the list of pinned messages in a chat. In private chats
+     * and channel direct messages chats, all non-service messages can be pinned. Conversely, the bot
+     * must be an administrator with the 'can_pin_messages' right or the 'can_edit_messages' right to
+     * pin messages in groups and channels respectively. Returns *True* on success.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
@@ -1742,10 +1864,10 @@ public interface TelegramBotApi {
     ): Boolean
 
     /**
-     * Use this method to remove a message from the list of pinned messages in a chat. If the chat
-     * is not a private chat, the bot must be an administrator in the chat for this to work and must
-     * have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages'
-     * administrator right in a channel. Returns *True* on success.
+     * Use this method to remove a message from the list of pinned messages in a chat. In private
+     * chats and channel direct messages chats, all messages can be unpinned. Conversely, the bot must
+     * be an administrator with the 'can_pin_messages' right or the 'can_edit_messages' right to unpin
+     * messages in groups and channels respectively. Returns *True* on success.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
@@ -1761,10 +1883,11 @@ public interface TelegramBotApi {
     ): Boolean
 
     /**
-     * Use this method to clear the list of pinned messages in a chat. If the chat is not a private
-     * chat, the bot must be an administrator in the chat for this to work and must have the
-     * 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator
-     * right in a channel. Returns *True* on success.
+     * Use this method to clear the list of pinned messages in a chat. In private chats and channel
+     * direct messages chats, no additional rights are required to unpin all pinned messages.
+     * Conversely, the bot must be an administrator with the 'can_pin_messages' right or the
+     * 'can_edit_messages' right to unpin all pinned messages in groups and channels respectively.
+     * Returns *True* on success.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
      * format `@channelusername`)
@@ -1776,7 +1899,8 @@ public interface TelegramBotApi {
      * success.
      *
      * @param chatId Unique identifier for the target chat or username of the target supergroup or
-     * channel (in the format `@channelusername`)
+     * channel (in the format `@channelusername`). Channel direct messages chats aren't supported;
+     * leave the corresponding channel instead.
      */
     public suspend fun leaveChat(chatId: String): Boolean
 
@@ -2208,261 +2332,6 @@ public interface TelegramBotApi {
             ChatAdministratorRights
 
     /**
-     * Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages.
-     * On success, if the edited message is not an inline message, the edited
-     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
-     * returned. Note that business messages that were not sent by the bot and do not contain an inline
-     * keyboard can only be edited within **48 hours** from the time they were sent.
-     *
-     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
-     * target chat or username of the target channel (in the format `@channelusername`)
-     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
-     * @param text New text of the message, 1-4096 characters after entities parsing
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message to be edited was sent
-     * @param parseMode Mode for parsing entities in the message text. See [formatting
-     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
-     * @param entities A JSON-serialized list of special entities that appear in message text, which
-     * can be specified instead of *parse_mode*
-     * @param linkPreviewOptions Link preview generation options for the message
-     * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
-     */
-    public suspend fun editMessageText(
-        chatId: String,
-        messageId: Long,
-        text: String,
-        businessConnectionId: String? = null,
-        parseMode: String? = null,
-        entities: Iterable<MessageEntity>? = null,
-        linkPreviewOptions: LinkPreviewOptions? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message
-
-    /**
-     * Use this method to edit captions of messages. On success, if the edited message is not an
-     * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
-     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
-     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
-     * sent.
-     *
-     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
-     * target chat or username of the target channel (in the format `@channelusername`)
-     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message to be edited was sent
-     * @param caption New caption of the message, 0-1024 characters after entities parsing
-     * @param parseMode Mode for parsing entities in the message caption. See [formatting
-     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
-     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
-     * which can be specified instead of *parse_mode*
-     * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
-     * media. Supported only for animation, photo and video messages.
-     * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
-     */
-    public suspend fun editMessageCaption(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String? = null,
-        caption: String? = null,
-        parseMode: String? = null,
-        captionEntities: Iterable<MessageEntity>? = null,
-        showCaptionAboveMedia: Boolean? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message
-
-    /**
-     * Use this method to edit animation, audio, document, photo, or video messages, or to add media
-     * to text messages. If a message is part of a message album, then it can be edited only to an
-     * audio for audio albums, only to a document for document albums and to a photo or a video
-     * otherwise. When an inline message is edited, a new file can't be uploaded; use a previously
-     * uploaded file via its file_id or specify a URL. On success, if the edited message is not an
-     * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
-     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
-     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
-     * sent.
-     *
-     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
-     * target chat or username of the target channel (in the format `@channelusername`)
-     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
-     * @param media A JSON-serialized object for a new media content of the message
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message to be edited was sent
-     * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
-     */
-    public suspend fun editMessageMedia(
-        chatId: String,
-        messageId: Long,
-        media: InputMedia,
-        businessConnectionId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message
-
-    /**
-     * Use this method to edit live location messages. A location can be edited until its
-     * *live_period* expires or editing is explicitly disabled by a call to
-     * [stopMessageLiveLocation](https://core.telegram.org/bots/api/#stopmessagelivelocation). On
-     * success, if the edited message is not an inline message, the edited
-     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
-     * returned.
-     *
-     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
-     * target chat or username of the target channel (in the format `@channelusername`)
-     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
-     * @param latitude Latitude of new location
-     * @param longitude Longitude of new location
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message to be edited was sent
-     * @param livePeriod New period in seconds during which the location can be updated, starting
-     * from the message send date. If 0x7FFFFFFF is specified, then the location can be updated
-     * forever. Otherwise, the new value must not exceed the current *live_period* by more than a day,
-     * and the live location expiration date must remain within the next 90 days. If not specified,
-     * then *live_period* remains unchanged
-     * @param horizontalAccuracy The radius of uncertainty for the location, measured in meters;
-     * 0-1500
-     * @param heading Direction in which the user is moving, in degrees. Must be between 1 and 360
-     * if specified.
-     * @param proximityAlertRadius The maximum distance for proximity alerts about approaching
-     * another chat member, in meters. Must be between 1 and 100000 if specified.
-     * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
-     */
-    public suspend fun editMessageLiveLocation(
-        chatId: String,
-        messageId: Long,
-        latitude: Double,
-        longitude: Double,
-        businessConnectionId: String? = null,
-        livePeriod: Int? = null,
-        horizontalAccuracy: Double? = null,
-        heading: Int? = null,
-        proximityAlertRadius: Int? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message
-
-    /**
-     * Use this method to stop updating a live location message before *live_period* expires. On
-     * success, if the message is not an inline message, the edited
-     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
-     * returned.
-     *
-     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
-     * target chat or username of the target channel (in the format `@channelusername`)
-     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * with live location to stop
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message to be edited was sent
-     * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
-     */
-    public suspend fun stopMessageLiveLocation(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message
-
-    /**
-     * Use this method to edit a checklist on behalf of a connected business account. On success,
-     * the edited [Message](https://core.telegram.org/bots/api/#message) is returned.
-     *
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message will be sent
-     * @param chatId Unique identifier for the target chat
-     * @param messageId Unique identifier for the target message
-     * @param checklist A JSON-serialized object for the new checklist
-     * @param replyMarkup A JSON-serialized object for the new inline keyboard for the message
-     */
-    public suspend fun editMessageChecklist(
-        businessConnectionId: String,
-        chatId: Long,
-        messageId: Long,
-        checklist: InputChecklist,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message
-
-    /**
-     * Use this method to edit only the reply markup of messages. On success, if the edited message
-     * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
-     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
-     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
-     * they were sent.
-     *
-     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
-     * target chat or username of the target channel (in the format `@channelusername`)
-     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message to be edited was sent
-     * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
-     */
-    public suspend fun editMessageReplyMarkup(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Message
-
-    /**
-     * Use this method to stop a poll which was sent by the bot. On success, the stopped
-     * [Poll](https://core.telegram.org/bots/api/#poll) is returned.
-     *
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
-     * @param messageId Identifier of the original message with the poll
-     * @param businessConnectionId Unique identifier of the business connection on behalf of which
-     * the message to be edited was sent
-     * @param replyMarkup A JSON-serialized object for a new message [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
-     */
-    public suspend fun stopPoll(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String? = null,
-        replyMarkup: InlineKeyboardMarkup? = null,
-    ): Poll
-
-    /**
-     * Use this method to delete a message, including service messages, with the following
-     * limitations:  
-     * - A message can only be deleted if it was sent less than 48 hours ago.  
-     * - Service messages about a supergroup, channel, or forum topic creation can't be deleted.  
-     * - A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.
-     *  
-     * - Bots can delete outgoing messages in private chats, groups, and supergroups.  
-     * - Bots can delete incoming messages in private chats.  
-     * - Bots granted *can_post_messages* permissions can delete outgoing messages in channels.  
-     * - If the bot is an administrator of a group, it can delete any message there.  
-     * - If the bot has *can_delete_messages* permission in a supergroup or a channel, it can delete
-     * any message there.  
-     * Returns *True* on success.
-     *
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
-     * @param messageId Identifier of the message to delete
-     */
-    public suspend fun deleteMessage(chatId: String, messageId: Long): Boolean
-
-    /**
-     * Use this method to delete multiple messages simultaneously. If some of the specified messages
-     * can't be found, they are skipped. Returns *True* on success.
-     *
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
-     * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See
-     * [deleteMessage](https://core.telegram.org/bots/api/#deletemessage) for limitations on which
-     * messages can be deleted
-     */
-    public suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean
-
-    /**
      * Returns the list of gifts that can be sent by the bot to users and channel chats. Requires no
      * parameters. Returns a [Gifts](https://core.telegram.org/bots/api/#gifts) object.
      */
@@ -2543,7 +2412,7 @@ public interface TelegramBotApi {
      * bot. Returns *True* on success.
      *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the
-     * format `@channelusername`)
+     * format `@channelusername`). Channel direct messages chats can't be verified.
      * @param customDescription Custom description for the verification; 0-70 characters. Must be
      * empty if the organization isn't allowed to provide a custom verification description.
      */
@@ -2845,6 +2714,295 @@ public interface TelegramBotApi {
     public suspend fun deleteStory(businessConnectionId: String, storyId: Long): Boolean
 
     /**
+     * Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages.
+     * On success, if the edited message is not an inline message, the edited
+     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
+     * returned. Note that business messages that were not sent by the bot and do not contain an inline
+     * keyboard can only be edited within **48 hours** from the time they were sent.
+     *
+     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
+     * target chat or username of the target channel (in the format `@channelusername`)
+     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
+     * to edit
+     * @param text New text of the message, 1-4096 characters after entities parsing
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
+     * @param parseMode Mode for parsing entities in the message text. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param entities A JSON-serialized list of special entities that appear in message text, which
+     * can be specified instead of *parse_mode*
+     * @param linkPreviewOptions Link preview generation options for the message
+     * @param replyMarkup A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     */
+    public suspend fun editMessageText(
+        chatId: String,
+        messageId: Long,
+        text: String,
+        businessConnectionId: String? = null,
+        parseMode: String? = null,
+        entities: Iterable<MessageEntity>? = null,
+        linkPreviewOptions: LinkPreviewOptions? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to edit captions of messages. On success, if the edited message is not an
+     * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
+     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
+     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
+     * sent.
+     *
+     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
+     * target chat or username of the target channel (in the format `@channelusername`)
+     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
+     * to edit
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
+     * @param caption New caption of the message, 0-1024 characters after entities parsing
+     * @param parseMode Mode for parsing entities in the message caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
+     * media. Supported only for animation, photo and video messages.
+     * @param replyMarkup A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     */
+    public suspend fun editMessageCaption(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to edit animation, audio, document, photo, or video messages, or to add media
+     * to text messages. If a message is part of a message album, then it can be edited only to an
+     * audio for audio albums, only to a document for document albums and to a photo or a video
+     * otherwise. When an inline message is edited, a new file can't be uploaded; use a previously
+     * uploaded file via its file_id or specify a URL. On success, if the edited message is not an
+     * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
+     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
+     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
+     * sent.
+     *
+     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
+     * target chat or username of the target channel (in the format `@channelusername`)
+     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
+     * to edit
+     * @param media A JSON-serialized object for a new media content of the message
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
+     * @param replyMarkup A JSON-serialized object for a new [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     */
+    public suspend fun editMessageMedia(
+        chatId: String,
+        messageId: Long,
+        media: InputMedia,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to edit live location messages. A location can be edited until its
+     * *live_period* expires or editing is explicitly disabled by a call to
+     * [stopMessageLiveLocation](https://core.telegram.org/bots/api/#stopmessagelivelocation). On
+     * success, if the edited message is not an inline message, the edited
+     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
+     * returned.
+     *
+     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
+     * target chat or username of the target channel (in the format `@channelusername`)
+     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
+     * to edit
+     * @param latitude Latitude of new location
+     * @param longitude Longitude of new location
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
+     * @param livePeriod New period in seconds during which the location can be updated, starting
+     * from the message send date. If 0x7FFFFFFF is specified, then the location can be updated
+     * forever. Otherwise, the new value must not exceed the current *live_period* by more than a day,
+     * and the live location expiration date must remain within the next 90 days. If not specified,
+     * then *live_period* remains unchanged
+     * @param horizontalAccuracy The radius of uncertainty for the location, measured in meters;
+     * 0-1500
+     * @param heading Direction in which the user is moving, in degrees. Must be between 1 and 360
+     * if specified.
+     * @param proximityAlertRadius The maximum distance for proximity alerts about approaching
+     * another chat member, in meters. Must be between 1 and 100000 if specified.
+     * @param replyMarkup A JSON-serialized object for a new [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     */
+    public suspend fun editMessageLiveLocation(
+        chatId: String,
+        messageId: Long,
+        latitude: Double,
+        longitude: Double,
+        businessConnectionId: String? = null,
+        livePeriod: Int? = null,
+        horizontalAccuracy: Double? = null,
+        heading: Int? = null,
+        proximityAlertRadius: Int? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to stop updating a live location message before *live_period* expires. On
+     * success, if the message is not an inline message, the edited
+     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
+     * returned.
+     *
+     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
+     * target chat or username of the target channel (in the format `@channelusername`)
+     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
+     * with live location to stop
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
+     * @param replyMarkup A JSON-serialized object for a new [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     */
+    public suspend fun stopMessageLiveLocation(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to edit a checklist on behalf of a connected business account. On success,
+     * the edited [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param chatId Unique identifier for the target chat
+     * @param messageId Unique identifier for the target message
+     * @param checklist A JSON-serialized object for the new checklist
+     * @param replyMarkup A JSON-serialized object for the new inline keyboard for the message
+     */
+    public suspend fun editMessageChecklist(
+        businessConnectionId: String,
+        chatId: Long,
+        messageId: Long,
+        checklist: InputChecklist,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to edit only the reply markup of messages. On success, if the edited message
+     * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
+     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
+     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
+     * they were sent.
+     *
+     * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
+     * target chat or username of the target channel (in the format `@channelusername`)
+     * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
+     * to edit
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
+     * @param replyMarkup A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     */
+    public suspend fun editMessageReplyMarkup(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to stop a poll which was sent by the bot. On success, the stopped
+     * [Poll](https://core.telegram.org/bots/api/#poll) is returned.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     * @param messageId Identifier of the original message with the poll
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message to be edited was sent
+     * @param replyMarkup A JSON-serialized object for a new message [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     */
+    public suspend fun stopPoll(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
+    ): Poll
+
+    /**
+     * Use this method to approve a suggested post in a direct messages chat. The bot must have the
+     * 'can_post_messages' administrator right in the corresponding channel chat. Returns *True* on
+     * success.
+     *
+     * @param chatId Unique identifier for the target direct messages chat
+     * @param messageId Identifier of a suggested post message to approve
+     * @param sendDate Point in time (Unix timestamp) when the post is expected to be published;
+     * omit if the date has already been specified when the suggested post was created. If specified,
+     * then the date must be not more than 2678400 seconds (30 days) in the future
+     */
+    public suspend fun approveSuggestedPost(
+        chatId: Long,
+        messageId: Long,
+        sendDate: Long? = null,
+    ): Boolean
+
+    /**
+     * Use this method to decline a suggested post in a direct messages chat. The bot must have the
+     * 'can_manage_direct_messages' administrator right in the corresponding channel chat. Returns
+     * *True* on success.
+     *
+     * @param chatId Unique identifier for the target direct messages chat
+     * @param messageId Identifier of a suggested post message to decline
+     * @param comment Comment for the creator of the suggested post; 0-128 characters
+     */
+    public suspend fun declineSuggestedPost(
+        chatId: Long,
+        messageId: Long,
+        comment: String? = null,
+    ): Boolean
+
+    /**
+     * Use this method to delete a message, including service messages, with the following
+     * limitations:  
+     * - A message can only be deleted if it was sent less than 48 hours ago.  
+     * - Service messages about a supergroup, channel, or forum topic creation can't be deleted.  
+     * - A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.
+     *  
+     * - Bots can delete outgoing messages in private chats, groups, and supergroups.  
+     * - Bots can delete incoming messages in private chats.  
+     * - Bots granted *can_post_messages* permissions can delete outgoing messages in channels.  
+     * - If the bot is an administrator of a group, it can delete any message there.  
+     * - If the bot has *can_delete_messages* administrator right in a supergroup or a channel, it
+     * can delete any message there.  
+     * - If the bot has *can_manage_direct_messages* administrator right in a channel, it can delete
+     * any message in the corresponding direct messages chat.  
+     * Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     * @param messageId Identifier of the message to delete
+     */
+    public suspend fun deleteMessage(chatId: String, messageId: Long): Boolean
+
+    /**
+     * Use this method to delete multiple messages simultaneously. If some of the specified messages
+     * can't be found, they are skipped. Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the
+     * format `@channelusername`)
+     * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See
+     * [deleteMessage](https://core.telegram.org/bots/api/#deletemessage) for limitations on which
+     * messages can be deleted
+     */
+    public suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean
+
+    /**
      * Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers)
      * .TGS, or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On
      * success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.
@@ -2860,6 +3018,8 @@ public interface TelegramBotApi {
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param emoji Emoji associated with the sticker; only for just uploaded stickers
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
@@ -2872,6 +3032,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
@@ -2883,11 +3046,13 @@ public interface TelegramBotApi {
         sticker: Input,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         emoji: String? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message
@@ -3172,6 +3337,8 @@ public interface TelegramBotApi {
      * in [Telegram Stars](https://t.me/BotNews/90).
      * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
      * for forum supergroups only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
      * @param providerToken Payment provider token, obtained via
      * [@BotFather](https://t.me/botfather). Pass an empty string for payments in [Telegram
      * Stars](https://t.me/BotNews/90).
@@ -3223,6 +3390,9 @@ public interface TelegramBotApi {
      * balance
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards). If empty, one 'Pay `total
@@ -3236,6 +3406,7 @@ public interface TelegramBotApi {
         currency: String,
         prices: Iterable<LabeledPrice>,
         messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
         providerToken: String? = null,
         maxTipAmount: Int? = null,
         suggestedTipAmounts: Iterable<Int>? = null,
@@ -3256,6 +3427,7 @@ public interface TelegramBotApi {
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
@@ -3447,7 +3619,8 @@ public interface TelegramBotApi {
      * Use this method to send a game. On success, the sent
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
-     * @param chatId Unique identifier for the target chat
+     * @param chatId Unique identifier for the target chat. Games can't be sent to channel direct
+     * messages chats and channel chats.
      * @param gameShortName Short name of the game, serves as the unique identifier for the game.
      * Set up your games via [@BotFather](https://t.me/botfather).
      * @param businessConnectionId Unique identifier of the business connection on behalf of which

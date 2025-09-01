@@ -41,6 +41,8 @@ import kotlin.String
  * supergroups only
  * @param canManageTopics *Optional*. *True*, if the user is allowed to create, rename, close, and
  * reopen forum topics; for supergroups only
+ * @param canManageDirectMessages *Optional*. *True*, if the administrator can manage direct
+ * messages of the channel and decline suggested posts; for channels only
  * @param customTitle *Optional*. Custom title for this user
  */
 public data class ChatMemberAdministrator(
@@ -161,6 +163,13 @@ public data class ChatMemberAdministrator(
     @get:JsonProperty("can_manage_topics")
     @param:JsonProperty("can_manage_topics")
     public val canManageTopics: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the administrator can manage direct messages of the channel and
+     * decline suggested posts; for channels only
+     */
+    @get:JsonProperty("can_manage_direct_messages")
+    @param:JsonProperty("can_manage_direct_messages")
+    public val canManageDirectMessages: Boolean? = null,
     /**
      * *Optional*. Custom title for this user
      */

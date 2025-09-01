@@ -20,6 +20,7 @@ import kotlin.String
  * limited gifts only
  * @param remainingCount *Optional*. The number of remaining gifts of this type that can be sent;
  * for limited gifts only
+ * @param publisherChat *Optional*. Information about the chat that published the gift
  */
 public data class Gift(
     /**
@@ -61,4 +62,10 @@ public data class Gift(
     @get:JsonProperty("remaining_count")
     @param:JsonProperty("remaining_count")
     public val remainingCount: Int? = null,
+    /**
+     * *Optional*. Information about the chat that published the gift
+     */
+    @get:JsonProperty("publisher_chat")
+    @param:JsonProperty("publisher_chat")
+    public val publisherChat: Chat? = null,
 )

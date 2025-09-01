@@ -18,6 +18,7 @@ import kotlin.String
  * @param model Model of the gift
  * @param symbol Symbol of the gift
  * @param backdrop Backdrop of the gift
+ * @param publisherChat *Optional*. Information about the chat that published the gift
  */
 public data class UniqueGift(
     /**
@@ -57,4 +58,10 @@ public data class UniqueGift(
     @get:JsonProperty("backdrop")
     @param:JsonProperty("backdrop")
     public val backdrop: UniqueGiftBackdrop,
+    /**
+     * *Optional*. Information about the chat that published the gift
+     */
+    @get:JsonProperty("publisher_chat")
+    @param:JsonProperty("publisher_chat")
+    public val publisherChat: Chat? = null,
 )

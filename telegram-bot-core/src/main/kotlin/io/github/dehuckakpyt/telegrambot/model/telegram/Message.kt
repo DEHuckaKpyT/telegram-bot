@@ -20,6 +20,8 @@ import kotlin.collections.List
  * unusable until it is actually sent
  * @param messageThreadId *Optional*. Unique identifier of a message thread to which the message
  * belongs; for supergroups only
+ * @param directMessagesTopic *Optional*. Information about the direct messages chat topic that
+ * contains the message
  * @param from *Optional*. Sender of the message; may be empty for messages sent to channels. For
  * backward compatibility, if the message was sent on behalf of a chat, the field contains a fake
  * sender user in non-channel chats
@@ -44,18 +46,22 @@ import kotlin.collections.List
  * @param isAutomaticForward *Optional*. *True*, if the message is a channel post that was
  * automatically forwarded to the connected discussion group
  * @param replyToMessage *Optional*. For replies in the same chat and message thread, the original
- * message. Note that the Message object in this field will not contain further *reply_to_message*
- * fields even if it itself is a reply.
+ * message. Note that the [Message](https://core.telegram.org/bots/api/#message) object in this field
+ * will not contain further *reply_to_message* fields even if it itself is a reply.
  * @param externalReply *Optional*. Information about the message that is being replied to, which
  * may come from another chat or forum topic
  * @param quote *Optional*. For replies that quote part of the original message, the quoted part of
  * the message
  * @param replyToStory *Optional*. For replies to a story, the original story
+ * @param replyToChecklistTaskId *Optional*. Identifier of the specific checklist task that is being
+ * replied to
  * @param viaBot *Optional*. Bot through which the message was sent
  * @param editDate *Optional*. Date the message was last edited in Unix time
  * @param hasProtectedContent *Optional*. *True*, if the message can't be forwarded
  * @param isFromOffline *Optional*. *True*, if the message was sent by an implicit action, for
  * example, as an away or a greeting business message, or as a scheduled message
+ * @param isPaidPost *Optional*. *True*, if the message is a paid post. Note that such posts must
+ * not be deleted for 24 hours to receive the payment and can't be edited.
  * @param mediaGroupId *Optional*. The unique identifier of a media message group this message
  * belongs to
  * @param authorSignature *Optional*. Signature of the post author for messages in channels, or the
@@ -67,6 +73,9 @@ import kotlin.collections.List
  * commands, etc. that appear in the text
  * @param linkPreviewOptions *Optional*. Options used for link preview generation for the message,
  * if it is a text message and link preview options were changed
+ * @param suggestedPostInfo *Optional*. Information about suggested post parameters if the message
+ * is a suggested post in a channel direct messages chat. If the message is an approved or declined
+ * suggested post, then it can't be edited.
  * @param effectId *Optional*. Unique identifier of the message effect added to the message
  * @param animation *Optional*. Message is an animation, information about the animation. For
  * backward compatibility, when this field is set, the *document* field will also be set
@@ -123,8 +132,9 @@ import kotlin.collections.List
  * languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant
  * bits, so a signed 64-bit integer or double-precision float type are safe for storing this
  * identifier.
- * @param pinnedMessage *Optional*. Specified message was pinned. Note that the Message object in
- * this field will not contain further *reply_to_message* fields even if it itself is a reply.
+ * @param pinnedMessage *Optional*. Specified message was pinned. Note that the
+ * [Message](https://core.telegram.org/bots/api/#message) object in this field will not contain further
+ * *reply_to_message* fields even if it itself is a reply.
  * @param invoice *Optional*. Message is an invoice for a
  * [payment](https://core.telegram.org/bots/api/#payments), information about the invoice. [More about
  * payments ](https://core.telegram.org/bots/api/#payments)
@@ -165,6 +175,13 @@ import kotlin.collections.List
  * completed
  * @param paidMessagePriceChanged *Optional*. Service message: the price for paid messages has
  * changed in the chat
+ * @param suggestedPostApproved *Optional*. Service message: a suggested post was approved
+ * @param suggestedPostApprovalFailed *Optional*. Service message: approval of a suggested post has
+ * failed
+ * @param suggestedPostDeclined *Optional*. Service message: a suggested post was declined
+ * @param suggestedPostPaid *Optional*. Service message: payment for a suggested post was received
+ * @param suggestedPostRefunded *Optional*. Service message: payment for a suggested post was
+ * refunded
  * @param videoChatScheduled *Optional*. Service message: video chat scheduled
  * @param videoChatStarted *Optional*. Service message: video chat started
  * @param videoChatEnded *Optional*. Service message: video chat ended
@@ -191,6 +208,12 @@ public data class Message(
     @get:JsonProperty("message_thread_id")
     @param:JsonProperty("message_thread_id")
     public val messageThreadId: Long? = null,
+    /**
+     * *Optional*. Information about the direct messages chat topic that contains the message
+     */
+    @get:JsonProperty("direct_messages_topic")
+    @param:JsonProperty("direct_messages_topic")
+    public val directMessagesTopic: DirectMessagesTopic? = null,
     /**
      * *Optional*. Sender of the message; may be empty for messages sent to channels. For backward
      * compatibility, if the message was sent on behalf of a chat, the field contains a fake sender
@@ -265,8 +288,8 @@ public data class Message(
     public val isAutomaticForward: Boolean? = null,
     /**
      * *Optional*. For replies in the same chat and message thread, the original message. Note that
-     * the Message object in this field will not contain further *reply_to_message* fields even if it
-     * itself is a reply.
+     * the [Message](https://core.telegram.org/bots/api/#message) object in this field will not contain
+     * further *reply_to_message* fields even if it itself is a reply.
      */
     @get:JsonProperty("reply_to_message")
     @param:JsonProperty("reply_to_message")
@@ -292,6 +315,12 @@ public data class Message(
     @param:JsonProperty("reply_to_story")
     public val replyToStory: Story? = null,
     /**
+     * *Optional*. Identifier of the specific checklist task that is being replied to
+     */
+    @get:JsonProperty("reply_to_checklist_task_id")
+    @param:JsonProperty("reply_to_checklist_task_id")
+    public val replyToChecklistTaskId: Long? = null,
+    /**
      * *Optional*. Bot through which the message was sent
      */
     @get:JsonProperty("via_bot")
@@ -316,6 +345,13 @@ public data class Message(
     @get:JsonProperty("is_from_offline")
     @param:JsonProperty("is_from_offline")
     public val isFromOffline: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the message is a paid post. Note that such posts must not be deleted
+     * for 24 hours to receive the payment and can't be edited.
+     */
+    @get:JsonProperty("is_paid_post")
+    @param:JsonProperty("is_paid_post")
+    public val isPaidPost: Boolean? = null,
     /**
      * *Optional*. The unique identifier of a media message group this message belongs to
      */
@@ -356,6 +392,14 @@ public data class Message(
     @get:JsonProperty("link_preview_options")
     @param:JsonProperty("link_preview_options")
     public val linkPreviewOptions: LinkPreviewOptions? = null,
+    /**
+     * *Optional*. Information about suggested post parameters if the message is a suggested post in
+     * a channel direct messages chat. If the message is an approved or declined suggested post, then
+     * it can't be edited.
+     */
+    @get:JsonProperty("suggested_post_info")
+    @param:JsonProperty("suggested_post_info")
+    public val suggestedPostInfo: SuggestedPostInfo? = null,
     /**
      * *Optional*. Unique identifier of the message effect added to the message
      */
@@ -575,8 +619,9 @@ public data class Message(
     @param:JsonProperty("migrate_from_chat_id")
     public val migrateFromChatId: Long? = null,
     /**
-     * *Optional*. Specified message was pinned. Note that the Message object in this field will not
-     * contain further *reply_to_message* fields even if it itself is a reply.
+     * *Optional*. Specified message was pinned. Note that the
+     * [Message](https://core.telegram.org/bots/api/#message) object in this field will not contain
+     * further *reply_to_message* fields even if it itself is a reply.
      */
     @get:JsonProperty("pinned_message")
     @param:JsonProperty("pinned_message")
@@ -753,6 +798,36 @@ public data class Message(
     @get:JsonProperty("paid_message_price_changed")
     @param:JsonProperty("paid_message_price_changed")
     public val paidMessagePriceChanged: PaidMessagePriceChanged? = null,
+    /**
+     * *Optional*. Service message: a suggested post was approved
+     */
+    @get:JsonProperty("suggested_post_approved")
+    @param:JsonProperty("suggested_post_approved")
+    public val suggestedPostApproved: SuggestedPostApproved? = null,
+    /**
+     * *Optional*. Service message: approval of a suggested post has failed
+     */
+    @get:JsonProperty("suggested_post_approval_failed")
+    @param:JsonProperty("suggested_post_approval_failed")
+    public val suggestedPostApprovalFailed: SuggestedPostApprovalFailed? = null,
+    /**
+     * *Optional*. Service message: a suggested post was declined
+     */
+    @get:JsonProperty("suggested_post_declined")
+    @param:JsonProperty("suggested_post_declined")
+    public val suggestedPostDeclined: SuggestedPostDeclined? = null,
+    /**
+     * *Optional*. Service message: payment for a suggested post was received
+     */
+    @get:JsonProperty("suggested_post_paid")
+    @param:JsonProperty("suggested_post_paid")
+    public val suggestedPostPaid: SuggestedPostPaid? = null,
+    /**
+     * *Optional*. Service message: payment for a suggested post was refunded
+     */
+    @get:JsonProperty("suggested_post_refunded")
+    @param:JsonProperty("suggested_post_refunded")
+    public val suggestedPostRefunded: SuggestedPostRefunded? = null,
     /**
      * *Optional*. Service message: video chat scheduled
      */

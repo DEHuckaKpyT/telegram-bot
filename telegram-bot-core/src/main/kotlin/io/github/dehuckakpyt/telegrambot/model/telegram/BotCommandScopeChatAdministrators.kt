@@ -14,12 +14,12 @@ import kotlin.String
  * @author KScript
  *
  * @param chatId Unique identifier for the target chat or username of the target supergroup (in the
- * format `@supergroupusername`)
+ * format `@supergroupusername`). Channel direct messages chats and channel chats aren't supported.
  */
 public data class BotCommandScopeChatAdministrators(
     /**
      * Unique identifier for the target chat or username of the target supergroup (in the format
-     * `@supergroupusername`)
+     * `@supergroupusername`). Channel direct messages chats and channel chats aren't supported.
      */
     @get:JsonProperty("chat_id")
     @param:JsonProperty("chat_id")

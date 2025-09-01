@@ -18,6 +18,8 @@ internal data class CopyMessages(
     public val messageIds: Iterable<Long>,
     @get:JsonProperty("message_thread_id")
     public val messageThreadId: Long? = null,
+    @get:JsonProperty("direct_messages_topic_id")
+    public val directMessagesTopicId: Long? = null,
     @get:JsonProperty("disable_notification")
     public val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content")

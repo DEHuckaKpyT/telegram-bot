@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /**
- * Created on 12.07.2025.
+ * Created on 01.09.2025.
  *
  * @author KScript
  */
@@ -100,6 +100,7 @@ public class TelegramBotImpl(
         text: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
@@ -107,6 +108,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendMessage",
@@ -115,6 +117,7 @@ public class TelegramBotImpl(
             text = text,
             businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             parseMode = parseMode,
             entities = entities,
             linkPreviewOptions = linkPreviewOptions,
@@ -122,6 +125,7 @@ public class TelegramBotImpl(
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
             messageEffectId = messageEffectId,
+            suggestedPostParameters = suggestedPostParameters,
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
@@ -130,6 +134,7 @@ public class TelegramBotImpl(
         put("text", text)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("parseMode", parseMode)
         put("entities", entities)
         put("linkPreviewOptions", linkPreviewOptions)
@@ -137,6 +142,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -146,27 +152,33 @@ public class TelegramBotImpl(
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         videoStartTimestamp: Int?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
+        suggestedPostParameters: SuggestedPostParameters?,
     ): Message = client.postJson<Message>("forwardMessage",
         ForwardMessage(
             chatId = chatId,
             fromChatId = fromChatId,
             messageId = messageId,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             videoStartTimestamp = videoStartTimestamp,
             disableNotification = disableNotification,
-            protectContent = protectContent
+            protectContent = protectContent,
+            suggestedPostParameters = suggestedPostParameters
         )
     ).afterMethod("forwardMessage") {
         put("chatId", chatId)
         put("fromChatId", fromChatId)
         put("messageId", messageId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("videoStartTimestamp", videoStartTimestamp)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
+        put("suggestedPostParameters", suggestedPostParameters)
     }
 
     override suspend fun forwardMessages(
@@ -174,6 +186,7 @@ public class TelegramBotImpl(
         fromChatId: String,
         messageIds: Iterable<Long>,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
     ): List<MessageId> = client.postJson<List<MessageId>>("forwardMessages",
@@ -182,6 +195,7 @@ public class TelegramBotImpl(
             fromChatId = fromChatId,
             messageIds = messageIds,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             disableNotification = disableNotification,
             protectContent = protectContent
         )
@@ -190,6 +204,7 @@ public class TelegramBotImpl(
         put("fromChatId", fromChatId)
         put("messageIds", messageIds)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
     }
@@ -199,6 +214,7 @@ public class TelegramBotImpl(
         fromChatId: String,
         messageId: Long,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         videoStartTimestamp: Int?,
         caption: String?,
         parseMode: String?,
@@ -207,6 +223,7 @@ public class TelegramBotImpl(
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): MessageId = client.postJson<MessageId>("copyMessage",
@@ -215,6 +232,7 @@ public class TelegramBotImpl(
             fromChatId = fromChatId,
             messageId = messageId,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             videoStartTimestamp = videoStartTimestamp,
             caption = caption,
             parseMode = parseMode,
@@ -223,6 +241,7 @@ public class TelegramBotImpl(
             disableNotification = disableNotification,
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
+            suggestedPostParameters = suggestedPostParameters,
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
@@ -231,6 +250,7 @@ public class TelegramBotImpl(
         put("fromChatId", fromChatId)
         put("messageId", messageId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("videoStartTimestamp", videoStartTimestamp)
         put("caption", caption)
         put("parseMode", parseMode)
@@ -239,6 +259,7 @@ public class TelegramBotImpl(
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -248,6 +269,7 @@ public class TelegramBotImpl(
         fromChatId: String,
         messageIds: Iterable<Long>,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         removeCaption: Boolean?,
@@ -257,6 +279,7 @@ public class TelegramBotImpl(
             fromChatId = fromChatId,
             messageIds = messageIds,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             disableNotification = disableNotification,
             protectContent = protectContent,
             removeCaption = removeCaption
@@ -266,6 +289,7 @@ public class TelegramBotImpl(
         put("fromChatId", fromChatId)
         put("messageIds", messageIds)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("removeCaption", removeCaption)
@@ -276,6 +300,7 @@ public class TelegramBotImpl(
         photo: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -285,6 +310,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendPhoto") {
@@ -292,6 +318,7 @@ public class TelegramBotImpl(
         appendContent("photo", photo)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
         appendIfNotNull("caption_entities", client.toJson(captionEntities))
@@ -301,6 +328,7 @@ public class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendPhoto") {
@@ -308,6 +336,7 @@ public class TelegramBotImpl(
         put("photo", photo)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("caption", caption)
         put("parseMode", parseMode)
         put("captionEntities", captionEntities)
@@ -317,6 +346,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -326,6 +356,7 @@ public class TelegramBotImpl(
         audio: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -337,6 +368,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendAudio") {
@@ -344,6 +376,7 @@ public class TelegramBotImpl(
         appendContent("audio", audio)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
         appendIfNotNull("caption_entities", client.toJson(captionEntities))
@@ -355,6 +388,7 @@ public class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendAudio") {
@@ -362,6 +396,7 @@ public class TelegramBotImpl(
         put("audio", audio)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("caption", caption)
         put("parseMode", parseMode)
         put("captionEntities", captionEntities)
@@ -373,6 +408,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -382,6 +418,7 @@ public class TelegramBotImpl(
         document: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         thumbnail: Input?,
         caption: String?,
         parseMode: String?,
@@ -391,6 +428,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendDocument") {
@@ -398,6 +436,7 @@ public class TelegramBotImpl(
         appendContent("document", document)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendContentIfNotNull("thumbnail", thumbnail)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
@@ -407,6 +446,7 @@ public class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendDocument") {
@@ -414,6 +454,7 @@ public class TelegramBotImpl(
         put("document", document)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("thumbnail", thumbnail)
         put("caption", caption)
         put("parseMode", parseMode)
@@ -423,6 +464,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -432,6 +474,7 @@ public class TelegramBotImpl(
         video: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         duration: Int?,
         width: Int?,
         height: Int?,
@@ -448,6 +491,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendVideo") {
@@ -455,6 +499,7 @@ public class TelegramBotImpl(
         appendContent("video", video)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("width", width)
         appendIfNotNull("height", height)
@@ -471,6 +516,7 @@ public class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendVideo") {
@@ -478,6 +524,7 @@ public class TelegramBotImpl(
         put("video", video)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("duration", duration)
         put("width", width)
         put("height", height)
@@ -494,6 +541,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -503,6 +551,7 @@ public class TelegramBotImpl(
         animation: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         duration: Int?,
         width: Int?,
         height: Int?,
@@ -516,6 +565,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendAnimation") {
@@ -523,6 +573,7 @@ public class TelegramBotImpl(
         appendContent("animation", animation)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("width", width)
         appendIfNotNull("height", height)
@@ -536,6 +587,7 @@ public class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendAnimation") {
@@ -543,6 +595,7 @@ public class TelegramBotImpl(
         put("animation", animation)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("duration", duration)
         put("width", width)
         put("height", height)
@@ -556,6 +609,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -565,6 +619,7 @@ public class TelegramBotImpl(
         voice: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         caption: String?,
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
@@ -573,6 +628,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendVoice") {
@@ -580,6 +636,7 @@ public class TelegramBotImpl(
         appendContent("voice", voice)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
         appendIfNotNull("caption_entities", client.toJson(captionEntities))
@@ -588,6 +645,7 @@ public class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendVoice") {
@@ -595,6 +653,7 @@ public class TelegramBotImpl(
         put("voice", voice)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("caption", caption)
         put("parseMode", parseMode)
         put("captionEntities", captionEntities)
@@ -603,6 +662,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -612,6 +672,7 @@ public class TelegramBotImpl(
         videoNote: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         duration: Int?,
         length: Int?,
         thumbnail: Input?,
@@ -619,6 +680,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendVideoNote") {
@@ -626,6 +688,7 @@ public class TelegramBotImpl(
         appendContent("video_note", videoNote)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("duration", duration)
         appendIfNotNull("length", length)
         appendContentIfNotNull("thumbnail", thumbnail)
@@ -633,6 +696,7 @@ public class TelegramBotImpl(
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendVideoNote") {
@@ -640,6 +704,7 @@ public class TelegramBotImpl(
         put("videoNote", videoNote)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("duration", duration)
         put("length", length)
         put("thumbnail", thumbnail)
@@ -647,6 +712,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -656,6 +722,8 @@ public class TelegramBotImpl(
         starCount: Int,
         media: Iterable<InputPaidMedia>,
         businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         payload: String?,
         caption: String?,
         parseMode: String?,
@@ -664,6 +732,7 @@ public class TelegramBotImpl(
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendPaidMedia") {
@@ -671,6 +740,8 @@ public class TelegramBotImpl(
         append("star_count", starCount)
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
+        appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("payload", payload)
         appendIfNotNull("caption", caption)
         appendIfNotNull("parse_mode", parseMode)
@@ -679,6 +750,7 @@ public class TelegramBotImpl(
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
 
@@ -698,6 +770,8 @@ public class TelegramBotImpl(
         put("starCount", starCount)
         put("media", media)
         put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("payload", payload)
         put("caption", caption)
         put("parseMode", parseMode)
@@ -706,6 +780,7 @@ public class TelegramBotImpl(
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -715,6 +790,7 @@ public class TelegramBotImpl(
         media: Iterable<InputMedia>,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
@@ -725,6 +801,7 @@ public class TelegramBotImpl(
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
@@ -747,6 +824,7 @@ public class TelegramBotImpl(
         put("media", media)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
@@ -760,6 +838,7 @@ public class TelegramBotImpl(
         longitude: Double,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         horizontalAccuracy: Double?,
         livePeriod: Int?,
         heading: Int?,
@@ -768,6 +847,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendLocation",
@@ -777,6 +857,7 @@ public class TelegramBotImpl(
             longitude = longitude,
             businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             horizontalAccuracy = horizontalAccuracy,
             livePeriod = livePeriod,
             heading = heading,
@@ -785,6 +866,7 @@ public class TelegramBotImpl(
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
             messageEffectId = messageEffectId,
+            suggestedPostParameters = suggestedPostParameters,
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
@@ -794,6 +876,7 @@ public class TelegramBotImpl(
         put("longitude", longitude)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("horizontalAccuracy", horizontalAccuracy)
         put("livePeriod", livePeriod)
         put("heading", heading)
@@ -802,6 +885,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -814,6 +898,7 @@ public class TelegramBotImpl(
         address: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         foursquareId: String?,
         foursquareType: String?,
         googlePlaceId: String?,
@@ -822,6 +907,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendVenue",
@@ -833,6 +919,7 @@ public class TelegramBotImpl(
             address = address,
             businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             foursquareId = foursquareId,
             foursquareType = foursquareType,
             googlePlaceId = googlePlaceId,
@@ -841,6 +928,7 @@ public class TelegramBotImpl(
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
             messageEffectId = messageEffectId,
+            suggestedPostParameters = suggestedPostParameters,
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
@@ -852,6 +940,7 @@ public class TelegramBotImpl(
         put("address", address)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("foursquareId", foursquareId)
         put("foursquareType", foursquareType)
         put("googlePlaceId", googlePlaceId)
@@ -860,6 +949,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -870,12 +960,14 @@ public class TelegramBotImpl(
         firstName: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         lastName: String?,
         vcard: String?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendContact",
@@ -885,12 +977,14 @@ public class TelegramBotImpl(
             firstName = firstName,
             businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             lastName = lastName,
             vcard = vcard,
             disableNotification = disableNotification,
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
             messageEffectId = messageEffectId,
+            suggestedPostParameters = suggestedPostParameters,
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
@@ -900,12 +994,14 @@ public class TelegramBotImpl(
         put("firstName", firstName)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("lastName", lastName)
         put("vcard", vcard)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -1019,11 +1115,13 @@ public class TelegramBotImpl(
         chatId: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postJson<Message>("sendDice",
@@ -1031,11 +1129,13 @@ public class TelegramBotImpl(
             chatId = chatId,
             businessConnectionId = businessConnectionId,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             emoji = emoji,
             disableNotification = disableNotification,
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
             messageEffectId = messageEffectId,
+            suggestedPostParameters = suggestedPostParameters,
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
@@ -1043,11 +1143,13 @@ public class TelegramBotImpl(
         put("chatId", chatId)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("emoji", emoji)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -1205,6 +1307,7 @@ public class TelegramBotImpl(
         canEditMessages: Boolean?,
         canPinMessages: Boolean?,
         canManageTopics: Boolean?,
+        canManageDirectMessages: Boolean?,
     ): Boolean = client.postJson<Boolean>("promoteChatMember",
         PromoteChatMember(
             chatId = chatId,
@@ -1223,7 +1326,8 @@ public class TelegramBotImpl(
             canPostMessages = canPostMessages,
             canEditMessages = canEditMessages,
             canPinMessages = canPinMessages,
-            canManageTopics = canManageTopics
+            canManageTopics = canManageTopics,
+            canManageDirectMessages = canManageDirectMessages
         )
     ).afterMethod("promoteChatMember") {
         put("chatId", chatId)
@@ -1243,6 +1347,7 @@ public class TelegramBotImpl(
         put("canEditMessages", canEditMessages)
         put("canPinMessages", canPinMessages)
         put("canManageTopics", canManageTopics)
+        put("canManageDirectMessages", canManageDirectMessages)
     }
 
     override suspend fun setChatAdministratorCustomTitle(
@@ -1898,230 +2003,6 @@ public class TelegramBotImpl(
             put("forChannels", forChannels)
         }
 
-    override suspend fun editMessageText(
-        chatId: String,
-        messageId: Long,
-        text: String,
-        businessConnectionId: String?,
-        parseMode: String?,
-        entities: Iterable<MessageEntity>?,
-        linkPreviewOptions: LinkPreviewOptions?,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("editMessageText",
-        EditMessageTextByChatIdAndMessageId(
-            chatId = chatId,
-            messageId = messageId,
-            text = text,
-            businessConnectionId = businessConnectionId,
-            parseMode = parseMode,
-            entities = entities,
-            linkPreviewOptions = linkPreviewOptions,
-            replyMarkup = replyMarkup
-        )
-    ).afterMethod("editMessageText") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("text", text)
-        put("businessConnectionId", businessConnectionId)
-        put("parseMode", parseMode)
-        put("entities", entities)
-        put("linkPreviewOptions", linkPreviewOptions)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun editMessageCaption(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String?,
-        caption: String?,
-        parseMode: String?,
-        captionEntities: Iterable<MessageEntity>?,
-        showCaptionAboveMedia: Boolean?,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("editMessageCaption",
-        EditMessageCaptionByChatIdAndMessageId(
-            chatId = chatId,
-            messageId = messageId,
-            businessConnectionId = businessConnectionId,
-            caption = caption,
-            parseMode = parseMode,
-            captionEntities = captionEntities,
-            showCaptionAboveMedia = showCaptionAboveMedia,
-            replyMarkup = replyMarkup
-        )
-    ).afterMethod("editMessageCaption") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("businessConnectionId", businessConnectionId)
-        put("caption", caption)
-        put("parseMode", parseMode)
-        put("captionEntities", captionEntities)
-        put("showCaptionAboveMedia", showCaptionAboveMedia)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun editMessageMedia(
-        chatId: String,
-        messageId: Long,
-        media: InputMedia,
-        businessConnectionId: String?,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postMultiPart<Message>("editMessageMedia") {
-        append("chat_id", chatId)
-        append("message_id", messageId)
-        append("media", client.toJson(media))
-        appendIfNotNull("business_connection_id", businessConnectionId)
-        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-
-        appendContent(media.media)
-
-        appendContentIfNotNull(media.thumbnail)
-
-        appendContentIfNotNull(media.cover)
-    }.afterMethod("editMessageMedia") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("media", media)
-        put("businessConnectionId", businessConnectionId)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun editMessageLiveLocation(
-        chatId: String,
-        messageId: Long,
-        latitude: Double,
-        longitude: Double,
-        businessConnectionId: String?,
-        livePeriod: Int?,
-        horizontalAccuracy: Double?,
-        heading: Int?,
-        proximityAlertRadius: Int?,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("editMessageLiveLocation",
-        EditMessageLiveLocationByChatIdAndMessageId(
-            chatId = chatId,
-            messageId = messageId,
-            latitude = latitude,
-            longitude = longitude,
-            businessConnectionId = businessConnectionId,
-            livePeriod = livePeriod,
-            horizontalAccuracy = horizontalAccuracy,
-            heading = heading,
-            proximityAlertRadius = proximityAlertRadius,
-            replyMarkup = replyMarkup
-        )
-    ).afterMethod("editMessageLiveLocation") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("latitude", latitude)
-        put("longitude", longitude)
-        put("businessConnectionId", businessConnectionId)
-        put("livePeriod", livePeriod)
-        put("horizontalAccuracy", horizontalAccuracy)
-        put("heading", heading)
-        put("proximityAlertRadius", proximityAlertRadius)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun stopMessageLiveLocation(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String?,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("stopMessageLiveLocation",
-        StopMessageLiveLocationByChatIdAndMessageId(
-            chatId = chatId,
-            messageId = messageId,
-            businessConnectionId = businessConnectionId,
-            replyMarkup = replyMarkup
-        )
-    ).afterMethod("stopMessageLiveLocation") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("businessConnectionId", businessConnectionId)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun editMessageChecklist(
-        businessConnectionId: String,
-        chatId: Long,
-        messageId: Long,
-        checklist: InputChecklist,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postMultiPart<Message>("editMessageChecklist") {
-        append("business_connection_id", businessConnectionId)
-        append("chat_id", chatId)
-        append("message_id", messageId)
-        append("checklist", client.toJson(checklist))
-        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.afterMethod("editMessageChecklist") {
-        put("businessConnectionId", businessConnectionId)
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("checklist", checklist)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun editMessageReplyMarkup(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String?,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postJson<Message>("editMessageReplyMarkup",
-        EditMessageReplyMarkupByChatIdAndMessageId(
-            chatId = chatId,
-            messageId = messageId,
-            businessConnectionId = businessConnectionId,
-            replyMarkup = replyMarkup
-        )
-    ).afterMethod("editMessageReplyMarkup") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("businessConnectionId", businessConnectionId)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun stopPoll(
-        chatId: String,
-        messageId: Long,
-        businessConnectionId: String?,
-        replyMarkup: InlineKeyboardMarkup?,
-    ): Poll = client.postJson<Poll>("stopPoll",
-        StopPoll(
-            chatId = chatId,
-            messageId = messageId,
-            businessConnectionId = businessConnectionId,
-            replyMarkup = replyMarkup
-        )
-    ).afterMethod("stopPoll") {
-        put("chatId", chatId)
-        put("messageId", messageId)
-        put("businessConnectionId", businessConnectionId)
-        put("replyMarkup", replyMarkup)
-    }
-
-    override suspend fun deleteMessage(chatId: String, messageId: Long): Boolean =
-        client.postJson<Boolean>("deleteMessage",
-            DeleteMessage(
-                chatId = chatId,
-                messageId = messageId
-            )
-        ).afterMethod("deleteMessage") {
-            put("chatId", chatId)
-            put("messageId", messageId)
-        }
-
-    override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean =
-        client.postJson<Boolean>("deleteMessages",
-            DeleteMessages(
-                chatId = chatId,
-                messageIds = messageIds
-            )
-        ).afterMethod("deleteMessages") {
-            put("chatId", chatId)
-            put("messageIds", messageIds)
-        }
-
     override suspend fun getAvailableGifts(): Gifts = client.get<Gifts>("getAvailableGifts")
         .afterMethod("getAvailableGifts")
 
@@ -2503,16 +2384,274 @@ public class TelegramBotImpl(
             put("storyId", storyId)
         }
 
+    override suspend fun editMessageText(
+        chatId: String,
+        messageId: Long,
+        text: String,
+        businessConnectionId: String?,
+        parseMode: String?,
+        entities: Iterable<MessageEntity>?,
+        linkPreviewOptions: LinkPreviewOptions?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postJson<Message>("editMessageText",
+        EditMessageTextByChatIdAndMessageId(
+            chatId = chatId,
+            messageId = messageId,
+            text = text,
+            businessConnectionId = businessConnectionId,
+            parseMode = parseMode,
+            entities = entities,
+            linkPreviewOptions = linkPreviewOptions,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("editMessageText") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("text", text)
+        put("businessConnectionId", businessConnectionId)
+        put("parseMode", parseMode)
+        put("entities", entities)
+        put("linkPreviewOptions", linkPreviewOptions)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun editMessageCaption(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String?,
+        caption: String?,
+        parseMode: String?,
+        captionEntities: Iterable<MessageEntity>?,
+        showCaptionAboveMedia: Boolean?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postJson<Message>("editMessageCaption",
+        EditMessageCaptionByChatIdAndMessageId(
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
+            caption = caption,
+            parseMode = parseMode,
+            captionEntities = captionEntities,
+            showCaptionAboveMedia = showCaptionAboveMedia,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("editMessageCaption") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun editMessageMedia(
+        chatId: String,
+        messageId: Long,
+        media: InputMedia,
+        businessConnectionId: String?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postMultiPart<Message>("editMessageMedia") {
+        append("chat_id", chatId)
+        append("message_id", messageId)
+        append("media", client.toJson(media))
+        appendIfNotNull("business_connection_id", businessConnectionId)
+        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+
+        appendContent(media.media)
+
+        appendContentIfNotNull(media.thumbnail)
+
+        appendContentIfNotNull(media.cover)
+    }.afterMethod("editMessageMedia") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("media", media)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun editMessageLiveLocation(
+        chatId: String,
+        messageId: Long,
+        latitude: Double,
+        longitude: Double,
+        businessConnectionId: String?,
+        livePeriod: Int?,
+        horizontalAccuracy: Double?,
+        heading: Int?,
+        proximityAlertRadius: Int?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postJson<Message>("editMessageLiveLocation",
+        EditMessageLiveLocationByChatIdAndMessageId(
+            chatId = chatId,
+            messageId = messageId,
+            latitude = latitude,
+            longitude = longitude,
+            businessConnectionId = businessConnectionId,
+            livePeriod = livePeriod,
+            horizontalAccuracy = horizontalAccuracy,
+            heading = heading,
+            proximityAlertRadius = proximityAlertRadius,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("editMessageLiveLocation") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("latitude", latitude)
+        put("longitude", longitude)
+        put("businessConnectionId", businessConnectionId)
+        put("livePeriod", livePeriod)
+        put("horizontalAccuracy", horizontalAccuracy)
+        put("heading", heading)
+        put("proximityAlertRadius", proximityAlertRadius)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun stopMessageLiveLocation(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postJson<Message>("stopMessageLiveLocation",
+        StopMessageLiveLocationByChatIdAndMessageId(
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("stopMessageLiveLocation") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun editMessageChecklist(
+        businessConnectionId: String,
+        chatId: Long,
+        messageId: Long,
+        checklist: InputChecklist,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postMultiPart<Message>("editMessageChecklist") {
+        append("business_connection_id", businessConnectionId)
+        append("chat_id", chatId)
+        append("message_id", messageId)
+        append("checklist", client.toJson(checklist))
+        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("editMessageChecklist") {
+        put("businessConnectionId", businessConnectionId)
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("checklist", checklist)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun editMessageReplyMarkup(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Message = client.postJson<Message>("editMessageReplyMarkup",
+        EditMessageReplyMarkupByChatIdAndMessageId(
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("editMessageReplyMarkup") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun stopPoll(
+        chatId: String,
+        messageId: Long,
+        businessConnectionId: String?,
+        replyMarkup: InlineKeyboardMarkup?,
+    ): Poll = client.postJson<Poll>("stopPoll",
+        StopPoll(
+            chatId = chatId,
+            messageId = messageId,
+            businessConnectionId = businessConnectionId,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("stopPoll") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("businessConnectionId", businessConnectionId)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun approveSuggestedPost(
+        chatId: Long,
+        messageId: Long,
+        sendDate: Long?,
+    ): Boolean = client.postJson<Boolean>("approveSuggestedPost",
+        ApproveSuggestedPost(
+            chatId = chatId,
+            messageId = messageId,
+            sendDate = sendDate
+        )
+    ).afterMethod("approveSuggestedPost") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("sendDate", sendDate)
+    }
+
+    override suspend fun declineSuggestedPost(
+        chatId: Long,
+        messageId: Long,
+        comment: String?,
+    ): Boolean = client.postJson<Boolean>("declineSuggestedPost",
+        DeclineSuggestedPost(
+            chatId = chatId,
+            messageId = messageId,
+            comment = comment
+        )
+    ).afterMethod("declineSuggestedPost") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("comment", comment)
+    }
+
+    override suspend fun deleteMessage(chatId: String, messageId: Long): Boolean =
+        client.postJson<Boolean>("deleteMessage",
+            DeleteMessage(
+                chatId = chatId,
+                messageId = messageId
+            )
+        ).afterMethod("deleteMessage") {
+            put("chatId", chatId)
+            put("messageId", messageId)
+        }
+
+    override suspend fun deleteMessages(chatId: String, messageIds: Iterable<Long>): Boolean =
+        client.postJson<Boolean>("deleteMessages",
+            DeleteMessages(
+                chatId = chatId,
+                messageIds = messageIds
+            )
+        ).afterMethod("deleteMessages") {
+            put("chatId", chatId)
+            put("messageIds", messageIds)
+        }
+
     override suspend fun sendSticker(
         chatId: String,
         sticker: Input,
         businessConnectionId: String?,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         emoji: String?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = client.postMultiPart<Message>("sendSticker") {
@@ -2520,11 +2659,13 @@ public class TelegramBotImpl(
         appendContent("sticker", sticker)
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
         appendIfNotNull("emoji", emoji)
         appendIfNotNull("disable_notification", disableNotification)
         appendIfNotNull("protect_content", protectContent)
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendSticker") {
@@ -2532,11 +2673,13 @@ public class TelegramBotImpl(
         put("sticker", sticker)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("emoji", emoji)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }
@@ -2804,6 +2947,7 @@ public class TelegramBotImpl(
         currency: String,
         prices: Iterable<LabeledPrice>,
         messageThreadId: Long?,
+        directMessagesTopicId: Long?,
         providerToken: String?,
         maxTipAmount: Int?,
         suggestedTipAmounts: Iterable<Int>?,
@@ -2824,6 +2968,7 @@ public class TelegramBotImpl(
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("sendInvoice",
@@ -2835,6 +2980,7 @@ public class TelegramBotImpl(
             currency = currency,
             prices = prices,
             messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
             providerToken = providerToken,
             maxTipAmount = maxTipAmount,
             suggestedTipAmounts = suggestedTipAmounts,
@@ -2855,6 +3001,7 @@ public class TelegramBotImpl(
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
             messageEffectId = messageEffectId,
+            suggestedPostParameters = suggestedPostParameters,
             replyParameters = replyParameters,
             replyMarkup = replyMarkup
         )
@@ -2866,6 +3013,7 @@ public class TelegramBotImpl(
         put("currency", currency)
         put("prices", prices)
         put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
         put("providerToken", providerToken)
         put("maxTipAmount", maxTipAmount)
         put("suggestedTipAmounts", suggestedTipAmounts)
@@ -2886,6 +3034,7 @@ public class TelegramBotImpl(
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
         put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
         put("replyParameters", replyParameters)
         put("replyMarkup", replyMarkup)
     }

@@ -11,15 +11,15 @@ import kotlin.collections.List
  * @author KScript
  *
  * @param checklistMessage *Optional*. Message containing the checklist to which the tasks were
- * added. Note that the Message object in this field will not contain the *reply_to_message* field even
- * if it itself is a reply.
+ * added. Note that the [Message](https://core.telegram.org/bots/api/#message) object in this field
+ * will not contain the *reply_to_message* field even if it itself is a reply.
  * @param tasks List of tasks added to the checklist
  */
 public data class ChecklistTasksAdded(
     /**
      * *Optional*. Message containing the checklist to which the tasks were added. Note that the
-     * Message object in this field will not contain the *reply_to_message* field even if it itself is
-     * a reply.
+     * [Message](https://core.telegram.org/bots/api/#message) object in this field will not contain the
+     * *reply_to_message* field even if it itself is a reply.
      */
     @get:JsonProperty("checklist_message")
     @param:JsonProperty("checklist_message")
