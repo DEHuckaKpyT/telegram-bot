@@ -35,6 +35,8 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     if (pluginConfig.username == null) pluginConfig.username = telegramBotConfig.tryGetString("username")
     if (pluginConfig.receiving.messageTemplate == null) pluginConfig.receiving.messageTemplate = { KtorMessageTemplate() }
 
+    InternalKoinContext.koin.declare<Application>(application, named("application"))
+    
     if (telegramBotConfig.propertyOrNull("template") != null) {
         InternalKoinContext.koin.declare<ApplicationConfig>(telegramBotConfig.config("template"), named("telegramBotTemplate"))
     }

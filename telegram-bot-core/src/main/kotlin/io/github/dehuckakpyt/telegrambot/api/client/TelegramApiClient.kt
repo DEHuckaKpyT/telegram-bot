@@ -1,31 +1,18 @@
 package io.github.dehuckakpyt.telegrambot.api.client
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.KotlinFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.addSerializer
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import io.github.dehuckakpyt.telegrambot.api.serializer.ContentInputSerializer
-import io.github.dehuckakpyt.telegrambot.api.serializer.StringInputSerializer
+import io.github.dehuckakpyt.telegrambot.config.constants.api.client.ApiConstants.DEFAULT_CLIENT_CONFIGURATION
+import io.github.dehuckakpyt.telegrambot.config.constants.api.client.ApiConstants.DEFAULT_MAPPER
 import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.github.dehuckakpyt.telegrambot.ext.toJson
-import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
-import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
-import io.ktor.http.URLProtocol.Companion.HTTPS
-import io.ktor.serialization.jackson.*
 
 /**
  * Created on 19.04.2024.
@@ -114,45 +101,7 @@ public class TelegramApiClient(
 
     fun close(): Unit = client.close()
 
-    companion object {
-        private val DEFAULT_MAPPER = jacksonMapperBuilder().apply {
-            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        }.build().apply {
-            setSerializationInclusion(JsonInclude.Include.NON_NULL)
-
-            registerModule(SimpleModule().apply {
-                addSerializer(StringInput::class, StringInputSerializer())
-                addSerializer(ContentInput::class, ContentInputSerializer())
-            })
-
-            registerModule(
-                KotlinModule.Builder()
-                    .withReflectionCacheSize(512)
-                    .configure(KotlinFeature.NullToEmptyCollection, false)
-                    .configure(KotlinFeature.NullToEmptyMap, false)
-                    .configure(KotlinFeature.NullIsSameAsDefault, false)
-                    .configure(KotlinFeature.SingletonSupport, false)
-                    .configure(KotlinFeature.StrictNullChecks, false)
-                    .build()
-            )
-        }
-
-        private val DEFAULT_CLIENT_CONFIGURATION: HttpClientConfig<ApacheEngineConfig>.(String) -> Unit = { token ->
-            install(ContentNegotiation) {
-                register(Json, JacksonConverter(DEFAULT_MAPPER))
-            }
-            engine {
-                socketTimeout = 600_000
-            }
-            defaultRequest {
-                url {
-                    protocol = HTTPS
-                    host = "api.telegram.org"
-                    path("/bot$token/")
-                }
-            }
-        }
-    }
+    companion object {}
 
     data class TelegramResponse<T>(
         @param:JsonProperty("ok") val ok: Boolean,
