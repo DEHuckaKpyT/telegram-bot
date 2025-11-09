@@ -81,7 +81,7 @@ internal class WebhookUpdateReceiver(
 
     override fun stop(): Unit = runBlocking(Dispatchers.Default) {
         bot.deleteWebhook(
-            dropPendingUpdates = config.dropPendingUpdates
+            dropPendingUpdates = config.dropPendingUpdates,
         )
         logger.info("Stopped webhook update receiver.")
     }

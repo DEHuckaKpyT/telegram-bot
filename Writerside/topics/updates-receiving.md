@@ -24,41 +24,165 @@ That`s all. Bot works.
 
 ## Webhook
 
-Now available only for Spring. *But don't get too upset. More details in <a href="updates-receiving.md#custom-receiver">"Custom receiver"</a>.
+It available only for web frameworks (Spring and Ktor). *But don't get too upset. More details in <a href="updates-receiving.md#custom-receiver">"Custom receiver"</a>.
 
 <tabs id="template-factory-receiving-templates" group="telegram-bot-code">
-    <tab title="Spring" group-key="spring"></tab>
+    <tab title="Spring" group-key="spring">
+        <p>You can configure it easily:</p>
+        <code-block lang="yaml">
+            telegram-bot:
+                spring:
+                    update-receiver: webhook
+                    # URL to your bot application
+                    update-receiver.webhook.url.host: "https://my.domain.com/api/my-awesome-bot"
+        </code-block>
+        <p>
+          By default, a unique random token will be generated for the <code>X-Telegram-Bot-Api-Secret-Token</code> header. 
+          By default, the full URL will be: <code>https://my.domain.com/api/my-awesome-bot/updates/receive</code>
+        </p>
+        <p>All available properties:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>PROPERTY</th>
+              <th>DEFAULT</th>
+              <th>DESCRIPTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver</code></td>
+              <td><code>long-polling</code></td>
+              <td>Choosing <code>long polling</code> or <code>webhook</code></td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.url.host</code></td>
+              <td>-</td>
+              <td><b>Required</b>: Base URL of your application. Will be concatenated with <code>url.path</code>.</td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.url.path</code></td>
+              <td><code>/updates/receive</code></td>
+              <td>API endpoint path. Will be appended to host</td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.certificate.path</code></td>
+              <td>-</td>
+              <td>Path to certificate (e.g. <code>/cert.pem</code>)</td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.ip-address</code></td>
+              <td>-</td>
+              <td>Fixed IP instead of DNS-resolved</td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.max-connections</code></td>
+              <td>-</td>
+              <td>Maximum simultaneous HTTPS connections</td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.drop-pending-updates</code></td>
+              <td>-</td>
+              <td><b>true</b> = drop all unprocessed updates</td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.secret-token</code></td>
+              <td>-</td>
+              <td>Custom token for <code>X-Telegram-Bot-Api-Secret-Token</code> header</td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.secret-token.random-generation</code></td>
+              <td><code>RANDOM_UUID</code></td>
+              <td>Token generation: <code>NONE</code>, <code>RANDOM_UUID</code>, <code>RANDOM_256_CHARS</code></td>
+            </tr>
+            <tr>
+              <td><code>telegram-bot.spring.update-receiver.webhook.secret-token.random-generation.print-on-startup</code></td>
+              <td><code>false</code></td>
+              <td><b>true</b> = print generated token on startup</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>More details: 
+          <a href="https://core.telegram.org/bots/api#setwebhook">Telegram official docs: setWebhook</a>
+        </p>
+    </tab>
+    <tab title="Ktor + Koin" group-key="ktor">
+        <p>You can configure it easily:</p>
+        <code-block lang="kotlin">
+            install(TelegramBot) {
+                receiving {
+                    webhook {
+                        urlHost = "https://my.domain.com/api/my-awesome-bot"
+                    }
+                }
+            }
+        </code-block>
+        <p>
+          By default, a unique random token will be generated for the <code>X-Telegram-Bot-Api-Secret-Token</code> header. 
+          By default, the full URL will be: <code>https://my.domain.com/api/my-awesome-bot/updates/receive</code>
+        </p>
+        <p>All available properties:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>PROPERTY</th>
+              <th>DEFAULT</th>
+              <th>DESCRIPTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>urlHost</code></td>
+              <td>-</td>
+              <td><b>Required</b>: Base URL of your application. Will be concatenated with <code>url.path</code>.</td>
+            </tr>
+            <tr>
+              <td><code>urlPath</code></td>
+              <td><code>/updates/receive</code></td>
+              <td>API endpoint path. Will be appended to host</td>
+            </tr>
+            <tr>
+              <td><code>certificate</code></td>
+              <td>-</td>
+              <td>ContentInput file of certificate (e.g. path <code>/cert.pem</code>)</td>
+            </tr>
+            <tr>
+              <td><code>ipAddress</code></td>
+              <td>-</td>
+              <td>Fixed IP instead of DNS-resolved</td>
+            </tr>
+            <tr>
+              <td><code>maxConnections</code></td>
+              <td>-</td>
+              <td>Maximum simultaneous HTTPS connections</td>
+            </tr>
+            <tr>
+              <td><code>dropPendingUpdates</code></td>
+              <td>-</td>
+              <td><b>true</b> = drop all unprocessed updates</td>
+            </tr>
+            <tr>
+              <td><code>secretToken</code></td>
+              <td>-</td>
+              <td>Custom token for <code>X-Telegram-Bot-Api-Secret-Token</code> header</td>
+            </tr>
+            <tr>
+              <td><code>secretTokenRandomGeneration</code></td>
+              <td><code>RANDOM_UUID</code></td>
+              <td>Token generation: <code>NONE</code>, <code>RANDOM_UUID</code>, <code>RANDOM_256_CHARS</code></td>
+            </tr>
+            <tr>
+              <td><code>secretTokenRandomGenerationPrintOnStartup</code></td>
+              <td><code>false</code></td>
+              <td><b>true</b> = print generated token on startup</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>More details: 
+          <a href="https://core.telegram.org/bots/api#setwebhook">Telegram official docs: setWebhook</a>
+        </p>
+    </tab>
 </tabs>
-
-It can be configured easy too:
-
-```yaml
-telegram-bot:
-  spring:
-    update-receiver: webhook
-    # URL to your bot application
-    update-receiver.webhook.url.host: "https://my.domain.com/api/my-awesome-bot"
-```
-
-By default, unique random token will be generated for `X-Telegram-Bot-Api-Secret-Token` header.
-By default, full URL will be concatenated to `https://my.domain.com/api/my-awesome-bot/updates/receive`.
-
-All available properties:
-
-| PROPERTY                                                                                      | DEFAULT            | DESCRIPTION                                                                          |
-|-----------------------------------------------------------------------------------------------|--------------------|--------------------------------------------------------------------------------------|
-| `telegram-bot.spring.update-receiver`                                                         | `long-polling`     | Choosing long polling or webhook.                                                    |
-| `telegram-bot.spring.update-receiver.webhook.url.host`                                        | -                  | `Required` URL directly to your application. Will be concatenated with `urlPath`.    |
-| `telegram-bot.spring.update-receiver.webhook.url.path`                                        | `/updates/receive` | API mapping in application. Will be concatenated with `urlHost`.                     |
-| `telegram-bot.spring.update-receiver.webhook.certificate.path`                                | -                  | Path to certificate in resources. For example, `/sert.pem`.                          |
-| `telegram-bot.spring.update-receiver.webhook.ip-address`                                      | -                  | The fixed IP address instead of the IP address resolved through DNS.                 |
-| `telegram-bot.spring.update-receiver.webhook.max-connections`                                 | -                  | The maximum allowed number of simultaneous HTTPS connections.                        |
-| `telegram-bot.spring.update-receiver.webhook.drop-pending-updates`                            | -                  | Pass **True** to drop all pending updates.                                           |
-| `telegram-bot.spring.update-receiver.webhook.secret-token`                                    | -                  | A secret token to be sent in a header `X-Telegram-Bot-Api-Secret-Token`.             |
-| `telegram-bot.spring.update-receiver.webhook.secret-token.random-generation`                  | `RANDOM_UUID`      | Autogeneration of secret token. Available `NONE`, `RANDOM_UUID`, `RANDOM_256_CHARS`. |
-| `telegram-bot.spring.update-receiver.webhook.secret-token.random-generation.print-on-startup` | `false`            | Pass **True** to print generated token on application startup.                       |
-
-More info about webhook in [official docs](https://core.telegram.org/bots/api#setwebhook).
 
 ## Custom receiver
 
@@ -78,7 +202,7 @@ class CustomUpdateReceiver(
         // Calling bot.getUpdates() or bot.setWebhook()
         logger.info("Started custom update receiver.")
     }
-    
+
     // Calling updateResolver.processUpdate()
 
     override fun stop(): Unit = runBlocking(Dispatchers.Default) {
@@ -88,6 +212,7 @@ class CustomUpdateReceiver(
     }
 }
 ```
+
 ```kotlin
 val config = TelegramBotConfig().apply {
     // other settings
