@@ -186,14 +186,6 @@ dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-jpa:$telegram_bot_version")
 }
 ```
-#### Spring 2.7
-```kotlin
-dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:$telegram_bot_version")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-spring2-jpa:$telegram_bot_version")
-}
-```
 
 #### Available properties
 
