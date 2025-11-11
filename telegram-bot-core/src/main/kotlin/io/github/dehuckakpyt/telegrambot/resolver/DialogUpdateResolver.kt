@@ -40,7 +40,7 @@ internal class DialogUpdateResolver(
     private val chainExceptionHandler: ChainExceptionHandler,
     private val messageArgumentFactories: List<MessageContainerFactory>,
     private val messageSource: MessageSource,
-    private val telegramUserSource: TelegramUserSource,
+    private val telegramUserSource: TelegramUserSource<*>,
     private val telegramChatSource: TelegramChatSource,
     private val telegramChatStatusEventSource: TelegramChatStatusEventSource,
     private val username: String,

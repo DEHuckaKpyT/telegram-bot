@@ -9,6 +9,7 @@ telegram-bot:
 #    update-receiver.webhook.secret-token-random-generation.print-on-startup: true
 
   source-jpa:
+    user-source.enabled: false
     chat-source.enabled: true
     chat-status-event-source.enabled: true
 

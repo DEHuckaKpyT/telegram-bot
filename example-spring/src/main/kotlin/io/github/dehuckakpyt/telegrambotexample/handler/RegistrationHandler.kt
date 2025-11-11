@@ -4,10 +4,12 @@ import io.github.dehuckakpyt.telegrambot.annotation.HandlerComponent
 import io.github.dehuckakpyt.telegrambot.container.message.MessageType.CONTACT
 import io.github.dehuckakpyt.telegrambot.container.message.MessageType.TEXT
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
+import io.github.dehuckakpyt.telegrambot.ext.container.fromId
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.contactKeyboard
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.removeKeyboard
 import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambotexample.holder.MessageTemplateHolder
+import io.github.dehuckakpyt.telegrambotexample.service.TelegramUserService
 
 
 /**
@@ -19,6 +21,7 @@ import io.github.dehuckakpyt.telegrambotexample.holder.MessageTemplateHolder
 @HandlerComponent
 class RegistrationHandler(
     template: MessageTemplateHolder,
+    telegramUserService: TelegramUserService,
 ) : BotHandler({
     val phonePattern = Regex("\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}")
 
@@ -29,6 +32,10 @@ class RegistrationHandler(
     // if you specify a type, the body of the method will contain a container with fields and methods of this type
     // for example, in the CONTACT type you can get the field contact: Contact not null
     step("get_contact", type = CONTACT) {
+        // Saving phone
+        telegramUserService.setPhone(fromId, contact.phoneNumber)
+
+        // Notify that it is complete
         sendMessage(template.registerComplete with contact, replyMarkup = removeKeyboard())
     }
 
@@ -40,7 +47,13 @@ class RegistrationHandler(
     step("get_contact", type = TEXT, next = "get_firstname") {
         phonePattern.find(text) ?: throw ChatException(template.registerWrongPhoneFormat)
 
+        // Saving phone
+        telegramUserService.setPhone(fromId, text)
+
+        // Ask more info
         sendMessage(template.registerGetFirstname, replyMarkup = removeKeyboard())
+
+        // Transfer phone to next step
         transfer(text)
     }
 

@@ -1,12 +1,13 @@
 package io.github.dehuckakpyt.telegrambot.source.user
 
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 
 
 /**
  * @author Denis Matytsin
  */
-public interface TelegramUserSource {
+public interface TelegramUserSource<EntityT : TelegramUser> {
 
     /**
      * Create or update telegram user.

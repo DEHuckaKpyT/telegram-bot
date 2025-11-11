@@ -10,6 +10,7 @@ import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
 import org.springframework.context.support.GenericApplicationContext
+import org.springframework.context.support.registerBean
 
 
 /**
@@ -44,7 +46,8 @@ class TelegramBotInitializationConfig(
     callbackContentSourceExpression: ConfigExpression<CallbackContentSource>?,
     chainSourceExpression: ConfigExpression<ChainSource>?,
     telegramMessageSourceExpression: ConfigExpression<MessageSource>?,
-    telegramUserSourceExpression: ConfigExpression<TelegramUserSource>?,
+    telegramUserSourceExpression: ConfigExpression<TelegramUserSource<out TelegramUser>>?,
+    telegramUserSource: TelegramUserSource<out TelegramUser>?,
     telegramChatSourceExpression: ConfigExpression<TelegramChatSource>?,
     telegramChatStatusEventSourceExpression: ConfigExpression<TelegramChatStatusEventSource>?,
     updateReceiverExpression: ConfigExpression<UpdateReceiver>?,
@@ -56,22 +59,29 @@ class TelegramBotInitializationConfig(
     private final val botContext: TelegramBotContext
 
     init {
+        //TODO clean up this code part
         val config: TelegramBotConfig = (telegramBotConfig ?: TelegramBotConfig()).apply {
             if (token == null) token = botToken
             if (username == null) username = botUsername
 
             if (receiving.messageTemplate == null) receiving.messageTemplate = { springMessageTemplate }
 
+            if (receiving.telegramUserSource == null) {
+                if (telegramUserSourceExpression != null) receiving.telegramUserSource = telegramUserSourceExpression::configure
+                else if (telegramUserSource != null) receiving.telegramUserSource = { telegramUserSource }
+            }
+
             if (messageSource == null && telegramMessageSourceExpression != null) messageSource = telegramMessageSourceExpression::configure
             if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
             if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
-            if (receiving.telegramUserSource == null && telegramUserSourceExpression != null) receiving.telegramUserSource = telegramUserSourceExpression::configure
             if (receiving.telegramChatSource == null && telegramChatSourceExpression != null) receiving.telegramChatSource = telegramChatSourceExpression::configure
             if (receiving.telegramChatStatusEventSource == null && telegramChatStatusEventSourceExpression != null) receiving.telegramChatStatusEventSource = telegramChatStatusEventSourceExpression::configure
             if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
         }
 
         botContext = TelegramBotFactory.createTelegramBotContext(config)
+
+        if (telegramUserSource == null) applicationContext.registerBean { botContext.telegramUserSource }
     }
 
     @Bean

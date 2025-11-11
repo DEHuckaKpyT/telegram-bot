@@ -6,10 +6,12 @@ import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 
 
@@ -47,6 +49,9 @@ interface TelegramBotContext {
 
     /** Factory for creating InputFile. */
     val inputFactory: InputFactory
+
+    /** Interface for saving users. */
+    val telegramUserSource: TelegramUserSource<out TelegramUser>
 
     /** Interface for saving messages. */
     val messageSource: MessageSource

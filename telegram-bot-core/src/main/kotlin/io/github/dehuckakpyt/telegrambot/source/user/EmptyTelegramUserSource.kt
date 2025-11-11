@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.source.user
 
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 
 /**
@@ -7,6 +8,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.User
  *
  * @author Denis Matytsin
  */
-internal class EmptyTelegramUserSource : TelegramUserSource {
+internal class EmptyTelegramUserSource : TelegramUserSource<TelegramUser> {
     override suspend fun save(user: User, available: Boolean) {}
 }

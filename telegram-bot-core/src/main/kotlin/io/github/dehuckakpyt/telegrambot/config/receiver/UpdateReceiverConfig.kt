@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -33,7 +34,7 @@ data class UpdateReceiverConfig(
     var chainSource: (TelegramBotActualConfig.() -> ChainSource)? = null,
 
     /** Source for saving users */
-    var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource)? = null,
+    var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource<out TelegramUser>)? = null,
 
     /** Source for saving chats (except private) */
     var telegramChatSource: (TelegramBotActualConfig.() -> TelegramChatSource)? = null,
