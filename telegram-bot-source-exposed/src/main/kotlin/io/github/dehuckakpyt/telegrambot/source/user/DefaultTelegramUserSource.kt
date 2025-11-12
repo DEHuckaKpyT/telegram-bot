@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.source.user
 
 import io.github.dehuckakpyt.telegrambot.ext.transaction.executeQuery
-import io.github.dehuckakpyt.telegrambot.model.DatabaseTelegramUser
-import io.github.dehuckakpyt.telegrambot.model.TelegramUsers
+import io.github.dehuckakpyt.telegrambot.model.DefaultTelegramUser
+import io.github.dehuckakpyt.telegrambot.model.DefaultTelegramUsers
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import java.time.LocalDateTime
@@ -11,12 +11,12 @@ import java.time.LocalDateTime
 /**
  * @author Denis Matytsin
  */
-class DatabaseTelegramUserSource : TelegramUserSource {
+class DefaultTelegramUserSource : TelegramUserSource<DefaultTelegramUser> {
 
     override suspend fun save(user: User, available: Boolean): Unit = executeQuery {
         val now = LocalDateTime.now()
 
-        DatabaseTelegramUser.findSingleByAndUpdate(TelegramUsers.userId eq user.id) { entity ->
+        DefaultTelegramUser.findSingleByAndUpdate(DefaultTelegramUsers.userId eq user.id) { entity ->
             entity.userId = user.id
             entity.username = user.username
             entity.firstName = user.firstName
@@ -24,7 +24,7 @@ class DatabaseTelegramUserSource : TelegramUserSource {
             entity.languageCode = user.languageCode
             entity.available = available
             entity.updatedAt = now
-        } ?: DatabaseTelegramUser.new {
+        } ?: DefaultTelegramUser.new {
             this.userId = user.id
             this.username = user.username
             this.firstName = user.firstName

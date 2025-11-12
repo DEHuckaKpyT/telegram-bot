@@ -22,7 +22,7 @@ class DatabaseCallbackContentSource(
             this.fromId = fromId
             this.callbackId = UUID.randomUUID()
             this.content = content
-            this.updateDate = LocalDateTime.now()
+            this.updatedAt = LocalDateTime.now()
         }
     }
 
@@ -37,7 +37,7 @@ class DatabaseCallbackContentSource(
 
         return DatabaseCallbackContent.find {
             (CallbackContents.chatId eq chatId) and (CallbackContents.fromId eq fromId)
-        }.orderBy(CallbackContents.updateDate to SortOrder.DESC)
+        }.orderBy(CallbackContents.updatedAt to SortOrder.DESC)
             .limit(1)
             .offset(maxCallbackContentsPerUser - 1)
             .firstOrNull()

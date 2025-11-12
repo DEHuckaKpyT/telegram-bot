@@ -12,7 +12,7 @@ import io.github.dehuckakpyt.telegrambot.source.chat.event.DatabaseTelegramChatS
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.DatabaseMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.source.user.DatabaseTelegramUserSource
+import io.github.dehuckakpyt.telegrambot.source.user.DefaultTelegramUserSource
 import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -66,13 +66,13 @@ val MessageSource.Companion.inDatabase: MessageSource
         return DatabaseMessageSource()
     }
 
-val TelegramUserSource.Companion.inDatabase: TelegramUserSource
+val TelegramUserSource.Companion.inDatabase: DefaultTelegramUserSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(TelegramUsers)
+            SchemaUtils.createMissingTablesAndColumns(DefaultTelegramUsers)
         }
 
-        return DatabaseTelegramUserSource()
+        return DefaultTelegramUserSource()
     }
 
 val TelegramChatSource.Companion.inDatabase: TelegramChatSource

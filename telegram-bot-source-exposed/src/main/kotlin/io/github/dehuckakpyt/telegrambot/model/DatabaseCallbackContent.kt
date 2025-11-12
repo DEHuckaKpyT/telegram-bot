@@ -21,7 +21,7 @@ object CallbackContents : UUIDTable("callback_content") {
     val fromId = long("from_id")
     val callbackId = uuid("callback_id").uniqueIndex()
     val content = text("content")
-    val updateDate = datetime("update_date")
+    val updatedAt = datetime("updated_at")
 }
 
 class DatabaseCallbackContent(id: EntityID<UUID>) : UUIDEntity(id), CallbackContent {
@@ -31,5 +31,5 @@ class DatabaseCallbackContent(id: EntityID<UUID>) : UUIDEntity(id), CallbackCont
     override var fromId by CallbackContents.fromId
     override var callbackId by CallbackContents.callbackId
     override var content by CallbackContents.content
-    var updateDate by CallbackContents.updateDate
+    var updatedAt by CallbackContents.updatedAt
 }

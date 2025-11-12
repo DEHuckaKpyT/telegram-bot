@@ -23,8 +23,8 @@ object TelegramChats : UUIDTable("telegram_chat") {
     val title = varchar("title", 255)
     val username = varchar("username", 255).nullable()
     val available = bool("available")
-    val updateDate = datetime("update_date").defaultExpression(CurrentDateTime)
-    val createDate = datetime("create_date").defaultExpression(CurrentDateTime)
+    val updatedAt = datetime("updated_at").defaultExpression(CurrentDateTime)
+    val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
 class DatabaseTelegramChat(id: EntityID<UUID>) : UUIDEntity(id), TelegramChat {
@@ -35,6 +35,6 @@ class DatabaseTelegramChat(id: EntityID<UUID>) : UUIDEntity(id), TelegramChat {
     override var title by TelegramChats.title
     override var username by TelegramChats.username
     override var available by TelegramChats.available
-    override var updatedAt by TelegramChats.updateDate
-    override var createdAt by TelegramChats.createDate
+    override var updatedAt by TelegramChats.updatedAt
+    override var createdAt by TelegramChats.createdAt
 }

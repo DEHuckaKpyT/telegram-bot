@@ -21,7 +21,7 @@ object TelegramChatStatusEvents : UUIDTable("telegram_chat_status_event") {
     val firstName = varchar("first_name", 255).nullable()
     val lastName = varchar("last_name", 255).nullable()
     val status = varchar("status", 255)
-    val createDate = datetime("create_date").defaultExpression(CurrentDateTime)
+    val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
 class DatabaseTelegramChatStatusEvent(id: EntityID<UUID>) : UUIDEntity(id), TelegramChatStatusEvent {
@@ -33,5 +33,5 @@ class DatabaseTelegramChatStatusEvent(id: EntityID<UUID>) : UUIDEntity(id), Tele
     override var firstName by TelegramChatStatusEvents.firstName
     override var lastName by TelegramChatStatusEvents.lastName
     override var status by TelegramChatStatusEvents.status
-    override val createdAt by TelegramChatStatusEvents.createDate
+    override val createdAt by TelegramChatStatusEvents.createdAt
 }
