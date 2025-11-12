@@ -37,6 +37,6 @@ class DatabaseTelegramUser(id: EntityID<UUID>) : UUIDEntity(id), TelegramUser {
     override var lastName by TelegramUsers.lastName
     override var languageCode by TelegramUsers.languageCode
     override var available by TelegramUsers.available
-    override var updateDate by TelegramUsers.updateDate
-    override var createDate by TelegramUsers.createDate
+    override var updatedAt by TelegramUsers.updateDate
+    override var createdAt by TelegramUsers.createDate
 }

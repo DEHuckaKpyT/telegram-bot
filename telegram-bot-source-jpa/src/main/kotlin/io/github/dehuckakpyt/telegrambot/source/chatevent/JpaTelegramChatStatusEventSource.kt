@@ -27,7 +27,7 @@ open class JpaTelegramChatStatusEventSource(
             firstName = chat.firstName,
             lastName = chat.lastName,
             status = status,
-            createDate = LocalDateTime.now(),
+            createdAt = LocalDateTime.now(),
         ).let(repository::save)
     }
 }

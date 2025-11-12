@@ -33,5 +33,5 @@ class JpaCallbackContent(
     override var content: String,
 
     @Column(nullable = false)
-    var updateDate: LocalDateTime,
+    var updatedAt: LocalDateTime,
 ) : UUIDTable(), CallbackContent

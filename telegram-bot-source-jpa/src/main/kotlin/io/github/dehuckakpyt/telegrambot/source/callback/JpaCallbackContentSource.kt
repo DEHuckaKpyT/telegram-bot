@@ -21,13 +21,13 @@ open class JpaCallbackContentSource(
         val callbackContent = findLast(chatId, fromId)?.apply {
             this.callbackId = UUID.randomUUID()
             this.content = content
-            this.updateDate = LocalDateTime.now()
+            this.updatedAt = LocalDateTime.now()
         } ?: JpaCallbackContent(
             chatId = chatId,
             fromId = fromId,
             callbackId = UUID.randomUUID(),
             content = content,
-            updateDate = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
         )
 
         repository.save(callbackContent)
@@ -41,6 +41,6 @@ open class JpaCallbackContentSource(
     private fun findLast(chatId: Long, fromId: Long): JpaCallbackContent? {
         if (maxCallbackContentsPerUser < 1) return null
 
-        return repository.findByChatIdAndFromIdOrderByUpdateDateDesc(chatId, fromId, pageable).firstOrNull()
+        return repository.findByChatIdAndFromIdOrderByUpdatedAtDesc(chatId, fromId, pageable).firstOrNull()
     }
 }

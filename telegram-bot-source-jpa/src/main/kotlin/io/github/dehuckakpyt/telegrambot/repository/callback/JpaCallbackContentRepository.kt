@@ -15,5 +15,5 @@ import java.util.*
  */
 interface JpaCallbackContentRepository : JpaRepository<JpaCallbackContent, UUID> {
     fun findFirstByCallbackId(callbackId: UUID): JpaCallbackContent?
-    fun findByChatIdAndFromIdOrderByUpdateDateDesc(chatId: Long, fromId: Long, pageable: Pageable): Page<JpaCallbackContent>
+    fun findByChatIdAndFromIdOrderByUpdatedAtDesc(chatId: Long, fromId: Long, pageable: Pageable): Page<JpaCallbackContent>
 }

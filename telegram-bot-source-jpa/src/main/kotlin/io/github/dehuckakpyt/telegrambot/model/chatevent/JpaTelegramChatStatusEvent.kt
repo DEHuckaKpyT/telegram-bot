@@ -30,5 +30,5 @@ class JpaTelegramChatStatusEvent(
     override val status: String,
 
     @Column(nullable = false)
-    override val createDate: LocalDateTime,
+    override val createdAt: LocalDateTime,
 ) : UUIDTable(), TelegramChatStatusEvent

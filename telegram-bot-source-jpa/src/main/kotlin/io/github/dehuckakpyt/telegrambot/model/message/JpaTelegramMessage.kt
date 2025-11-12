@@ -46,5 +46,5 @@ class JpaTelegramMessage(
     override val fileIds: List<String>?,
 
     @Column(nullable = false)
-    override val createDate: LocalDateTime,
+    override val createdAt: LocalDateTime,
 ) : UUIDTable(), TelegramMessage

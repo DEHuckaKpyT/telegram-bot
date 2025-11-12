@@ -23,15 +23,15 @@ class JpaTelegramChatSource(
             this.title = chat.title ?: ""
             this.username = chat.username
             this.available = available
-            this.updateDate = now
+            this.updatedAt = now
         } ?: JpaTelegramChat(
             chatId = chat.id,
             type = chat.type,
             title = chat.title ?: "",
             username = chat.username,
             available = available,
-            updateDate = now,
-            createDate = now,
+            updatedAt = now,
+            createdAt = now,
         )
 
         repository.save(entity)

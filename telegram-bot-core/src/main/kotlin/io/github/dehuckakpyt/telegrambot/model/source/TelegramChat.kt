@@ -28,8 +28,8 @@ interface TelegramChat {
     public val available: Boolean
 
     /** Date/time when chat with bot was changed last time. */
-    public val updateDate: LocalDateTime
+    public val updatedAt: LocalDateTime
 
     /** Date/time when bot was added to chat. */
-    public val createDate: LocalDateTime
+    public val createdAt: LocalDateTime
 }

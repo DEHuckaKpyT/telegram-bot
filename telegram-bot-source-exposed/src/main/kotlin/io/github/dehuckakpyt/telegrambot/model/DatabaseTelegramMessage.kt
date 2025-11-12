@@ -43,5 +43,5 @@ class DatabaseTelegramMessage(id: EntityID<UUID>) : UUIDEntity(id), TelegramMess
     override var stepContainerType by TelegramMessages.stepContainerType
     override var text by TelegramMessages.text
     override var fileIds by TelegramMessages.fileIds
-    override val createDate by TelegramMessages.createdDate
+    override val createdAt by TelegramMessages.createdDate
 }

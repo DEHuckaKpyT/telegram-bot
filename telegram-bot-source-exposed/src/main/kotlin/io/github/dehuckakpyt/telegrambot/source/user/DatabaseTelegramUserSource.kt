@@ -23,7 +23,7 @@ class DatabaseTelegramUserSource : TelegramUserSource {
             entity.lastName = user.lastName
             entity.languageCode = user.languageCode
             entity.available = available
-            entity.updateDate = now
+            entity.updatedAt = now
         } ?: DatabaseTelegramUser.new {
             this.userId = user.id
             this.username = user.username
@@ -31,8 +31,8 @@ class DatabaseTelegramUserSource : TelegramUserSource {
             this.lastName = user.lastName
             this.languageCode = user.languageCode
             this.available = available
-            this.updateDate = now
-            this.createDate = now
+            this.updatedAt = now
+            this.createdAt = now
         }
     }
 }

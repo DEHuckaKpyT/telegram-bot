@@ -30,8 +30,8 @@ class JpaTelegramChat(
     override var available: Boolean,
 
     @Column(nullable = false)
-    override var updateDate: LocalDateTime,
+    override var updatedAt: LocalDateTime,
 
     @Column(nullable = false)
-    override val createDate: LocalDateTime,
+    override val createdAt: LocalDateTime,
 ) : UUIDTable(), TelegramChat

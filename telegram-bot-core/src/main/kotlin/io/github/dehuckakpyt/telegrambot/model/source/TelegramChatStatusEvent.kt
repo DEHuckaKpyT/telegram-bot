@@ -30,5 +30,5 @@ interface TelegramChatStatusEvent {
     val status: String
 
     /** Date/time when status was changed. */
-    val createDate: LocalDateTime
+    val createdAt: LocalDateTime
 }

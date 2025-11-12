@@ -33,5 +33,5 @@ class DatabaseTelegramChatStatusEvent(id: EntityID<UUID>) : UUIDEntity(id), Tele
     override var firstName by TelegramChatStatusEvents.firstName
     override var lastName by TelegramChatStatusEvents.lastName
     override var status by TelegramChatStatusEvents.status
-    override val createDate by TelegramChatStatusEvents.createDate
+    override val createdAt by TelegramChatStatusEvents.createDate
 }

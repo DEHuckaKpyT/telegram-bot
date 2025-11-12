@@ -1,15 +1,17 @@
 package io.github.dehuckakpyt.telegrambot.source.user
 
+import io.github.dehuckakpyt.telegrambot.ext.java.lang.getHandleOfEmptyDeclaredConstructor
+import io.github.dehuckakpyt.telegrambot.ext.kotlin.reflect.firstGenericClass
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 import io.github.dehuckakpyt.telegrambot.model.user.BaseTelegramUser
 import io.github.dehuckakpyt.telegrambot.repository.user.BaseTelegramUserRepository
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
-import java.lang.invoke.MethodHandles
-import java.lang.reflect.ParameterizedType
 import java.time.LocalDateTime
 
 
 /**
+ * If you do not intend to override the [save] method, remember that an entity inherited from BaseTelegramUser must have an empty constructor.
+ *
  * @author Denis Matytsin
  */
 abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser> : TelegramUserSource<EntityT> {
@@ -17,20 +19,18 @@ abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser> : TelegramUser
     protected abstract val transactional: TransactionAction
     protected abstract val repository: BaseTelegramUserRepository<EntityT>
 
-    @Suppress("UNCHECKED_CAST")
-    private val entityClass: Class<EntityT> = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<EntityT>
-    private val createUser: (userId: Long, createDate: LocalDateTime) -> EntityT
+    protected val entityClass: Class<EntityT> = this::class.firstGenericClass()
+    private val createUser: (userId: Long, createdAt: LocalDateTime) -> EntityT
 
     init {
-        val lookup = MethodHandles.lookup()
-        val constructor = entityClass.getDeclaredConstructor()
-        val createUserHandle = lookup.unreflectConstructor(constructor)
-        createUser = { userId, createDate ->
-            @Suppress("UNCHECKED_CAST")
+        val createUserHandle = entityClass.getHandleOfEmptyDeclaredConstructor()
+
+        @Suppress("UNCHECKED_CAST")
+        createUser = { userId, createdAt ->
             val user = createUserHandle.invoke() as EntityT
 
-            user.setUserId(userId)
-            user.setCreateDate(createDate)
+            user.userId = userId
+            user.createdAt = createdAt
 
             user
         }
@@ -39,15 +39,15 @@ abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser> : TelegramUser
     override suspend fun save(user: User, available: Boolean): Unit = transactional {
         val now = LocalDateTime.now()
 
-        val entity = repository.findByUserId(userId = user.id) ?: createUser(user.id, now)
+        val entity = repository.findByUserId(user.id) ?: createUser(user.id, now)
 
         entity.apply {
-            this.setUsername(user.username)
-            this.setFirstName(user.firstName)
-            this.setLastName(user.lastName)
-            this.setLanguageCode(user.languageCode)
-            this.setAvailable(available)
-            this.setUpdateDate(now)
+            this.username = user.username
+            this.firstName = user.firstName
+            this.lastName = user.lastName
+            this.languageCode = user.languageCode
+            this.available = available
+            this.updatedAt = now
         }
 
         repository.save(entity)

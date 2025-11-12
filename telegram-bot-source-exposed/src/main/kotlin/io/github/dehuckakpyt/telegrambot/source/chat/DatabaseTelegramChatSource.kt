@@ -22,15 +22,15 @@ class DatabaseTelegramChatSource : TelegramChatSource {
             entity.title = chat.title ?: ""
             entity.username = chat.username
             entity.available = available
-            entity.updateDate = now
+            entity.updatedAt = now
         } ?: DatabaseTelegramChat.new {
             this.chatId = chat.id
             this.type = chat.type
             this.title = chat.title ?: ""
             this.username = chat.username
             this.available = available
-            this.updateDate = now
-            this.createDate = now
+            this.updatedAt = now
+            this.createdAt = now
         }
     }
 }

@@ -50,6 +50,8 @@ class BotConfig
 ```kotlin
 package com.dehucka.example.model
 
+// It is important to write the entity with an empty constructor.
+// Otherwise, it will be necessary to override the method for creating a user.
 @Entity
 class TelegramUser : BaseTelegramUser() {
 

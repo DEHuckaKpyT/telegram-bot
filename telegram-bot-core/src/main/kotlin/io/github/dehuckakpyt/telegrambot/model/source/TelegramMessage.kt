@@ -44,5 +44,5 @@ interface TelegramMessage {
     val fileIds: List<String>?
 
     /** Date/time when message was sent. */
-    val createDate: LocalDateTime
+    val createdAt: LocalDateTime
 }

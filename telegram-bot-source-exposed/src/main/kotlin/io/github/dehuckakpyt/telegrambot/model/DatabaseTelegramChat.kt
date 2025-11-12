@@ -35,6 +35,6 @@ class DatabaseTelegramChat(id: EntityID<UUID>) : UUIDEntity(id), TelegramChat {
     override var title by TelegramChats.title
     override var username by TelegramChats.username
     override var available by TelegramChats.available
-    override var updateDate by TelegramChats.updateDate
-    override var createDate by TelegramChats.createDate
+    override var updatedAt by TelegramChats.updateDate
+    override var createdAt by TelegramChats.createDate
 }

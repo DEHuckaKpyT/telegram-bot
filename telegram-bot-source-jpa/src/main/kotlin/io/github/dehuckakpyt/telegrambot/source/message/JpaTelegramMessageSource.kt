@@ -23,7 +23,7 @@ open class JpaTelegramMessageSource(
                 stepContainerType = stepContainerType,
                 text = text,
                 fileIds = fileIds,
-                createDate = LocalDateTime.now(),
+                createdAt = LocalDateTime.now(),
             )
         )
     }
