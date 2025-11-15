@@ -10,7 +10,10 @@ import java.time.LocalDateTime
  *
  * @author Denis Matytsin
  */
-interface TelegramUser {
+interface TelegramUser<IdT : Any> {
+
+    /** Unique internal identifier for user. */
+    public val id: IdT
 
     /** Unique identifier for user (from [io.github.dehuckakpyt.telegrambot.model.telegram.User.id]). */
     public val userId: Long

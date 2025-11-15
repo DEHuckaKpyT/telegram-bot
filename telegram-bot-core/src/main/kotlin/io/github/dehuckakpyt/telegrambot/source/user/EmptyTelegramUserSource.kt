@@ -8,6 +8,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.User
  *
  * @author Denis Matytsin
  */
-internal class EmptyTelegramUserSource : TelegramUserSource<TelegramUser> {
+internal class EmptyTelegramUserSource : TelegramUserSource<TelegramUser<Any>> {
     override suspend fun save(user: User, available: Boolean) {}
 }

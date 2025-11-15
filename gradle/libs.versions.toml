@@ -20,7 +20,7 @@ kotlinx-coroutines = "1.10.2"
 google-ksp = "2.2.21-2.0.4"
 ktor = "3.3.2"
 jackson = "2.20.1"
-spring = "3.5.7"
+spring = "3.5.5"
 koin = "4.1.1"
 koin-additional = "2.3.1"
 jetbrains-exposed = "0.61.0"
@@ -62,6 +62,7 @@ spring-boot-starter = { group = "org.springframework.boot", name = "spring-boot-
 spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "spring" }
 spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa", version.ref = "spring" }
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring" }
+spring-data-jpa = { group = "org.springframework.data", name = "spring-data-jpa", version.ref = "spring" }
 
 koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin" }
 koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }

@@ -34,7 +34,7 @@ data class UpdateReceiverConfig(
     var chainSource: (TelegramBotActualConfig.() -> ChainSource)? = null,
 
     /** Source for saving users */
-    var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource<out TelegramUser>)? = null,
+    var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource<out TelegramUser<out Any>>)? = null,
 
     /** Source for saving chats (except private) */
     var telegramChatSource: (TelegramBotActualConfig.() -> TelegramChatSource)? = null,

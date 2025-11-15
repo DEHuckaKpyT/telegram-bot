@@ -28,7 +28,7 @@ public object ApiConstants {
     public val DEFAULT_MAPPER = jacksonMapperBuilder().apply {
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     }.build().apply {
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
 
         registerModule(SimpleModule().apply {
             addSerializer(StringInput::class, StringInputSerializer())

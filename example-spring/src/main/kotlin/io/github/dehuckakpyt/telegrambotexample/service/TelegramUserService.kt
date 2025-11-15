@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.source.user.BaseTelegramUserSource
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import io.github.dehuckakpyt.telegrambotexample.model.TelegramUser
 import io.github.dehuckakpyt.telegrambotexample.repository.TelegramUserRepository
+import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Service
 
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service
 class TelegramUserService(
     override val transactional: TransactionAction,
     override val repository: TelegramUserRepository,
+    override val entityManager: EntityManager,
 ) : BaseTelegramUserSource<TelegramUser>() {
 
     suspend fun setPhone(userId: Long, phone: String): TelegramUser = transactional {

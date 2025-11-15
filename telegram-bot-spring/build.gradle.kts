@@ -9,6 +9,8 @@ dependencies {
     //region springframework
     api(libs.spring.boot.starter)
     api(libs.spring.boot.starter.webflux)
+
+    api(libs.spring.data.jpa)
     //endregion springframework
 
     //region dehuckakpyt

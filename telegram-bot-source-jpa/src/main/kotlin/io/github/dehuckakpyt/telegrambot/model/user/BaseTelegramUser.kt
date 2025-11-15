@@ -5,6 +5,7 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
 import java.time.LocalDateTime
+import java.util.*
 
 
 /**
@@ -17,7 +18,7 @@ import java.time.LocalDateTime
  * @author Denis Matytsin
  */
 @MappedSuperclass
-abstract class BaseTelegramUser : UUIDTable(), TelegramUser {
+abstract class BaseTelegramUser : UUIDTable(), TelegramUser<UUID> {
 
     @Column(nullable = false, unique = true)
     override var userId: Long = 0

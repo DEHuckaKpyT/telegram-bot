@@ -5,9 +5,11 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.User
 
 
 /**
+ * Source for saving users in telegram-bot-core.
+ *
  * @author Denis Matytsin
  */
-public interface TelegramUserSource<EntityT : TelegramUser> {
+public interface TelegramUserSource<EntityT : TelegramUser<out Any>> {
 
     /**
      * Create or update telegram user.

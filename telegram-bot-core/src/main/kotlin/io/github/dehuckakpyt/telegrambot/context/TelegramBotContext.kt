@@ -51,7 +51,7 @@ interface TelegramBotContext {
     val inputFactory: InputFactory
 
     /** Interface for saving users. */
-    val telegramUserSource: TelegramUserSource<out TelegramUser>
+    val telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>
 
     /** Interface for saving messages. */
     val messageSource: MessageSource

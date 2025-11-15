@@ -24,7 +24,7 @@ import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 internal class TelegramBotReceiverActualConfigImpl : TelegramBotReceiverActualConfig {
     override lateinit var callbackContentSource: CallbackContentSource
     override lateinit var chainSource: ChainSource
-    override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser>
+    override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>
     override lateinit var telegramChatSource: TelegramChatSource
     override lateinit var telegramChatStatusEventSource: TelegramChatStatusEventSource
     override lateinit var contentConverter: ContentConverter

@@ -30,7 +30,7 @@ internal class TelegramBotContextImpl : TelegramBotContext {
     override lateinit var telegramBotEventListening: TelegramBotEventListening
     override lateinit var buttonFactory: ButtonFactory
     override lateinit var inputFactory: InputFactory
-    override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser>
+    override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>
     override lateinit var messageSource: MessageSource
     override lateinit var callbackContentSource: CallbackContentSource
     override lateinit var chainSource: ChainSource
