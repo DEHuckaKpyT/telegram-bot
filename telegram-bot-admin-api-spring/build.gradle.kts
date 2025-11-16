@@ -11,6 +11,7 @@ dependencies {
     //region springframework
     api(libs.spring.boot.starter)
     api(libs.spring.boot.starter.webflux)
+    api(libs.spring.security.core)
     //endregion springframework
 
     //region dehuckakpyt
@@ -24,8 +25,8 @@ dependencies {
     //endregion kotlin
 
     //region mapstruct
-    api("org.mapstruct:mapstruct:1.6.0")
-    kapt("org.mapstruct:mapstruct-processor:1.6.0")
+    api(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
     //endregion mapstruct
 
     //region springframework
