@@ -18,9 +18,6 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 - Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
 - Easy to **write tests** for your bot.
 
-## ⚠️ Limitations (will be resolved) ⚠️
-- Now available only long polling (will be added webhook also).
-
 ## Prerequisites
 
 - JDK 17 or higher
