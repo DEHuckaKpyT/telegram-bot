@@ -30,9 +30,14 @@ import kotlin.collections.List
  * received on behalf of business accounts only
  * @param wasRefunded *Optional*. *True*, if the gift was refunded and isn't available anymore
  * @param convertStarCount *Optional*. Number of Telegram Stars that can be claimed by the receiver
- * instead of the gift; omitted if the gift cannot be converted to Telegram Stars
- * @param prepaidUpgradeStarCount *Optional*. Number of Telegram Stars that were paid by the sender
- * for the ability to upgrade the gift
+ * instead of the gift; omitted if the gift cannot be converted to Telegram Stars; for gifts received
+ * on behalf of business accounts only
+ * @param prepaidUpgradeStarCount *Optional*. Number of Telegram Stars that were paid for the
+ * ability to upgrade the gift
+ * @param isUpgradeSeparate *Optional*. *True*, if the gift's upgrade was purchased after the gift
+ * was sent; for gifts received on behalf of business accounts only
+ * @param uniqueGiftNumber *Optional*. Unique number reserved for this gift when upgraded. See the
+ * *number* field in [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
  */
 public data class OwnedGiftRegular(
     /**
@@ -107,16 +112,30 @@ public data class OwnedGiftRegular(
     public val wasRefunded: Boolean? = null,
     /**
      * *Optional*. Number of Telegram Stars that can be claimed by the receiver instead of the gift;
-     * omitted if the gift cannot be converted to Telegram Stars
+     * omitted if the gift cannot be converted to Telegram Stars; for gifts received on behalf of
+     * business accounts only
      */
     @get:JsonProperty("convert_star_count")
     @param:JsonProperty("convert_star_count")
     public val convertStarCount: Int? = null,
     /**
-     * *Optional*. Number of Telegram Stars that were paid by the sender for the ability to upgrade
-     * the gift
+     * *Optional*. Number of Telegram Stars that were paid for the ability to upgrade the gift
      */
     @get:JsonProperty("prepaid_upgrade_star_count")
     @param:JsonProperty("prepaid_upgrade_star_count")
     public val prepaidUpgradeStarCount: Int? = null,
+    /**
+     * *Optional*. *True*, if the gift's upgrade was purchased after the gift was sent; for gifts
+     * received on behalf of business accounts only
+     */
+    @get:JsonProperty("is_upgrade_separate")
+    @param:JsonProperty("is_upgrade_separate")
+    public val isUpgradeSeparate: Boolean? = null,
+    /**
+     * *Optional*. Unique number reserved for this gift when upgraded. See the *number* field in
+     * [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
+     */
+    @get:JsonProperty("unique_gift_number")
+    @param:JsonProperty("unique_gift_number")
+    public val uniqueGiftNumber: Int? = null,
 ) : OwnedGift

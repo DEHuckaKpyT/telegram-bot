@@ -15,10 +15,10 @@ import kotlin.String
  *
  * @param text Text of the button. If none of the optional fields are used, it will be sent as a
  * message when the button is pressed
- * @param requestUsers *Optional.* If specified, pressing the button will open a list of suitable
+ * @param requestUsers *Optional*. If specified, pressing the button will open a list of suitable
  * users. Identifiers of selected users will be sent to the bot in a “users_shared” service message.
  * Available in private chats only.
- * @param requestChat *Optional.* If specified, pressing the button will open a list of suitable
+ * @param requestChat *Optional*. If specified, pressing the button will open a list of suitable
  * chats. Tapping on a chat will send its identifier to the bot in a “chat_shared” service message.
  * Available in private chats only.
  * @param requestContact *Optional*. If *True*, the user's phone number will be sent as a contact
@@ -40,7 +40,7 @@ public data class KeyboardButton(
     @param:JsonProperty("text")
     public val text: String,
     /**
-     * *Optional.* If specified, pressing the button will open a list of suitable users. Identifiers
+     * *Optional*. If specified, pressing the button will open a list of suitable users. Identifiers
      * of selected users will be sent to the bot in a “users_shared” service message. Available in
      * private chats only.
      */
@@ -48,7 +48,7 @@ public data class KeyboardButton(
     @param:JsonProperty("request_users")
     public val requestUsers: KeyboardButtonRequestUsers? = null,
     /**
-     * *Optional.* If specified, pressing the button will open a list of suitable chats. Tapping on
+     * *Optional*. If specified, pressing the button will open a list of suitable chats. Tapping on
      * a chat will send its identifier to the bot in a “chat_shared” service message. Available in
      * private chats only.
      */

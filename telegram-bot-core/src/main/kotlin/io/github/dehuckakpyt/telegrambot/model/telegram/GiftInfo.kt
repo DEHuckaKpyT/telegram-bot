@@ -18,13 +18,17 @@ import kotlin.collections.List
  * for gifts received on behalf of business accounts
  * @param convertStarCount *Optional*. Number of Telegram Stars that can be claimed by the receiver
  * by converting the gift; omitted if conversion to Telegram Stars is impossible
- * @param prepaidUpgradeStarCount *Optional*. Number of Telegram Stars that were prepaid by the
- * sender for the ability to upgrade the gift
+ * @param prepaidUpgradeStarCount *Optional*. Number of Telegram Stars that were prepaid for the
+ * ability to upgrade the gift
+ * @param isUpgradeSeparate *Optional*. *True*, if the gift's upgrade was purchased after the gift
+ * was sent
  * @param canBeUpgraded *Optional*. *True*, if the gift can be upgraded to a unique gift
  * @param text *Optional*. Text of the message that was added to the gift
  * @param entities *Optional*. Special entities that appear in the text
  * @param isPrivate *Optional*. *True*, if the sender and gift text are shown only to the gift
  * receiver; otherwise, everyone will be able to see them
+ * @param uniqueGiftNumber *Optional*. Unique number reserved for this gift when upgraded. See the
+ * *number* field in [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
  */
 public data class GiftInfo(
     /**
@@ -48,12 +52,17 @@ public data class GiftInfo(
     @param:JsonProperty("convert_star_count")
     public val convertStarCount: Int? = null,
     /**
-     * *Optional*. Number of Telegram Stars that were prepaid by the sender for the ability to
-     * upgrade the gift
+     * *Optional*. Number of Telegram Stars that were prepaid for the ability to upgrade the gift
      */
     @get:JsonProperty("prepaid_upgrade_star_count")
     @param:JsonProperty("prepaid_upgrade_star_count")
     public val prepaidUpgradeStarCount: Int? = null,
+    /**
+     * *Optional*. *True*, if the gift's upgrade was purchased after the gift was sent
+     */
+    @get:JsonProperty("is_upgrade_separate")
+    @param:JsonProperty("is_upgrade_separate")
+    public val isUpgradeSeparate: Boolean? = null,
     /**
      * *Optional*. *True*, if the gift can be upgraded to a unique gift
      */
@@ -79,4 +88,11 @@ public data class GiftInfo(
     @get:JsonProperty("is_private")
     @param:JsonProperty("is_private")
     public val isPrivate: Boolean? = null,
+    /**
+     * *Optional*. Unique number reserved for this gift when upgraded. See the *number* field in
+     * [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
+     */
+    @get:JsonProperty("unique_gift_number")
+    @param:JsonProperty("unique_gift_number")
+    public val uniqueGiftNumber: Int? = null,
 )

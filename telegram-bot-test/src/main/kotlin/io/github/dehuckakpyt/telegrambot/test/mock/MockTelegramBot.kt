@@ -129,6 +129,7 @@ internal class MockTelegramBot : TelegramBot {
         videoStartTimestamp: Int?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
+        messageEffectId: String?,
         suggestedPostParameters: SuggestedPostParameters?,
     ): Message = mockk()
 
@@ -156,6 +157,7 @@ internal class MockTelegramBot : TelegramBot {
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
         suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
@@ -466,6 +468,15 @@ internal class MockTelegramBot : TelegramBot {
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
     ): Message = mockk()
+
+    override suspend fun sendMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        text: String,
+        messageThreadId: Long?,
+        parseMode: String?,
+        entities: Iterable<MessageEntity>?,
+    ): Boolean = mockk()
 
     override suspend fun sendChatAction(
         chatId: String,
@@ -793,7 +804,35 @@ internal class MockTelegramBot : TelegramBot {
         excludeUnsaved: Boolean?,
         excludeSaved: Boolean?,
         excludeUnlimited: Boolean?,
-        excludeLimited: Boolean?,
+        excludeLimitedUpgradable: Boolean?,
+        excludeLimitedNonUpgradable: Boolean?,
+        excludeUnique: Boolean?,
+        excludeFromBlockchain: Boolean?,
+        sortByPrice: Boolean?,
+        offset: String?,
+        limit: Int?,
+    ): OwnedGifts = mockk()
+
+    override suspend fun getUserGifts(
+        userId: Long,
+        excludeUnlimited: Boolean?,
+        excludeLimitedUpgradable: Boolean?,
+        excludeLimitedNonUpgradable: Boolean?,
+        excludeFromBlockchain: Boolean?,
+        excludeUnique: Boolean?,
+        sortByPrice: Boolean?,
+        offset: String?,
+        limit: Int?,
+    ): OwnedGifts = mockk()
+
+    override suspend fun getChatGifts(
+        chatId: String,
+        excludeUnsaved: Boolean?,
+        excludeSaved: Boolean?,
+        excludeUnlimited: Boolean?,
+        excludeLimitedUpgradable: Boolean?,
+        excludeLimitedNonUpgradable: Boolean?,
+        excludeFromBlockchain: Boolean?,
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
@@ -825,6 +864,15 @@ internal class MockTelegramBot : TelegramBot {
         parseMode: String?,
         captionEntities: Iterable<MessageEntity>?,
         areas: Iterable<StoryArea>?,
+        postToChatPage: Boolean?,
+        protectContent: Boolean?,
+    ): Story = mockk()
+
+    override suspend fun repostStory(
+        businessConnectionId: String,
+        fromChatId: Long,
+        fromStoryId: Long,
+        activePeriod: Int,
         postToChatPage: Boolean?,
         protectContent: Boolean?,
     ): Story = mockk()

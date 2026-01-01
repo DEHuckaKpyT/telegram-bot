@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
+import kotlin.Boolean
 import kotlin.Int
 import kotlin.String
 
@@ -15,6 +16,8 @@ import kotlin.String
  * @param iconColor Color of the topic icon in RGB format
  * @param iconCustomEmojiId *Optional*. Unique identifier of the custom emoji shown as the topic
  * icon
+ * @param isNameImplicit *Optional*. *True*, if the name of the topic wasn't specified explicitly by
+ * its creator and likely needs to be changed by the bot
  */
 public data class ForumTopicCreated(
     /**
@@ -35,4 +38,11 @@ public data class ForumTopicCreated(
     @get:JsonProperty("icon_custom_emoji_id")
     @param:JsonProperty("icon_custom_emoji_id")
     public val iconCustomEmojiId: String? = null,
+    /**
+     * *Optional*. *True*, if the name of the topic wasn't specified explicitly by its creator and
+     * likely needs to be changed by the bot
+     */
+    @get:JsonProperty("is_name_implicit")
+    @param:JsonProperty("is_name_implicit")
+    public val isNameImplicit: Boolean? = null,
 )

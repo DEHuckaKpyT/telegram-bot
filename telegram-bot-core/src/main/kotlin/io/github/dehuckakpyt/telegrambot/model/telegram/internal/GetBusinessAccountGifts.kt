@@ -17,10 +17,14 @@ internal data class GetBusinessAccountGifts(
     public val excludeSaved: Boolean? = null,
     @get:JsonProperty("exclude_unlimited")
     public val excludeUnlimited: Boolean? = null,
-    @get:JsonProperty("exclude_limited")
-    public val excludeLimited: Boolean? = null,
+    @get:JsonProperty("exclude_limited_upgradable")
+    public val excludeLimitedUpgradable: Boolean? = null,
+    @get:JsonProperty("exclude_limited_non_upgradable")
+    public val excludeLimitedNonUpgradable: Boolean? = null,
     @get:JsonProperty("exclude_unique")
     public val excludeUnique: Boolean? = null,
+    @get:JsonProperty("exclude_from_blockchain")
+    public val excludeFromBlockchain: Boolean? = null,
     @get:JsonProperty("sort_by_price")
     public val sortByPrice: Boolean? = null,
     @get:JsonProperty("offset")

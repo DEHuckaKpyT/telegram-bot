@@ -9,7 +9,6 @@ import io.github.dehuckakpyt.telegrambotexample.test.clearDatabase
 import io.github.dehuckakpyt.telegrambotexample.test.compareCurrentDataSetWith
 import io.github.dehuckakpyt.telegrambotexample.test.createDataSet
 import io.kotest.core.spec.style.FreeSpec
-import io.kotest.matchers.resource.resourceAsString
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -39,7 +38,7 @@ class RegistrationHandlerIT(
         coEvery { bot.sendMessage(1_001, any(), replyMarkup = any()) } returns mockk()
 
         // Act
-        sendUpdate(resourceAsString("/json/handler/registration/command-update.json"))
+        sendUpdate(javaClass.getResource("/json/handler/registration/command-update.json").readText())
 
         // Assert
         coVerify {
@@ -54,7 +53,7 @@ class RegistrationHandlerIT(
         coEvery { bot.sendMessage(1_001, any(), replyMarkup = any()) } returns mockk()
 
         // Act
-        sendUpdate(resourceAsString("/json/handler/registration/contact-update.json"))
+        sendUpdate(javaClass.getResource("/json/handler/registration/contact-update.json").readText())
 
         // Assert
         coVerify {
@@ -69,7 +68,7 @@ class RegistrationHandlerIT(
         coEvery { bot.sendMessage(1_001, any(), replyMarkup = any()) } returns mockk()
 
         // Act
-        sendUpdate(resourceAsString("/json/handler/registration/text-update.json"))
+        sendUpdate(javaClass.getResource("/json/handler/registration/text-update.json").readText())
 
         // Assert
         coVerify {
@@ -84,7 +83,7 @@ class RegistrationHandlerIT(
         coEvery { bot.sendMessage(1_001, any(), replyMarkup = any()) } returns mockk()
 
         // Act
-        sendUpdate(resourceAsString("/json/handler/registration/text-wrong-format-update.json"))
+        sendUpdate(javaClass.getResource("/json/handler/registration/text-wrong-format-update.json").readText())
 
         // Assert
         coVerify {
@@ -99,7 +98,7 @@ class RegistrationHandlerIT(
         coEvery { bot.sendMessage(1_001, any(), replyMarkup = any()) } returns mockk()
 
         // Act
-        sendUpdate(resourceAsString("/json/handler/registration/get-firstname-update.json"))
+        sendUpdate(javaClass.getResource("/json/handler/registration/get-firstname-update.json").readText())
 
         // Assert
         coVerify {

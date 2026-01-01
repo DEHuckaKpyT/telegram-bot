@@ -13,7 +13,7 @@ import kotlin.collections.List
  * @author KScript
  *
  * @param title Title of the checklist; 1-255 characters after entities parsing
- * @param parseMode Optional. Mode for parsing entities in the title. See [formatting
+ * @param parseMode *Optional*. Mode for parsing entities in the title. See [formatting
  * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
  * @param titleEntities *Optional*. List of special entities that appear in the title, which can be
  * specified instead of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*,
@@ -31,7 +31,7 @@ public data class InputChecklist(
     @param:JsonProperty("title")
     public val title: String,
     /**
-     * Optional. Mode for parsing entities in the title. See [formatting
+     * *Optional*. Mode for parsing entities in the title. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      */
     @get:JsonProperty("parse_mode")

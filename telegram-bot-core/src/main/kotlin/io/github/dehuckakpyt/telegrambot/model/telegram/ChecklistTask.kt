@@ -16,7 +16,9 @@ import kotlin.collections.List
  * @param text Text of the task
  * @param textEntities *Optional*. Special entities that appear in the task text
  * @param completedByUser *Optional*. User that completed the task; omitted if the task wasn't
- * completed
+ * completed by a user
+ * @param completedByChat *Optional*. Chat that completed the task; omitted if the task wasn't
+ * completed by a chat
  * @param completionDate *Optional*. Point in time (Unix timestamp) when the task was completed; 0
  * if the task wasn't completed
  */
@@ -40,11 +42,17 @@ public data class ChecklistTask(
     @param:JsonProperty("text_entities")
     public val textEntities: List<MessageEntity>? = null,
     /**
-     * *Optional*. User that completed the task; omitted if the task wasn't completed
+     * *Optional*. User that completed the task; omitted if the task wasn't completed by a user
      */
     @get:JsonProperty("completed_by_user")
     @param:JsonProperty("completed_by_user")
     public val completedByUser: User? = null,
+    /**
+     * *Optional*. Chat that completed the task; omitted if the task wasn't completed by a chat
+     */
+    @get:JsonProperty("completed_by_chat")
+    @param:JsonProperty("completed_by_chat")
+    public val completedByChat: Chat? = null,
     /**
      * *Optional*. Point in time (Unix timestamp) when the task was completed; 0 if the task wasn't
      * completed

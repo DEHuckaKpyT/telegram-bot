@@ -7,7 +7,6 @@ import io.github.dehuckakpyt.telegrambotexample.test.EnablePostgresTestContainer
 import io.github.dehuckakpyt.telegrambotexample.test.compareCurrentDataSetWith
 import io.github.dehuckakpyt.telegrambotexample.test.createDataSet
 import io.kotest.core.spec.style.FreeSpec
-import io.kotest.matchers.resource.resourceAsString
 import io.mockk.clearAllMocks
 import io.mockk.coVerify
 import org.springframework.boot.test.context.SpringBootTest
@@ -29,7 +28,7 @@ class StartCommandIT(
         createDataSet("/datasets/handler/start/command.json")
 
         // Act
-        sendUpdate(resourceAsString("/json/handler/start/update.json"))
+        sendUpdate(javaClass.getResource("/json/handler/start/update.json").readText())
 
         // Assert
         coVerify {
