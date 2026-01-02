@@ -4,8 +4,7 @@ import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 
@@ -16,35 +15,34 @@ import java.time.LocalDateTime
  *
  * @author Denis Matytsin
  */
-@Entity
-@Table(name = "telegram_message")
-class JpaTelegramMessage(
+@MappedSuperclass
+class BaseTelegramMessage : UUIDTable(), TelegramMessage {
 
     @Column(nullable = false)
-    override val chatId: Long,
+    override var chatId: Long = 0
 
-    override val fromId: Long?,
-
-    @Column(nullable = false)
-    override val fromBot: Boolean,
+    override var fromId: Long? = null
 
     @Column(nullable = false)
-    override val messageId: Long,
+    override var fromBot: Boolean = false
 
     @Column(nullable = false)
-    override val type: String,
+    override var messageId: Long = 0
 
-    override val step: String?,
+    @Column(nullable = false)
+    override lateinit var type: String
 
-    override val stepContainerType: String?,
+    override var step: String? = null
+
+    override var stepContainerType: String? = null
 
     @Column(columnDefinition = "text")
-    override val text: String?,
+    override var text: String? = null
 
     @Type(ListArrayType::class)
     @Column(name = "file_ids", columnDefinition = "text[]")
-    override val fileIds: List<String>?,
+    override var fileIds: List<String>? = null
 
     @Column(nullable = false)
-    override val createdAt: LocalDateTime,
-) : UUIDTable(), TelegramMessage
+    override lateinit var createdAt: LocalDateTime
+} 

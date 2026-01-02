@@ -2,7 +2,8 @@ package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
+import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
@@ -45,7 +46,7 @@ class TelegramBotConfig {
     var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null
 
     /** Source for saving messages */
-    var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null
+    var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage>)? = null
 
     /** Templater for build message templates */
     var templater: (TelegramBotActualConfig.() -> Templater)? = null

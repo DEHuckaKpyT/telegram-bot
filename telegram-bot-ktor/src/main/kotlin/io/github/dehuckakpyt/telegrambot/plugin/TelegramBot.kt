@@ -13,7 +13,6 @@ import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
 import io.github.dehuckakpyt.telegrambot.template.KtorMessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.ktor.server.application.*
@@ -36,7 +35,7 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     if (pluginConfig.receiving.messageTemplate == null) pluginConfig.receiving.messageTemplate = { KtorMessageTemplate() }
 
     InternalKoinContext.koin.declare<Application>(application, named("application"))
-    
+
     if (telegramBotConfig.propertyOrNull("template") != null) {
         InternalKoinContext.koin.declare<ApplicationConfig>(telegramBotConfig.config("template"), named("telegramBotTemplate"))
     }
@@ -53,7 +52,8 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     koin.declare<Templater>(context.templater)
     koin.declare<ButtonFactory>(context.buttonFactory)
     koin.declare<InputFactory>(context.inputFactory)
-    koin.declare<MessageSource>(context.messageSource)
+    koin.declare(context.telegramMessageSource)
+    koin.declare(context.telegramUserSource)
     koin.declare<ChainSource>(context.chainSource)
     koin.declare<CallbackContentSource>(context.callbackContentSource)
 

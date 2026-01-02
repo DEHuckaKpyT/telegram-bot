@@ -8,7 +8,7 @@ import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.*
@@ -23,7 +23,7 @@ import io.ktor.server.application.*
  */
 fun Application.configureTelegramBot() {
     install(TelegramBot) {
-        messageSource = { MessageSource.inDatabase }
+        telegramMessageSource = { TelegramMessageSource.inDatabase }
 
         receiving {
             longPolling {

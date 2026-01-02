@@ -10,13 +10,14 @@ import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.SpringMessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
@@ -45,7 +46,8 @@ class TelegramBotInitializationConfig(
     springMessageTemplate: SpringMessageTemplate,
     callbackContentSourceExpression: ConfigExpression<CallbackContentSource>?,
     chainSourceExpression: ConfigExpression<ChainSource>?,
-    telegramMessageSourceExpression: ConfigExpression<MessageSource>?,
+    telegramMessageSourceExpression: ConfigExpression<TelegramMessageSource<out TelegramMessage>>?,
+    telegramMessageSource: TelegramMessageSource<out TelegramMessage>?,
     telegramUserSourceExpression: ConfigExpression<TelegramUserSource<out TelegramUser>>?,
     telegramUserSource: TelegramUserSource<out TelegramUser>?,
     telegramChatSourceExpression: ConfigExpression<TelegramChatSource>?,
@@ -71,7 +73,11 @@ class TelegramBotInitializationConfig(
                 else if (telegramUserSource != null) receiving.telegramUserSource = { telegramUserSource }
             }
 
-            if (messageSource == null && telegramMessageSourceExpression != null) messageSource = telegramMessageSourceExpression::configure
+            if (this.telegramMessageSource == null) {
+                if (telegramMessageSourceExpression != null) this.telegramMessageSource = telegramMessageSourceExpression::configure
+                else if (telegramMessageSource != null) this.telegramMessageSource = { telegramMessageSource }
+            }
+
             if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
             if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
             if (receiving.telegramChatSource == null && telegramChatSourceExpression != null) receiving.telegramChatSource = telegramChatSourceExpression::configure
@@ -82,6 +88,7 @@ class TelegramBotInitializationConfig(
         botContext = TelegramBotFactory.createTelegramBotContext(config)
 
         if (telegramUserSource == null) applicationContext.registerBean { botContext.telegramUserSource }
+        if (telegramMessageSource == null) applicationContext.registerBean { botContext.telegramMessageSource }
     }
 
     @Bean
@@ -95,9 +102,6 @@ class TelegramBotInitializationConfig(
 
     @Bean
     fun inputFactory(): InputFactory = botContext.inputFactory
-
-    @Bean
-    fun telegramMessageSource(): MessageSource = botContext.messageSource
 
     @Bean
     fun chainSource(): ChainSource = botContext.chainSource

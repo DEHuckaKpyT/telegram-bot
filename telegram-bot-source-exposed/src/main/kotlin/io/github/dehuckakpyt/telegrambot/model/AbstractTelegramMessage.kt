@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.model
 
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.TextColumnType
@@ -17,7 +16,7 @@ import java.util.*
  *
  * @author Denis Matytsin
  */
-object TelegramMessages : UUIDTable("telegram_message") {
+open class AbstractTelegramMessages : UUIDTable("telegram_message") {
 
     val chatId = long("chat_id")
     val fromId = long("from_id").nullable()
@@ -31,17 +30,16 @@ object TelegramMessages : UUIDTable("telegram_message") {
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
-class DatabaseTelegramMessage(id: EntityID<UUID>) : UUIDEntity(id), TelegramMessage {
-    companion object : UUIDEntityClass<DatabaseTelegramMessage>(TelegramMessages)
+open class AbstractTelegramMessage(id: EntityID<UUID>, table: AbstractTelegramMessages) : UUIDEntity(id), TelegramMessage {
 
-    override var chatId by TelegramMessages.chatId
-    override var fromId by TelegramMessages.fromId
-    override var fromBot by TelegramMessages.fromBot
-    override var messageId by TelegramMessages.messageId
-    override var type by TelegramMessages.type
-    override var step by TelegramMessages.step
-    override var stepContainerType by TelegramMessages.stepContainerType
-    override var text by TelegramMessages.text
-    override var fileIds by TelegramMessages.fileIds
-    override val createdAt by TelegramMessages.createdAt
+    override var chatId by table.chatId
+    override var fromId by table.fromId
+    override var fromBot by table.fromBot
+    override var messageId by table.messageId
+    override var type by table.type
+    override var step by table.step
+    override var stepContainerType by table.stepContainerType
+    override var text by table.text
+    override var fileIds by table.fileIds
+    override val createdAt by table.createdAt
 }

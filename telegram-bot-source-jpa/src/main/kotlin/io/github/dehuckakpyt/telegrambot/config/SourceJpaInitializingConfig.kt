@@ -19,6 +19,5 @@ class SourceJpaInitializingConfig {
     @Bean
     fun transactionAction(
         transactionManager: PlatformTransactionManager,
-    ): TransactionAction =
-        TransactionActionImpl(transactionManager)
+    ): TransactionAction = TransactionActionImpl(transactionManager)
 }

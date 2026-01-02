@@ -28,7 +28,7 @@ import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContent
 import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
 import io.github.dehuckakpyt.telegrambot.source.chat.EmptyTelegramChatSource
 import io.github.dehuckakpyt.telegrambot.source.chat.event.EmptyTelegramChatStatusEventSource
-import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
+import io.github.dehuckakpyt.telegrambot.source.message.EmptyTelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.user.EmptyTelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.RegexTemplater
@@ -74,15 +74,15 @@ object TelegramBotFactory {
         actual.token = config.token ?: throw IllegalArgumentException("Telegram-bot TOKEN must not be empty!")
         actual.username = config.username
         actual.clientConfiguration = config.clientConfiguration
-        actual.messageSource = config.messageSource?.invoke(actual) ?: EmptyMessageSource()
+        actual.telegramMessageSource = config.telegramMessageSource?.invoke(actual) ?: EmptyTelegramMessageSource()
         val telegramBotEventManager = TelegramBotEventManager()
         actual.telegramBot = TelegramBotImpl(actual.token, actual.username, actual.clientConfiguration, telegramBotEventManager)
         actual.templater = config.templater?.invoke(actual) ?: RegexTemplater()
 
-        val telegramBotEventListening = TelegramBotEventListening(telegramBotEventManager, actual.messageSource, config.eventListeningPreventDefaults)
+        val telegramBotEventListening = TelegramBotEventListening(telegramBotEventManager, actual.telegramMessageSource, config.eventListeningPreventDefaults)
         config.eventListening?.invoke(telegramBotEventListening)
 
-        context.messageSource = actual.messageSource
+        context.telegramMessageSource = actual.telegramMessageSource
         context.telegramBot = actual.telegramBot
         context.templater = actual.templater
         context.telegramBotEventListening = telegramBotEventListening
@@ -123,7 +123,7 @@ object TelegramBotFactory {
             LeftChatMemberMessageContainerFactory(),
             NewChatMembersMessageContainerFactory(),
         )
-        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.messageSource, actual.receiving.telegramUserSource, actual.receiving.telegramChatSource, actual.receiving.telegramChatStatusEventSource, actual.telegramBot.username)
+        val dialogUpdateResolver = DialogUpdateResolver(actualReceiving.callbackSerializer, actualReceiving.chainSource, chainResolver, actualReceiving.exceptionHandler, actualReceiving.chainExceptionHandler, messageArgumentFactories, actual.telegramMessageSource, actual.receiving.telegramUserSource, actual.receiving.telegramChatSource, actual.receiving.telegramChatStatusEventSource, actual.telegramBot.username)
         val eventUpdateResolver = EventUpdateResolver()
 
         val botHandling = BotHandling(actual.telegramBot, chainResolver, actualReceiving.contentConverter, actual.templater, buttonFactory)

@@ -1,12 +1,13 @@
 package io.github.dehuckakpyt.telegrambot.ext
 
 import io.github.dehuckakpyt.telegrambot.config.constants.source.callback.CallbackContentSourceConstant.CALLBACK_CONTENT_SOURCE_MAX_CONTENTS_PER_USER
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.InMemoryCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chain.InMemoryChainSource
-import io.github.dehuckakpyt.telegrambot.source.message.EmptyMessageSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.source.message.EmptyTelegramMessageSource
+import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 
 
 /**
@@ -26,5 +27,5 @@ fun CallbackContentSource.Companion.inMemory(
 val ChainSource.Companion.inMemory: ChainSource
     get() = InMemoryChainSource()
 
-val MessageSource.Companion.empty: MessageSource
-    get() = EmptyMessageSource()
+val TelegramMessageSource.Companion.empty: TelegramMessageSource<out TelegramMessage>
+    get() = EmptyTelegramMessageSource()

@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.message
 
 import io.github.dehuckakpyt.telegrambot.ext.context.currentContainerContextOrNull
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 
 
@@ -17,7 +18,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Message
  *
  * @author Denis Matytsin
  */
-interface MessageSource {
+interface TelegramMessageSource<EntityT : TelegramMessage> {
 
     /**
      * Save message.
