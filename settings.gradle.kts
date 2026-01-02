@@ -8,7 +8,7 @@ include("telegram-bot-source-jpa")
 include("telegram-bot-source-exposed")
 include("telegram-bot-templater-freemarker")
 include("telegram-bot-admin-api-spring")
-include("telegram-bot-admin-ui")
+include("telegram-bot-admin-ui-spring")
 
 include("example-core")
 include("example-spring")
