@@ -8,7 +8,7 @@ import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chain.DatabaseChainSource
 import io.github.dehuckakpyt.telegrambot.source.chat.DatabaseTelegramChatSource
 import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
-import io.github.dehuckakpyt.telegrambot.source.chat.event.DatabaseTelegramChatStatusEventSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.DefaultTelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.DefaultTelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
@@ -84,11 +84,11 @@ val TelegramChatSource.Companion.inDatabase: TelegramChatSource
         return DatabaseTelegramChatSource()
     }
 
-val TelegramChatStatusEventSource.Companion.inDatabase: TelegramChatStatusEventSource
+val TelegramChatStatusEventSource.Companion.inDatabase: DefaultTelegramChatStatusEventSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(TelegramChatStatusEvents)
+            SchemaUtils.createMissingTablesAndColumns(DefaultTelegramChatStatusEvents)
         }
 
-        return DatabaseTelegramChatStatusEventSource()
+        return DefaultTelegramChatStatusEventSource()
     }

@@ -23,7 +23,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @ConditionalOnProperty(name = [TELEGRAM_BOT_SOURCE_JPA, TELEGRAM_BOT_SOURCE_JPA_MESSAGE_SOURCE], havingValue = "true", matchIfMissing = true)
 class TelegramMessageSourceInitializationConfig {
 
-
     @Bean
     @ConditionalOnMissingBean(TelegramMessageSource::class)
     fun telegramMessageSource(

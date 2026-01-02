@@ -6,11 +6,13 @@ import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
+import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
@@ -33,6 +35,7 @@ internal class TelegramBotContextImpl : TelegramBotContext {
     override lateinit var inputFactory: InputFactory
     override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser>
     override lateinit var telegramMessageSource: TelegramMessageSource<out TelegramMessage>
+    override lateinit var telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>
     override lateinit var callbackContentSource: CallbackContentSource
     override lateinit var chainSource: ChainSource
 }

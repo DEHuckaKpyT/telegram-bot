@@ -10,6 +10,7 @@ import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
@@ -51,7 +52,8 @@ class TelegramBotInitializationConfig(
     telegramUserSourceExpression: ConfigExpression<TelegramUserSource<out TelegramUser>>?,
     telegramUserSource: TelegramUserSource<out TelegramUser>?,
     telegramChatSourceExpression: ConfigExpression<TelegramChatSource>?,
-    telegramChatStatusEventSourceExpression: ConfigExpression<TelegramChatStatusEventSource>?,
+    telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>?,
+    telegramChatStatusEventSourceExpression: ConfigExpression<TelegramChatStatusEventSource<out TelegramChatStatusEvent>>?,
     updateReceiverExpression: ConfigExpression<UpdateReceiver>?,
     @Value("\${telegram-bot.token}") botToken: String?,
     @Value("\${telegram-bot.username}") botUsername: String?,
@@ -78,10 +80,14 @@ class TelegramBotInitializationConfig(
                 else if (telegramMessageSource != null) this.telegramMessageSource = { telegramMessageSource }
             }
 
+            if (receiving.telegramChatStatusEventSource == null) {
+                if (telegramChatStatusEventSourceExpression != null) this.receiving.telegramChatStatusEventSource = telegramChatStatusEventSourceExpression::configure
+                else if (telegramChatStatusEventSource != null) this.receiving.telegramChatStatusEventSource = { telegramChatStatusEventSource }
+            }
+
             if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
             if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
             if (receiving.telegramChatSource == null && telegramChatSourceExpression != null) receiving.telegramChatSource = telegramChatSourceExpression::configure
-            if (receiving.telegramChatStatusEventSource == null && telegramChatStatusEventSourceExpression != null) receiving.telegramChatStatusEventSource = telegramChatStatusEventSourceExpression::configure
             if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
         }
 
@@ -89,6 +95,7 @@ class TelegramBotInitializationConfig(
 
         if (telegramUserSource == null) applicationContext.registerBean { botContext.telegramUserSource }
         if (telegramMessageSource == null) applicationContext.registerBean { botContext.telegramMessageSource }
+        if (telegramChatStatusEventSource == null) applicationContext.registerBean { botContext.telegramChatStatusEventSource }
     }
 
     @Bean

@@ -135,6 +135,7 @@ object TelegramBotFactory {
         updateHandling.invoke(botUpdateHandling)
 
         context.telegramUserSource = actualReceiving.telegramUserSource
+        context.telegramChatStatusEventSource = actualReceiving.telegramChatStatusEventSource
         context.callbackContentSource = actualReceiving.callbackContentSource
         context.chainSource = actualReceiving.chainSource
         context.botHandling = botHandling
