@@ -1,15 +1,17 @@
+import com.github.gradle.node.npm.task.NpmTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.org.jetbrains.kotlin.jvm)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.spring)
+    id("com.github.node-gradle.node") version "7.0.2"
 }
 
 dependencies {
     //region springframework
     api(libs.spring.boot.starter)
     api(libs.spring.boot.starter.webflux)
-    implementation("org.springframework.boot:spring-boot-starter-security:3.5.5")
+    implementation(libs.spring.boot.starter.security)
     //endregion springframework
 
     //region dehuckakpyt
@@ -26,6 +28,27 @@ dependencies {
     //region springframework
     testApi(libs.spring.boot.starter.test)
     //endregion springframework
+}
+
+node {
+    version.set(libs.versions.node)
+    npmVersion.set(libs.versions.npm)
+    download.set(true)
+    nodeProjectDir.set(file("./src/main/webapp"))
+}
+
+// Build frontend and copy to 'build/resources/static'
+tasks.register<NpmTask>("viteBuild") {
+    dependsOn(tasks.npmInstall)
+    args.set(listOf("run", "build"))
+    workingDir.set(file("./src/main/webapp"))
+}
+tasks.named<ProcessResources>("processResources") {
+    dependsOn("viteBuild")
+
+    from("./src/main/webapp/dist") {
+        into("static")
+    }
 }
 
 tasks.withType<KotlinCompile> {

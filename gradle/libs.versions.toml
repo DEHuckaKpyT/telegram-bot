@@ -31,6 +31,10 @@ kotest-extensions-spring = "1.3.0"
 mapstruct = "1.6.3"
 mockk = "1.14.6"
 
+## Frontend
+node = "24.11.1"
+npm = "11.6.2"
+
 [libraries]
 
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
@@ -63,6 +67,7 @@ jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "ja
 spring-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "spring-boot" }
 spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "spring-boot" }
 spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-starter-security = { group = "org.springframework.boot", name = "spring-boot-starter-security", version.ref = "spring-boot" }
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot" }
 spring-data-jpa = { group = "org.springframework.data", name = "spring-data-jpa", version.ref = "spring-boot" }
 
