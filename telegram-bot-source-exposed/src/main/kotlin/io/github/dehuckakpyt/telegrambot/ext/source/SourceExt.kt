@@ -6,7 +6,7 @@ import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.callback.DatabaseCallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chain.DatabaseChainSource
-import io.github.dehuckakpyt.telegrambot.source.chat.DatabaseTelegramChatSource
+import io.github.dehuckakpyt.telegrambot.source.chat.DefaultTelegramChatSource
 import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
 import io.github.dehuckakpyt.telegrambot.source.chat.event.DefaultTelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
@@ -75,13 +75,13 @@ val TelegramUserSource.Companion.inDatabase: DefaultTelegramUserSource
         return DefaultTelegramUserSource()
     }
 
-val TelegramChatSource.Companion.inDatabase: TelegramChatSource
+val TelegramChatSource.Companion.inDatabase: DefaultTelegramChatSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(TelegramChats)
+            SchemaUtils.createMissingTablesAndColumns(DefaultTelegramChats)
         }
 
-        return DatabaseTelegramChatSource()
+        return DefaultTelegramChatSource()
     }
 
 val TelegramChatStatusEventSource.Companion.inDatabase: DefaultTelegramChatStatusEventSource

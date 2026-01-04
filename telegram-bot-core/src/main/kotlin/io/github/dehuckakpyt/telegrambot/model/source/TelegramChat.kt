@@ -19,7 +19,7 @@ interface TelegramChat {
     public val type: String
 
     /** Title, for supergroups, channels and group chats (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.title]). */
-    public val title: String
+    public val title: String?
 
     /** Username, for supergroups and channels if available (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.username]). */
     public val username: String?

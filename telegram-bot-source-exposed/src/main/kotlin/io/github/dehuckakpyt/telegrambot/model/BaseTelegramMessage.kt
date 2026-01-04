@@ -16,7 +16,7 @@ import java.util.*
  *
  * @author Denis Matytsin
  */
-open class AbstractTelegramMessages : UUIDTable("telegram_message") {
+open class BaseTelegramMessages : UUIDTable("telegram_message") {
 
     val chatId = long("chat_id")
     val fromId = long("from_id").nullable()
@@ -30,7 +30,7 @@ open class AbstractTelegramMessages : UUIDTable("telegram_message") {
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
-open class AbstractTelegramMessage(id: EntityID<UUID>, table: AbstractTelegramMessages) : UUIDEntity(id), TelegramMessage {
+open class BaseTelegramMessage(id: EntityID<UUID>, table: BaseTelegramMessages) : UUIDEntity(id), TelegramMessage {
 
     override var chatId by table.chatId
     override var fromId by table.fromId

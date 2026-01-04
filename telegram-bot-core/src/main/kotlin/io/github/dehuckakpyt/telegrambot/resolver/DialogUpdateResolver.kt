@@ -11,6 +11,7 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionH
 import io.github.dehuckakpyt.telegrambot.ext.source.chat.save
 import io.github.dehuckakpyt.telegrambot.ext.update.message.chatId
 import io.github.dehuckakpyt.telegrambot.ext.update.message.fetchCommand
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
@@ -44,7 +45,7 @@ internal class DialogUpdateResolver(
     private val messageArgumentFactories: List<MessageContainerFactory>,
     private val telegramMessageSource: TelegramMessageSource<out TelegramMessage>,
     private val telegramUserSource: TelegramUserSource<out TelegramUser>,
-    private val telegramChatSource: TelegramChatSource,
+    private val telegramChatSource: TelegramChatSource<out TelegramChat>,
     private val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>,
     private val username: String,
 ) {

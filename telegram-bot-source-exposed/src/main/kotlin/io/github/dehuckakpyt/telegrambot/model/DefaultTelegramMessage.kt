@@ -8,8 +8,8 @@ import java.util.*
 /**
  * @author Denis Matytsin
  */
-object DefaultTelegramMessages : AbstractTelegramMessages()
+object DefaultTelegramMessages : BaseTelegramMessages()
 
-open class DefaultTelegramMessage(id: EntityID<UUID>) : AbstractTelegramMessage(id, DefaultTelegramMessages) {
+open class DefaultTelegramMessage(id: EntityID<UUID>) : BaseTelegramMessage(id, DefaultTelegramMessages) {
     companion object : UUIDEntityClass<DefaultTelegramMessage>(DefaultTelegramMessages)
 }

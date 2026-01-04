@@ -15,7 +15,7 @@ import java.util.*
  *
  * @author Denis Matytsin
  */
-open class AbstractTelegramUsers(name: String = "telegram_user") : UUIDTable(name) {
+open class BaseTelegramUsers(name: String = "telegram_user") : UUIDTable(name) {
 
     val userId = long("user_id").uniqueIndex()
     val username = varchar("username", 255).nullable()
@@ -27,7 +27,7 @@ open class AbstractTelegramUsers(name: String = "telegram_user") : UUIDTable(nam
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
-open class AbstractTelegramUser(id: EntityID<UUID>, table: AbstractTelegramUsers) : UUIDEntity(id), TelegramUser {
+open class BaseTelegramUser(id: EntityID<UUID>, table: BaseTelegramUsers) : UUIDEntity(id), TelegramUser {
 
     override var userId by table.userId
     override var username by table.username

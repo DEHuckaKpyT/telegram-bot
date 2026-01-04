@@ -8,8 +8,8 @@ import java.util.*
 /**
  * @author Denis Matytsin
  */
-object DefaultTelegramChatStatusEvents : AbstractTelegramChatStatusEvents()
+object DefaultTelegramChatStatusEvents : BaseTelegramChatStatusEvents()
 
-open class DefaultTelegramChatStatusEvent(id: EntityID<UUID>) : AbstractTelegramChatStatusEvent(id, DefaultTelegramChatStatusEvents) {
+open class DefaultTelegramChatStatusEvent(id: EntityID<UUID>) : BaseTelegramChatStatusEvent(id, DefaultTelegramChatStatusEvents) {
     companion object : UUIDEntityClass<DefaultTelegramChatStatusEvent>(DefaultTelegramChatStatusEvents)
 }

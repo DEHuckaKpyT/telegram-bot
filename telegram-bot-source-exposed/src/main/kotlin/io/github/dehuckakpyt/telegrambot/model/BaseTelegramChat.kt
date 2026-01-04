@@ -2,7 +2,6 @@ package io.github.dehuckakpyt.telegrambot.model
 
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.javatime.CurrentDateTime
@@ -16,25 +15,24 @@ import java.util.*
  *
  * @author Denis Matytsin
  */
-object TelegramChats : UUIDTable("telegram_chat") {
+open class BaseTelegramChats : UUIDTable("telegram_chat") {
 
     val chatId = long("chat_id").uniqueIndex()
     val type = varchar("type", 255)
-    val title = varchar("title", 255)
+    val title = varchar("title", 255).nullable()
     val username = varchar("username", 255).nullable()
     val available = bool("available")
     val updatedAt = datetime("updated_at").defaultExpression(CurrentDateTime)
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
-class DatabaseTelegramChat(id: EntityID<UUID>) : UUIDEntity(id), TelegramChat {
-    companion object : UUIDEntityClass<DatabaseTelegramChat>(TelegramChats)
+open class BaseTelegramChat(id: EntityID<UUID>, table: BaseTelegramChats) : UUIDEntity(id), TelegramChat {
 
-    override var chatId by TelegramChats.chatId
-    override var type by TelegramChats.type
-    override var title by TelegramChats.title
-    override var username by TelegramChats.username
-    override var available by TelegramChats.available
-    override var updatedAt by TelegramChats.updatedAt
-    override var createdAt by TelegramChats.createdAt
+    override var chatId by table.chatId
+    override var type by table.type
+    override var title by table.title
+    override var username by table.username
+    override var available by table.available
+    override var updatedAt by table.updatedAt
+    override var createdAt by table.createdAt
 }

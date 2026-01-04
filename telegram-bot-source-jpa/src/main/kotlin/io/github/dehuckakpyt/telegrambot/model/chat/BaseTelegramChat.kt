@@ -3,35 +3,32 @@ package io.github.dehuckakpyt.telegrambot.model.chat
 import io.github.dehuckakpyt.telegrambot.model.UUIDTable
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.MappedSuperclass
 import java.time.LocalDateTime
 
 
 /**
  * @author Denis Matytsin
  */
-@Entity
-@Table(name = "telegram_chat")
-class JpaTelegramChat(
+@MappedSuperclass
+class BaseTelegramChat : UUIDTable(), TelegramChat {
 
     @Column(nullable = false, unique = true)
-    override val chatId: Long,
+    override var chatId: Long = 0
 
     @Column(nullable = false)
-    override var type: String,
+    override lateinit var type: String
+
+    override var title: String? = null
+
+    override var username: String? = null
 
     @Column(nullable = false)
-    override var title: String,
-
-    override var username: String?,
+    override var available: Boolean = false
 
     @Column(nullable = false)
-    override var available: Boolean,
+    override lateinit var updatedAt: LocalDateTime
 
     @Column(nullable = false)
-    override var updatedAt: LocalDateTime,
-
-    @Column(nullable = false)
-    override val createdAt: LocalDateTime,
-) : UUIDTable(), TelegramChat
+    override lateinit var createdAt: LocalDateTime
+}

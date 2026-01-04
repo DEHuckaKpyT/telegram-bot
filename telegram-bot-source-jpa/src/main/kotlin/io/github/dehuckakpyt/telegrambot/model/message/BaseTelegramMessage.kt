@@ -10,9 +10,6 @@ import java.time.LocalDateTime
 
 
 /**
- * Created on 20.07.2023.
- *<p>
- *
  * @author Denis Matytsin
  */
 @MappedSuperclass

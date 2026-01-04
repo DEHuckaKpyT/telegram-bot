@@ -12,7 +12,7 @@ import java.util.*
 /**
  * @author Denis Matytsin
  */
-open class AbstractTelegramChatStatusEvents : UUIDTable("telegram_chat_status_event") {
+open class BaseTelegramChatStatusEvents : UUIDTable("telegram_chat_status_event") {
 
     val chatId = long("chat_id")
     val title = varchar("title", 255).nullable()
@@ -23,7 +23,7 @@ open class AbstractTelegramChatStatusEvents : UUIDTable("telegram_chat_status_ev
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
-open class AbstractTelegramChatStatusEvent(id: EntityID<UUID>, table: AbstractTelegramChatStatusEvents) : UUIDEntity(id), TelegramChatStatusEvent {
+open class BaseTelegramChatStatusEvent(id: EntityID<UUID>, table: BaseTelegramChatStatusEvents) : UUIDEntity(id), TelegramChatStatusEvent {
 
     override var chatId by table.chatId
     override var title by table.title

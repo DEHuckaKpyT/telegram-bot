@@ -4,6 +4,7 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
@@ -26,7 +27,7 @@ internal class TelegramBotReceiverActualConfigImpl : TelegramBotReceiverActualCo
     override lateinit var callbackContentSource: CallbackContentSource
     override lateinit var chainSource: ChainSource
     override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser>
-    override lateinit var telegramChatSource: TelegramChatSource
+    override lateinit var telegramChatSource: TelegramChatSource<out TelegramChat>
     override lateinit var telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>
     override lateinit var contentConverter: ContentConverter
     override lateinit var callbackSerializer: CallbackSerializer

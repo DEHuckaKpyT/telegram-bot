@@ -136,6 +136,7 @@ object TelegramBotFactory {
 
         context.telegramUserSource = actualReceiving.telegramUserSource
         context.telegramChatStatusEventSource = actualReceiving.telegramChatStatusEventSource
+        context.telegramChatSource = actualReceiving.telegramChatSource
         context.callbackContentSource = actualReceiving.callbackContentSource
         context.chainSource = actualReceiving.chainSource
         context.botHandling = botHandling
