@@ -18,11 +18,10 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 - Has possibility to **save state in database** with **Spring JPA** or **Exposed**.
 - Easy to **write tests** for your bot.
 
-## Prerequisites
+## Tested with
 
-- JDK 17 or higher
-- Kotlin 1.8 or higher
-- Gradle or Maven
+- JDK 17
+- Kotlin 2.2.21
 
 ## Simple examples
 

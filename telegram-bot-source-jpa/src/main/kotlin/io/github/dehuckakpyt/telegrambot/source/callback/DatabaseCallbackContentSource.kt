@@ -1,17 +1,17 @@
 package io.github.dehuckakpyt.telegrambot.source.callback
 
 import io.github.dehuckakpyt.telegrambot.exception.chat.ChatException
-import io.github.dehuckakpyt.telegrambot.model.callback.JpaCallbackContent
+import io.github.dehuckakpyt.telegrambot.model.callback.DatabaseCallbackContent
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
 import io.github.dehuckakpyt.telegrambot.repository.OffsetLimitPageable
-import io.github.dehuckakpyt.telegrambot.repository.callback.JpaCallbackContentRepository
+import io.github.dehuckakpyt.telegrambot.repository.callback.DatabaseCallbackContentRepository
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import java.time.LocalDateTime
 import java.util.*
 
-open class JpaCallbackContentSource(
+open class DatabaseCallbackContentSource(
     private val transactional: TransactionAction,
-    private val repository: JpaCallbackContentRepository,
+    private val repository: DatabaseCallbackContentRepository,
     private val maxCallbackContentsPerUser: Long,
 ) : CallbackContentSource {
 
@@ -22,7 +22,7 @@ open class JpaCallbackContentSource(
             this.callbackId = UUID.randomUUID()
             this.content = content
             this.updatedAt = LocalDateTime.now()
-        } ?: JpaCallbackContent(
+        } ?: DatabaseCallbackContent(
             chatId = chatId,
             fromId = fromId,
             callbackId = UUID.randomUUID(),
@@ -38,7 +38,7 @@ open class JpaCallbackContentSource(
             ?: throw ChatException("Содержание для callback'а не найдено :(")
     }
 
-    private fun findLast(chatId: Long, fromId: Long): JpaCallbackContent? {
+    private fun findLast(chatId: Long, fromId: Long): DatabaseCallbackContent? {
         if (maxCallbackContentsPerUser < 1) return null
 
         return repository.findByChatIdAndFromIdOrderByUpdatedAtDesc(chatId, fromId, pageable).firstOrNull()

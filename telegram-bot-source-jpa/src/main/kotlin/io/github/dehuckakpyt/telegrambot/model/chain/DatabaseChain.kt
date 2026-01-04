@@ -15,7 +15,7 @@ import jakarta.persistence.Table
  */
 @Entity
 @Table(name = "chain")
-class JpaChain(
+class DatabaseChain(
 
     @Column(nullable = false)
     override val chatId: Long,
