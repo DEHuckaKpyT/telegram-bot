@@ -3,8 +3,6 @@
 ## Save all states in database
 
 All you have to do is add a dependency for `source-jpa`:
-<tabs>
-<tab title="Spring 3.x">
 <code-block lang="kotlin">
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
@@ -12,17 +10,6 @@ dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-jpa:%current_version%")
 }
 </code-block>
-</tab>
-<tab title="Spring 2.7">
-<code-block lang="kotlin">
-dependencies {
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-spring:%current_version%")
-    implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-source-spring2-jpa:%current_version%")
-}
-</code-block>
-</tab>
-</tabs>
 
 ## Available properties
 
@@ -38,144 +25,74 @@ dependencies {
 | `telegram-bot.source-jpa.chat-status-event-source.enabled` | `false` | Enable (disable) default `inDatabase` chat status event source       |
 
 
-## Override default `inDatabase` models
+## Override default models and extend services
 
-If you're a bit unhappy with the default implementation, you can override it. For example, override `TelegramMessage` entity:
+If you're a bit unhappy with the default implementation, you can override it. For example, override `TelegramUserSource`:
 
 <tabs id="override-model-spring-jpa" group="telegram-bot-code">
     <tab title="Spring" group-key="spring"></tab>
 </tabs>
 
-You need to disable it in properties:
-
-`resources/application.properties`
-```
-telegram-bot.source-jpa.message-source.enabled=false
+You need to disable it in properties `resources/application.properties`:
+```properties
+telegram-bot.source-jpa.user-source.enabled=false
 ```
 
 ```kotlin
 package com.dehucka.example.config
 
-import com.dehucka.example.repository.TelegramMessageRepository
-import com.dehucka.example.service.TelegramMessageService
-import io.github.dehuckakpyt.telegrambot.annotation.EnableTelegramBot
-import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
-import org.springframework.boot.autoconfigure.domain.EntityScan
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-
-
 @Configuration
 @EnableJpaRepositories(basePackages = ["com.dehucka.example.repository"]) // your repository package
 @EntityScan(basePackages = ["com.dehucka.example.model"]) // your model package
-class BotConfig {
-
-    @Bean
-    fun telegramMessageSourceExpression(
-        transactionAction: TransactionAction,
-        repository: TelegramMessageRepository,
-    ): ConfigExpression<MessageSource> =
-        ConfigExpression { TelegramMessageService(transactionAction, repository) }
-}
+class BotConfig
 ```
 
 ```kotlin
 package com.dehucka.example.model
 
-import io.github.dehuckakpyt.telegrambot.model.UUIDTable
-import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
-import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
-import io.hypersistence.utils.hibernate.type.array.ListArrayType
-import io.hypersistence.utils.hibernate.type.json.JsonType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import org.hibernate.annotations.ColumnDefault
-import org.hibernate.annotations.Type
-import java.time.LocalDateTime
-
-
+// It is important to write the entity with an empty constructor.
+// Otherwise, it will be necessary to override the method for creating a user.
 @Entity
-class CustomTelegramMessage(
-    @Column(nullable = false)
-    override val chatId: Long,
+class TelegramUser : BaseTelegramUser() {
 
-    @Column(nullable = false)
-    override val fromId: Long,
-
-    @Column(nullable = false)
-    override val fromBot: Boolean,
-
-    @Column(nullable = false)
-    override val messageId: Long,
-
-    @Column(nullable = false)
-    override val type: String,
-
-    override val step: String?,
-
-    override val stepContainerType: String?,
-
-    @Column(columnDefinition = "text")
-    override val text: String?,
-
-    @Type(ListArrayType::class)
-    @Column(name = "file_ids", columnDefinition = "text[]")
-    override val fileIds: List<String>?,
-
-    @Type(JsonType::class)
-    @Column(columnDefinition = "jsonb")
-    val replyMarkup: InlineKeyboardMarkup?,
-
-    @Column(nullable = false)
-    @ColumnDefault("'now()'")
-    override val createDate: LocalDateTime = LocalDateTime.now(),
-) : UUIDTable(), TelegramMessage
+    // in BaseTelegramUser all default fields
+    // and you can add your own fields
+    var phone: String? = null
+}
 ```
 
 ```kotlin
 package com.dehucka.example.repository
 
-import com.dehucka.example.model.TelegramMessage
-import org.springframework.data.jpa.repository.JpaRepository
-import java.util.*
+import com.dehucka.example.model.TelegramUser
 
-
-interface TelegramMessageRepository : JpaRepository<CustomTelegramMessage, UUID>
+interface TelegramUserRepository : BaseTelegramUserRepository<TelegramUser>
 ```
 
 ```kotlin
 package com.dehucka.example.service
 
-import com.dehucka.example.model.TelegramMessage
-import com.dehucka.example.repository.TelegramMessageRepository
-import io.github.dehuckakpyt.telegrambot.model.telegram.Message
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
-import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
+import com.dehucka.example.model.TelegramUser
+import com.dehucka.example.repository.TelegramUserRepository
 
+@Service
+class TelegramUserService(
+    override val transactional: TransactionAction,
+    override val repository: TelegramUserRepository,
+) : BaseTelegramUserSource<TelegramUser>() {
 
-class TelegramMessageService(
-    private val transactional: TransactionAction,
-    private val repository: TelegramMessageRepository,
-) : MessageSource {
+    // your any methods
+    suspend fun setPhone(userId: Long, phone: String): TelegramUser = transactional {
+        val user = repository.findByUserId(userId)
+            ?: throw IllegalStateException("User $userId does not exist.")
 
-    override suspend fun save(message: Message, fromBot: Boolean, type: String, step: String?, stepContainerType: String?, text: String?, fileIds: List<String>?): Unit = transactional {
-        repository.save(
-            CustomTelegramMessage(
-                chatId = message.chat.id,
-                fromId = message.from!!.id,
-                fromBot = fromBot,
-                messageId = message.messageId,
-                type = type,
-                step = step,
-                stepContainerType = stepContainerType,
-                text = text,
-                fileIds = fileIds,
-                replyMarkup = message.replyMarkup
-            )
-        )
+        user.phone = phone
+
+        repository.save(user)
     }
 }
 ```
+
+If you need more control, you can extend interfaces `io.github.dehuckakpyt.telegrambot.model.source.TelegramUser` and `io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource`.
+
+If you need to inject instances from `TelegramBotContext`, you can use creating bean of `io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression<out TelegramUserSource>` like <a href="sources.md">here</a>.

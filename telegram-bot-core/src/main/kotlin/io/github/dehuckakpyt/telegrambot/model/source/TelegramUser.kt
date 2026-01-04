@@ -31,8 +31,8 @@ interface TelegramUser {
     public val available: Boolean
 
     /** Date/time when user started this bot last time. */
-    public val updateDate: LocalDateTime
+    public val updatedAt: LocalDateTime
 
     /** Date/time when user started this bot first time. */
-    public val createDate: LocalDateTime
+    public val createdAt: LocalDateTime
 }

@@ -4,6 +4,9 @@ import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -23,9 +26,9 @@ import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 interface TelegramBotReceiverActualConfig {
     val callbackContentSource: CallbackContentSource
     val chainSource: ChainSource
-    val telegramUserSource: TelegramUserSource
-    val telegramChatSource: TelegramChatSource
-    val telegramChatStatusEventSource: TelegramChatStatusEventSource
+    val telegramUserSource: TelegramUserSource<out TelegramUser>
+    val telegramChatSource: TelegramChatSource<out TelegramChat>
+    val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>
     val contentConverter: ContentConverter
     val callbackSerializer: CallbackSerializer
     val messageTemplate: MessageTemplate

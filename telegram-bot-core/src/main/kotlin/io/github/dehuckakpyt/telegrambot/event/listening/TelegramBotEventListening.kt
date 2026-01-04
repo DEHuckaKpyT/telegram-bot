@@ -4,7 +4,8 @@ import io.github.dehuckakpyt.telegrambot.event.managing.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.ext.event.listening.After
 import io.github.dehuckakpyt.telegrambot.ext.event.listening.AfterMethod
 import io.github.dehuckakpyt.telegrambot.ext.event.listening.defaults
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
+import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 
 
 /**
@@ -14,12 +15,12 @@ import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
  */
 public class TelegramBotEventListening internal constructor(
     private val manager: TelegramBotEventManager,
-    messageSource: MessageSource,
+    telegramMessageSource: TelegramMessageSource<out TelegramMessage>,
     preventDefaults: Boolean,
 ) {
 
     init {
-        if (preventDefaults.not()) defaults(messageSource)
+        if (preventDefaults.not()) defaults(telegramMessageSource)
     }
 
     public fun afterMethodCalled(methodName: String, action: suspend (Map<String, Any?>) -> Unit): Unit = manager.afterMethodCalled(methodName, action)

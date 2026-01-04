@@ -7,6 +7,9 @@ import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandler
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
+import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -33,13 +36,13 @@ data class UpdateReceiverConfig(
     var chainSource: (TelegramBotActualConfig.() -> ChainSource)? = null,
 
     /** Source for saving users */
-    var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource)? = null,
+    var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource<out TelegramUser>)? = null,
 
     /** Source for saving chats (except private) */
-    var telegramChatSource: (TelegramBotActualConfig.() -> TelegramChatSource)? = null,
+    var telegramChatSource: (TelegramBotActualConfig.() -> TelegramChatSource<out TelegramChat>)? = null,
 
     /** Source for saving all changes of bot`s status in all chats */
-    var telegramChatStatusEventSource: (TelegramBotActualConfig.() -> TelegramChatStatusEventSource)? = null,
+    var telegramChatStatusEventSource: (TelegramBotActualConfig.() -> TelegramChatStatusEventSource<out TelegramChatStatusEvent>)? = null,
 
     /** Converter from object to string and back */
     var contentConverter: (TelegramBotActualConfig.() -> ContentConverter)? = null,
