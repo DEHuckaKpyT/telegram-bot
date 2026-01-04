@@ -42,4 +42,4 @@ class BaseTelegramMessage : UUIDTable(), TelegramMessage {
 
     @Column(nullable = false)
     override lateinit var createdAt: LocalDateTime
-} 
+}

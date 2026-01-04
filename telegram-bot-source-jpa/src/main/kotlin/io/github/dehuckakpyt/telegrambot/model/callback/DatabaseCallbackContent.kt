@@ -18,7 +18,7 @@ import java.util.*
  */
 @Entity
 @Table(name = "callback_content")
-class JpaCallbackContent(
+class DatabaseCallbackContent(
 
     @Column(nullable = false)
     override val chatId: Long,
