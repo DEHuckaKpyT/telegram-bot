@@ -8,6 +8,7 @@ import io.github.dehuckakpyt.telegrambot.model.user.BaseTelegramUser
 import io.github.dehuckakpyt.telegrambot.repository.user.BaseTelegramUserRepository
 import io.github.dehuckakpyt.telegrambot.source.user.argument.FilterTelegramUserArgument
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
+import org.springframework.transaction.annotation.Isolation.REPEATABLE_READ
 import jakarta.persistence.EntityManager
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.domain.Page
@@ -50,7 +51,7 @@ abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser> : TelegramUser
         }
     }
 
-    override suspend fun save(user: User, available: Boolean): Unit = transactional {
+    override suspend fun save(user: User, available: Boolean): Unit = transactional(isolation = REPEATABLE_READ) {
         val now = LocalDateTime.now()
 
         val entity = repository.findByUserId(user.id) ?: createUser(user.id, now)

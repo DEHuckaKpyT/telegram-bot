@@ -2,14 +2,12 @@ package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
 import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_CHAT_SOURCE
-import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
-import io.github.dehuckakpyt.telegrambot.repository.chat.JpaTelegramChatRepository
-import io.github.dehuckakpyt.telegrambot.source.chat.JpaTelegramChatSource
+import io.github.dehuckakpyt.telegrambot.repository.chat.DefaultTelegramChatRepository
+import io.github.dehuckakpyt.telegrambot.source.chat.DefaultTelegramChatSource
 import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
@@ -26,13 +24,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 class TelegramChatSourceInitializationConfig {
 
     @Bean
-    //TODO create custom @ConditionalOnMissingBean
-    @ConditionalOnMissingBean(name = ["telegramChatSourceExpression"], parameterizedContainer = [ConfigExpression::class])
-    @ConditionalOnProperty(TELEGRAM_BOT_SOURCE_JPA_CHAT_SOURCE, havingValue = "true", matchIfMissing = true)
-    fun telegramChatSourceExpression(
+    @ConditionalOnMissingBean(TelegramChatSource::class)
+    fun telegramChatSource(
         transactionAction: TransactionAction,
-        repository: JpaTelegramChatRepository,
-    ): ConfigExpression<TelegramChatSource> = ConfigExpression {
-        JpaTelegramChatSource(transactionAction, repository)
-    }
+        repository: DefaultTelegramChatRepository,
+    ): DefaultTelegramChatSource = DefaultTelegramChatSource(transactionAction, repository)
 }

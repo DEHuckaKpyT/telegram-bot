@@ -37,6 +37,8 @@ import kotlin.String
  * [getMe](https://core.telegram.org/bots/api/#getme).
  * @param hasMainWebApp *Optional*. *True*, if the bot has a main Web App. Returned only in
  * [getMe](https://core.telegram.org/bots/api/#getme).
+ * @param hasTopicsEnabled *Optional*. *True*, if the bot has forum topic mode enabled in private
+ * chats. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
  */
 public data class User(
     /**
@@ -126,4 +128,11 @@ public data class User(
     @get:JsonProperty("has_main_web_app")
     @param:JsonProperty("has_main_web_app")
     public val hasMainWebApp: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the bot has forum topic mode enabled in private chats. Returned only
+     * in [getMe](https://core.telegram.org/bots/api/#getme).
+     */
+    @get:JsonProperty("has_topics_enabled")
+    @param:JsonProperty("has_topics_enabled")
+    public val hasTopicsEnabled: Boolean? = null,
 )

@@ -18,8 +18,8 @@ import kotlin.collections.List
  * containing a video sent to a big chat), the server might automatically schedule a message instead of
  * sending it immediately. In such cases, this field will be 0 and the relevant message will be
  * unusable until it is actually sent
- * @param messageThreadId *Optional*. Unique identifier of a message thread to which the message
- * belongs; for supergroups only
+ * @param messageThreadId *Optional*. Unique identifier of a message thread or forum topic to which
+ * the message belongs; for supergroups and private chats only
  * @param directMessagesTopic *Optional*. Information about the direct messages chat topic that
  * contains the message
  * @param from *Optional*. Sender of the message; may be empty for messages sent to channels. For
@@ -42,7 +42,8 @@ import kotlin.collections.List
  * account that is independent from any potential bot chat which might share the same identifier.
  * @param chat Chat the message belongs to
  * @param forwardOrigin *Optional*. Information about the original message for forwarded messages
- * @param isTopicMessage *Optional*. *True*, if the message is sent to a forum topic
+ * @param isTopicMessage *Optional*. *True*, if the message is sent to a topic in a forum supergroup
+ * or a private chat with the bot
  * @param isAutomaticForward *Optional*. *True*, if the message is a channel post that was
  * automatically forwarded to the connected discussion group
  * @param replyToMessage *Optional*. For replies in the same chat and message thread, the original
@@ -146,6 +147,8 @@ import kotlin.collections.List
  * @param chatShared *Optional*. Service message: a chat was shared with the bot
  * @param gift *Optional*. Service message: a regular gift was sent or received
  * @param uniqueGift *Optional*. Service message: a unique gift was sent or received
+ * @param giftUpgradeSent *Optional*. Service message: upgrade of a gift was purchased after the
+ * gift was sent
  * @param connectedWebsite *Optional*. The domain name of the website on which the user has logged
  * in. [More about Telegram Login ](https://core.telegram.org/widgets/login)
  * @param writeAccessAllowed *Optional*. Service message: the user allowed the bot to write messages
@@ -202,8 +205,8 @@ public data class Message(
     @param:JsonProperty("message_id")
     override val messageId: Long,
     /**
-     * *Optional*. Unique identifier of a message thread to which the message belongs; for
-     * supergroups only
+     * *Optional*. Unique identifier of a message thread or forum topic to which the message
+     * belongs; for supergroups and private chats only
      */
     @get:JsonProperty("message_thread_id")
     @param:JsonProperty("message_thread_id")
@@ -274,7 +277,8 @@ public data class Message(
     @param:JsonProperty("forward_origin")
     public val forwardOrigin: MessageOrigin? = null,
     /**
-     * *Optional*. *True*, if the message is sent to a forum topic
+     * *Optional*. *True*, if the message is sent to a topic in a forum supergroup or a private chat
+     * with the bot
      */
     @get:JsonProperty("is_topic_message")
     @param:JsonProperty("is_topic_message")
@@ -672,6 +676,12 @@ public data class Message(
     @get:JsonProperty("unique_gift")
     @param:JsonProperty("unique_gift")
     public val uniqueGift: UniqueGiftInfo? = null,
+    /**
+     * *Optional*. Service message: upgrade of a gift was purchased after the gift was sent
+     */
+    @get:JsonProperty("gift_upgrade_sent")
+    @param:JsonProperty("gift_upgrade_sent")
+    public val giftUpgradeSent: GiftInfo? = null,
     /**
      * *Optional*. The domain name of the website on which the user has logged in. [More about
      * Telegram Login ](https://core.telegram.org/widgets/login)

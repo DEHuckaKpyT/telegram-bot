@@ -17,7 +17,6 @@ class DefaultTelegramUserSource : TelegramUserSource<DefaultTelegramUser> {
         val now = LocalDateTime.now()
 
         DefaultTelegramUser.findSingleByAndUpdate(DefaultTelegramUsers.userId eq user.id) { entity ->
-            entity.userId = user.id
             entity.username = user.username
             entity.firstName = user.firstName
             entity.lastName = user.lastName

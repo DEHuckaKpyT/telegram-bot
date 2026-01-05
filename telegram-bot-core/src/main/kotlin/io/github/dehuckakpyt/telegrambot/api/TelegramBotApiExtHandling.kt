@@ -28,8 +28,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param fromChatId Unique identifier for the chat where the original message was sent (or
      * channel username in the format `@channelusername`)
      * @param messageId Message identifier in the chat specified in *from_chat_id*
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be forwarded; required if the message is forwarded to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the forwarded video in the message
@@ -38,6 +38,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * notification with no sound.
      * @param protectContent Protects the contents of the forwarded message from forwarding and
      * saving
+     * @param messageEffectId Unique identifier of the message effect to be added to the message;
+     * only available when forwarding to private chats
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
      * suggested post to send; for direct messages chats only
      */
@@ -49,6 +51,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         videoStartTimestamp: Int? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
+        messageEffectId: String? = null,
         suggestedPostParameters: SuggestedPostParameters? = null,
     ): Message = forwardMessage(
         fromChatId = fromChatId.toString(),
@@ -58,6 +61,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         videoStartTimestamp = videoStartTimestamp,
         disableNotification = disableNotification,
         protectContent = protectContent,
+        messageEffectId = messageEffectId,
         suggestedPostParameters = suggestedPostParameters,
     )
 
@@ -71,8 +75,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * channel username in the format `@channelusername`)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat
      * *from_chat_id* to forward. The identifiers must be specified in a strictly increasing order.
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the messages
      * will be forwarded; required if the messages are forwarded to a direct messages chat
      * @param disableNotification Sends the messages
@@ -109,8 +113,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param fromChatId Unique identifier for the chat where the original message was sent (or
      * channel username in the format `@channelusername`)
      * @param messageId Message identifier in the chat specified in *from_chat_id*
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the copied video in the message
@@ -131,6 +135,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
      * balance
+     * @param messageEffectId Unique identifier of the message effect to be added to the message;
+     * only available when copying to private chats
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
      * suggested post to send; for direct messages chats only. If the message is sent as a reply to
      * another suggested post, then that suggested post is automatically declined.
@@ -153,6 +159,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
@@ -169,6 +176,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         disableNotification = disableNotification,
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
+        messageEffectId = messageEffectId,
         suggestedPostParameters = suggestedPostParameters,
         replyParameters = replyParameters,
         replyMarkup = replyMarkup,
@@ -189,8 +197,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * channel username in the format `@channelusername`)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat
      * *from_chat_id* to copy. The identifiers must be specified in a strictly increasing order.
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the messages
      * will be sent; required if the messages are sent to a direct messages chat
      * @param disableNotification Sends the messages
@@ -229,8 +237,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * ](https://core.telegram.org/bots/api/#sending-files)
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param caption Photo caption (may also be used when resending photos by *file_id*), 0-1024
@@ -313,8 +321,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * Sending Files ](https://core.telegram.org/bots/api/#sending-files)
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param caption Audio caption, 0-1024 characters after entities parsing
@@ -403,8 +411,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * ](https://core.telegram.org/bots/api/#sending-files)
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the
@@ -490,8 +498,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * Files ](https://core.telegram.org/bots/api/#sending-files)
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent video in seconds
@@ -601,8 +609,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files)
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent animation in seconds
@@ -703,8 +711,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * ](https://core.telegram.org/bots/api/#sending-files)
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param caption Voice message caption, 0-1024 characters after entities parsing
@@ -779,8 +787,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * video notes by a URL is currently unsupported
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param duration Duration of sent video in seconds
@@ -856,8 +864,8 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * and animated stickers can't be sent via an HTTP URL.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
-     * @param messageThreadId Unique identifier for the target message thread (topic) of the forum;
-     * for forum supergroups only
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message
      * will be sent; required if the message is sent to a direct messages chat
      * @param emoji Emoji associated with the sticker; only for just uploaded stickers

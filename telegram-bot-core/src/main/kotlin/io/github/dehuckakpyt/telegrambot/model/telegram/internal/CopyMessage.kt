@@ -41,6 +41,8 @@ internal data class CopyMessage(
     public val protectContent: Boolean? = null,
     @get:JsonProperty("allow_paid_broadcast")
     public val allowPaidBroadcast: Boolean? = null,
+    @get:JsonProperty("message_effect_id")
+    public val messageEffectId: String? = null,
     @get:JsonProperty("suggested_post_parameters")
     public val suggestedPostParameters: SuggestedPostParameters? = null,
     @get:JsonProperty("reply_parameters")

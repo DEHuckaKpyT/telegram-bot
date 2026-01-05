@@ -2,10 +2,9 @@ package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
 import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_MESSAGE_SOURCE
-import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
-import io.github.dehuckakpyt.telegrambot.repository.message.JpaTelegramMessageRepository
-import io.github.dehuckakpyt.telegrambot.source.message.JpaTelegramMessageSource
-import io.github.dehuckakpyt.telegrambot.source.message.MessageSource
+import io.github.dehuckakpyt.telegrambot.repository.message.DefaultTelegramMessageRepository
+import io.github.dehuckakpyt.telegrambot.source.message.DefaultTelegramMessageSource
+import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -25,13 +24,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 class TelegramMessageSourceInitializationConfig {
 
     @Bean
-    //TODO create custom @ConditionalOnMissingBean
-    @ConditionalOnMissingBean(name = ["telegramMessageSourceExpression"], parameterizedContainer = [ConfigExpression::class])
-    @ConditionalOnProperty(TELEGRAM_BOT_SOURCE_JPA_MESSAGE_SOURCE, havingValue = "true", matchIfMissing = true)
-    fun telegramMessageSourceExpression(
+    @ConditionalOnMissingBean(TelegramMessageSource::class)
+    fun telegramMessageSource(
         transactionAction: TransactionAction,
-        repository: JpaTelegramMessageRepository,
-    ): ConfigExpression<MessageSource> = ConfigExpression {
-        JpaTelegramMessageSource(transactionAction, repository)
-    }
+        repository: DefaultTelegramMessageRepository,
+    ): DefaultTelegramMessageSource = DefaultTelegramMessageSource(transactionAction, repository)
 }

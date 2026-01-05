@@ -3,9 +3,9 @@ package io.github.dehuckakpyt.telegrambot.config
 import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA
 import io.github.dehuckakpyt.telegrambot.config.constant.SourceJpaPropertiesConstant.TELEGRAM_BOT_SOURCE_JPA_CHAIN_SOURCE
 import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
-import io.github.dehuckakpyt.telegrambot.repository.chain.JpaChainRepository
+import io.github.dehuckakpyt.telegrambot.repository.chain.DatabaseChainRepository
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
-import io.github.dehuckakpyt.telegrambot.source.chain.JpaChainSource
+import io.github.dehuckakpyt.telegrambot.source.chain.DatabaseChainSource
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -30,8 +30,8 @@ class ChainSourceInitializationConfig {
     @ConditionalOnProperty(TELEGRAM_BOT_SOURCE_JPA_CHAIN_SOURCE, havingValue = "true", matchIfMissing = true)
     fun chainSourceExpression(
         transactionAction: TransactionAction,
-        repository: JpaChainRepository,
+        repository: DatabaseChainRepository,
     ): ConfigExpression<ChainSource> = ConfigExpression {
-        JpaChainSource(transactionAction, repository)
+        DatabaseChainSource(transactionAction, repository)
     }
 }

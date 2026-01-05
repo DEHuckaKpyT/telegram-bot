@@ -99,6 +99,11 @@ import kotlin.collections.List
  * interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision
  * float type are safe for storing this identifier.
  * @param location *Optional*. For supergroups, the location to which the supergroup is connected
+ * @param rating *Optional*. For private chats, the rating of the user if any
+ * @param uniqueGiftColors *Optional*. The color scheme based on a unique gift that must be used for
+ * the chat's name, message replies and link previews
+ * @param paidMessageStarCount *Optional*. The number of Telegram Stars a general user have to pay
+ * to send a message to the chat
  */
 public data class ChatFullInfo(
     /**
@@ -414,4 +419,24 @@ public data class ChatFullInfo(
     @get:JsonProperty("location")
     @param:JsonProperty("location")
     public val location: ChatLocation? = null,
+    /**
+     * *Optional*. For private chats, the rating of the user if any
+     */
+    @get:JsonProperty("rating")
+    @param:JsonProperty("rating")
+    public val rating: UserRating? = null,
+    /**
+     * *Optional*. The color scheme based on a unique gift that must be used for the chat's name,
+     * message replies and link previews
+     */
+    @get:JsonProperty("unique_gift_colors")
+    @param:JsonProperty("unique_gift_colors")
+    public val uniqueGiftColors: UniqueGiftColors? = null,
+    /**
+     * *Optional*. The number of Telegram Stars a general user have to pay to send a message to the
+     * chat
+     */
+    @get:JsonProperty("paid_message_star_count")
+    @param:JsonProperty("paid_message_star_count")
+    public val paidMessageStarCount: Int? = null,
 )

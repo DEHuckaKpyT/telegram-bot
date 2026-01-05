@@ -15,7 +15,7 @@ import kotlin.collections.List
  * @param id Unique identifier of the task; must be positive and unique among all task identifiers
  * currently present in the checklist
  * @param text Text of the task; 1-100 characters after entities parsing
- * @param parseMode Optional. Mode for parsing entities in the text. See [formatting
+ * @param parseMode *Optional*. Mode for parsing entities in the text. See [formatting
  * options](https://core.telegram.org/bots/api#formatting-options) for more details.
  * @param textEntities *Optional*. List of special entities that appear in the text, which can be
  * specified instead of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*,
@@ -36,7 +36,7 @@ public data class InputChecklistTask(
     @param:JsonProperty("text")
     public val text: String,
     /**
-     * Optional. Mode for parsing entities in the text. See [formatting
+     * *Optional*. Mode for parsing entities in the text. See [formatting
      * options](https://core.telegram.org/bots/api#formatting-options) for more details.
      */
     @get:JsonProperty("parse_mode")
