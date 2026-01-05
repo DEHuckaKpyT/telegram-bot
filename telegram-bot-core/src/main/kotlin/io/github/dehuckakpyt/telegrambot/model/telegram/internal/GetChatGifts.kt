@@ -1,0 +1,34 @@
+package io.github.dehuckakpyt.telegrambot.model.telegram.`internal`
+
+import com.fasterxml.jackson.`annotation`.JsonProperty
+import kotlin.Boolean
+import kotlin.Int
+import kotlin.String
+
+/**
+ * @author KScript
+ */
+internal data class GetChatGifts(
+    @get:JsonProperty("chat_id")
+    public val chatId: String,
+    @get:JsonProperty("exclude_unsaved")
+    public val excludeUnsaved: Boolean? = null,
+    @get:JsonProperty("exclude_saved")
+    public val excludeSaved: Boolean? = null,
+    @get:JsonProperty("exclude_unlimited")
+    public val excludeUnlimited: Boolean? = null,
+    @get:JsonProperty("exclude_limited_upgradable")
+    public val excludeLimitedUpgradable: Boolean? = null,
+    @get:JsonProperty("exclude_limited_non_upgradable")
+    public val excludeLimitedNonUpgradable: Boolean? = null,
+    @get:JsonProperty("exclude_from_blockchain")
+    public val excludeFromBlockchain: Boolean? = null,
+    @get:JsonProperty("exclude_unique")
+    public val excludeUnique: Boolean? = null,
+    @get:JsonProperty("sort_by_price")
+    public val sortByPrice: Boolean? = null,
+    @get:JsonProperty("offset")
+    public val offset: String? = null,
+    @get:JsonProperty("limit")
+    public val limit: Int? = null,
+)
