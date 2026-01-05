@@ -2,9 +2,9 @@ package io.github.dehuckakpyt.telegrambot.handling
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
+import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.telegram.*
 import io.github.dehuckakpyt.telegrambot.resolver.EventUpdateResolver
-import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 
 
@@ -22,7 +22,7 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
 class BotUpdateHandling internal constructor(
     public val bot: TelegramBot,
     private val resolver: EventUpdateResolver,
-    private val chainSource: ChainSource,
+    private val chainManager: ChainManager,
     templater: Templater,
     buttonFactory: ButtonFactory,
 ) : Templater by templater,
@@ -105,12 +105,10 @@ class BotUpdateHandling internal constructor(
      *
      * @param userId which user in chat to set step (in private chats equals to chatId)
      * @param step name of the next step for selected dialog
-     * @param content stringified object for transfer (defaults json from JsonContentConverter)
-     *
-     * @see io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
+     * @param instance instance of any class for transfer
      */
-    suspend fun next(userId: Long, step: String?, content: String? = null): Unit {
-        chainSource.save(userId, userId, step, content)
+    suspend fun next(userId: Long, step: String?, instance: Any? = null): Unit {
+        chainManager.setNextStep(userId, userId, step, instance)
     }
 
     /**
@@ -119,11 +117,9 @@ class BotUpdateHandling internal constructor(
      * @param chatId which chat to set step
      * @param userId which user in chat to set step (in private chats equals to chatId)
      * @param step name of the next step for selected dialog
-     * @param content stringified object for transfer (defaults json from JsonContentConverter)
-     *
-     * @see io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
+     * @param instance instance of any class for transfer
      */
-    suspend fun next(chatId: Long, userId: Long, step: String?, content: String? = null): Unit {
-        chainSource.save(chatId, userId, step, content)
+    suspend fun next(chatId: Long, userId: Long, step: String?, instance: Any? = null): Unit {
+        chainManager.setNextStep(chatId, userId, step, instance)
     }
 }

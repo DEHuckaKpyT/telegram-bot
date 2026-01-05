@@ -5,12 +5,9 @@ import io.github.dehuckakpyt.telegrambot.container.GeneralContainer
 import io.github.dehuckakpyt.telegrambot.container.message.CommandContainer
 import io.github.dehuckakpyt.telegrambot.container.message.MessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
-import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
-import io.github.dehuckakpyt.telegrambot.converter.toContentOrNull
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.container.chatId
-import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
-import kotlin.collections.set
+import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import kotlin.reflect.KClass
 
 
@@ -25,9 +22,8 @@ import kotlin.reflect.KClass
  */
 internal class ChainResolver(
     private val callbackSerializer: CallbackSerializer,
-    private val chainSource: ChainSource,
     private val chainExceptionHandler: ChainExceptionHandler,
-    private val contentConverter: ContentConverter,
+    private val chainManager: ChainManager,
 ) {
 
     private val actionByCommand: MutableMap<String, suspend CommandContainer.() -> Unit> = hashMapOf()
@@ -147,15 +143,6 @@ internal class ChainResolver(
      * Will be saved name of the next step and transferred object.
      */
     private suspend fun GeneralContainer.saveNextStepInChain() {
-        chainSource.save(chatId, from.id, nextStep, nextStepInstance.toContent())
+        chainManager.setNextStep(chatId, from.id, nextStep, nextStepInstance)
     }
-
-    /**
-     * Convert transferred object to string.
-     *
-     * @return stringified object (defaults json from JsonContentConverter)
-     *
-     * @see io.github.dehuckakpyt.telegrambot.converter.JsonContentConverter
-     */
-    private fun Any?.toContent(): String? = contentConverter.toContentOrNull(this)
 }

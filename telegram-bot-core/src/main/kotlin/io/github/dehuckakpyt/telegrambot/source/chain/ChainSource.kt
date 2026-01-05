@@ -1,18 +1,17 @@
 package io.github.dehuckakpyt.telegrambot.source.chain
 
 import io.github.dehuckakpyt.telegrambot.model.source.Chain
+import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 
 
 /**
- * Created on 20.07.2023.
- *
  * Interface for saving the state of the dialog between the user and the bot.
  * Dialogs are separated by chat and by the user who wrote the message.
  *
  * This means that one user will have different dialogs in different chats.
  * And it means that in a group chat each user will have a different dialog.
  *
- * IMPORTANT: If update without from.id, it will be ignored in any dialogs (BotHandling).
+ * IMPORTANT: If [Update.message] without from.id, it will be ignored in any dialogs (BotHandling).
  *
  * @author Denis Matytsin
  */

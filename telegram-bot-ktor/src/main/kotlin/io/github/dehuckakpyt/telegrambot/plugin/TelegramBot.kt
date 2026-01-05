@@ -56,6 +56,7 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     koin.declare(context.telegramUserSource)
     koin.declare<ChainSource>(context.chainSource)
     koin.declare<CallbackContentSource>(context.callbackContentSource)
+    koin.declare(context.chainManager)
 
     koin.getAll<BotHandler>()
     koin.getAll<BotUpdateHandler>()

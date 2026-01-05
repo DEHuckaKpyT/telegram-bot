@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
@@ -41,4 +42,5 @@ internal class TelegramBotContextImpl : TelegramBotContext {
     override lateinit var telegramChatSource: TelegramChatSource<out TelegramChat>
     override lateinit var callbackContentSource: CallbackContentSource
     override lateinit var chainSource: ChainSource
+    override lateinit var chainManager: ChainManager
 }

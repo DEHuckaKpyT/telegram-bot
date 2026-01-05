@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
@@ -72,4 +73,7 @@ interface TelegramBotContext {
 
     /** Interface for saving long callback data. */
     val callbackContentSource: CallbackContentSource
+
+    /** Class for managing chain steps. */
+    val chainManager: ChainManager
 }

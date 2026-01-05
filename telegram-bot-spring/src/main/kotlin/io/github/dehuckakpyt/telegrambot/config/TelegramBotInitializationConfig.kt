@@ -10,6 +10,7 @@ import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
@@ -122,6 +123,9 @@ class TelegramBotInitializationConfig(
 
     @Bean
     fun callbackContentSource(): CallbackContentSource = botContext.callbackContentSource
+
+    @Bean
+    fun chainManager(): ChainManager = botContext.chainManager
 
     @Bean(autowireCandidate = false)
     fun botHandling(): BotHandling = botContext.botHandling
