@@ -1,5 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model.source
 
+import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMember
 import java.time.LocalDateTime
 
 
@@ -9,24 +11,27 @@ import java.time.LocalDateTime
  *
  * @author Denis Matytsin
  */
-interface TelegramChatStatusEvent {
+interface TelegramChatStatusEvent<IdT : Any> {
 
-    /** Unique identifier for chat (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.id]). */
+    /** Unique internal identifier. */
+    val id: IdT
+
+    /** Unique identifier for chat (from [Chat.id]). */
     val chatId: Long
 
-    /** Title, for supergroups, channels and group chats (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.title]). */
+    /** Title, for supergroups, channels and group chats (from [Chat.title]). */
     val title: String?
 
-    /** Username, for private chats, supergroups and channels if available (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.username]). */
+    /** Username, for private chats, supergroups and channels if available (from [Chat.username]). */
     val username: String?
 
-    /** First name of the other party in a private chat (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.firstName]). */
+    /** First name of the other party in a private chat (from [Chat.firstName]). */
     val firstName: String?
 
-    /** Last name of the other party in a private chat (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.lastName]). */
+    /** Last name of the other party in a private chat (from [Chat.lastName]). */
     val lastName: String?
 
-    /** The member's status in the chat (from [io.github.dehuckakpyt.telegrambot.model.telegram.ChatMember.status]). */
+    /** The member's status in the chat (from [ChatMember.status]). */
     val status: String
 
     /** Date/time when status was changed. */

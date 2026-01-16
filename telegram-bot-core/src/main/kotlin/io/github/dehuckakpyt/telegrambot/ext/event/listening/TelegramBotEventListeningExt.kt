@@ -18,7 +18,7 @@ public object After
 
 public class AfterMethod(internal val methodName: String)
 
-internal fun TelegramBotEventListening.defaults(telegramMessageSource: TelegramMessageSource<out TelegramMessage>) {
+internal fun TelegramBotEventListening.defaults(telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>) {
     after method "sendMessage" called { args ->
         val text: String by args
         val returnedValue: Message by args

@@ -7,7 +7,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMemberUpdated
 /**
  * @author Denis Matytsin
  */
-public interface TelegramChatStatusEventSource<EntityT : TelegramChatStatusEvent> {
+public interface TelegramChatStatusEventSource<EntityT : TelegramChatStatusEvent<out Any>> {
 
     public suspend fun save(chatMemberUpdated: ChatMemberUpdated): Unit
 

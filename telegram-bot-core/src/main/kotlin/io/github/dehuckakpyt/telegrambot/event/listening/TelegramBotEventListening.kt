@@ -15,7 +15,7 @@ import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
  */
 public class TelegramBotEventListening internal constructor(
     private val manager: TelegramBotEventManager,
-    telegramMessageSource: TelegramMessageSource<out TelegramMessage>,
+    telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>,
     preventDefaults: Boolean,
 ) {
 

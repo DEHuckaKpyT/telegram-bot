@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMemberUpdated
 import io.github.dehuckakpyt.telegrambot.repository.chatevent.BaseTelegramChatStatusEventRepository
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
+import jakarta.persistence.EntityManager
 import java.time.LocalDateTime
 
 
@@ -17,6 +18,7 @@ abstract class BaseTelegramChatStatusEventSource<EntityT : BaseTelegramChatStatu
 
     protected abstract val transactional: TransactionAction
     protected abstract val repository: BaseTelegramChatStatusEventRepository<EntityT>
+    protected abstract val entityManager: EntityManager
 
     protected val entityClass: Class<EntityT> = this::class.firstGenericClass()
     private val createChatStatusEventHandle = entityClass.getHandleOfEmptyDeclaredConstructor()

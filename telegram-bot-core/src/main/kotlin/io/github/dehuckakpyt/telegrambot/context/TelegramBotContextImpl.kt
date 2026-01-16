@@ -22,9 +22,6 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
 
 
 /**
- * Created on 27.12.2023.
- *<p>
- *
  * @author Denis Matytsin
  */
 internal class TelegramBotContextImpl : TelegramBotContext {
@@ -37,9 +34,10 @@ internal class TelegramBotContextImpl : TelegramBotContext {
     override lateinit var buttonFactory: ButtonFactory
     override lateinit var inputFactory: InputFactory
     override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>
-    override lateinit var telegramMessageSource: TelegramMessageSource<out TelegramMessage>
-    override lateinit var telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>
-    override lateinit var telegramChatSource: TelegramChatSource<out TelegramChat>
+    override lateinit var telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>
+    override lateinit var telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>
+    override lateinit var telegramChatSource: TelegramChatSource<out TelegramChat<out Any>>
     override lateinit var callbackContentSource: CallbackContentSource
     override lateinit var chainSource: ChainSource
+    override lateinit var chainManager: ChainManager
 }

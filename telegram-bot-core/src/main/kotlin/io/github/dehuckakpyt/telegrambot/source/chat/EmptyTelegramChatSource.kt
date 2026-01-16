@@ -7,6 +7,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
 /**
  * @author Denis Matytsin
  */
-internal class EmptyTelegramChatSource : TelegramChatSource<TelegramChat> {
+internal class EmptyTelegramChatSource : TelegramChatSource<TelegramChat<out Any>> {
     override suspend fun save(chat: Chat, available: Boolean): Unit {}
 }

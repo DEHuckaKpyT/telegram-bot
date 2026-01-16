@@ -11,7 +11,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Message
  *
  * @author Denis Matytsin
  */
-internal class EmptyTelegramMessageSource : TelegramMessageSource<TelegramMessage> {
+internal class EmptyTelegramMessageSource : TelegramMessageSource<TelegramMessage<out Any>> {
     override suspend fun save(message: Message, fromBot: Boolean, type: String, step: String?, stepContainerType: String?, text: String?, fileIds: List<String>?) {}
     override suspend fun save(message: Message, fromBot: Boolean, type: String, text: String?, fileIds: List<String>?) {}
 }

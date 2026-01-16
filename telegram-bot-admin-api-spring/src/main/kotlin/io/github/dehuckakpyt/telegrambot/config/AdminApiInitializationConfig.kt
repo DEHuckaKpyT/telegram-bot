@@ -1,10 +1,13 @@
 package io.github.dehuckakpyt.telegrambot.config
 
+import io.github.dehuckakpyt.telegrambot.controller.admin.message.TelegramMessageAdminController
 import io.github.dehuckakpyt.telegrambot.controller.admin.user.TelegramUserAdminController
 import io.github.dehuckakpyt.telegrambot.manager.access.admin.AdminUIAccessManager
-import io.github.dehuckakpyt.telegrambot.mapper.controller.admin.user.TelegramUserAdminMapperImpl
+import io.github.dehuckakpyt.telegrambot.mapper.controller.admin.message.TelegramMessageAdminMapper
+import io.github.dehuckakpyt.telegrambot.mapper.controller.admin.user.TelegramUserAdminMapper
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.data.web.ReactivePageableHandlerMethodArgumentResolver
@@ -18,9 +21,10 @@ import org.springframework.web.reactive.result.method.HandlerMethodArgumentResol
  */
 @Configuration
 @Import(value = [
+    TelegramMessageAdminController::class,
     TelegramUserAdminController::class,
-    TelegramUserAdminMapperImpl::class,
 ])
+@ComponentScan(basePackageClasses = [TelegramUserAdminMapper::class, TelegramMessageAdminMapper::class])
 class AdminApiInitializationConfig {
 
     /** Default resolver for Pageable in controller. */

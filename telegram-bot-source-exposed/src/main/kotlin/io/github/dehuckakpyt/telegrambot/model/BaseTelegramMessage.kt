@@ -30,7 +30,7 @@ open class BaseTelegramMessages : UUIDTable("telegram_message") {
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
-open class BaseTelegramMessage(id: EntityID<UUID>, table: BaseTelegramMessages) : UUIDEntity(id), TelegramMessage {
+open class BaseTelegramMessage(id: EntityID<UUID>, table: BaseTelegramMessages) : UUIDEntity(id), TelegramMessage<EntityID<UUID>> {
 
     override var chatId by table.chatId
     override var fromId by table.fromId

@@ -1,50 +1,46 @@
-package io.github.dehuckakpyt.telegrambot.model.source
+package io.github.dehuckakpyt.telegrambot.controller.admin.message.dto
 
 import io.github.dehuckakpyt.telegrambot.TelegramBotImpl
 import io.github.dehuckakpyt.telegrambot.container.Container
 import io.github.dehuckakpyt.telegrambot.model.telegram.Message
 import java.time.LocalDateTime
+import java.util.*
 
 
 /**
- * Created on 21.08.2023.
- *
- * Model of the info about sent or received message.
- *
  * @author Denis Matytsin
  */
-interface TelegramMessage<IdT : Any> {
+data class TelegramMessageAdminDto(
 
-    /** Unique internal identifier. */
-    val id: IdT
+    val id: UUID,
 
     /** Which chat was sent message (from [Message.chat]). */
-    val chatId: Long
+    val chatId: Long,
 
     /** Who was sent message (from [Message.from]). */
-    val fromId: Long?
+    val fromId: Long?,
 
     /** True if bot sent message. */
-    val fromBot: Boolean
+    val fromBot: Boolean,
 
     /** Message id (from [Message.messageId]). */
-    val messageId: Long
+    val messageId: Long,
 
     /** Type of the message (like 'TEXT', 'PHOTO', 'AUDIO') (can find all in [TelegramBotImpl]). */
-    val type: String
+    val type: String,
 
     /** The step when the message saving (from [Container]). */
-    val step: String?
+    val step: String?,
 
     /** Type of the container, which process user message (from [Container]). */
-    val stepContainerType: String?
+    val stepContainerType: String?,
 
     /** Content of the message. */
-    val text: String?
+    val text: String?,
 
     /** File ids which are sent. */
-    val fileIds: List<String>?
+    val fileIds: List<String>?,
 
     /** Date/time when message was sent. */
-    val createdAt: LocalDateTime
-}
+    val createdAt: LocalDateTime,
+)

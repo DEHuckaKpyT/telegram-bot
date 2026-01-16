@@ -27,7 +27,7 @@ open class BaseTelegramUsers(name: String = "telegram_user") : UUIDTable(name) {
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }
 
-open class BaseTelegramUser(id: EntityID<UUID>, table: BaseTelegramUsers) : UUIDEntity(id), TelegramUser {
+open class BaseTelegramUser(id: EntityID<UUID>, table: BaseTelegramUsers) : UUIDEntity(id), TelegramUser<EntityID<UUID>> {
 
     override var userId by table.userId
     override var username by table.username

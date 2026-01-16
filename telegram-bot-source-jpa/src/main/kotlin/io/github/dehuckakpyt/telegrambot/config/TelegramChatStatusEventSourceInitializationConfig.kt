@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.repository.chatevent.DefaultTelegramCha
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.source.chatevent.DefaultTelegramChatStatusEventSource
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
+import jakarta.persistence.EntityManager
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -28,5 +29,6 @@ class TelegramChatStatusEventSourceInitializationConfig {
     fun telegramChatStatusEventSource(
         transactionAction: TransactionAction,
         repository: DefaultTelegramChatStatusEventRepository,
-    ): DefaultTelegramChatStatusEventSource = DefaultTelegramChatStatusEventSource(transactionAction, repository)
+        entityManager: EntityManager,
+    ): DefaultTelegramChatStatusEventSource = DefaultTelegramChatStatusEventSource(transactionAction, repository, entityManager)
 }

@@ -5,13 +5,14 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
 import java.time.LocalDateTime
+import java.util.*
 
 
 /**
  * @author Denis Matytsin
  */
 @MappedSuperclass
-class BaseTelegramChat : UUIDTable(), TelegramChat {
+class BaseTelegramChat : UUIDTable(), TelegramChat<UUID> {
 
     @Column(nullable = false, unique = true)
     override var chatId: Long = 0

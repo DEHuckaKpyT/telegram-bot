@@ -7,13 +7,14 @@ import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
+import java.util.*
 
 
 /**
  * @author Denis Matytsin
  */
 @MappedSuperclass
-class BaseTelegramMessage : UUIDTable(), TelegramMessage {
+class BaseTelegramMessage : UUIDTable(), TelegramMessage<UUID> {
 
     @Column(nullable = false)
     override var chatId: Long = 0

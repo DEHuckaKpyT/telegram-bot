@@ -22,8 +22,6 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
 
 
 /**
- * Created on 27.12.2023.
- *
  * Isolated context for telegram bot instance.
  *
  * Isolated means that you can create few contexts and use them independently of each other.
@@ -60,13 +58,13 @@ interface TelegramBotContext {
     val telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>
 
     /** Interface for saving messages. */
-    val telegramMessageSource: TelegramMessageSource<out TelegramMessage>
+    val telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>
 
     /** Interface for saving chat events. */
-    val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>
+    val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>
 
     /** Interface for saving chats. */
-    val telegramChatSource: TelegramChatSource<out TelegramChat>
+    val telegramChatSource: TelegramChatSource<out TelegramChat<out Any>>
 
     /** Interface for saving the state of the dialog between the user and the bot. */
     val chainSource: ChainSource

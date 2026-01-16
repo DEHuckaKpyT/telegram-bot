@@ -5,13 +5,14 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
 import java.time.LocalDateTime
+import java.util.*
 
 
 /**
  * @author Denis Matytsin
  */
 @MappedSuperclass
-class BaseTelegramChatStatusEvent : UUIDTable(), TelegramChatStatusEvent {
+class BaseTelegramChatStatusEvent : UUIDTable(), TelegramChatStatusEvent<UUID> {
 
     @Column(nullable = false)
     override var chatId: Long = 0

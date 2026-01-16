@@ -39,10 +39,10 @@ data class UpdateReceiverConfig(
     var telegramUserSource: (TelegramBotActualConfig.() -> TelegramUserSource<out TelegramUser<out Any>>)? = null,
 
     /** Source for saving chats (except private) */
-    var telegramChatSource: (TelegramBotActualConfig.() -> TelegramChatSource<out TelegramChat>)? = null,
+    var telegramChatSource: (TelegramBotActualConfig.() -> TelegramChatSource<out TelegramChat<out Any>>)? = null,
 
     /** Source for saving all changes of bot`s status in all chats */
-    var telegramChatStatusEventSource: (TelegramBotActualConfig.() -> TelegramChatStatusEventSource<out TelegramChatStatusEvent>)? = null,
+    var telegramChatStatusEventSource: (TelegramBotActualConfig.() -> TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>)? = null,
 
     /** Converter from object to string and back */
     var contentConverter: (TelegramBotActualConfig.() -> ContentConverter)? = null,

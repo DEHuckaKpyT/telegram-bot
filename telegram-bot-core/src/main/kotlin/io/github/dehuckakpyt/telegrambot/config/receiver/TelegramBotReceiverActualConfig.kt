@@ -28,8 +28,8 @@ interface TelegramBotReceiverActualConfig {
     val callbackContentSource: CallbackContentSource
     val chainSource: ChainSource
     val telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>
-    val telegramChatSource: TelegramChatSource<out TelegramChat>
-    val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>
+    val telegramChatSource: TelegramChatSource<out TelegramChat<out Any>>
+    val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>
     val contentConverter: ContentConverter
     val callbackSerializer: CallbackSerializer
     val chainManager: ChainManager

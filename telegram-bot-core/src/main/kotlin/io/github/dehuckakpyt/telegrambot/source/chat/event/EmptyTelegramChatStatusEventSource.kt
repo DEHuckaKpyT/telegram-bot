@@ -7,6 +7,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMemberUpdated
 /**
  * @author Denis Matytsin
  */
-internal class EmptyTelegramChatStatusEventSource : TelegramChatStatusEventSource<TelegramChatStatusEvent> {
+internal class EmptyTelegramChatStatusEventSource : TelegramChatStatusEventSource<TelegramChatStatusEvent<out Any>> {
     override suspend fun save(chatMemberUpdated: ChatMemberUpdated): Unit {}
 }

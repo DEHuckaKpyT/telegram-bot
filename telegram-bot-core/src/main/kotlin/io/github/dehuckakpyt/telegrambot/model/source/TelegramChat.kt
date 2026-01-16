@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.model.source
 
+import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
 import java.time.LocalDateTime
 
 
@@ -10,18 +11,21 @@ import java.time.LocalDateTime
  *
  * @author Denis Matytsin
  */
-interface TelegramChat {
+interface TelegramChat<IdT : Any> {
 
-    /** Unique identifier for this chat (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.id]). */
+    /** Unique internal identifier. */
+    public val id: IdT
+
+    /** Unique identifier for this chat (from [Chat.id]). */
     public val chatId: Long
 
-    /** Type of the chat, can be either “group”, “supergroup” or “channel” (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.type]). */
+    /** Type of the chat, can be either “group”, “supergroup” or “channel” (from [Chat.type]). */
     public val type: String
 
-    /** Title, for supergroups, channels and group chats (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.title]). */
+    /** Title, for supergroups, channels and group chats (from [Chat.title]). */
     public val title: String?
 
-    /** Username, for supergroups and channels if available (from [io.github.dehuckakpyt.telegrambot.model.telegram.Chat.username]). */
+    /** Username, for supergroups and channels if available (from [Chat.username]). */
     public val username: String?
 
     /** False if bot was kicked from chat. True if bot can send messages to chat. */

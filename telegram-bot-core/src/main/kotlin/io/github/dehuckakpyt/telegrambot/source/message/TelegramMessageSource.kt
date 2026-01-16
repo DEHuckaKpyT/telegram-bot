@@ -18,7 +18,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Message
  *
  * @author Denis Matytsin
  */
-interface TelegramMessageSource<EntityT : TelegramMessage> {
+interface TelegramMessageSource<EntityT : TelegramMessage<out Any>> {
 
     /**
      * Save message.

@@ -5,8 +5,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.User
 
 
 /**
- * Created on 01.05.2024.
- *
  * @author Denis Matytsin
  */
 interface Container {

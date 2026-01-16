@@ -43,10 +43,10 @@ internal class DialogUpdateResolver(
     private val exceptionHandler: ExceptionHandler,
     private val chainExceptionHandler: ChainExceptionHandler,
     private val messageArgumentFactories: List<MessageContainerFactory>,
-    private val telegramMessageSource: TelegramMessageSource<out TelegramMessage>,
-    private val telegramUserSource: TelegramUserSource<out TelegramUser>,
-    private val telegramChatSource: TelegramChatSource<out TelegramChat>,
-    private val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>,
+    private val telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>,
+    private val telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>,
+    private val telegramChatSource: TelegramChatSource<out TelegramChat<out Any>>,
+    private val telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>,
     private val username: String,
 ) {
     private val logger = LoggerFactory.getLogger(DialogUpdateResolver::class.java)

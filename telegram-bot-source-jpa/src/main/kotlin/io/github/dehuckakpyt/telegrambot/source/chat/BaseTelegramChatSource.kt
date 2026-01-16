@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.model.chat.BaseTelegramChat
 import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
 import io.github.dehuckakpyt.telegrambot.repository.chat.BaseTelegramChatRepository
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
+import jakarta.persistence.EntityManager
 import java.time.LocalDateTime
 
 
@@ -16,6 +17,7 @@ abstract class BaseTelegramChatSource<EntityT : BaseTelegramChat> : TelegramChat
 
     protected abstract val transactional: TransactionAction
     protected abstract val repository: BaseTelegramChatRepository<EntityT>
+    protected abstract val entityManager: EntityManager
 
     protected val entityClass: Class<EntityT> = this::class.firstGenericClass()
     private val createChat: (chatId: Long, createdAt: LocalDateTime) -> EntityT

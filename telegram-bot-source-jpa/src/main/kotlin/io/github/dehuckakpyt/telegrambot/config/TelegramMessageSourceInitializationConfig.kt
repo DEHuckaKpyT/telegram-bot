@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.repository.message.DefaultTelegramMessa
 import io.github.dehuckakpyt.telegrambot.source.message.DefaultTelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
+import jakarta.persistence.EntityManager
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -28,5 +29,6 @@ class TelegramMessageSourceInitializationConfig {
     fun telegramMessageSource(
         transactionAction: TransactionAction,
         repository: DefaultTelegramMessageRepository,
-    ): DefaultTelegramMessageSource = DefaultTelegramMessageSource(transactionAction, repository)
+        entityManager: EntityManager,
+    ): DefaultTelegramMessageSource = DefaultTelegramMessageSource(transactionAction, repository, entityManager)
 }

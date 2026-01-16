@@ -27,5 +27,5 @@ fun CallbackContentSource.Companion.inMemory(
 val ChainSource.Companion.inMemory: ChainSource
     get() = InMemoryChainSource()
 
-val TelegramMessageSource.Companion.empty: TelegramMessageSource<out TelegramMessage>
+val TelegramMessageSource.Companion.empty: TelegramMessageSource<out TelegramMessage<out Any>>
     get() = EmptyTelegramMessageSource()

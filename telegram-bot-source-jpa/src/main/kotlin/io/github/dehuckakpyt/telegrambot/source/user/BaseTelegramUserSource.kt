@@ -8,7 +8,6 @@ import io.github.dehuckakpyt.telegrambot.model.user.BaseTelegramUser
 import io.github.dehuckakpyt.telegrambot.repository.user.BaseTelegramUserRepository
 import io.github.dehuckakpyt.telegrambot.source.user.argument.FilterTelegramUserArgument
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
-import org.springframework.transaction.annotation.Isolation.REPEATABLE_READ
 import jakarta.persistence.EntityManager
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.domain.Page
@@ -17,6 +16,7 @@ import org.springframework.data.domain.Slice
 import org.springframework.data.domain.SliceImpl
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.transaction.annotation.Isolation.REPEATABLE_READ
 import java.time.LocalDateTime
 import java.util.*
 
@@ -77,15 +77,15 @@ abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser> : TelegramUser
         repository.findAll(arg.toSpecification(), pageable)
     }
 
-    override suspend fun slice(arg: FilterTelegramUserArgument, pageable: Pageable): Slice<EntityT> {
+    override suspend fun slice(arg: FilterTelegramUserArgument, pageable: Pageable): Slice<EntityT> = transactional(readOnly = true) {
         // TODO move to utilities parts of code
         val criteriaBuilder = entityManager.criteriaBuilder
         val criteriaQuery = criteriaBuilder.createQuery(entityClass)
         val root = criteriaQuery.from(entityClass)
 
         arg.toSpecification()
-            .toPredicate(root, criteriaQuery, criteriaBuilder)
-            .let(criteriaQuery::where)
+            ?.toPredicate(root, criteriaQuery, criteriaBuilder)
+            ?.let(criteriaQuery::where)
 
         // sort from Pageable
         if (pageable.sort.isSorted) {
@@ -106,14 +106,14 @@ abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser> : TelegramUser
             resultList = resultList.dropLast(1)
         }
 
-        return SliceImpl(resultList, pageable, hasNext)
+        SliceImpl(resultList, pageable, hasNext)
     }
 
     override suspend fun count(arg: FilterTelegramUserArgument): Long = transactional(readOnly = true) {
         repository.count(arg.toSpecification())
     }
 
-    protected fun FilterTelegramUserArgument.toSpecification(): Specification<EntityT> = Specification { root, _, builder ->
+    protected fun FilterTelegramUserArgument.toSpecification(): Specification<EntityT>? = Specification { root, _, builder ->
         val predicates = mutableListOf<Predicate>()
 
         userIdsIn?.let { predicates += root.get<Long>("userId").`in`(it) }
@@ -127,6 +127,7 @@ abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser> : TelegramUser
             )
         }
 
-        builder.and(*predicates.toTypedArray())
+        if (predicates.isNotEmpty()) builder.and(*predicates.toTypedArray())
+        else null
     }
 }

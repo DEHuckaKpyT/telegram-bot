@@ -46,7 +46,7 @@ class TelegramBotConfig {
     var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null
 
     /** Source for saving messages */
-    var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage>)? = null
+    var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage<out Any>>)? = null
 
     /** Templater for build message templates */
     var templater: (TelegramBotActualConfig.() -> Templater)? = null

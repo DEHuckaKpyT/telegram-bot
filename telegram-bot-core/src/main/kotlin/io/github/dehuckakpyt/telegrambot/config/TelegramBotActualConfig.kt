@@ -19,7 +19,7 @@ interface TelegramBotActualConfig {
     val token: String
     val username: String?
     val clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)?
-    val telegramMessageSource: TelegramMessageSource<out TelegramMessage>
+    val telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>
     val telegramBot: TelegramBot
     val templater: Templater
     val receiving: TelegramBotReceiverActualConfig

@@ -7,7 +7,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
 /**
  * @author Denis Matytsin
  */
-interface TelegramChatSource<EntityT : TelegramChat> {
+interface TelegramChatSource<EntityT : TelegramChat<out Any>> {
 
     public suspend fun save(chat: Chat, available: Boolean = true): Unit
 

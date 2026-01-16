@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.controller.admin.user.dto
 
+import io.github.dehuckakpyt.telegrambot.model.telegram.User
 import java.time.LocalDateTime
 import java.util.*
 
@@ -11,19 +12,19 @@ data class TelegramUserAdminListDto(
 
     public val id: UUID,
 
-    /** Unique identifier for user (from [io.github.dehuckakpyt.telegrambot.model.telegram.User.id]). */
+    /** Unique identifier for user (from [User.id]). */
     public val userId: Long,
 
-    /** User's username (from [io.github.dehuckakpyt.telegrambot.model.telegram.User.username]). */
+    /** User's username (from [User.username]). */
     public val username: String?,
 
-    /** User's first name (from [io.github.dehuckakpyt.telegrambot.model.telegram.User.firstName]). */
+    /** User's first name (from [User.firstName]). */
     public val firstName: String,
 
-    /** User's last name (from [io.github.dehuckakpyt.telegrambot.model.telegram.User.lastName]). */
+    /** User's last name (from [User.lastName]). */
     public val lastName: String?,
 
-    /** [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) of the user's language (from [io.github.dehuckakpyt.telegrambot.model.telegram.User.languageCode]). */
+    /** [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) of the user's language (from [User.languageCode]). */
     public val languageCode: String?,
 
     /** False if user blocked this bot. True if bot can send messages to user. */

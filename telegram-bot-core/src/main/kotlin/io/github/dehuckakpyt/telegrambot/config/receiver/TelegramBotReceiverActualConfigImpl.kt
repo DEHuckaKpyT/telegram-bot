@@ -28,8 +28,8 @@ internal class TelegramBotReceiverActualConfigImpl : TelegramBotReceiverActualCo
     override lateinit var callbackContentSource: CallbackContentSource
     override lateinit var chainSource: ChainSource
     override lateinit var telegramUserSource: TelegramUserSource<out TelegramUser<out Any>>
-    override lateinit var telegramChatSource: TelegramChatSource<out TelegramChat>
-    override lateinit var telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent>
+    override lateinit var telegramChatSource: TelegramChatSource<out TelegramChat<out Any>>
+    override lateinit var telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>
     override lateinit var contentConverter: ContentConverter
     override lateinit var callbackSerializer: CallbackSerializer
     override lateinit var chainManager: ChainManager

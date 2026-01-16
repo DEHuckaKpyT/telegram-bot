@@ -8,4 +8,4 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
  *
  * @author Denis Matytsin
  */
-val TelegramMessage.fileId: String? get() = if (fileIds.isNullOrEmpty()) null else fileIds?.get(0)
+val TelegramMessage<out Any>.fileId: String? get() = if (fileIds.isNullOrEmpty()) null else fileIds?.get(0)
