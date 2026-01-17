@@ -79,7 +79,7 @@ import com.dehucka.example.repository.TelegramUserRepository
 class TelegramUserService(
     override val transactional: TransactionAction,
     override val repository: TelegramUserRepository,
-) : BaseTelegramUserSource<TelegramUser>() {
+) : BaseTelegramUserSource<TelegramUser, SimpleFilterTelegramUserArgument>() {
 
     // your any methods
     suspend fun setPhone(userId: Long, phone: String): TelegramUser = transactional {

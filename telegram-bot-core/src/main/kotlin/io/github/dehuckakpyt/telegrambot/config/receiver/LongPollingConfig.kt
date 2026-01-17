@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.config.receiver
 
-import kotlinx.coroutines.CoroutineScope
+import kotlin.time.Duration
 
 
 /**
@@ -20,6 +20,6 @@ data class LongPollingConfig(
     /** Delay between when internal error while long polling. Defaults to 5_000. */
     public var retryDelay: Long? = null,
 
-    /** Telegram bot`s scope. */
-    public var scope: CoroutineScope? = null,
+    /** Delay between when internal error while long polling. Defaults to 5_000. */
+    public var gracefulShutdownTimeout: Duration? = null,
 )

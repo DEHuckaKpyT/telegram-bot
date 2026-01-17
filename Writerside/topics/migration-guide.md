@@ -1,10 +1,10 @@
 # Migration guide
 
-### From 0.13.5 to 0.14.0
+### From 0.13.5 to 1.0.0
 
 Refactor column fields. Sql-example for PostgreSQL:
 
-```postgresql
+```sql
 ALTER TABLE callback_content RENAME COLUMN update_date TO updated_at;
 
 ALTER TABLE telegram_chat RENAME COLUMN update_date TO updated_at;

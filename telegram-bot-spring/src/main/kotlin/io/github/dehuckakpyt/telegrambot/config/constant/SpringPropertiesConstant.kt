@@ -5,6 +5,8 @@ package io.github.dehuckakpyt.telegrambot.config.constant
  * @author Denis Matytsin
  */
 internal object SpringPropertiesConstant {
+    internal const val TELEGRAM_BOT_ENABLED = "telegram-bot.enabled"
+
     internal const val TELEGRAM_BOT_SPRING_UPDATE_RECEIVER_VARIANT = "telegram-bot.spring.update-receiver" // webhook or long-polling
 
     internal const val TELEGRAM_BOT_SPRING_WEBHOOK_UPDATE_RECEIVER_URL_HOST = "telegram-bot.spring.update-receiver.webhook.url.host"

@@ -1,6 +1,5 @@
 package io.github.dehuckakpyt.telegrambotexample.config
 
-import io.github.dehuckakpyt.telegrambot.annotation.EnableTelegramBot
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.ext.config.client
 import io.github.dehuckakpyt.telegrambot.ext.config.eventListening
@@ -20,12 +19,8 @@ import org.springframework.context.annotation.Configuration
 
 
 /**
- * Created on 29.12.2023.
- *<p>
- *
  * @author Denis Matytsin
  */
-@EnableTelegramBot
 @Configuration
 class BotConfig {
     private val logger = LoggerFactory.getLogger(BotConfig::class.java)

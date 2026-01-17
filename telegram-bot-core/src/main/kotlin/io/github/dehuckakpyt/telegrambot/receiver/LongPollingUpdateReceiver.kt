@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.receiver
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.config.constants.receiver.LongPollingUpdateReceiverConstant.LONG_POLLING_RECEIVER_DEFAULT_GRACEFUL_SHUTDOWN_TIMEOUT
 import io.github.dehuckakpyt.telegrambot.config.constants.receiver.LongPollingUpdateReceiverConstant.LONG_POLLING_RECEIVER_DEFAULT_RETRY_DELAY
 import io.github.dehuckakpyt.telegrambot.config.constants.receiver.LongPollingUpdateReceiverConstant.LONG_POLLING_RECEIVER_DEFAULT_TIMEOUT
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
@@ -8,12 +9,10 @@ import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import kotlinx.coroutines.*
 import org.apache.http.ConnectionClosedException
 import org.slf4j.LoggerFactory
+import kotlin.time.Duration
 
 
 /**
- * Created on 06.12.2023.
- *<p>
- *
  * @author Denis Matytsin
  */
 internal class LongPollingUpdateReceiver(
@@ -25,15 +24,23 @@ internal class LongPollingUpdateReceiver(
     private val limit: Int? = config.limit
     private val timeout: Int = config.timeout ?: LONG_POLLING_RECEIVER_DEFAULT_TIMEOUT
     private val retryDelay: Long = config.retryDelay ?: LONG_POLLING_RECEIVER_DEFAULT_RETRY_DELAY
-    private val scope = config.scope ?: CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineName("TelegramBot"))
+    private val gracefulShutdownTimeout: Duration = config.gracefulShutdownTimeout ?: LONG_POLLING_RECEIVER_DEFAULT_GRACEFUL_SHUTDOWN_TIMEOUT
+
+    private val pollingJob = SupervisorJob()
+    private val processingJob = SupervisorJob()
+    private val pollingScope = CoroutineScope(Dispatchers.IO + pollingJob + CoroutineName("TelegramBot-Polling"))
+    private val processingScope = CoroutineScope(Dispatchers.Default + processingJob + CoroutineName("TelegramBot-Processing"))
 
     private val logger = LoggerFactory.getLogger(LongPollingUpdateReceiver::class.java)
     private var lastUpdateId: Long? = null
+
+    @Volatile
     private var running: Boolean = false
 
     override fun start(): Unit {
         running = true
-        scope.launch { retryingReceiveUpdates() }
+
+        pollingScope.launch { retryingReceiveUpdates() }
     }
 
     private suspend fun retryingReceiveUpdates() {
@@ -74,7 +81,7 @@ internal class LongPollingUpdateReceiver(
             lastUpdateId = updates.last().updateId
 
             for (update in updates) {
-                scope.launch {
+                processingScope.launch {
                     updateResolver.processUpdate(update)
                 }
             }
@@ -82,8 +89,44 @@ internal class LongPollingUpdateReceiver(
     }
 
     override fun stop(): Unit {
+        // Signal all loops that no more work should be performed
+        // (prevents accepting new updates)
         running = false
+
+        // Force interruption of an active long-polling HTTP request
+        // This causes bot.getUpdates(...) to fail fast and exit the polling loop
         bot.client.close()
-        scope.cancel()
+        // Cancel the polling coroutine hierarchy so no new polling cycles start
+        pollingJob.cancel()
+
+        // Wait for already received updates to finish processing
+        // This enables graceful shutdown instead of killing in-flight handlers
+        val startTime = System.currentTimeMillis()
+        val activeChildren = processingJob.children.count()
+
+        if (activeChildren > 0) {
+            logger.info("Waiting for $activeChildren in-flight update(s) to finish...")
+
+            runBlocking {
+                val finished = withTimeoutOrNull(gracefulShutdownTimeout) {
+                    // Wait for all active child coroutines only
+                    processingJob.children.forEach { it.join() }
+                    true
+                }
+
+                if (finished != true) {
+                    val elapsed = System.currentTimeMillis() - startTime
+                    logger.warn(
+                        "Timeout while waiting update processing to finish " +
+                                "for Telegram-bot '${bot.username}'. " +
+                                "Waited ${elapsed}ms, some updates may not have been fully processed."
+                    )
+                }
+            }
+        }
+
+        // Final cleanup: cancel remaining processing coroutines
+        // (should be no-op if everything finished normally)
+        processingJob.cancel()
     }
 }

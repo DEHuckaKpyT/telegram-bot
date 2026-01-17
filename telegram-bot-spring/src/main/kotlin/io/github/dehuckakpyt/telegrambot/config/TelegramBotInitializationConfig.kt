@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
+import io.github.dehuckakpyt.telegrambot.config.constant.SpringPropertiesConstant.TELEGRAM_BOT_ENABLED
 import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
@@ -25,25 +26,22 @@ import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.SpringMessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.SmartLifecycle
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.event.EventListener
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 
 
 /**
- * Created on 29.12.2023.
- *<p>
- *
  * @author Denis Matytsin
  */
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(SpringMessageTemplate::class)
+@ConditionalOnProperty(name = [TELEGRAM_BOT_ENABLED], havingValue = "true", matchIfMissing = true)
 class TelegramBotInitializationConfig(
     private val applicationContext: GenericApplicationContext,
     springMessageTemplate: SpringMessageTemplate,
@@ -61,7 +59,7 @@ class TelegramBotInitializationConfig(
     @Value("\${telegram-bot.token}") botToken: String?,
     @Value("\${telegram-bot.username}") botUsername: String?,
     telegramBotConfig: TelegramBotConfig?,
-) : DisposableBean {
+) : SmartLifecycle {
     private final val logger = LoggerFactory.getLogger(TelegramBotInitializationConfig::class.java)
     private final val botContext: TelegramBotContext
 
@@ -133,8 +131,9 @@ class TelegramBotInitializationConfig(
     @Bean(autowireCandidate = false)
     fun botUpdateHandling(): BotUpdateHandling = botContext.botUpdateHandling
 
-    @EventListener(ApplicationReadyEvent::class)
-    fun startTelegramBot() {
+    private var running = false
+
+    override fun start() {
         // initialize all handlers
         val botHandling = applicationContext.getBean(BotHandling::class.java)
         applicationContext.getBeansOfType(BotHandler::class.java).forEach { (_, handler) -> handler.block(botHandling) }
@@ -144,12 +143,17 @@ class TelegramBotInitializationConfig(
         // start receiving updates
         logger.info("Starting telegram-bot '${botContext.telegramBot.username}'..")
         botContext.updateReceiver.start()
+        running = true
         logger.info("Telegram-bot '${botContext.telegramBot.username}' started.")
     }
 
-    override fun destroy() {
+    override fun stop() {
+        // stop receiving updates
         logger.info("Stopping telegram-bot '${botContext.telegramBot.username}'..")
         botContext.updateReceiver.stop()
+        running = false
         logger.info("Telegram-bot '${botContext.telegramBot.username}' stopped.")
     }
+
+    override fun isRunning(): Boolean = running
 }
