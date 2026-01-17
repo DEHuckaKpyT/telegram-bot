@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.model.chatevent.BaseTelegramChatStatusE
 import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMemberUpdated
 import io.github.dehuckakpyt.telegrambot.repository.chatevent.BaseTelegramChatStatusEventRepository
 import io.github.dehuckakpyt.telegrambot.source.chat.event.TelegramChatStatusEventSource
+import io.github.dehuckakpyt.telegrambot.source.chatevent.argument.SimpleFilterTelegramChatEventArgument
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import jakarta.persistence.EntityManager
 import java.time.LocalDateTime
@@ -14,7 +15,7 @@ import java.time.LocalDateTime
 /**
  * @author Denis Matytsin
  */
-abstract class BaseTelegramChatStatusEventSource<EntityT : BaseTelegramChatStatusEvent> : TelegramChatStatusEventSource<EntityT> {
+abstract class BaseTelegramChatStatusEventSource<EntityT : BaseTelegramChatStatusEvent, FilterArgumentT : SimpleFilterTelegramChatEventArgument> : TelegramChatStatusEventSource<EntityT> {
 
     protected abstract val transactional: TransactionAction
     protected abstract val repository: BaseTelegramChatStatusEventRepository<EntityT>

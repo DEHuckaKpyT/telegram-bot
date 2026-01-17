@@ -5,6 +5,7 @@ import io.github.dehuckakpyt.telegrambot.ext.kotlin.reflect.firstGenericClass
 import io.github.dehuckakpyt.telegrambot.model.chat.BaseTelegramChat
 import io.github.dehuckakpyt.telegrambot.model.telegram.Chat
 import io.github.dehuckakpyt.telegrambot.repository.chat.BaseTelegramChatRepository
+import io.github.dehuckakpyt.telegrambot.source.chat.argument.SimpleFilterTelegramChatArgument
 import io.github.dehuckakpyt.telegrambot.transaction.action.TransactionAction
 import jakarta.persistence.EntityManager
 import java.time.LocalDateTime
@@ -13,7 +14,7 @@ import java.time.LocalDateTime
 /**
  * @author Denis Matytsin
  */
-abstract class BaseTelegramChatSource<EntityT : BaseTelegramChat> : TelegramChatSource<EntityT> {
+abstract class BaseTelegramChatSource<EntityT : BaseTelegramChat, FilterArgumentT : SimpleFilterTelegramChatArgument> : TelegramChatSource<EntityT> {
 
     protected abstract val transactional: TransactionAction
     protected abstract val repository: BaseTelegramChatRepository<EntityT>

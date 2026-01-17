@@ -66,6 +66,14 @@ abstract class BaseTelegramUserSource<EntityT : BaseTelegramUser, FilterArgument
     override fun FilterArgumentT.toPredicates(root: Root<EntityT>, query: CriteriaQuery<*>?, builder: CriteriaBuilder): List<Predicate>? {
         val predicates = mutableListOf<Predicate>()
 
+        predicates += defaultPredicates(root, query, builder)
+
+        return predicates
+    }
+
+    protected open fun FilterArgumentT.defaultPredicates(root: Root<EntityT>, query: CriteriaQuery<*>?, builder: CriteriaBuilder): List<Predicate> {
+        val predicates = mutableListOf<Predicate>()
+
         userIdsIn?.let { predicates += root.get<Long>("userId").`in`(it) }
         usernameContainsIgnoreCase?.let { predicates += builder.containsIgnoreCase(root.get("username"), it) }
         anyStringFieldContainsIgnoreCase?.let {
