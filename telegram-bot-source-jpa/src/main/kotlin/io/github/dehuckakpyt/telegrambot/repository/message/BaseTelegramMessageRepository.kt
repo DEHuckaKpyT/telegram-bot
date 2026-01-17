@@ -1,10 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.repository.message
 
 import io.github.dehuckakpyt.telegrambot.model.message.BaseTelegramMessage
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import io.github.dehuckakpyt.telegrambot.repository.base.TelegramEntityRepository
 import org.springframework.data.repository.NoRepositoryBean
-import java.util.*
 
 
 /**
@@ -14,4 +12,4 @@ import java.util.*
  * @author Denis Matytsin
  */
 @NoRepositoryBean
-interface BaseTelegramMessageRepository<EntityT : BaseTelegramMessage> : JpaRepository<EntityT, UUID>, JpaSpecificationExecutor<EntityT>
+interface BaseTelegramMessageRepository<EntityT : BaseTelegramMessage> : TelegramEntityRepository<EntityT>

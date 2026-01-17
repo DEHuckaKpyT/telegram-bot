@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.source.user
 
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
-import io.github.dehuckakpyt.telegrambot.source.user.argument.FilterTelegramUserArgument
+import io.github.dehuckakpyt.telegrambot.source.user.argument.SimpleFilterTelegramUserArgument
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
@@ -11,7 +11,7 @@ import org.springframework.data.domain.Slice
  *
  * @author Denis Matytsin
  */
-public interface TelegramUserAdminSource<EntityIdT : Any, EntityT : TelegramUser<EntityIdT>> {
+public interface TelegramUserAdminSource<EntityIdT : Any, EntityT : TelegramUser<EntityIdT>, FilterArgumentT : SimpleFilterTelegramUserArgument> {
 
     /**
      * Get telegram user by id.
@@ -30,7 +30,7 @@ public interface TelegramUserAdminSource<EntityIdT : Any, EntityT : TelegramUser
      *
      * @return page of TelegramUser entities
      */
-    public suspend fun page(arg: FilterTelegramUserArgument, pageable: Pageable): Page<EntityT>
+    public suspend fun page(arg: FilterArgumentT, pageable: Pageable): Page<EntityT>
 
     /**
      * Get telegram users slice.
@@ -40,7 +40,7 @@ public interface TelegramUserAdminSource<EntityIdT : Any, EntityT : TelegramUser
      *
      * @return slice of TelegramUser entities
      */
-    public suspend fun slice(arg: FilterTelegramUserArgument, pageable: Pageable): Slice<EntityT>
+    public suspend fun slice(arg: FilterArgumentT, pageable: Pageable): Slice<EntityT>
 
     /**
      * Get telegram users slice.
@@ -49,7 +49,7 @@ public interface TelegramUserAdminSource<EntityIdT : Any, EntityT : TelegramUser
      *
      * @return count of TelegramUser entities
      */
-    public suspend fun count(arg: FilterTelegramUserArgument): Long
+    public suspend fun count(arg: FilterArgumentT): Long
 
     companion object
 }

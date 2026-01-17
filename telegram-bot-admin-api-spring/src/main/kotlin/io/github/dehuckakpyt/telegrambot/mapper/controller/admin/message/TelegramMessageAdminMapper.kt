@@ -4,7 +4,7 @@ import io.github.dehuckakpyt.telegrambot.controller.admin.message.dto.FilterTele
 import io.github.dehuckakpyt.telegrambot.controller.admin.message.dto.TelegramMessageAdminDto
 import io.github.dehuckakpyt.telegrambot.controller.admin.message.dto.TelegramMessageAdminListDto
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
-import io.github.dehuckakpyt.telegrambot.source.message.argument.FilterTelegramMessageArgument
+import io.github.dehuckakpyt.telegrambot.source.message.argument.SimpleFilterTelegramMessageArgument
 import org.mapstruct.Mapper
 import java.util.*
 
@@ -15,7 +15,7 @@ import java.util.*
 @Mapper
 interface TelegramMessageAdminMapper {
 
-    fun toFilterTelegramMessageArgument(filters: FilterTelegramMessageAdminDto): FilterTelegramMessageArgument
+    fun toFilterTelegramMessageArgument(filters: FilterTelegramMessageAdminDto): SimpleFilterTelegramMessageArgument
 
     fun toTelegramMessageAdminDto(message: TelegramMessage<UUID>): TelegramMessageAdminDto
 

@@ -10,6 +10,7 @@ import io.github.dehuckakpyt.telegrambot.ext.spring.data.domain.toSliceDto
 import io.github.dehuckakpyt.telegrambot.mapper.controller.admin.user.TelegramUserAdminMapper
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserAdminSource
+import io.github.dehuckakpyt.telegrambot.source.user.argument.SimpleFilterTelegramUserArgument
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,7 +28,7 @@ import java.util.*
 @RestController
 @RequestMapping("/admin/telegram-users")
 open class TelegramUserAdminController(
-    protected val telegramUserService: TelegramUserAdminSource<UUID, out TelegramUser<UUID>>,
+    protected val telegramUserService: TelegramUserAdminSource<UUID, out TelegramUser<UUID>, SimpleFilterTelegramUserArgument>,
     protected val telegramUserMapper: TelegramUserAdminMapper,
 ) {
 

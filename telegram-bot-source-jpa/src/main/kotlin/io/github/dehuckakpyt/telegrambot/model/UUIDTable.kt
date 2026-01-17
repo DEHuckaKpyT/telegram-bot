@@ -8,9 +8,6 @@ import java.util.*
 
 
 /**
- * Created on 02.01.2024.
- *<p>
- *
  * @author Denis Matytsin
  */
 @MappedSuperclass
