@@ -34,7 +34,7 @@ If you're a bit unhappy with the default implementation, you can override it. Fo
 </tabs>
 
 You need to disable it in properties `resources/application.properties`:
-```properties
+```
 telegram-bot.source-jpa.user-source.enabled=false
 ```
 
