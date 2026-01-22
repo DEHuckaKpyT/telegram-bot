@@ -14,8 +14,8 @@ dependencies {
     implementation(project(":telegram-bot-spring"))
     implementation(project(":telegram-bot-source-jpa"))
     implementation(project(":telegram-bot-templater-freemarker"))
-//    implementation(project(":telegram-bot-admin-api-spring"))
-//    implementation(project(":telegram-bot-admin-ui-spring"))
+    implementation(project(":telegram-bot-admin-api-spring"))
+    implementation(project(":telegram-bot-admin-ui-spring"))
     //endregion dehuckakpyt
 
     //region other

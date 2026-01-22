@@ -1,16 +1,22 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import org.springframework.beans.factory.annotation.Value
+import io.github.dehuckakpyt.telegrambot.auth.AdminUIAccessAuthorizationManager
+import io.github.dehuckakpyt.telegrambot.auth.AdminUIAuthWebFilter
+import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminUITokenStore
+import io.github.dehuckakpyt.telegrambot.manager.access.admin.AdminApiAccessManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
+import reactor.core.publisher.Mono
 
 
 /**
@@ -19,29 +25,38 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebFluxSecurity
 class AdminUiSecurityConfig(
-    @param:Value("\${TELEGRAM_BOT_ADMIN_UI_USERNAME:admin}") private val adminUsername: String,
-    @param:Value("\${TELEGRAM_BOT_ADMIN_UI_PASSWORD:11}") private val adminPassword: String,
+    private val tokenStore: TelegramAdminUITokenStore,
+    private val adminApiAccessManager: AdminApiAccessManager,
 ) {
-
-    @Bean
-    fun userDetailsService(): MapReactiveUserDetailsService {
-        val user = User.withUsername(adminUsername)
-            .password("{noop}$adminPassword") // no-op encoder
-            .roles("ADMIN")
-            .build()
-
-        return MapReactiveUserDetailsService(user)
-    }
 
     @Bean
     fun securityChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http
             .csrf { it.disable() }
-            .authorizeExchange {
-                it.pathMatchers("/**").permitAll()
-                it.anyExchange().permitAll()
+            .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
+            .exceptionHandling {
+                it.authenticationEntryPoint { swe, e ->
+                    Mono.fromRunnable { swe.response.statusCode = HttpStatus.UNAUTHORIZED }
+                }
+                it.accessDeniedHandler { swe, e ->
+                    Mono.fromRunnable { swe.response.statusCode = HttpStatus.FORBIDDEN }
+                }
             }
-            .httpBasic { }
+            .authorizeExchange {
+                it.pathMatchers("/").permitAll()
+                it.pathMatchers("/assets/**").permitAll()
+                it.pathMatchers("/admin/auth/login").permitAll()
+                it.pathMatchers(HttpMethod.GET, "/admin/telegram-users/**")
+                    .access(AdminUIAccessAuthorizationManager("GET /admin/telegram-users", adminApiAccessManager))
+
+                it.pathMatchers(HttpMethod.GET, "/admin/telegram-messages/**")
+                    .access(AdminUIAccessAuthorizationManager("GET /admin/telegram-messages", adminApiAccessManager))
+                it.anyExchange().denyAll()
+            }
+            .addFilterAt(
+                AdminUIAuthWebFilter(tokenStore),
+                SecurityWebFiltersOrder.AUTHENTICATION
+            )
             .build()
     }
 

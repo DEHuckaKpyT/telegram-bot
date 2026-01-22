@@ -12,7 +12,6 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageAdminSource
 import io.github.dehuckakpyt.telegrambot.source.message.argument.SimpleFilterTelegramMessageArgument
 import org.springframework.data.domain.Pageable
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,33 +27,29 @@ import java.util.*
 @RestController
 @RequestMapping("/admin/telegram-messages")
 open class TelegramMessageAdminController(
-    protected val telegramUserService: TelegramMessageAdminSource<UUID, out TelegramMessage<UUID>, SimpleFilterTelegramMessageArgument>,
-    protected val telegramUserMapper: TelegramMessageAdminMapper,
+    protected val telegramMessageService: TelegramMessageAdminSource<UUID, out TelegramMessage<UUID>, SimpleFilterTelegramMessageArgument>,
+    protected val telegramMessageMapper: TelegramMessageAdminMapper,
 ) {
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramMessagesGet()")
     @GetMapping("/{id}")
     open suspend fun get(@PathVariable id: UUID): TelegramMessageAdminDto =
-        telegramUserService.get(id)
-            .let(telegramUserMapper::toTelegramMessageAdminDto)
+        telegramMessageService.get(id)
+            .let(telegramMessageMapper::toTelegramMessageAdminDto)
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramMessagesSlice()")
     @GetMapping("/slice")
     open suspend fun slice(filters: FilterTelegramMessageAdminDto, pageable: Pageable): SliceDto<TelegramMessageAdminListDto> =
-        telegramUserMapper.toFilterTelegramMessageArgument(filters)
-            .let { filters -> telegramUserService.slice(filters, pageable) }
-            .toSliceDto(telegramUserMapper::toTelegramMessageAdminListDto)
+        telegramMessageMapper.toFilterTelegramMessageArgument(filters)
+            .let { filters -> telegramMessageService.slice(filters, pageable) }
+            .toSliceDto(telegramMessageMapper::toTelegramMessageAdminListDto)
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramMessagesPage()")
     @GetMapping("/page")
     open suspend fun page(filters: FilterTelegramMessageAdminDto, pageable: Pageable): PageDto<TelegramMessageAdminListDto> =
-        telegramUserMapper.toFilterTelegramMessageArgument(filters)
-            .let { filters -> telegramUserService.page(filters, pageable) }
-            .toPageDto(telegramUserMapper::toTelegramMessageAdminListDto)
+        telegramMessageMapper.toFilterTelegramMessageArgument(filters)
+            .let { filters -> telegramMessageService.page(filters, pageable) }
+            .toPageDto(telegramMessageMapper::toTelegramMessageAdminListDto)
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramMessagesCount()")
     @GetMapping("/count")
     open suspend fun count(filters: FilterTelegramMessageAdminDto): Long =
-        telegramUserMapper.toFilterTelegramMessageArgument(filters)
-            .let { telegramUserService.count(it) }
+        telegramMessageMapper.toFilterTelegramMessageArgument(filters)
+            .let { telegramMessageService.count(it) }
 }

@@ -85,7 +85,7 @@ exposed-java-time = { group = "org.jetbrains.exposed", name = "exposed-java-time
 hypersistence-utils-hibernate-v63 = { group = "io.hypersistence", name = "hypersistence-utils-hibernate-63", version.ref = "hypersistence" }
 
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
-kotest-extensions-spring = { group = "io.kotest.extensions", name = "kotest-extensions-spring", version.ref = "kotest-extensions-spring" }
+kotest-extensions-spring = { group = "io.kotest", name = "kotest-extensions-spring", version.ref = "kotest" }
 
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }

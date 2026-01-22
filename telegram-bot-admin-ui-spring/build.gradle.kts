@@ -25,9 +25,13 @@ dependencies {
     api(libs.kotlinx.coroutines.reactor)
     //endregion kotlin
 
-    //region springframework
+    //region test
     testApi(libs.spring.boot.starter.test)
-    //endregion springframework
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.extensions.spring)
+    testImplementation(libs.mockk)
+    testImplementation(libs.springmockk)
+    //endregion test
 }
 
 node {

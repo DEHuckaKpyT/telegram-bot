@@ -12,7 +12,6 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserAdminSource
 import io.github.dehuckakpyt.telegrambot.source.user.argument.SimpleFilterTelegramUserArgument
 import org.springframework.data.domain.Pageable
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,27 +31,23 @@ open class TelegramUserAdminController(
     protected val telegramUserMapper: TelegramUserAdminMapper,
 ) {
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramUserGet()")
     @GetMapping("/{id}")
     open suspend fun get(@PathVariable id: UUID): TelegramUserAdminDto =
         telegramUserService.get(id)
             .let(telegramUserMapper::toTelegramUserAdminDto)
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramUsersSlice()")
     @GetMapping("/slice")
     open suspend fun slice(filters: FilterTelegramUserAdminDto, pageable: Pageable): SliceDto<TelegramUserAdminListDto> =
         telegramUserMapper.toFilterTelegramUserArgument(filters)
             .let { filters -> telegramUserService.slice(filters, pageable) }
             .toSliceDto(telegramUserMapper::toTelegramUserAdminListDto)
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramUsersPage()")
     @GetMapping("/page")
     open suspend fun page(filters: FilterTelegramUserAdminDto, pageable: Pageable): PageDto<TelegramUserAdminListDto> =
         telegramUserMapper.toFilterTelegramUserArgument(filters)
             .let { filters -> telegramUserService.page(filters, pageable) }
             .toPageDto(telegramUserMapper::toTelegramUserAdminListDto)
 
-    @PreAuthorize("@adminUIAccessManager.hasAccessToTelegramUsersCount()")
     @GetMapping("/count")
     open suspend fun count(filters: FilterTelegramUserAdminDto): Long =
         telegramUserMapper.toFilterTelegramUserArgument(filters)

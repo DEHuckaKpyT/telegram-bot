@@ -12,6 +12,7 @@ dependencies {
     api(libs.spring.boot.starter)
     api(libs.spring.boot.starter.webflux)
     api(libs.spring.security.core)
+    implementation(libs.spring.boot.starter.security)
     //endregion springframework
 
     //region dehuckakpyt
