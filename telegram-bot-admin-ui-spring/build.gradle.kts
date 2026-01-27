@@ -25,6 +25,10 @@ dependencies {
     api(libs.kotlinx.coroutines.reactor)
     //endregion kotlin
 
+    //region google
+    api("com.google.guava:guava:33.5.0-jre")
+    //endregion google
+
     //region test
     testApi(libs.spring.boot.starter.test)
     testImplementation(libs.kotest.runner.junit5)

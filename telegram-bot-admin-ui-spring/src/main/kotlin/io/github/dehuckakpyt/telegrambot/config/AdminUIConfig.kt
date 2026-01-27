@@ -2,11 +2,14 @@ package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.auth.InMemoryAdminUITokenStore
 import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminUITokenStore
+import io.github.dehuckakpyt.telegrambot.config.holder.AdminUIFrontendConfigHolder
 import io.github.dehuckakpyt.telegrambot.controller.admin.auth.AuthAdminController
+import io.github.dehuckakpyt.telegrambot.controller.admin.config.AdminUIController
 import io.github.dehuckakpyt.telegrambot.util.auth.TelegramAuthChecker
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import java.time.Duration
@@ -17,7 +20,11 @@ import kotlin.time.toKotlinDuration
  * @author Denis Matytsin
  */
 @AutoConfiguration
-@Import(AuthAdminController::class)
+@Import(value = [
+    AuthAdminController::class,
+    AdminUIController::class,
+])
+@ConfigurationPropertiesScan(basePackageClasses = [AdminUIFrontendConfigHolder::class])
 class AdminUIConfig {
 
     @Bean

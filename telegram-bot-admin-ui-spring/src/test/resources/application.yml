@@ -1,0 +1,4 @@
+telegram-bot:
+  administration:
+    access:
+      user-ids: "123"

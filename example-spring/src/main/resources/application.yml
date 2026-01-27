@@ -3,6 +3,14 @@ telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}
   username: ${TELEGRAM_BOT_USERNAME}
 
+  administration:
+    access:
+      user-ids: "123"
+    
+    admin-ui:
+      front-end:
+        host: "http://127.0.0.1:80"
+    
   spring:
 #    update-receiver: webhook
 #    update-receiver.webhook.url.host: "https://my.domain.com"

@@ -45,7 +45,11 @@ class AdminUiSecurityConfig(
             .authorizeExchange {
                 it.pathMatchers("/").permitAll()
                 it.pathMatchers("/assets/**").permitAll()
+                it.pathMatchers("/vite.svg").permitAll()
+                it.pathMatchers("/login").permitAll()
+                it.pathMatchers("/admin-ui/config").permitAll()
                 it.pathMatchers("/admin/auth/login").permitAll()
+                it.pathMatchers("/admin/auth/logout").authenticated()
                 it.pathMatchers(HttpMethod.GET, "/admin/telegram-users/**")
                     .access(AdminUIAccessAuthorizationManager("GET /admin/telegram-users", adminApiAccessManager))
 

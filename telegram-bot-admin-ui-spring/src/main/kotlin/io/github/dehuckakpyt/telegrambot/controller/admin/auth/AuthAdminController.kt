@@ -1,15 +1,14 @@
 package io.github.dehuckakpyt.telegrambot.controller.admin.auth
 
+import com.google.common.base.CaseFormat.LOWER_CAMEL
+import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminUITokenStore
 import io.github.dehuckakpyt.telegrambot.util.auth.TelegramAuthChecker
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.CredentialsExpiredException
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.Instant
 
 
@@ -27,7 +26,7 @@ class AuthAdminController(
     private val adminIds = adminIds.split(',').map(String::toLong)
 
     @PostMapping("/login")
-    suspend fun login(@RequestBody data: Map<String, String>): Map<String, String> {
+    suspend fun login(@RequestBody data: Map<String, String>): Map<String, Any> {
         if (!telegramAuthChecker.isValid(data)) {
             throw BadCredentialsException("Invalid Telegram signature.")
         }
@@ -44,6 +43,16 @@ class AuthAdminController(
         }
         val token = tokenStore.issue(telegramUserId)
 
-        return mapOf("token" to token)
+        return mapOf(
+            "token" to token,
+            "telegramUserData" to data.mapKeys { LOWER_UNDERSCORE.to(LOWER_CAMEL, it.key) }
+        )
+    }
+
+    @PostMapping("/logout")
+    suspend fun logout(@RequestHeader("Authorization") bearerToken: String): Unit {
+        if (!bearerToken.startsWith("Bearer ")) return
+        val tokenValue = bearerToken.substring(7)
+        tokenStore.revoke(tokenValue)
     }
 }
