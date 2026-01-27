@@ -9,12 +9,12 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
  * @author Denis Matytsin
  */
 @Experimental
-suspend fun currentUserPrincipal(): TelegramAdminUIPrincipal? {
+suspend fun currentUserPrincipal(): TelegramAdminApiPrincipal? {
     val context = ReactiveSecurityContextHolder.getContext().awaitSingleOrNull() ?: return null
 
     val authentication = context.authentication ?: return null
 
-    return authentication.principal as? TelegramAdminUIPrincipal
+    return authentication.principal as? TelegramAdminApiPrincipal
 }
 
 @Experimental

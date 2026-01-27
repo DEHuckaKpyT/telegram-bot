@@ -1,16 +1,17 @@
 import { useEffect, useRef } from 'react';
-import { adminSessionStore } from "../../g-shared/store/admin-session-store.ts";
-import { authStorage } from "../../g-shared/storage/auth-storage.ts";
-import type { TelegramAuthPayloadDto } from "../../g-shared/api/auth/dto/telegram-auth-payload.ts";
-import { login } from "../../g-shared/api/auth/admin-auth-api.ts";
+import { adminSessionStore } from "../../g-shared/store/adminSessionStore.ts";
+import { authStorage } from "../../g-shared/storage/authStorage.ts";
+import type { TelegramAuthPayloadDto } from "../../g-shared/api/auth/dto/telegramAuthPayload.ts";
 import { useNavigate } from 'react-router-dom';
 import { Box } from "@mui/material";
+import { useApi } from "../../a-app/provider/apiProvider.tsx";
+import { useAppConfig } from "../../a-app/config/appConfigContext.tsx";
 
-type TelegramLoginButtonProps = {
-    telegramBotName: string;
-};
+type TelegramLoginButtonProps = {};
 
-export function TelegramLoginButton({ telegramBotName }: TelegramLoginButtonProps) {
+export function TelegramLoginButton({}: TelegramLoginButtonProps) {
+    const { adminAuth } = useApi();
+    const { telegramBotUsername } = useAppConfig();
     const navigate = useNavigate();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -18,7 +19,7 @@ export function TelegramLoginButton({ telegramBotName }: TelegramLoginButtonProp
         // @ts-ignore
         window.onTelegramAuth = async (user: TelegramAuthPayloadDto) => {
             try {
-                const { token, telegramUserData } = await login(user);
+                const { token, telegramUserData } = await adminAuth.login(user);
                 adminSessionStore.set({ accessToken: token });
                 authStorage.set(telegramUserData);
                 navigate('/', { replace: true });
@@ -30,7 +31,7 @@ export function TelegramLoginButton({ telegramBotName }: TelegramLoginButtonProp
         const script = document.createElement('script');
         script.src = 'https://telegram.org/js/telegram-widget.js?22';
         script.async = true;
-        script.setAttribute('data-telegram-login', telegramBotName);
+        script.setAttribute('data-telegram-login', telegramBotUsername);
         script.setAttribute('data-size', 'large');
         script.setAttribute('data-userpic', 'true');
         script.setAttribute('data-request-access', 'write');
@@ -43,7 +44,7 @@ export function TelegramLoginButton({ telegramBotName }: TelegramLoginButtonProp
                 containerRef.current.innerHTML = '';
             }
         };
-    }, [ telegramBotName, navigate ]);
+    }, [ telegramBotUsername, navigate ]);
 
     return (
         <Box

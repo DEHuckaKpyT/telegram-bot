@@ -1,10 +1,11 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import io.github.dehuckakpyt.telegrambot.auth.InMemoryAdminUITokenStore
-import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminUITokenStore
-import io.github.dehuckakpyt.telegrambot.config.holder.AdminUIFrontendConfigHolder
+import io.github.dehuckakpyt.telegrambot.auth.InMemoryAdminApiTokenStore
+import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminApiTokenStore
+import io.github.dehuckakpyt.telegrambot.config.holder.AdminPanelConfigHolder
 import io.github.dehuckakpyt.telegrambot.controller.admin.auth.AuthAdminController
-import io.github.dehuckakpyt.telegrambot.controller.admin.config.AdminUIController
+import io.github.dehuckakpyt.telegrambot.controller.admin.config.AdminPanelConfigController
+import io.github.dehuckakpyt.telegrambot.controller.frontend.FrontendController
 import io.github.dehuckakpyt.telegrambot.util.auth.TelegramAuthChecker
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -21,17 +22,18 @@ import kotlin.time.toKotlinDuration
  */
 @AutoConfiguration
 @Import(value = [
+    FrontendController::class,
     AuthAdminController::class,
-    AdminUIController::class,
+    AdminPanelConfigController::class,
 ])
-@ConfigurationPropertiesScan(basePackageClasses = [AdminUIFrontendConfigHolder::class])
-class AdminUIConfig {
+@ConfigurationPropertiesScan(basePackageClasses = [AdminPanelConfigHolder::class])
+class AdminPanelConfig {
 
     @Bean
     @ConditionalOnMissingBean
     fun telegramAdminUITokenStore(
         @Value("\${telegram-bot.admin-ui.token-store.token-ttl:PT30M}") ttl: Duration,
-    ): TelegramAdminUITokenStore = InMemoryAdminUITokenStore(ttl.toKotlinDuration())
+    ): TelegramAdminApiTokenStore = InMemoryAdminApiTokenStore(ttl.toKotlinDuration())
 
     @Bean
     @ConditionalOnMissingBean

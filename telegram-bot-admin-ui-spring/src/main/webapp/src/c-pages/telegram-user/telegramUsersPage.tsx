@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Box, Alert } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { DataGrid, type GridColDef, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid';
-import { getTelegramUsersPage } from "../../g-shared/api/telegram-user/telegram-user-api.ts";
-import type { TelegramUserListDto } from "../../g-shared/api/telegram-user/dto/telegram-user-list-dto.ts";
-import { TelegramUsersFilters } from '../../d-widgets/telegram-user/telegram-user-filters.tsx';
-import { buildSortParam } from "../../g-shared/util/params/params-util.ts";
+import type { TelegramUserListDto } from "../../g-shared/api/telegram-user/dto/telegramUserListDto.ts";
+import { TelegramUsersFilters } from '../../d-widgets/telegram-user/telegramUserFilters.tsx';
+import { buildSortParam } from "../../g-shared/util/params/paramsUtil.ts";
+import { useApi } from "../../a-app/provider/apiProvider.tsx";
 
 const columns: GridColDef<TelegramUserListDto>[] = [
     { field: 'userId', headerName: 'Telegram ID', width: 150 },
@@ -27,6 +27,7 @@ const columns: GridColDef<TelegramUserListDto>[] = [
 ];
 
 export function TelegramUsersPage() {
+    const { telegramUsers } = useApi();
     const [ rows, setRows ] = useState<TelegramUserListDto[]>([]);
     const [ rowCount, setRowCount ] = useState(0);
     const [ loading, setLoading ] = useState(false);
@@ -37,24 +38,24 @@ export function TelegramUsersPage() {
         pageSize: 10,
     });
 
-    const [sortModel, setSortModel] = useState<GridSortModel>([]);
+    const [ sortModel, setSortModel ] = useState<GridSortModel>([]);
 
-    const [anyStringFieldContainsIgnoreCase, setAnyStringFieldContainsIgnoreCase] = useState('');
-    const [usernameContainsIgnoreCase, setUsernameContainsIgnoreCase] = useState('');
-    const [userIdsIn, setUserIdsIn] = useState('');
+    const [ anyStringFieldContainsIgnoreCase, setAnyStringFieldContainsIgnoreCase ] = useState('');
+    const [ usernameContainsIgnoreCase, setUsernameContainsIgnoreCase ] = useState('');
+    const [ userIdsIn, setUserIdsIn ] = useState('');
 
     useEffect(() => {
         setLoading(true);
         setError(null);
 
-        getTelegramUsersPage({
+        telegramUsers.page({
             page: paginationModel.page,
             size: paginationModel.pageSize,
             sort: buildSortParam(sortModel),
 
             anyStringFieldContainsIgnoreCase: anyStringFieldContainsIgnoreCase || undefined,
             usernameContainsIgnoreCase: usernameContainsIgnoreCase || undefined,
-            userIdsIn: userIdsIn.length ? [userIdsIn] : undefined,
+            userIdsIn: userIdsIn.length ? [ userIdsIn ] : undefined,
         })
             .then(page => {
                 setRows(page.content);

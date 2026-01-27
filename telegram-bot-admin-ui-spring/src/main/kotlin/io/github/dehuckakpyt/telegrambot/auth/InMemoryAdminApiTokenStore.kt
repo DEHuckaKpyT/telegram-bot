@@ -10,10 +10,10 @@ import kotlin.time.TimeSource
 /**
  * @author Denis Matytsin
  */
-class InMemoryAdminUITokenStore(
+class InMemoryAdminApiTokenStore(
     private val ttl: Duration,
     private val timeSource: TimeSource = TimeSource.Monotonic,
-) : TelegramAdminUITokenStore {
+) : TelegramAdminApiTokenStore {
 
     private val tokens = ConcurrentHashMap<String, UserEntry>()
 

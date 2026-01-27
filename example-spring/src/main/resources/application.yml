@@ -7,8 +7,12 @@ telegram-bot:
     access:
       user-ids: "123"
     
-    admin-ui:
-      front-end:
+    admin-api:
+      prefix: "/api"
+      
+    admin-panel:
+      prefix: "/admin-ui"
+      front-end-config:
         host: "http://127.0.0.1:80"
     
   spring:

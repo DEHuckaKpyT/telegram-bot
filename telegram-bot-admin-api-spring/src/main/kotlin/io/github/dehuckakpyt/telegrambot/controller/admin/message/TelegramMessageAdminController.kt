@@ -25,7 +25,7 @@ import java.util.*
  * @author Denis Matytsin
  */
 @RestController
-@RequestMapping("/admin/telegram-messages")
+@RequestMapping("\${telegram-bot.administration.admin-api.prefix:/api}/admin/telegram-messages")
 open class TelegramMessageAdminController(
     protected val telegramMessageService: TelegramMessageAdminSource<UUID, out TelegramMessage<UUID>, SimpleFilterTelegramMessageArgument>,
     protected val telegramMessageMapper: TelegramMessageAdminMapper,

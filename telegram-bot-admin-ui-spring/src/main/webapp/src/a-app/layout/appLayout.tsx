@@ -1,7 +1,7 @@
 import { type ReactNode, useState } from 'react';
 import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Popover, Typography, } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { LogoutButton } from "../../d-widgets/admin-auth/telegram-logout-button.tsx";
+import { LogoutButton } from "../../d-widgets/admin-auth/telegramLogoutButton.tsx";
 import { useLocation, useNavigate } from "react-router-dom";
 
 type Props = {

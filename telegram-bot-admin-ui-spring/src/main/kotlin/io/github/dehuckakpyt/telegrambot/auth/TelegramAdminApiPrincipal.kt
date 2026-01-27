@@ -4,6 +4,6 @@ package io.github.dehuckakpyt.telegrambot.auth
 /**
  * @author Denis Matytsin
  */
-data class TelegramAdminUIPrincipal(
+data class TelegramAdminApiPrincipal(
     val telegramUserId: Long,
 )

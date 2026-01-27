@@ -1,2 +1,2 @@
-io.github.dehuckakpyt.telegrambot.config.AdminUIConfig
-io.github.dehuckakpyt.telegrambot.config.AdminUiSecurityConfig
+io.github.dehuckakpyt.telegrambot.config.AdminPanelConfig
+io.github.dehuckakpyt.telegrambot.config.AdminApiSecurityConfig

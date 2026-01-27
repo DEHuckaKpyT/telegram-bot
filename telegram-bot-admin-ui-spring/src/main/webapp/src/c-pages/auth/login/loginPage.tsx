@@ -1,11 +1,8 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
-import { TelegramLoginButton } from "../../../d-widgets/admin-auth/telegram-login-button.tsx";
-import { appConfigStore } from "../../../g-shared/store/app-config-store.ts";
+import { TelegramLoginButton } from "../../../d-widgets/admin-auth/telegramLoginButton.tsx";
 
 
 export function LoginPage() {
-    const { telegramBotUsername } = appConfigStore.get();
-
     return (
         <Box
             sx={{
@@ -26,7 +23,7 @@ export function LoginPage() {
                         Enter vai Telegram
                     </Typography>
 
-                    <TelegramLoginButton telegramBotName={telegramBotUsername}/>
+                    <TelegramLoginButton/>
                 </CardContent>
             </Card>
         </Box>

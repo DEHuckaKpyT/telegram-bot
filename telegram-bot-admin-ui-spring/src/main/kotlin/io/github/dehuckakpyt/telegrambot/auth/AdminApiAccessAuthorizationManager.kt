@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono
 /**
  * @author Denis Matytsin
  */
-class AdminUIAccessAuthorizationManager(
+class AdminApiAccessAuthorizationManager(
     private val apiName: String,
 
     private val adminApiAccessManager: AdminApiAccessManager,

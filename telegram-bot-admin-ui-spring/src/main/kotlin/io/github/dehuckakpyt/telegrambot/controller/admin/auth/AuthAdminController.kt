@@ -2,7 +2,7 @@ package io.github.dehuckakpyt.telegrambot.controller.admin.auth
 
 import com.google.common.base.CaseFormat.LOWER_CAMEL
 import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
-import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminUITokenStore
+import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminApiTokenStore
 import io.github.dehuckakpyt.telegrambot.util.auth.TelegramAuthChecker
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.access.AccessDeniedException
@@ -16,9 +16,9 @@ import java.time.Instant
  * @author Denis Matytsin
  */
 @RestController
-@RequestMapping("/admin/auth")
+@RequestMapping("\${telegram-bot.administration.admin-api.prefix:/api}/admin/auth")
 class AuthAdminController(
-    private val tokenStore: TelegramAdminUITokenStore,
+    private val tokenStore: TelegramAdminApiTokenStore,
     private val telegramAuthChecker: TelegramAuthChecker,
 
     @Value("\${telegram-bot.administration.access.user-ids}") adminIds: String,

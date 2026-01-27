@@ -1,4 +1,4 @@
-import type { BasePageParams } from "../../../params/page-params.ts";
+import type { BasePageParams } from "../../../params/pageParams.ts";
 
 export type UsersPageParams = {
     anyStringFieldContainsIgnoreCase?: string;

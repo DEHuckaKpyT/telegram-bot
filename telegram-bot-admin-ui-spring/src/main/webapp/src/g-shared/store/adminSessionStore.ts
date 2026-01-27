@@ -1,4 +1,4 @@
-import type { AdminSession } from "../../f-entities/auth-session/admin-session.ts";
+import type { AdminSession } from "../../f-entities/auth-session/adminSession.ts";
 import { atom } from 'nanostores';
 
 const STORAGE_KEY = 'admin_session';

@@ -1,4 +1,4 @@
-import type { UserData } from "../../f-entities/auth-session/user-data.ts";
+import type { UserData } from "../../f-entities/auth-session/userData.ts";
 
 
 let userData: UserData | null = null;

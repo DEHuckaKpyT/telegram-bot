@@ -1,15 +1,12 @@
 import type { AppConfig } from "../../f-entities/general/config.ts";
+import { getConfig } from "../api/admin-panel/adminPanelApi.ts";
 
 
 let config: AppConfig | null = null;
 
 export const appConfigStore = {
     async load(): Promise<void> {
-        const res = await fetch('/admin-ui/config');
-        if (!res.ok) {
-            throw new Error('Failed to load app config');
-        }
-        config = await res.json();
+        config = await getConfig();
     },
 
     get(): AppConfig {

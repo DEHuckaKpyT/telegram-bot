@@ -25,7 +25,7 @@ import java.util.*
  * @author Denis Matytsin
  */
 @RestController
-@RequestMapping("/admin/telegram-users")
+@RequestMapping("\${telegram-bot.administration.admin-api.prefix:/api}/admin/telegram-users")
 open class TelegramUserAdminController(
     protected val telegramUserService: TelegramUserAdminSource<UUID, out TelegramUser<UUID>, SimpleFilterTelegramUserArgument>,
     protected val telegramUserMapper: TelegramUserAdminMapper,

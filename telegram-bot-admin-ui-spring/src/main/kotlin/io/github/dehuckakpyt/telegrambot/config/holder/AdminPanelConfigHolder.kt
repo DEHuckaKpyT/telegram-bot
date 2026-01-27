@@ -7,8 +7,8 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding
 /**
  * @author Denis Matytsin
  */
-@ConfigurationProperties(prefix = "telegram-bot.administration.admin-ui.front-end")
-class AdminUIFrontendConfigHolder @ConstructorBinding constructor(
+@ConfigurationProperties(prefix = "telegram-bot.administration.admin-panel.front-end-config")
+class AdminPanelConfigHolder @ConstructorBinding constructor(
 
     val host: String,
 ) 

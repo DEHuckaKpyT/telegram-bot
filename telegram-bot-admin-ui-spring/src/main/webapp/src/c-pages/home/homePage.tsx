@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { AppLayout } from "../../a-app/layout/AppLayout.tsx";
+import { AppLayout } from "../../a-app/layout/appLayout.tsx";
 
 export function HomePage() {
     return (

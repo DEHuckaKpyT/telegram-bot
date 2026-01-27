@@ -12,8 +12,8 @@ import reactor.core.publisher.Mono
 /**
  * @author Denis Matytsin
  */
-class AdminUIAuthWebFilter(
-    private val tokenStore: TelegramAdminUITokenStore,
+class AdminApiAuthWebFilter(
+    private val tokenStore: TelegramAdminApiTokenStore,
 ) : WebFilter {
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
@@ -31,7 +31,7 @@ class AdminUIAuthWebFilter(
         }
 
         val authentication = UsernamePasswordAuthenticationToken(
-            TelegramAdminUIPrincipal(telegramUserId),
+            TelegramAdminApiPrincipal(telegramUserId),
             null,
             listOf(SimpleGrantedAuthority("ADMIN"))
         )

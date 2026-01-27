@@ -6,7 +6,7 @@ package io.github.dehuckakpyt.telegrambot.auth
  *
  * @author Denis Matytsin
  */
-interface TelegramAdminUITokenStore {
+interface TelegramAdminApiTokenStore {
 
     /**
      * Issues a new bearer token for the given Telegram user.
@@ -26,7 +26,7 @@ interface TelegramAdminUITokenStore {
      * This method is used by the security layer on each authenticated request.
      *
      * @param token bearer token from the Authorization header
-     * 
+     *
      * @return Telegram user identifier, or null if the token is invalid
      */
     fun resolve(token: String): Long?

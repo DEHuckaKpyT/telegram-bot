@@ -1,9 +1,10 @@
 package io.github.dehuckakpyt.telegrambot.config
 
-import io.github.dehuckakpyt.telegrambot.auth.AdminUIAccessAuthorizationManager
-import io.github.dehuckakpyt.telegrambot.auth.AdminUIAuthWebFilter
-import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminUITokenStore
+import io.github.dehuckakpyt.telegrambot.auth.AdminApiAccessAuthorizationManager
+import io.github.dehuckakpyt.telegrambot.auth.AdminApiAuthWebFilter
+import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminApiTokenStore
 import io.github.dehuckakpyt.telegrambot.manager.access.admin.AdminApiAccessManager
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -24,9 +25,11 @@ import reactor.core.publisher.Mono
  */
 @Configuration
 @EnableWebFluxSecurity
-class AdminUiSecurityConfig(
-    private val tokenStore: TelegramAdminUITokenStore,
+class AdminApiSecurityConfig(
+    private val tokenStore: TelegramAdminApiTokenStore,
     private val adminApiAccessManager: AdminApiAccessManager,
+    @param:Value("\${telegram-bot.administration.admin-api.prefix:/api}") private val apiPrefix: String,
+    @param:Value("\${telegram-bot.administration.admin-panel.prefix:/admin-ui}") private val adminPanelPrefix: String,
 ) {
 
     @Bean
@@ -43,22 +46,21 @@ class AdminUiSecurityConfig(
                 }
             }
             .authorizeExchange {
-                it.pathMatchers("/").permitAll()
-                it.pathMatchers("/assets/**").permitAll()
                 it.pathMatchers("/vite.svg").permitAll()
-                it.pathMatchers("/login").permitAll()
-                it.pathMatchers("/admin-ui/config").permitAll()
-                it.pathMatchers("/admin/auth/login").permitAll()
-                it.pathMatchers("/admin/auth/logout").authenticated()
-                it.pathMatchers(HttpMethod.GET, "/admin/telegram-users/**")
-                    .access(AdminUIAccessAuthorizationManager("GET /admin/telegram-users", adminApiAccessManager))
+                it.pathMatchers("/assets/**").permitAll()
+                it.pathMatchers("$adminPanelPrefix/**").permitAll()
+                it.pathMatchers("/admin-panel/config").permitAll()
+                it.pathMatchers("$apiPrefix/admin/auth/login").permitAll()
+                it.pathMatchers("$apiPrefix/admin/auth/logout").authenticated()
+                it.pathMatchers(HttpMethod.GET, "$apiPrefix/admin/telegram-users/**")
+                    .access(AdminApiAccessAuthorizationManager("GET /admin/telegram-users", adminApiAccessManager))
 
-                it.pathMatchers(HttpMethod.GET, "/admin/telegram-messages/**")
-                    .access(AdminUIAccessAuthorizationManager("GET /admin/telegram-messages", adminApiAccessManager))
+                it.pathMatchers(HttpMethod.GET, "$apiPrefix/admin/telegram-messages/**")
+                    .access(AdminApiAccessAuthorizationManager("GET /admin/telegram-messages", adminApiAccessManager))
                 it.anyExchange().denyAll()
             }
             .addFilterAt(
-                AdminUIAuthWebFilter(tokenStore),
+                AdminApiAuthWebFilter(tokenStore),
                 SecurityWebFiltersOrder.AUTHENTICATION
             )
             .build()

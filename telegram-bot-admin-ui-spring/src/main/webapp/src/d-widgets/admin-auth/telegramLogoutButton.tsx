@@ -1,13 +1,14 @@
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { adminSessionStore } from "../../g-shared/store/admin-session-store.ts";
-import { logout } from "../../g-shared/api/auth/admin-auth-api.ts";
+import { adminSessionStore } from "../../g-shared/store/adminSessionStore.ts";
+import { useApi } from "../../a-app/provider/apiProvider.tsx";
 
 export function LogoutButton() {
+    const { adminAuth } = useApi();
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout();
+        adminAuth.logout();
         adminSessionStore.clear();
         navigate('/login', { replace: true });
     };
