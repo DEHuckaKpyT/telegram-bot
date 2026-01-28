@@ -52,6 +52,7 @@ abstract class BaseTelegramMessageSource<EntityT : BaseTelegramMessage, FilterAr
         val predicates = mutableListOf<Predicate>()
 
         chatIdsIn?.let { predicates += root.get<Long>("chatId").`in`(it) }
+        fromIdsIn?.let { predicates += root.get<Long>("fromId").`in`(it) }
 
         return predicates
     }

@@ -41,7 +41,7 @@ export function TelegramUsersFilters({
                 size="small"
                 value={userIdsIn}
                 onChange={e => {
-                    const filtered = e.target.value.replace(/[^0-9,]/g, ''); // убираем всё кроме цифр и запятых
+                    const filtered = e.target.value.replace(/[^0-9,]/g, '');
                     onUserIdsInChange(filtered);
                 }}
             />

@@ -2,7 +2,7 @@ import { client } from '../client.ts';
 import type { AxiosResponse } from 'axios';
 import type { PageDto } from "../../dto/pageDto.ts";
 import type { TelegramUserDto } from "./dto/telegramUserDto.ts";
-import type { UsersPageParams } from "./params/usersPageParams.ts";
+import type { TelegramUsersPageParams } from "./params/telegramUsersPageParams.ts";
 import type { TelegramUserListDto } from "./dto/telegramUserListDto.ts";
 import type { AppConfig } from "../../../f-entities/general/config.ts";
 
@@ -16,7 +16,7 @@ export function telegramUsersApi(config: AppConfig) {
                 `${baseUrl}/${id}`,
             ).then((response: AxiosResponse<TelegramUserDto>) => response.data);
         },
-        page(params: UsersPageParams) {
+        page(params: TelegramUsersPageParams) {
             return client.get<PageDto<TelegramUserListDto>>(
                 `${baseUrl}/page`,
                 { params },

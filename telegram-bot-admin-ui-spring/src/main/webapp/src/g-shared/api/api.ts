@@ -1,6 +1,7 @@
 import type { AppConfig } from "../../f-entities/general/config.ts";
 import { telegramUsersApi } from "./telegram-user/telegramUserApi.ts";
 import { adminAuthApi } from "./auth/adminAuthApi.ts";
+import { telegramMessagesApi } from "./telegram-mesage/telegramMessageApi.ts";
 
 
 export function createApi(config: AppConfig) {
@@ -9,6 +10,7 @@ export function createApi(config: AppConfig) {
     return {
         adminAuth: adminAuthApi(config),
         telegramUsers: telegramUsersApi(config),
+        telegramMessages: telegramMessagesApi(config),
     };
 }
 

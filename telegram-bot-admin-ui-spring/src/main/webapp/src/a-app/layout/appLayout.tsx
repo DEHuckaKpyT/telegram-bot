@@ -55,9 +55,13 @@ export function AppLayout({ children }: Props) {
                                     selected={location.pathname === '/telegram-users'}
                                     onClick={() => navigate('/telegram-users')}
                                 >
-                                    <ListItemText primary="Пользователи" />
+                                    <ListItemText primary="Пользователи"/>
                                 </ListItemButton>
-                                <ListItemButton sx={{ pl: 4 }}>
+                                <ListItemButton
+                                    sx={{ pl: 4 }}
+                                    selected={location.pathname === '/telegram-messages'}
+                                    onClick={() => navigate('/telegram-messages')}
+                                >
                                     <ListItemText primary="Сообщения"/>
                                 </ListItemButton>
                                 <ListItemButton sx={{ pl: 4 }}>

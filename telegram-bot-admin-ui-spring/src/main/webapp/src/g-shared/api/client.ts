@@ -19,7 +19,6 @@ client.interceptors.request.use(config => {
     };
 
     const session = $adminSession.get();
-    console.log("client: current session ", session);
     if (session?.accessToken) {
         config.headers?.set?.('Authorization', `Bearer ${session.accessToken}`);
     }

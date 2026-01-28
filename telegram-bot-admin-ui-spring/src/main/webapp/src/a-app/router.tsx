@@ -7,6 +7,7 @@ import { useStore } from '@nanostores/react';
 import { AppLayout } from './layout/appLayout.tsx';
 import { TelegramUsersPage } from '../c-pages/telegram-user/telegramUsersPage.tsx';
 import { useAppConfig } from "./config/appConfigContext.tsx";
+import { TelegramMessagesPage } from "../c-pages/telegram-message/telegramMessagesPage.tsx";
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
     const session = useStore($adminSession);
@@ -37,6 +38,7 @@ export function AppRouter() {
                 >
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/telegram-users" element={<TelegramUsersPage/>}/>
+                    <Route path="/telegram-messages" element={<TelegramMessagesPage/>}/>
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace/>}/>

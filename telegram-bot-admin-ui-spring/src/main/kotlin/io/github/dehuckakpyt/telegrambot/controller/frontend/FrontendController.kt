@@ -14,7 +14,5 @@ class FrontendController {
     private val indexHtml = ClassPathResource("/static/index.html")
 
     @GetMapping("\${telegram-bot.administration.admin-panel.prefix:/admin-ui}/**", produces = [TEXT_HTML_VALUE])
-    suspend fun forward(): ClassPathResource {
-        return indexHtml
-    }
+    suspend fun forward(): ClassPathResource = indexHtml
 }
