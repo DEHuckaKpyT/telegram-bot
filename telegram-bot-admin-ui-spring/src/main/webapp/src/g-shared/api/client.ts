@@ -25,3 +25,20 @@ client.interceptors.request.use(config => {
 
     return config;
 });
+
+client.interceptors.response.use(
+    response => response,
+    error => {
+        const status = error.response?.status;
+
+        if (status === 401) {
+            $adminSession.set(null);
+
+            if (window.location.pathname !== "/admin-ui/login") {
+                window.location.href = "/admin-ui/login";
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);

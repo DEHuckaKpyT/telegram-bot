@@ -9,18 +9,18 @@ import { useApi } from "../../a-app/provider/apiProvider.tsx";
 const columns: GridColDef<TelegramUserListDto>[] = [
     { field: 'userId', headerName: 'Telegram ID', width: 150 },
     { field: 'username', headerName: 'Username', width: 150 },
-    { field: 'firstName', headerName: 'Имя', width: 150 },
-    { field: 'lastName', headerName: 'Фамилия', width: 150 },
-    { field: 'languageCode', headerName: 'Lang', width: 100 },
+    { field: 'firstName', headerName: 'First name', width: 150 },
+    { field: 'lastName', headerName: 'Last name', width: 150 },
+    { field: 'languageCode', headerName: 'Lang code', width: 100 },
     {
         field: 'available',
-        headerName: 'Доступен',
+        headerName: 'Available',
         width: 120,
         type: 'boolean',
     },
     {
         field: 'createdAt',
-        headerName: 'Создан',
+        headerName: 'Created at',
         width: 180,
         valueGetter: v => new Date(v).toLocaleString(),
     },
@@ -63,7 +63,7 @@ export function TelegramUsersPage() {
             })
             .catch(() => setError('Не удалось загрузить пользователей'))
             .finally(() => setLoading(false));
-    }, [ paginationModel ]);
+    }, [ paginationModel, sortModel ]);
 
     if (error) {
         return <Alert severity="error">{error}</Alert>;

@@ -11,15 +11,16 @@ const columns: GridColDef<TelegramMessageListDto>[] = [
     { field: 'fromId', headerName: 'Sender ID', width: 150 },
     { field: 'fromBot', headerName: 'Sender is bot', width: 150 },
     { field: 'messageId', headerName: 'Message ID', width: 150 },
-    { field: 'type', headerName: 'type', width: 150 },
-    { field: 'step', headerName: 'step', width: 150 },
+    { field: 'type', headerName: 'Type', width: 150 },
+    { field: 'step', headerName: 'Step', width: 150 },
     { field: 'stepContainerType', headerName: 'Container type', width: 150 },
     { field: 'text', headerName: 'Text', width: 150 },
     {
         field: 'createdAt',
-        headerName: 'Создан',
+        headerName: 'Created at',
         width: 180,
         valueGetter: v => new Date(v).toLocaleString(),
+        sortable: true
     },
 ];
 
@@ -35,7 +36,7 @@ export function TelegramMessagesPage() {
         pageSize: 10,
     });
 
-    const [ sortModel, setSortModel ] = useState<GridSortModel>([]);
+    const [ sortModel, setSortModel ] = useState<GridSortModel>([ { field: "createdAt", sort: "desc" } ]);
 
     const [ chatIdsIn, setChatIdsIn ] = useState('');
     const [ fromIdsIn, setFromIdsIn ] = useState('');
@@ -58,7 +59,7 @@ export function TelegramMessagesPage() {
             })
             .catch(() => setError('Не удалось загрузить сообщения'))
             .finally(() => setLoading(false));
-    }, [ paginationModel ]);
+    }, [ paginationModel, sortModel ]);
 
     if (error) {
         return <Alert severity="error">{error}</Alert>;
@@ -84,7 +85,7 @@ export function TelegramMessagesPage() {
                     setPaginationModel({ page: 0, pageSize: 10 });
                 }}
             />
-            <Box sx={{ height: 600 }}>
+            <Box>
                 <DataGrid
                     rows={rows}
                     columns={columns}

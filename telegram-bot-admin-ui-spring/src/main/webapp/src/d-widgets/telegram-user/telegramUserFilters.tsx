@@ -23,7 +23,7 @@ export function TelegramUsersFilters({
     return (
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
             <TextField
-                label="Поиск (любой текст)"
+                label="Search (any text)"
                 size="small"
                 value={anyStringFieldContainsIgnoreCase}
                 onChange={e => onAnyStringFieldContainsIgnoreCaseChange(e.target.value)}
@@ -46,7 +46,7 @@ export function TelegramUsersFilters({
                 }}
             />
 
-            <Button onClick={onReset}>Сбросить</Button>
+            <Button onClick={onReset}>Reset</Button>
         </Box>
     );
 }

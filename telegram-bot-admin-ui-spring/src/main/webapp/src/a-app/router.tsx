@@ -8,6 +8,8 @@ import { AppLayout } from './layout/appLayout.tsx';
 import { TelegramUsersPage } from '../c-pages/telegram-user/telegramUsersPage.tsx';
 import { useAppConfig } from "./config/appConfigContext.tsx";
 import { TelegramMessagesPage } from "../c-pages/telegram-message/telegramMessagesPage.tsx";
+import { TelegramChatsPage } from '../c-pages/telegram-chat/telegramChatsPage.tsx';
+import { TelegramChatStatusEventsPage } from "../c-pages/telegram-chat-status-event/telegramChatStatusEventsPage.tsx";
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
     const session = useStore($adminSession);
@@ -39,6 +41,8 @@ export function AppRouter() {
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/telegram-users" element={<TelegramUsersPage/>}/>
                     <Route path="/telegram-messages" element={<TelegramMessagesPage/>}/>
+                    <Route path="/telegram-chats" element={<TelegramChatsPage/>}/>
+                    <Route path="/telegram-chat-staus-events" element={<TelegramChatStatusEventsPage/>}/>
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace/>}/>

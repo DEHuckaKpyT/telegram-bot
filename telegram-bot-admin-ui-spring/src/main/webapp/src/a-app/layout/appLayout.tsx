@@ -3,6 +3,11 @@ import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Popo
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { LogoutButton } from "../../d-widgets/admin-auth/telegramLogoutButton.tsx";
 import { useLocation, useNavigate } from "react-router-dom";
+import PeopleIcon from "@mui/icons-material/People";
+import MessageIcon from "@mui/icons-material/Message";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import CategoryIcon from "@mui/icons-material/Category";
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 type Props = {
     children: ReactNode;
@@ -11,6 +16,7 @@ type Props = {
 export function AppLayout({ children }: Props) {
     const navigate = useNavigate();
     const location = useLocation();
+
     const drawerWidth = 240;
     const [ openUserPopover, setOpenUserPopover ] = useState<HTMLElement | null>(null);
     const [ openEntities, setOpenEntities ] = useState(true);
@@ -45,7 +51,14 @@ export function AppLayout({ children }: Props) {
                 <Box>
                     <List>
                         <ListItemButton onClick={toggleEntities}>
-                            <ListItemText primary="Сущности"/>
+                            <ListItemText
+                                primary={
+                                    <span>
+                    <CategoryIcon fontSize="small" sx={{ mr: 1 }}/>
+                    Entities
+                </span>
+                                }
+                            />
                             {openEntities ? <ExpandLess/> : <ExpandMore/>}
                         </ListItemButton>
                         <Collapse in={openEntities} timeout="auto" unmountOnExit>
@@ -55,17 +68,58 @@ export function AppLayout({ children }: Props) {
                                     selected={location.pathname === '/telegram-users'}
                                     onClick={() => navigate('/telegram-users')}
                                 >
-                                    <ListItemText primary="Пользователи"/>
+                                    <ListItemText
+                                        primary={
+                                            <span>
+                            <PeopleIcon fontSize="small" sx={{ mr: 1 }}/>
+                            Users
+                        </span>
+                                        }
+                                    />
                                 </ListItemButton>
+
                                 <ListItemButton
                                     sx={{ pl: 4 }}
                                     selected={location.pathname === '/telegram-messages'}
                                     onClick={() => navigate('/telegram-messages')}
                                 >
-                                    <ListItemText primary="Сообщения"/>
+                                    <ListItemText
+                                        primary={
+                                            <span>
+                            <MessageIcon fontSize="small" sx={{ mr: 1 }}/>
+                            Messages
+                        </span>
+                                        }
+                                    />
                                 </ListItemButton>
-                                <ListItemButton sx={{ pl: 4 }}>
-                                    <ListItemText primary="Чаты"/>
+
+                                <ListItemButton
+                                    sx={{ pl: 4 }}
+                                    selected={location.pathname === '/telegram-chat'}
+                                    onClick={() => navigate('/telegram-chats')}
+                                >
+                                    <ListItemText
+                                        primary={
+                                            <span>
+                            <ChatBubbleOutlineIcon fontSize="small" sx={{ mr: 1 }}/>
+                            Chats
+                        </span>
+                                        }
+                                    />
+                                </ListItemButton>
+                                <ListItemButton
+                                    sx={{ pl: 4 }}
+                                    selected={location.pathname === '/telegram-chat-staus-events'}
+                                    onClick={() => navigate('/telegram-chat-staus-events')}
+                                >
+                                    <ListItemText
+                                        primary={
+                                            <span>
+                <EventNoteIcon fontSize="small" sx={{ mr: 1 }}/>
+                Chat Status Events
+            </span>
+                                        }
+                                    />
                                 </ListItemButton>
                             </List>
                         </Collapse>

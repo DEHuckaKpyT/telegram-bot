@@ -48,13 +48,12 @@ class AdminApiSecurityConfig(
             .authorizeExchange {
                 it.pathMatchers("/vite.svg").permitAll()
                 it.pathMatchers("/assets/**").permitAll()
-                it.pathMatchers("$adminPanelPrefix/**").permitAll()
                 it.pathMatchers("/admin-panel/config").permitAll()
+                it.pathMatchers("$adminPanelPrefix/**").permitAll()
                 it.pathMatchers("$apiPrefix/admin/auth/login").permitAll()
                 it.pathMatchers("$apiPrefix/admin/auth/logout").authenticated()
                 it.pathMatchers(HttpMethod.GET, "$apiPrefix/admin/telegram-users/**")
                     .access(AdminApiAccessAuthorizationManager("GET /admin/telegram-users", adminApiAccessManager))
-
                 it.pathMatchers(HttpMethod.GET, "$apiPrefix/admin/telegram-messages/**")
                     .access(AdminApiAccessAuthorizationManager("GET /admin/telegram-messages", adminApiAccessManager))
                 it.anyExchange().denyAll()

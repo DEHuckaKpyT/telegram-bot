@@ -37,7 +37,7 @@ export function TelegramMessagesFilters({
                 }}
             />
 
-            <Button onClick={onReset}>Сбросить</Button>
+            <Button onClick={onReset}>Reset</Button>
         </Box>
     );
 }
