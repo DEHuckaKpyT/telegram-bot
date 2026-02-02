@@ -4,7 +4,7 @@ import io.github.dehuckakpyt.telegrambot.ext.transaction.executeQuery
 import io.github.dehuckakpyt.telegrambot.model.DefaultTelegramUser
 import io.github.dehuckakpyt.telegrambot.model.DefaultTelegramUsers
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.v1.core.eq
 import java.time.LocalDateTime
 
 

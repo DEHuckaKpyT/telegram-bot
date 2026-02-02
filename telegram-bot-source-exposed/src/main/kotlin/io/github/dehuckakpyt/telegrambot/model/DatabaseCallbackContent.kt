@@ -1,11 +1,12 @@
 package io.github.dehuckakpyt.telegrambot.model
 
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
-import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
+import org.jetbrains.exposed.v1.core.java.javaUUID
+import org.jetbrains.exposed.v1.dao.java.UUIDEntity
+import org.jetbrains.exposed.v1.dao.java.UUIDEntityClass
+import org.jetbrains.exposed.v1.javatime.datetime
 import java.util.*
 
 
@@ -19,7 +20,7 @@ import java.util.*
 object CallbackContents : UUIDTable("callback_content") {
     val chatId = long("chat_id")
     val fromId = long("from_id")
-    val callbackId = uuid("callback_id").uniqueIndex()
+    val callbackId = javaUUID("callback_id").uniqueIndex()
     val content = text("content")
     val updatedAt = datetime("updated_at")
 }
