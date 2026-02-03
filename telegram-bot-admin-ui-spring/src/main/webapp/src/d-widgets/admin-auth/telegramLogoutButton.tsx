@@ -7,8 +7,8 @@ export function LogoutButton() {
     const { adminAuth } = useApi();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        adminAuth.logout();
+    const handleLogout = async () => {
+        await adminAuth.logout();
         adminSessionStore.clear();
         navigate('/login', { replace: true });
     };

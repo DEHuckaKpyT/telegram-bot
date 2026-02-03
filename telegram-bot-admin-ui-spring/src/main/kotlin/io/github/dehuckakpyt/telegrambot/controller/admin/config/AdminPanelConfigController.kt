@@ -20,10 +20,11 @@ class AdminPanelConfigController(
     @Value("\${telegram-bot.administration.admin-panel.prefix:/admin-ui}") adminPanelPrefix: String,
 ) {
     private val frontendConfigJson = mapOf(
-        "host" to adminPanelConfigHolder.host,
         "apiPrefix" to backendApiPrefix,
         "adminPanelPrefix" to adminPanelPrefix,
         "telegramBotUsername" to bot.username,
+
+        "defaultPageSize" to adminPanelConfigHolder.defaultPageSize,
     )
 
     @GetMapping(value = ["/config"], produces = ["application/json"])

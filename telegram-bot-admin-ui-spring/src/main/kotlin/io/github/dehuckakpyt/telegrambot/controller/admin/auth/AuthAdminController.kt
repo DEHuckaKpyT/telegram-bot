@@ -3,8 +3,8 @@ package io.github.dehuckakpyt.telegrambot.controller.admin.auth
 import com.google.common.base.CaseFormat.LOWER_CAMEL
 import com.google.common.base.CaseFormat.LOWER_UNDERSCORE
 import io.github.dehuckakpyt.telegrambot.auth.TelegramAdminApiTokenStore
+import io.github.dehuckakpyt.telegrambot.config.holder.AdministrationConfigHolder
 import io.github.dehuckakpyt.telegrambot.util.auth.TelegramAuthChecker
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.CredentialsExpiredException
@@ -20,10 +20,9 @@ import java.time.Instant
 class AuthAdminController(
     private val tokenStore: TelegramAdminApiTokenStore,
     private val telegramAuthChecker: TelegramAuthChecker,
-
-    @Value("\${telegram-bot.administration.access.user-ids}") adminIds: String,
+    administrationConfigHolder: AdministrationConfigHolder,
 ) {
-    private val adminIds = adminIds.split(',').map(String::toLong)
+    private val adminIds = administrationConfigHolder.access.userIds
 
     @PostMapping("/login")
     suspend fun login(@RequestBody data: Map<String, String>): Map<String, Any> {
@@ -52,6 +51,7 @@ class AuthAdminController(
     @PostMapping("/logout")
     suspend fun logout(@RequestHeader("Authorization") bearerToken: String): Unit {
         if (!bearerToken.startsWith("Bearer ")) return
+
         val tokenValue = bearerToken.substring(7)
         tokenStore.revoke(tokenValue)
     }

@@ -5,6 +5,7 @@ import type { TelegramUserListDto } from "../../g-shared/api/telegram-user/dto/t
 import { TelegramUsersFilters } from '../../d-widgets/telegram-user/telegramUserFilters.tsx';
 import { buildSortParam } from "../../g-shared/util/params/paramsUtil.ts";
 import { useApi } from "../../a-app/provider/apiProvider.tsx";
+import { useAppConfig } from "../../a-app/config/appConfigContext.tsx";
 
 const columns: GridColDef<TelegramUserListDto>[] = [
     { field: 'userId', headerName: 'Telegram ID', width: 150 },
@@ -28,6 +29,8 @@ const columns: GridColDef<TelegramUserListDto>[] = [
 
 export function TelegramUsersPage() {
     const { telegramUsers } = useApi();
+    const { defaultPageSize } = useAppConfig();
+
     const [ rows, setRows ] = useState<TelegramUserListDto[]>([]);
     const [ rowCount, setRowCount ] = useState(0);
     const [ loading, setLoading ] = useState(false);
@@ -35,10 +38,10 @@ export function TelegramUsersPage() {
 
     const [ paginationModel, setPaginationModel ] = useState<GridPaginationModel>({
         page: 0,
-        pageSize: 10,
+        pageSize: defaultPageSize,
     });
 
-    const [ sortModel, setSortModel ] = useState<GridSortModel>([]);
+    const [ sortModel, setSortModel ] = useState<GridSortModel>([ { field: "createdAt", sort: "desc" } ]);
 
     const [ anyStringFieldContainsIgnoreCase, setAnyStringFieldContainsIgnoreCase ] = useState('');
     const [ usernameContainsIgnoreCase, setUsernameContainsIgnoreCase ] = useState('');
@@ -92,7 +95,7 @@ export function TelegramUsersPage() {
                     setUsernameContainsIgnoreCase('');
                     setUserIdsIn('');
                     setSortModel([]);
-                    setPaginationModel({ page: 0, pageSize: 10 });
+                    setPaginationModel({ page: 0, pageSize: defaultPageSize });
                 }}
             />
             <Box sx={{ height: 600 }}>

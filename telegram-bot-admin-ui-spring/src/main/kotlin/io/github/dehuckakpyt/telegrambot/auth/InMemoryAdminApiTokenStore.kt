@@ -38,6 +38,8 @@ class InMemoryAdminApiTokenStore(
             return null
         }
 
+        entry.expiresAt = timeSource.markNow().plus(ttl)
+
         return entry.telegramUserId
     }
 
@@ -47,6 +49,6 @@ class InMemoryAdminApiTokenStore(
 
     private data class UserEntry(
         val telegramUserId: Long,
-        val expiresAt: TimeMark,
+        var expiresAt: TimeMark,
     )
 }

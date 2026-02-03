@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.config
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.constant.SpringPropertiesConstant.TELEGRAM_BOT_ENABLED
 import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
+import io.github.dehuckakpyt.telegrambot.config.holder.AdministrationConfigHolder
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.SmartLifecycle
 import org.springframework.context.annotation.Bean
 import org.springframework.context.support.GenericApplicationContext
@@ -40,7 +41,7 @@ import org.springframework.context.support.registerBean
  * @author Denis Matytsin
  */
 @AutoConfiguration
-@EnableConfigurationProperties(SpringMessageTemplate::class)
+@ConfigurationPropertiesScan(basePackageClasses = [SpringMessageTemplate::class, AdministrationConfigHolder::class])
 @ConditionalOnProperty(name = [TELEGRAM_BOT_ENABLED], havingValue = "true", matchIfMissing = true)
 class TelegramBotInitializationConfig(
     private val applicationContext: GenericApplicationContext,

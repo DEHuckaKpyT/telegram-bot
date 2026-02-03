@@ -31,8 +31,8 @@ class AdminPanelConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    fun telegramAdminUITokenStore(
-        @Value("\${telegram-bot.admin-ui.token-store.token-ttl:PT30M}") ttl: Duration,
+    fun telegramAdminApiTokenStore(
+        @Value("\${telegram-bot.administration.admin-api.token-store.token-ttl:PT30M}") ttl: Duration,
     ): TelegramAdminApiTokenStore = InMemoryAdminApiTokenStore(ttl.toKotlinDuration())
 
     @Bean

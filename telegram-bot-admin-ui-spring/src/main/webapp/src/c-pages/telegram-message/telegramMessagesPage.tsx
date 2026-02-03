@@ -5,11 +5,12 @@ import { buildSortParam } from "../../g-shared/util/params/paramsUtil.ts";
 import { useApi } from "../../a-app/provider/apiProvider.tsx";
 import type { TelegramMessageListDto } from '../../g-shared/api/telegram-mesage/dto/telegramMessageListDto.ts';
 import { TelegramMessagesFilters } from "../../d-widgets/telegram-message/telegramMessageFilters.tsx";
+import { useAppConfig } from "../../a-app/config/appConfigContext.tsx";
 
 const columns: GridColDef<TelegramMessageListDto>[] = [
     { field: 'chatId', headerName: 'Chat ID', width: 150 },
     { field: 'fromId', headerName: 'Sender ID', width: 150 },
-    { field: 'fromBot', headerName: 'Sender is bot', width: 150 },
+    { field: 'fromBot', headerName: 'Sender is bot', width: 150, type: 'boolean' },
     { field: 'messageId', headerName: 'Message ID', width: 150 },
     { field: 'type', headerName: 'Type', width: 150 },
     { field: 'step', headerName: 'Step', width: 150 },
@@ -26,6 +27,8 @@ const columns: GridColDef<TelegramMessageListDto>[] = [
 
 export function TelegramMessagesPage() {
     const { telegramMessages } = useApi();
+    const { defaultPageSize } = useAppConfig();
+
     const [ rows, setRows ] = useState<TelegramMessageListDto[]>([]);
     const [ rowCount, setRowCount ] = useState(0);
     const [ loading, setLoading ] = useState(false);
@@ -33,7 +36,7 @@ export function TelegramMessagesPage() {
 
     const [ paginationModel, setPaginationModel ] = useState<GridPaginationModel>({
         page: 0,
-        pageSize: 10,
+        pageSize: defaultPageSize,
     });
 
     const [ sortModel, setSortModel ] = useState<GridSortModel>([ { field: "createdAt", sort: "desc" } ]);
@@ -82,7 +85,7 @@ export function TelegramMessagesPage() {
                     setChatIdsIn('');
                     setFromIdsIn('');
                     setSortModel([]);
-                    setPaginationModel({ page: 0, pageSize: 10 });
+                    setPaginationModel({ page: 0, pageSize: defaultPageSize });
                 }}
             />
             <Box>

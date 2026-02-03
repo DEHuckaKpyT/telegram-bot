@@ -3,6 +3,5 @@ export type UserData = {
     username?: string;
     firstName: string;
     lastName?: string;
-    authDate: number;
     photoUrl?: string;
 };

@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { adminSessionStore } from "../../g-shared/store/adminSessionStore.ts";
-import { authStorage } from "../../g-shared/storage/authStorage.ts";
 import type { TelegramAuthPayloadDto } from "../../g-shared/api/auth/dto/telegramAuthPayload.ts";
 import { useNavigate } from 'react-router-dom';
 import { Box } from "@mui/material";
 import { useApi } from "../../a-app/provider/apiProvider.tsx";
 import { useAppConfig } from "../../a-app/config/appConfigContext.tsx";
+import { authStore } from "../../g-shared/store/authStore.ts";
+import { adminSessionStore } from "../../g-shared/store/adminSessionStore.ts";
 
 type TelegramLoginButtonProps = {};
 
@@ -21,7 +21,7 @@ export function TelegramLoginButton({}: TelegramLoginButtonProps) {
             try {
                 const { token, telegramUserData } = await adminAuth.login(user);
                 adminSessionStore.set({ accessToken: token });
-                authStorage.set(telegramUserData);
+                authStore.set(telegramUserData);
                 navigate('/', { replace: true });
             } catch (e) {
                 console.error(e);

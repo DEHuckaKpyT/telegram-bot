@@ -8,6 +8,7 @@ import MessageIcon from "@mui/icons-material/Message";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CategoryIcon from "@mui/icons-material/Category";
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import { $authContext } from "../../g-shared/store/authStore.ts";
 
 type Props = {
     children: ReactNode;
@@ -16,6 +17,7 @@ type Props = {
 export function AppLayout({ children }: Props) {
     const navigate = useNavigate();
     const location = useLocation();
+    const userData = $authContext.get()!;
 
     const drawerWidth = 240;
     const [ openUserPopover, setOpenUserPopover ] = useState<HTMLElement | null>(null);
@@ -130,7 +132,7 @@ export function AppLayout({ children }: Props) {
                 <Box sx={{ p: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleUserClick}>
                         <Avatar sx={{ mr: 1 }}>A</Avatar>
-                        <Typography variant="body2">Admin</Typography>
+                        <Typography variant="body2">{userData.firstName}</Typography>
                     </Box>
 
                     <Popover
@@ -141,7 +143,17 @@ export function AppLayout({ children }: Props) {
                         transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     >
                         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                            <Typography variant="body2">Admin User</Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                                <Typography variant="body2">{userData.firstName} {userData.lastName}</Typography>
+                                {userData.username && (
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                    >
+                                        {userData.username}
+                                    </Typography>
+                                )}
+                            </Box>
                             <LogoutButton/>
                         </Box>
                     </Popover>

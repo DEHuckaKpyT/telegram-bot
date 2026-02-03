@@ -5,15 +5,19 @@ telegram-bot:
 
   administration:
     access:
-      user-ids: "123"
+      user-ids: 
+      - 1165327523
     
     admin-api:
       prefix: "/api"
-      
+
+      token-store:
+        token-ttl: "PT12H"
+
     admin-panel:
       prefix: "/admin-ui"
       front-end-config:
-        host: "http://127.0.0.1:80"
+        default-page-size: 25
     
   spring:
 #    update-receiver: webhook
