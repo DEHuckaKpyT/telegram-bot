@@ -3,9 +3,9 @@ package io.github.dehuckakpyt.telegrambotexample.plugin
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.migration.jdbc.MigrationUtils
 
 /**
  * Created on 29.11.2022.
@@ -34,7 +34,8 @@ fun Application.configureDatabase() {
 
     fun createTables() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(
+            MigrationUtils.statementsRequiredForDatabaseMigration(
+
             )
         }
     }

@@ -5,8 +5,8 @@ import io.github.dehuckakpyt.telegrambot.ext.transaction.readQuery
 import io.github.dehuckakpyt.telegrambot.model.Chains
 import io.github.dehuckakpyt.telegrambot.model.DatabaseChain
 import io.github.dehuckakpyt.telegrambot.model.source.Chain
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
 
 class DatabaseChainSource : ChainSource {
 

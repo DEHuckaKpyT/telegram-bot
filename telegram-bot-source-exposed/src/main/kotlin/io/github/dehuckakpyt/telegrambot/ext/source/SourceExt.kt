@@ -14,8 +14,8 @@ import io.github.dehuckakpyt.telegrambot.source.message.DefaultTelegramMessageSo
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.source.user.DefaultTelegramUserSource
 import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.migration.jdbc.MigrationUtils
 
 
 /**
@@ -33,7 +33,7 @@ fun CallbackContentSource.Companion.inDatabase(
     maxCallbackContentsPerUser: Long = CALLBACK_CONTENT_SOURCE_MAX_CONTENTS_PER_USER,
 ): CallbackContentSource {
     transaction {
-        SchemaUtils.createMissingTablesAndColumns(CallbackContents)
+        MigrationUtils.statementsRequiredForDatabaseMigration(CallbackContents)
     }
 
     return DatabaseCallbackContentSource(maxCallbackContentsPerUser)
@@ -42,7 +42,7 @@ fun CallbackContentSource.Companion.inDatabase(
 val CallbackContentSource.Companion.inDatabase: CallbackContentSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(CallbackContents)
+            MigrationUtils.statementsRequiredForDatabaseMigration(CallbackContents)
         }
 
         return DatabaseCallbackContentSource(CALLBACK_CONTENT_SOURCE_MAX_CONTENTS_PER_USER)
@@ -51,7 +51,7 @@ val CallbackContentSource.Companion.inDatabase: CallbackContentSource
 val ChainSource.Companion.inDatabase: ChainSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(Chains)
+            MigrationUtils.statementsRequiredForDatabaseMigration(Chains)
         }
 
         return DatabaseChainSource()
@@ -60,7 +60,7 @@ val ChainSource.Companion.inDatabase: ChainSource
 val TelegramMessageSource.Companion.inDatabase: DefaultTelegramMessageSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(DefaultTelegramMessages)
+            MigrationUtils.statementsRequiredForDatabaseMigration(DefaultTelegramMessages)
         }
 
         return DefaultTelegramMessageSource()
@@ -69,7 +69,7 @@ val TelegramMessageSource.Companion.inDatabase: DefaultTelegramMessageSource
 val TelegramUserSource.Companion.inDatabase: DefaultTelegramUserSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(DefaultTelegramUsers)
+            MigrationUtils.statementsRequiredForDatabaseMigration(DefaultTelegramUsers)
         }
 
         return DefaultTelegramUserSource()
@@ -78,7 +78,7 @@ val TelegramUserSource.Companion.inDatabase: DefaultTelegramUserSource
 val TelegramChatSource.Companion.inDatabase: DefaultTelegramChatSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(DefaultTelegramChats)
+            MigrationUtils.statementsRequiredForDatabaseMigration(DefaultTelegramChats)
         }
 
         return DefaultTelegramChatSource()
@@ -87,7 +87,7 @@ val TelegramChatSource.Companion.inDatabase: DefaultTelegramChatSource
 val TelegramChatStatusEventSource.Companion.inDatabase: DefaultTelegramChatStatusEventSource
     get() {
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(DefaultTelegramChatStatusEvents)
+            MigrationUtils.statementsRequiredForDatabaseMigration(DefaultTelegramChatStatusEvents)
         }
 
         return DefaultTelegramChatStatusEventSource()

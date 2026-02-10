@@ -6,9 +6,9 @@ import io.github.dehuckakpyt.telegrambot.ext.transaction.readQuery
 import io.github.dehuckakpyt.telegrambot.model.CallbackContents
 import io.github.dehuckakpyt.telegrambot.model.DatabaseCallbackContent
 import io.github.dehuckakpyt.telegrambot.model.source.CallbackContent
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.SortOrder
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
 import java.time.LocalDateTime
 import java.util.*
 
