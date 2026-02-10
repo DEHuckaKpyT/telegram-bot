@@ -6,7 +6,7 @@ telegram-bot:
   administration:
     access:
       user-ids: 
-      - 1165327523
+        - 1165327523
     
     admin-api:
       prefix: "/api"
