@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /**
- * Created on 05.01.2026.
+ * Created on 11.02.2026.
  *
  * @author KScript
  */
@@ -1239,6 +1239,22 @@ public class TelegramBotImpl(
         put("limit", limit)
     }
 
+    override suspend fun getUserProfileAudios(
+        userId: Long,
+        offset: Int?,
+        limit: Int?,
+    ): UserProfileAudios = client.postJson<UserProfileAudios>("getUserProfileAudios",
+        GetUserProfileAudios(
+            userId = userId,
+            offset = offset,
+            limit = limit
+        )
+    ).afterMethod("getUserProfileAudios") {
+        put("userId", userId)
+        put("offset", offset)
+        put("limit", limit)
+    }
+
     override suspend fun setUserEmojiStatus(
         userId: Long,
         emojiStatusCustomEmojiId: String?,
@@ -1990,6 +2006,17 @@ public class TelegramBotImpl(
     ).afterMethod("getMyShortDescription") {
         put("languageCode", languageCode)
     }
+
+    override suspend fun setMyProfilePhoto(photo: InputProfilePhoto): Boolean =
+            client.postMultiPart<Boolean>("setMyProfilePhoto") {
+        append("photo", client.toJson(photo))
+    }.afterMethod("setMyProfilePhoto") {
+        put("photo", photo)
+    }
+
+    override suspend fun removeMyProfilePhoto(): Boolean =
+            client.get<Boolean>("removeMyProfilePhoto")
+        .afterMethod("removeMyProfilePhoto")
 
     override suspend fun setChatMenuButton(chatId: Long?, menuButton: MenuButton?): Boolean =
             client.postJson<Boolean>("setChatMenuButton",

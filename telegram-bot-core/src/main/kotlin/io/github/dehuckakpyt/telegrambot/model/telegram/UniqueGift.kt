@@ -22,6 +22,8 @@ import kotlin.String
  * @param backdrop Backdrop of the gift
  * @param isPremium *Optional*. *True*, if the original regular gift was exclusively purchaseable by
  * Telegram Premium subscribers
+ * @param isBurned *Optional*. *True*, if the gift was used to craft another gift and isn't
+ * available anymore
  * @param isFromBlockchain *Optional*. *True*, if the gift is assigned from the TON blockchain and
  * can't be resold or transferred in Telegram
  * @param colors *Optional*. The color scheme that can be used by the gift's owner for the chat's
@@ -80,6 +82,12 @@ public data class UniqueGift(
     @get:JsonProperty("is_premium")
     @param:JsonProperty("is_premium")
     public val isPremium: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the gift was used to craft another gift and isn't available anymore
+     */
+    @get:JsonProperty("is_burned")
+    @param:JsonProperty("is_burned")
+    public val isBurned: Boolean? = null,
     /**
      * *Optional*. *True*, if the gift is assigned from the TON blockchain and can't be resold or
      * transferred in Telegram

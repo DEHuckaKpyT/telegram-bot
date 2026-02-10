@@ -23,6 +23,7 @@ import kotlin.collections.List
  * @param cover *Optional*. Available sizes of the cover of the video in the message
  * @param startTimestamp *Optional*. Timestamp in seconds from which the video will play in the
  * message
+ * @param qualities *Optional*. List of available qualities of the video
  * @param fileName *Optional*. Original filename as defined by the sender
  * @param mimeType *Optional*. MIME type of the file as defined by the sender
  * @param fileSize *Optional*. File size in bytes. It can be bigger than 2^31 and some programming
@@ -79,6 +80,12 @@ public data class Video(
     @get:JsonProperty("start_timestamp")
     @param:JsonProperty("start_timestamp")
     public val startTimestamp: Int? = null,
+    /**
+     * *Optional*. List of available qualities of the video
+     */
+    @get:JsonProperty("qualities")
+    @param:JsonProperty("qualities")
+    public val qualities: List<VideoQuality>? = null,
     /**
      * *Optional*. Original filename as defined by the sender
      */

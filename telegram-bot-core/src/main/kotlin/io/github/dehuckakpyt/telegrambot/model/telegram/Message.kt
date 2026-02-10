@@ -110,6 +110,8 @@ import kotlin.collections.List
  * information about them (the bot itself may be one of these members)
  * @param leftChatMember *Optional*. A member was removed from the group, information about them
  * (this member may be the bot itself)
+ * @param chatOwnerLeft *Optional*. Service message: chat owner has left
+ * @param chatOwnerChanged *Optional*. Service message: chat owner has changed
  * @param newChatTitle *Optional*. A chat title was changed to this value
  * @param newChatPhoto *Optional*. A chat photo was change to this value
  * @param deleteChatPhoto *Optional*. Service message: the chat photo was deleted
@@ -556,6 +558,18 @@ public data class Message(
     @get:JsonProperty("left_chat_member")
     @param:JsonProperty("left_chat_member")
     public val leftChatMember: User? = null,
+    /**
+     * *Optional*. Service message: chat owner has left
+     */
+    @get:JsonProperty("chat_owner_left")
+    @param:JsonProperty("chat_owner_left")
+    public val chatOwnerLeft: ChatOwnerLeft? = null,
+    /**
+     * *Optional*. Service message: chat owner has changed
+     */
+    @get:JsonProperty("chat_owner_changed")
+    @param:JsonProperty("chat_owner_changed")
+    public val chatOwnerChanged: ChatOwnerChanged? = null,
     /**
      * *Optional*. A chat title was changed to this value
      */

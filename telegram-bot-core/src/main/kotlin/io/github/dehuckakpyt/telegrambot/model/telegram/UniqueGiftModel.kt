@@ -13,8 +13,10 @@ import kotlin.String
  *
  * @param name Name of the model
  * @param sticker The sticker that represents the unique gift
- * @param rarityPerMille The number of unique gifts that receive this model for every 1000 gifts
- * upgraded
+ * @param rarityPerMille The number of unique gifts that receive this model for every 1000 gift
+ * upgrades. Always 0 for crafted gifts.
+ * @param rarity *Optional*. Rarity of the model if it is a crafted model. Currently, can be
+ * “uncommon”, “rare”, “epic”, or “legendary”.
  */
 public data class UniqueGiftModel(
     /**
@@ -30,9 +32,17 @@ public data class UniqueGiftModel(
     @param:JsonProperty("sticker")
     public val sticker: Sticker,
     /**
-     * The number of unique gifts that receive this model for every 1000 gifts upgraded
+     * The number of unique gifts that receive this model for every 1000 gift upgrades. Always 0 for
+     * crafted gifts.
      */
     @get:JsonProperty("rarity_per_mille")
     @param:JsonProperty("rarity_per_mille")
     public val rarityPerMille: Int,
+    /**
+     * *Optional*. Rarity of the model if it is a crafted model. Currently, can be “uncommon”,
+     * “rare”, “epic”, or “legendary”.
+     */
+    @get:JsonProperty("rarity")
+    @param:JsonProperty("rarity")
+    public val rarity: String? = null,
 )

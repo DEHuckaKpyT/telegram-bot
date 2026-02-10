@@ -100,6 +100,8 @@ import kotlin.collections.List
  * float type are safe for storing this identifier.
  * @param location *Optional*. For supergroups, the location to which the supergroup is connected
  * @param rating *Optional*. For private chats, the rating of the user if any
+ * @param firstProfileAudio *Optional*. For private chats, the first audio added to the profile of
+ * the user
  * @param uniqueGiftColors *Optional*. The color scheme based on a unique gift that must be used for
  * the chat's name, message replies and link previews
  * @param paidMessageStarCount *Optional*. The number of Telegram Stars a general user have to pay
@@ -425,6 +427,12 @@ public data class ChatFullInfo(
     @get:JsonProperty("rating")
     @param:JsonProperty("rating")
     public val rating: UserRating? = null,
+    /**
+     * *Optional*. For private chats, the first audio added to the profile of the user
+     */
+    @get:JsonProperty("first_profile_audio")
+    @param:JsonProperty("first_profile_audio")
+    public val firstProfileAudio: Audio? = null,
     /**
      * *Optional*. The color scheme based on a unique gift that must be used for the chat's name,
      * message replies and link previews

@@ -52,6 +52,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.SuggestedPostParameters
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserChatBoosts
+import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfileAudios
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfilePhotos
 import io.github.dehuckakpyt.telegrambot.model.telegram.WebhookInfo
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
@@ -1476,6 +1477,22 @@ public interface TelegramBotApi {
     ): UserProfilePhotos
 
     /**
+     * Use this method to get a list of profile audios for a user. Returns a
+     * [UserProfileAudios](https://core.telegram.org/bots/api/#userprofileaudios) object.
+     *
+     * @param userId Unique identifier of the target user
+     * @param offset Sequential number of the first audio to be returned. By default, all audios are
+     * returned.
+     * @param limit Limits the number of audios to be retrieved. Values between 1-100 are accepted.
+     * Defaults to 100.
+     */
+    public suspend fun getUserProfileAudios(
+        userId: Long,
+        offset: Int? = null,
+        limit: Int? = null,
+    ): UserProfileAudios
+
+    /**
      * Changes the emoji status for a given user that previously allowed the bot to manage their
      * emoji status via the Mini App method
      * [requestEmojiStatusAccess](https://core.telegram.org/bots/webapps#initializing-mini-apps).
@@ -2005,10 +2022,10 @@ public interface TelegramBotApi {
     public suspend fun getForumTopicIconStickers(): List<Sticker>
 
     /**
-     * Use this method to create a topic in a forum supergroup chat. The bot must be an
-     * administrator in the chat for this to work and must have the *can_manage_topics* administrator
-     * rights. Returns information about the created topic as a
-     * [ForumTopic](https://core.telegram.org/bots/api/#forumtopic) object.
+     * Use this method to create a topic in a forum supergroup chat or a private chat with a user.
+     * In the case of a supergroup chat the bot must be an administrator in the chat for this to work
+     * and must have the *can_manage_topics* administrator right. Returns information about the created
+     * topic as a [ForumTopic](https://core.telegram.org/bots/api/#forumtopic) object.
      *
      * @param chatId Unique identifier for the target chat or username of the target supergroup (in
      * the format `@supergroupusername`)
@@ -2317,6 +2334,18 @@ public interface TelegramBotApi {
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     public suspend fun getMyShortDescription(languageCode: String? = null): BotShortDescription
+
+    /**
+     * Changes the profile photo of the bot. Returns *True* on success.
+     *
+     * @param photo The new profile photo to set
+     */
+    public suspend fun setMyProfilePhoto(photo: InputProfilePhoto): Boolean
+
+    /**
+     * Removes the profile photo of the bot. Requires no parameters. Returns *True* on success.
+     */
+    public suspend fun removeMyProfilePhoto(): Boolean
 
     /**
      * Use this method to change the bot's menu button in a private chat, or the default menu

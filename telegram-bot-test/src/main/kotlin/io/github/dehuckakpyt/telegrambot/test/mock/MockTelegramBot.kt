@@ -54,6 +54,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.SuggestedPostParameters
 import io.github.dehuckakpyt.telegrambot.model.telegram.Update
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserChatBoosts
+import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfileAudios
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfilePhotos
 import io.github.dehuckakpyt.telegrambot.model.telegram.WebhookInfo
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
@@ -498,6 +499,12 @@ internal class MockTelegramBot : TelegramBot {
         limit: Int?,
     ): UserProfilePhotos = mockk()
 
+    override suspend fun getUserProfileAudios(
+        userId: Long,
+        offset: Int?,
+        limit: Int?,
+    ): UserProfileAudios = mockk()
+
     override suspend fun setUserEmojiStatus(
         userId: Long,
         emojiStatusCustomEmojiId: String?,
@@ -716,6 +723,10 @@ internal class MockTelegramBot : TelegramBot {
             Boolean = mockk()
 
     override suspend fun getMyShortDescription(languageCode: String?): BotShortDescription = mockk()
+
+    override suspend fun setMyProfilePhoto(photo: InputProfilePhoto): Boolean = mockk()
+
+    override suspend fun removeMyProfilePhoto(): Boolean = mockk()
 
     override suspend fun setChatMenuButton(chatId: Long?, menuButton: MenuButton?): Boolean =
             mockk()

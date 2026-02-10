@@ -39,6 +39,8 @@ import kotlin.String
  * [getMe](https://core.telegram.org/bots/api/#getme).
  * @param hasTopicsEnabled *Optional*. *True*, if the bot has forum topic mode enabled in private
  * chats. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
+ * @param allowsUsersToCreateTopics *Optional*. *True*, if the bot allows users to create and delete
+ * topics in private chats. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
  */
 public data class User(
     /**
@@ -135,4 +137,11 @@ public data class User(
     @get:JsonProperty("has_topics_enabled")
     @param:JsonProperty("has_topics_enabled")
     public val hasTopicsEnabled: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the bot allows users to create and delete topics in private chats.
+     * Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
+     */
+    @get:JsonProperty("allows_users_to_create_topics")
+    @param:JsonProperty("allows_users_to_create_topics")
+    public val allowsUsersToCreateTopics: Boolean? = null,
 )
