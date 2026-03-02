@@ -13,6 +13,7 @@ import kotlin.String
  * @author KScript
  *
  * @param status The member's status in the chat, always “member”
+ * @param tag *Optional*. Tag of the member
  * @param user Information about the user
  * @param untilDate *Optional*. Date when the user's subscription will expire; Unix time
  */
@@ -23,6 +24,12 @@ public data class ChatMemberMember(
     @get:JsonProperty("status")
     @param:JsonProperty("status")
     override val status: String,
+    /**
+     * *Optional*. Tag of the member
+     */
+    @get:JsonProperty("tag")
+    @param:JsonProperty("tag")
+    public val tag: String? = null,
     /**
      * Information about the user
      */

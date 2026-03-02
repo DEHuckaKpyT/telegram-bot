@@ -35,6 +35,8 @@ import kotlin.collections.List
  * @param senderBusinessBot *Optional*. The bot that actually sent the message on behalf of the
  * business account. Available only for outgoing messages sent on behalf of the connected business
  * account.
+ * @param senderTag *Optional*. Tag or custom title of the sender of the message; for supergroups
+ * only
  * @param date Date the message was sent in Unix time. It is always a positive number, representing
  * a valid date.
  * @param businessConnectionId *Optional*. Unique identifier of the business connection from which
@@ -63,8 +65,8 @@ import kotlin.collections.List
  * example, as an away or a greeting business message, or as a scheduled message
  * @param isPaidPost *Optional*. *True*, if the message is a paid post. Note that such posts must
  * not be deleted for 24 hours to receive the payment and can't be edited.
- * @param mediaGroupId *Optional*. The unique identifier of a media message group this message
- * belongs to
+ * @param mediaGroupId *Optional*. The unique identifier inside this chat of a media message group
+ * this message belongs to
  * @param authorSignature *Optional*. Signature of the post author for messages in channels, or the
  * custom title of an anonymous group administrator
  * @param paidStarCount *Optional*. The number of Telegram Stars that were paid by the sender of the
@@ -193,8 +195,9 @@ import kotlin.collections.List
  * @param videoChatParticipantsInvited *Optional*. Service message: new participants invited to a
  * video chat
  * @param webAppData *Optional*. Service message: data sent by a Web App
- * @param replyMarkup *Optional*. Inline keyboard attached to the message. `login_url` buttons are
- * represented as ordinary `url` buttons.
+ * @param replyMarkup *Optional*. [Inline
+ * keyboard](https://core.telegram.org/bots/features#inline-keyboards) attached to the message.
+ * `login_url` buttons are represented as ordinary `url` buttons.
  */
 public data class Message(
     /**
@@ -251,6 +254,12 @@ public data class Message(
     @get:JsonProperty("sender_business_bot")
     @param:JsonProperty("sender_business_bot")
     public val senderBusinessBot: User? = null,
+    /**
+     * *Optional*. Tag or custom title of the sender of the message; for supergroups only
+     */
+    @get:JsonProperty("sender_tag")
+    @param:JsonProperty("sender_tag")
+    public val senderTag: String? = null,
     /**
      * Date the message was sent in Unix time. It is always a positive number, representing a valid
      * date.
@@ -359,7 +368,8 @@ public data class Message(
     @param:JsonProperty("is_paid_post")
     public val isPaidPost: Boolean? = null,
     /**
-     * *Optional*. The unique identifier of a media message group this message belongs to
+     * *Optional*. The unique identifier inside this chat of a media message group this message
+     * belongs to
      */
     @get:JsonProperty("media_group_id")
     @param:JsonProperty("media_group_id")
@@ -883,8 +893,8 @@ public data class Message(
     @param:JsonProperty("web_app_data")
     public val webAppData: WebAppData? = null,
     /**
-     * *Optional*. Inline keyboard attached to the message. `login_url` buttons are represented as
-     * ordinary `url` buttons.
+     * *Optional*. [Inline keyboard](https://core.telegram.org/bots/features#inline-keyboards)
+     * attached to the message. `login_url` buttons are represented as ordinary `url` buttons.
      */
     @get:JsonProperty("reply_markup")
     @param:JsonProperty("reply_markup")

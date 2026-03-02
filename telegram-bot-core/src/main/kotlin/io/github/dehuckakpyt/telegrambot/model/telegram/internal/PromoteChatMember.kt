@@ -45,4 +45,6 @@ internal data class PromoteChatMember(
     public val canManageTopics: Boolean? = null,
     @get:JsonProperty("can_manage_direct_messages")
     public val canManageDirectMessages: Boolean? = null,
+    @get:JsonProperty("can_manage_tags")
+    public val canManageTags: Boolean? = null,
 )

@@ -3464,6 +3464,8 @@ public interface TelegramBotApiExt : TelegramBotApi {
      * reopen forum topics; for supergroups only
      * @param canManageDirectMessages Pass *True* if the administrator can manage direct messages
      * within the channel and decline suggested posts; for channels only
+     * @param canManageTags Pass *True* if the administrator can edit the tags of regular members;
+     * for groups and supergroups only
      */
     public suspend fun promoteChatMember(
         chatId: Long,
@@ -3484,6 +3486,7 @@ public interface TelegramBotApiExt : TelegramBotApi {
         canPinMessages: Boolean? = null,
         canManageTopics: Boolean? = null,
         canManageDirectMessages: Boolean? = null,
+        canManageTags: Boolean? = null,
     ): Boolean = promoteChatMember(
         chatId = chatId.toString(),
         userId = userId,
@@ -3503,6 +3506,7 @@ public interface TelegramBotApiExt : TelegramBotApi {
         canPinMessages = canPinMessages,
         canManageTopics = canManageTopics,
         canManageDirectMessages = canManageDirectMessages,
+        canManageTags = canManageTags,
     )
 
     /**
@@ -3523,6 +3527,26 @@ public interface TelegramBotApiExt : TelegramBotApi {
         chatId = chatId.toString(),
         userId = userId,
         customTitle = customTitle,
+    )
+
+    /**
+     * Use this method to set a tag for a regular member in a group or a supergroup. The bot must be
+     * an administrator in the chat for this to work and must have the *can_manage_tags* administrator
+     * right. Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target supergroup (in
+     * the format `@supergroupusername`)
+     * @param userId Unique identifier of the target user
+     * @param tag New tag for the member; 0-16 characters, emoji are not allowed
+     */
+    public suspend fun setChatMemberTag(
+        chatId: Long,
+        userId: Long,
+        tag: String? = null,
+    ): Boolean = setChatMemberTag(
+        chatId = chatId.toString(),
+        userId = userId,
+        tag = tag,
     )
 
     /**

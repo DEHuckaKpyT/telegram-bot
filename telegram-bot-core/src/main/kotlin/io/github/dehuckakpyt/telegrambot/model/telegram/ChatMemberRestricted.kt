@@ -14,6 +14,7 @@ import kotlin.String
  * @author KScript
  *
  * @param status The member's status in the chat, always “restricted”
+ * @param tag *Optional*. Tag of the member
  * @param user Information about the user
  * @param isMember *True*, if the user is a member of the chat at the moment of the request
  * @param canSendMessages *True*, if the user is allowed to send text messages, contacts, giveaways,
@@ -29,6 +30,7 @@ import kotlin.String
  * and use inline bots
  * @param canAddWebPagePreviews *True*, if the user is allowed to add web page previews to their
  * messages
+ * @param canEditTag *True*, if the user is allowed to edit their own tag
  * @param canChangeInfo *True*, if the user is allowed to change the chat title, photo and other
  * settings
  * @param canInviteUsers *True*, if the user is allowed to invite new users to the chat
@@ -44,6 +46,12 @@ public data class ChatMemberRestricted(
     @get:JsonProperty("status")
     @param:JsonProperty("status")
     override val status: String,
+    /**
+     * *Optional*. Tag of the member
+     */
+    @get:JsonProperty("tag")
+    @param:JsonProperty("tag")
+    public val tag: String? = null,
     /**
      * Information about the user
      */
@@ -117,6 +125,12 @@ public data class ChatMemberRestricted(
     @get:JsonProperty("can_add_web_page_previews")
     @param:JsonProperty("can_add_web_page_previews")
     public val canAddWebPagePreviews: Boolean,
+    /**
+     * *True*, if the user is allowed to edit their own tag
+     */
+    @get:JsonProperty("can_edit_tag")
+    @param:JsonProperty("can_edit_tag")
+    public val canEditTag: Boolean,
     /**
      * *True*, if the user is allowed to change the chat title, photo and other settings
      */

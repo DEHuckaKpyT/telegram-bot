@@ -1,6 +1,9 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.`annotation`.JsonProperty
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
 
 /**
  * This object represents a video file of a specific quality.

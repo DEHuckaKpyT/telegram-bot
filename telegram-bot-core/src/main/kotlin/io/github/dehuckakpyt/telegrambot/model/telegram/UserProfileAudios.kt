@@ -1,6 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.`annotation`.JsonProperty
+import kotlin.Int
+import kotlin.collections.List
 
 /**
  * This object represents the audios displayed on a user's profile.

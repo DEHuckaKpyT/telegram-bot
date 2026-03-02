@@ -1586,7 +1586,8 @@ public abstract class TelegramBotApiHandling {
      * @param protectContent Protects the contents of the sent message from forwarding and saving
      * @param messageEffectId Unique identifier of the message effect to be added to the message
      * @param replyParameters A JSON-serialized object for description of the message to reply to
-     * @param replyMarkup A JSON-serialized object for an inline keyboard
+     * @param replyMarkup A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.sendChecklist(
         businessConnectionId: String,
@@ -1668,8 +1669,8 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Use this method to stream a partial message to a user while the message is being generated;
-     * supported only for bots with forum topic mode enabled. Returns *True* on success.
+     * Use this method to stream a partial message to a user while the message is being generated.
+     * Returns *True* on success.
      *
      * @param draftId Unique identifier of the message draft; must be non-zero. Changes of drafts
      * with the same identifier are animated
@@ -1944,6 +1945,8 @@ public abstract class TelegramBotApiHandling {
      * reopen forum topics; for supergroups only
      * @param canManageDirectMessages Pass *True* if the administrator can manage direct messages
      * within the channel and decline suggested posts; for channels only
+     * @param canManageTags Pass *True* if the administrator can edit the tags of regular members;
+     * for groups and supergroups only
      */
     public suspend fun Container.promoteChatMember(
         userId: Long,
@@ -1963,6 +1966,7 @@ public abstract class TelegramBotApiHandling {
         canPinMessages: Boolean? = null,
         canManageTopics: Boolean? = null,
         canManageDirectMessages: Boolean? = null,
+        canManageTags: Boolean? = null,
     ): Boolean = bot.promoteChatMember(
         chatId = chat.id,
         userId = userId,
@@ -1982,6 +1986,7 @@ public abstract class TelegramBotApiHandling {
         canPinMessages = canPinMessages,
         canManageTopics = canManageTopics,
         canManageDirectMessages = canManageDirectMessages,
+        canManageTags = canManageTags,
     )
 
     /**
@@ -1997,6 +2002,21 @@ public abstract class TelegramBotApiHandling {
         chatId = chat.id,
         userId = userId,
         customTitle = customTitle,
+    )
+
+    /**
+     * Use this method to set a tag for a regular member in a group or a supergroup. The bot must be
+     * an administrator in the chat for this to work and must have the *can_manage_tags* administrator
+     * right. Returns *True* on success.
+     *
+     * @param userId Unique identifier of the target user
+     * @param tag New tag for the member; 0-16 characters, emoji are not allowed
+     */
+    public suspend fun Container.setChatMemberTag(userId: Long, tag: String? = null): Boolean =
+            bot.setChatMemberTag(
+        chatId = chat.id,
+        userId = userId,
+        tag = tag,
     )
 
     /**
@@ -3605,7 +3625,8 @@ public abstract class TelegramBotApiHandling {
      * the message will be sent
      * @param messageId Unique identifier for the target message
      * @param checklist A JSON-serialized object for the new checklist
-     * @param replyMarkup A JSON-serialized object for the new inline keyboard for the message
+     * @param replyMarkup A JSON-serialized object for the new [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards) for the message
      */
     public suspend fun Container.editMessageChecklist(
         businessConnectionId: String,

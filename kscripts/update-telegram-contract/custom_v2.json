@@ -1,13 +1,13 @@
 {
   "version": {
     "major": 9,
-    "minor": 4,
+    "minor": 5,
     "patch": 0
   },
   "recent_changes": {
     "year": 2026,
-    "month": 2,
-    "day": 9
+    "month": 3,
+    "day": 1
   },
   "methods": [
     {
@@ -3660,7 +3660,7 @@
         },
         {
           "name": "reply_markup",
-          "description": "A JSON-serialized object for an inline keyboard",
+          "description": "A JSON-serialized object for an [inline keyboard](https://core.telegram.org/bots/features#inline-keyboards)",
           "required": false,
           "type_info": {
             "type": "reference",
@@ -3828,7 +3828,7 @@
     },
     {
       "name": "sendMessageDraft",
-      "description": "Use this method to stream a partial message to a user while the message is being generated; supported only for bots with forum topic mode enabled. Returns *True* on success.",
+      "description": "Use this method to stream a partial message to a user while the message is being generated. Returns *True* on success.",
       "arguments": [
         {
           "name": "chat_id",
@@ -4495,6 +4495,14 @@
           "type_info": {
             "type": "bool"
           }
+        },
+        {
+          "name": "can_manage_tags",
+          "description": "Pass *True* if the administrator can edit the tags of regular members; for groups and supergroups only",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
         }
       ],
       "maybe_multipart": false,
@@ -4553,6 +4561,56 @@
         "default": true
       },
       "documentation_link": "https://core.telegram.org/bots/api/#setchatadministratorcustomtitle"
+    },
+    {
+      "name": "setChatMemberTag",
+      "description": "Use this method to set a tag for a regular member in a group or a supergroup. The bot must be an administrator in the chat for this to work and must have the *can\\_manage\\_tags* administrator right. Returns *True* on success.",
+      "arguments": [
+        {
+          "name": "chat_id",
+          "description": "Unique identifier for the target chat or username of the target supergroup (in the format `@supergroupusername`)",
+          "required": true,
+          "type_info": {
+            "type": "any_of",
+            "any_of": [
+              {
+                "type": "integer",
+                "enumeration": []
+              },
+              {
+                "type": "string",
+                "enumeration": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_id",
+          "description": "Unique identifier of the target user",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "tag",
+          "description": "New tag for the member; 0-16 characters, emoji are not allowed",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "min_len": 0,
+            "max_len": 16,
+            "enumeration": []
+          }
+        }
+      ],
+      "maybe_multipart": false,
+      "return_type": {
+        "type": "bool",
+        "default": true
+      },
+      "documentation_link": "https://core.telegram.org/bots/api/#setchatmembertag"
     },
     {
       "name": "banChatSenderChat",
@@ -8497,7 +8555,7 @@
         },
         {
           "name": "reply_markup",
-          "description": "A JSON-serialized object for the new inline keyboard for the message",
+          "description": "A JSON-serialized object for the new [inline keyboard](https://core.telegram.org/bots/features#inline-keyboards) for the message",
           "required": false,
           "type_info": {
             "type": "reference",
@@ -11735,6 +11793,15 @@
           }
         },
         {
+          "name": "sender_tag",
+          "description": "*Optional*. Tag or custom title of the sender of the message; for supergroups only",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
           "name": "date",
           "description": "Date the message was sent in Unix time. It is always a positive number, representing a valid date.",
           "required": true,
@@ -11880,7 +11947,7 @@
         },
         {
           "name": "media_group_id",
-          "description": "*Optional*. The unique identifier of a media message group this message belongs to",
+          "description": "*Optional*. The unique identifier inside this chat of a media message group this message belongs to",
           "required": false,
           "type_info": {
             "type": "string",
@@ -12624,7 +12691,7 @@
         },
         {
           "name": "reply_markup",
-          "description": "*Optional*. Inline keyboard attached to the message. `login_url` buttons are represented as ordinary `url` buttons.",
+          "description": "*Optional*. [Inline keyboard](https://core.telegram.org/bots/features#inline-keyboards) attached to the message. `login_url` buttons are represented as ordinary `url` buttons.",
           "required": false,
           "type_info": {
             "type": "reference",
@@ -12709,7 +12776,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the entity. Currently, can be “mention” (`@username`), “hashtag” (`#hashtag` or `#hashtag@chatusername`), “cashtag” (`$USD` or `$USD@chatusername`), “bot\\_command” (`/start@jobs_bot`), “url” (`https://telegram.org`), “email” (`do-not-reply@telegram.org`), “phone\\_number” (`+1-212-555-0123`), “bold” (**bold text**), “italic” (*italic text*), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable\\_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text\\_link” (for clickable text URLs), “text\\_mention” (for users [without usernames](https://telegram.org/blog/edit#new-mentions)), “custom\\_emoji” (for inline custom emoji stickers)",
+          "description": "Type of the entity. Currently, can be “mention” (`@username`), “hashtag” (`#hashtag` or `#hashtag@chatusername`), “cashtag” (`$USD` or `$USD@chatusername`), “bot\\_command” (`/start@jobs_bot`), “url” (`https://telegram.org`), “email” (`do-not-reply@telegram.org`), “phone\\_number” (`+1-212-555-0123`), “bold” (**bold text**), “italic” (*italic text*), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “blockquote” (block quotation), “expandable\\_blockquote” (collapsed-by-default block quotation), “code” (monowidth string), “pre” (monowidth block), “text\\_link” (for clickable text URLs), “text\\_mention” (for users [without usernames](https://telegram.org/blog/edit#new-mentions)), “custom\\_emoji” (for inline custom emoji stickers), or “date\\_time” (for formatted date and time)",
           "required": true,
           "type_info": {
             "type": "string",
@@ -12732,7 +12799,8 @@
               "pre",
               "text_link",
               "text_mention",
-              "custom_emoji"
+              "custom_emoji",
+              "date_time"
             ]
           }
         },
@@ -12784,6 +12852,24 @@
         {
           "name": "custom_emoji_id",
           "description": "*Optional*. For “custom\\_emoji” only, unique identifier of the custom emoji. Use [getCustomEmojiStickers](https://core.telegram.org/bots/api/#getcustomemojistickers) to get full information about the sticker",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "unix_time",
+          "description": "*Optional*. For “date\\_time” only, the Unix time associated with the entity",
+          "required": false,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "date_time_format",
+          "description": "*Optional*. For “date\\_time” only, the string that defines the formatting of the date and time. See [date-time entity formatting](https://core.telegram.org/bots/api/#date-time-entity-formatting) for more details.",
           "required": false,
           "type_info": {
             "type": "string",
@@ -17486,6 +17572,14 @@
           "type_info": {
             "type": "bool"
           }
+        },
+        {
+          "name": "can_manage_tags",
+          "description": "*Optional*. *True*, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can\\_pin\\_messages.",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
         }
       ],
       "documentation_link": "https://core.telegram.org/bots/api/#chatadministratorrights"
@@ -17805,6 +17899,14 @@
           }
         },
         {
+          "name": "can_manage_tags",
+          "description": "*Optional*. *True*, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can\\_pin\\_messages.",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        },
+        {
           "name": "custom_title",
           "description": "*Optional*. Custom title for this user",
           "required": false,
@@ -17828,6 +17930,15 @@
           "type_info": {
             "type": "string",
             "default": "member",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "tag",
+          "description": "*Optional*. Tag of the member",
+          "required": false,
+          "type_info": {
+            "type": "string",
             "enumeration": []
           }
         },
@@ -17864,6 +17975,15 @@
           "type_info": {
             "type": "string",
             "default": "restricted",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "tag",
+          "description": "*Optional*. Tag of the member",
+          "required": false,
+          "type_info": {
+            "type": "string",
             "enumeration": []
           }
         },
@@ -17959,6 +18079,14 @@
         {
           "name": "can_add_web_page_previews",
           "description": "*True*, if the user is allowed to add web page previews to their messages",
+          "required": true,
+          "type_info": {
+            "type": "bool"
+          }
+        },
+        {
+          "name": "can_edit_tag",
+          "description": "*True*, if the user is allowed to edit their own tag",
           "required": true,
           "type_info": {
             "type": "bool"
@@ -18213,6 +18341,14 @@
         {
           "name": "can_add_web_page_previews",
           "description": "*Optional*. *True*, if the user is allowed to add web page previews to their messages",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        },
+        {
+          "name": "can_edit_tag",
+          "description": "*Optional*. *True*, if the user is allowed to edit their own tag",
           "required": false,
           "type_info": {
             "type": "bool"
@@ -23566,7 +23702,7 @@
         },
         {
           "name": "reply_markup",
-          "description": "*Optional*. Inline keyboard attached to the message",
+          "description": "*Optional*. [Inline keyboard](https://core.telegram.org/bots/features#inline-keyboards) attached to the message",
           "required": false,
           "type_info": {
             "type": "reference",

@@ -23,6 +23,7 @@ import kotlin.Boolean
  * stickers and use inline bots
  * @param canAddWebPagePreviews *Optional*. *True*, if the user is allowed to add web page previews
  * to their messages
+ * @param canEditTag *Optional*. *True*, if the user is allowed to edit their own tag
  * @param canChangeInfo *Optional*. *True*, if the user is allowed to change the chat title, photo
  * and other settings. Ignored in public supergroups
  * @param canInviteUsers *Optional*. *True*, if the user is allowed to invite new users to the chat
@@ -94,6 +95,12 @@ public data class ChatPermissions(
     @get:JsonProperty("can_add_web_page_previews")
     @param:JsonProperty("can_add_web_page_previews")
     public val canAddWebPagePreviews: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the user is allowed to edit their own tag
+     */
+    @get:JsonProperty("can_edit_tag")
+    @param:JsonProperty("can_edit_tag")
+    public val canEditTag: Boolean? = null,
     /**
      * *Optional*. *True*, if the user is allowed to change the chat title, photo and other
      * settings. Ignored in public supergroups

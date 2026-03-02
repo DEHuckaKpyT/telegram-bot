@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /**
- * Created on 11.02.2026.
+ * Created on 02.03.2026.
  *
  * @author KScript
  */
@@ -1355,6 +1355,7 @@ public class TelegramBotImpl(
         canPinMessages: Boolean?,
         canManageTopics: Boolean?,
         canManageDirectMessages: Boolean?,
+        canManageTags: Boolean?,
     ): Boolean = client.postJson<Boolean>("promoteChatMember",
         PromoteChatMember(
             chatId = chatId,
@@ -1374,7 +1375,8 @@ public class TelegramBotImpl(
             canEditMessages = canEditMessages,
             canPinMessages = canPinMessages,
             canManageTopics = canManageTopics,
-            canManageDirectMessages = canManageDirectMessages
+            canManageDirectMessages = canManageDirectMessages,
+            canManageTags = canManageTags
         )
     ).afterMethod("promoteChatMember") {
         put("chatId", chatId)
@@ -1395,6 +1397,7 @@ public class TelegramBotImpl(
         put("canPinMessages", canPinMessages)
         put("canManageTopics", canManageTopics)
         put("canManageDirectMessages", canManageDirectMessages)
+        put("canManageTags", canManageTags)
     }
 
     override suspend fun setChatAdministratorCustomTitle(
@@ -1411,6 +1414,22 @@ public class TelegramBotImpl(
         put("chatId", chatId)
         put("userId", userId)
         put("customTitle", customTitle)
+    }
+
+    override suspend fun setChatMemberTag(
+        chatId: String,
+        userId: Long,
+        tag: String?,
+    ): Boolean = client.postJson<Boolean>("setChatMemberTag",
+        SetChatMemberTag(
+            chatId = chatId,
+            userId = userId,
+            tag = tag
+        )
+    ).afterMethod("setChatMemberTag") {
+        put("chatId", chatId)
+        put("userId", userId)
+        put("tag", tag)
     }
 
     override suspend fun banChatSenderChat(chatId: String, senderChatId: Long): Boolean =

@@ -43,6 +43,8 @@ import kotlin.String
  * reopen forum topics; for supergroups only
  * @param canManageDirectMessages *Optional*. *True*, if the administrator can manage direct
  * messages of the channel and decline suggested posts; for channels only
+ * @param canManageTags *Optional*. *True*, if the administrator can edit the tags of regular
+ * members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
  * @param customTitle *Optional*. Custom title for this user
  */
 public data class ChatMemberAdministrator(
@@ -170,6 +172,13 @@ public data class ChatMemberAdministrator(
     @get:JsonProperty("can_manage_direct_messages")
     @param:JsonProperty("can_manage_direct_messages")
     public val canManageDirectMessages: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the administrator can edit the tags of regular members; for groups and
+     * supergroups only. If omitted defaults to the value of can_pin_messages.
+     */
+    @get:JsonProperty("can_manage_tags")
+    @param:JsonProperty("can_manage_tags")
+    public val canManageTags: Boolean? = null,
     /**
      * *Optional*. Custom title for this user
      */

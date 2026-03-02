@@ -20,7 +20,7 @@ import kotlin.String
  * (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth
  * string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users
  * [without usernames](https://telegram.org/blog/edit#new-mentions)), “custom_emoji” (for inline custom
- * emoji stickers)
+ * emoji stickers), or “date_time” (for formatted date and time)
  * @param offset Offset in [UTF-16 code units](https://core.telegram.org/api/entities#entity-length)
  * to the start of the entity
  * @param length Length of the entity in [UTF-16 code
@@ -31,6 +31,10 @@ import kotlin.String
  * @param customEmojiId *Optional*. For “custom_emoji” only, unique identifier of the custom emoji.
  * Use [getCustomEmojiStickers](https://core.telegram.org/bots/api/#getcustomemojistickers) to get full
  * information about the sticker
+ * @param unixTime *Optional*. For “date_time” only, the Unix time associated with the entity
+ * @param dateTimeFormat *Optional*. For “date_time” only, the string that defines the formatting of
+ * the date and time. See [date-time entity
+ * formatting](https://core.telegram.org/bots/api/#date-time-entity-formatting) for more details.
  */
 public data class MessageEntity(
     /**
@@ -43,7 +47,7 @@ public data class MessageEntity(
      * quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text
      * URLs), “text_mention” (for users [without
      * usernames](https://telegram.org/blog/edit#new-mentions)), “custom_emoji” (for inline custom
-     * emoji stickers)
+     * emoji stickers), or “date_time” (for formatted date and time)
      */
     @get:JsonProperty("type")
     @param:JsonProperty("type")
@@ -88,4 +92,18 @@ public data class MessageEntity(
     @get:JsonProperty("custom_emoji_id")
     @param:JsonProperty("custom_emoji_id")
     public val customEmojiId: String? = null,
+    /**
+     * *Optional*. For “date_time” only, the Unix time associated with the entity
+     */
+    @get:JsonProperty("unix_time")
+    @param:JsonProperty("unix_time")
+    public val unixTime: Int? = null,
+    /**
+     * *Optional*. For “date_time” only, the string that defines the formatting of the date and
+     * time. See [date-time entity
+     * formatting](https://core.telegram.org/bots/api/#date-time-entity-formatting) for more details.
+     */
+    @get:JsonProperty("date_time_format")
+    @param:JsonProperty("date_time_format")
+    public val dateTimeFormat: String? = null,
 )

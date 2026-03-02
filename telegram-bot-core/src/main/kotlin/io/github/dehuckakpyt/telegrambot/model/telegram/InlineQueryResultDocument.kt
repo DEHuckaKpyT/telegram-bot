@@ -27,7 +27,8 @@ import kotlin.collections.List
  * @param mimeType MIME type of the content of the file, either “application/pdf” or
  * “application/zip”
  * @param description *Optional*. Short description of the result
- * @param replyMarkup *Optional*. Inline keyboard attached to the message
+ * @param replyMarkup *Optional*. [Inline
+ * keyboard](https://core.telegram.org/bots/features#inline-keyboards) attached to the message
  * @param inputMessageContent *Optional*. Content of the message to be sent instead of the file
  * @param thumbnailUrl *Optional*. URL of the thumbnail (JPEG only) for the file
  * @param thumbnailWidth *Optional*. Thumbnail width
@@ -85,7 +86,8 @@ public data class InlineQueryResultDocument(
     @param:JsonProperty("description")
     public val description: String? = null,
     /**
-     * *Optional*. Inline keyboard attached to the message
+     * *Optional*. [Inline keyboard](https://core.telegram.org/bots/features#inline-keyboards)
+     * attached to the message
      */
     @get:JsonProperty("reply_markup")
     @param:JsonProperty("reply_markup")

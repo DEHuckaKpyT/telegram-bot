@@ -553,12 +553,19 @@ internal class MockTelegramBot : TelegramBot {
         canPinMessages: Boolean?,
         canManageTopics: Boolean?,
         canManageDirectMessages: Boolean?,
+        canManageTags: Boolean?,
     ): Boolean = mockk()
 
     override suspend fun setChatAdministratorCustomTitle(
         chatId: String,
         userId: Long,
         customTitle: String,
+    ): Boolean = mockk()
+
+    override suspend fun setChatMemberTag(
+        chatId: String,
+        userId: Long,
+        tag: String?,
     ): Boolean = mockk()
 
     override suspend fun banChatSenderChat(chatId: String, senderChatId: Long): Boolean = mockk()
