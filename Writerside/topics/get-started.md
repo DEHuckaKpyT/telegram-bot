@@ -54,6 +54,12 @@ To use the library, all you need to do is add a dependency, build a config, spec
             dependencies {
                 implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
                 implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:%current_version%")
+                // Additional dependencies
+                runtimeOnly("io.insert-koin:koin-annotations:version")
+                ksp("io.insert-koin:koin-ksp-compiler:version")
+            }
+            ksp {
+                arg("KOIN_DEFAULT_MODULE", "true")
             }
         </code-block>
         <code>com/example/myproject/KtorApp.kt</code>

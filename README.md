@@ -136,6 +136,14 @@ repositories {
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:$telegram_bot_version")
+    
+    // Additional dependencies
+    runtimeOnly("io.insert-koin:koin-annotations:<>")
+    ksp("io.insert-koin:koin-ksp-compiler:<>")
+}
+
+ksp {
+    arg("KOIN_DEFAULT_MODULE", "true")
 }
 ```
 `com/example/myproject/KtorApp.kt`
