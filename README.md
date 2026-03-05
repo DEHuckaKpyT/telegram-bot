@@ -130,14 +130,19 @@ Ready-to-use solution for use with Ktor+Koin.
 
 `build.gradle.kts`
 ```kotlin
+plugins {
+    // Optional plugin for koin
+    id("com.google.devtools.ksp") version "<>"
+}
+
 repositories {
     mavenCentral()
 }
 dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:$telegram_bot_version")
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:$telegram_bot_version")
-    
-    // Additional dependencies
+
+    // Optional dependencies for koin
     compileOnly("io.insert-koin:koin-annotations:<>")
     ksp("io.insert-koin:koin-ksp-compiler:<>")
 }

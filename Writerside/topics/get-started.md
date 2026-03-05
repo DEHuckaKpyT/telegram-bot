@@ -48,13 +48,17 @@ To use the library, all you need to do is add a dependency, build a config, spec
         <br/>
         <code>build.gradle.kts</code>
         <code-block lang="kotlin">
+            plugins {
+                // Optional plugin for koin
+                id("com.google.devtools.ksp") version "version"
+            }
             repositories {
                 mavenCentral()
             }
             dependencies {
                 implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-core:%current_version%")
                 implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:%current_version%")
-                // Additional dependencies
+                // Optional dependencies for koin
                 compileOnly("io.insert-koin:koin-annotations:version")
                 ksp("io.insert-koin:koin-ksp-compiler:version")
             }
