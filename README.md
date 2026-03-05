@@ -138,7 +138,7 @@ dependencies {
     implementation("io.github.dehuckakpyt.telegrambot:telegram-bot-ktor:$telegram_bot_version")
     
     // Additional dependencies
-    runtimeOnly("io.insert-koin:koin-annotations:<>")
+    compileOnly("io.insert-koin:koin-annotations:<>")
     ksp("io.insert-koin:koin-ksp-compiler:<>")
 }
 
