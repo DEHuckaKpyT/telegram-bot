@@ -3,6 +3,8 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.dehuckakpyt.telegrambot/telegram-bot-core?label=Maven%20Central&logo=apache-maven&logoColor=red&color=red)](https://central.sonatype.com/artifact/io.github.dehuckakpyt.telegrambot/telegram-bot-core)
 [![Documentation](https://img.shields.io/badge/Writerside-docs-forest?logo=jetbrains&logoColor=black)](https://dehuckakpyt.github.io/telegram-bot/starter-topic.html)
 
+[![Telegram](https://img.shields.io/badge/Telegram-Join%20Chat-2CA5E0?logo=telegram&logoColor=white)](https://t.me/+8YNQBUvqe-phMzYy)
+
 [![Telegram Bot API version](https://img.shields.io/badge/Bot_Api-9.5-blue?logo=telegram)](https://core.telegram.org/bots/api)
 [![GitHub License](https://img.shields.io/github/license/DEHuckaKpyT/telegram-bot?logo=apache&logoColor=red&label=License&color=orange)](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/LICENSE.txt)
 
