@@ -30,13 +30,18 @@ class AuthAdminController(
             throw BadCredentialsException("Invalid Telegram signature.")
         }
 
-        val authDate = data["auth_date"]!!.toLong()
+        val authDate = data["auth_date"]?.toLongOrNull()
+            ?: throw BadCredentialsException("Invalid Telegram auth_date.")
         val now = Instant.now().epochSecond
+        if (authDate > now + 60) {
+            throw BadCredentialsException("Authentication date is invalid.")
+        }
         if (now - authDate > 86400) {
             throw CredentialsExpiredException("Authentication is expired.")
         }
 
-        val telegramUserId = data["id"]!!.toLong()
+        val telegramUserId = data["id"]?.toLongOrNull()
+            ?: throw BadCredentialsException("Invalid Telegram id.")
         if (telegramUserId !in adminIds) {
             throw AccessDeniedException("You are not admin.")
         }

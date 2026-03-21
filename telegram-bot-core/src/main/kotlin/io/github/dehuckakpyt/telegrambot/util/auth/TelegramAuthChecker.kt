@@ -20,7 +20,7 @@ class TelegramAuthChecker(
     fun getValidatedId(data: Map<String, String>): Long? {
         if (isValid(data).not()) return null
 
-        return data["id"]!!.toLong()
+        return data["id"]?.toLongOrNull()
     }
 
     /**
@@ -49,10 +49,15 @@ class TelegramAuthChecker(
      * @see <a href="https://github.com/pengrad/java-telegram-bot-api/commit/5eb1ec4e24bf7eb83874cfdb1163d38d3b6fccfd">Original</a>
      */
     fun isValid(authData: String, hash: String?): Boolean {
-        val secret = sha256(telegramBotToken.toByteArray())
-        val result = hmacSha256(secret, authData)
+        if (hash == null) return false
 
-        return result == hash
+        val secret = sha256(telegramBotToken.toByteArray())
+        val expectedHash = hmacSha256(secret, authData)
+
+        return MessageDigest.isEqual(
+            expectedHash.toByteArray(),
+            hash.toByteArray()
+        )
     }
 
     private fun sha256(string: ByteArray?): ByteArray {

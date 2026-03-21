@@ -65,7 +65,7 @@ internal class WebhookUpdateReceiver(
         } else {
             post(config.urlPathOrDefault) {
                 if (secretToken != call.secretToken) {
-                    logger.warn("Invalid secret token '${call.secretToken}' received.")
+                    logger.warn("Invalid secret token received.")
                     call.response.status(Forbidden)
                     return@post
                 }
