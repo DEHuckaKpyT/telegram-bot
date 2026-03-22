@@ -70,4 +70,8 @@ data class UpdateReceiverConfig(
 
     /** Update handlers declaration */
     var updateHandling: BotUpdateHandling.() -> Unit = {},
+
+    val longPolling: LongPollingConfig = LongPollingConfig(),
+
+    val webhook: WebhookConfig = WebhookConfig(),
 )

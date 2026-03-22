@@ -34,28 +34,29 @@ import io.ktor.client.engine.apache.*
  *
  * @author Denis Matytsin
  */
-class TelegramBotConfig {
-
+data class TelegramBotConfig(
     /** Telegram bot token */
-    var token: String? = null
+    var token: String? = null,
 
     /** Telegram bot username (optional, but recommended) */
-    var username: String? = null
+    var username: String? = null,
 
     /** Telegram bot client additional configuration */
-    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null
+    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
 
     /** Source for saving messages */
-    var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage<out Any>>)? = null
+    var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage<out Any>>)? = null,
 
     /** Templater for build message templates */
-    var templater: (TelegramBotActualConfig.() -> Templater)? = null
+    var templater: (TelegramBotActualConfig.() -> Templater)? = null,
+
+    /** Configure receiving */
+    val receiving: UpdateReceiverConfig = UpdateReceiverConfig(),
 
     /** Listening for react to telegram bot's events */
-    internal var eventListening: (TelegramBotEventListening.() -> Unit)? = null
-    internal var eventListeningPreventDefaults: Boolean = false
-
-    var receiving: UpdateReceiverConfig = UpdateReceiverConfig()
+    internal var eventListening: (TelegramBotEventListening.() -> Unit)? = null,
+    internal var eventListeningPreventDefaults: Boolean? = null,
+) {
 
     /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit) {

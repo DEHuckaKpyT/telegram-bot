@@ -37,5 +37,7 @@ internal class TelegramBotReceiverActualConfigImpl : TelegramBotReceiverActualCo
     override lateinit var invocationStrategy: HandlerInvocationStrategy
     override lateinit var exceptionHandler: ExceptionHandler
     override lateinit var chainExceptionHandler: ChainExceptionHandler
+    override lateinit var longPolling: LongPollingConfig
+    override lateinit var webhook: WebhookConfig
     override lateinit var updateResolver: UpdateResolver
 }

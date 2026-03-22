@@ -38,4 +38,6 @@ interface TelegramBotReceiverActualConfig {
     val exceptionHandler: ExceptionHandler
     val chainExceptionHandler: ChainExceptionHandler
     val updateResolver: UpdateResolver
+    val longPolling: LongPollingConfig
+    val webhook: WebhookConfig
 }

@@ -7,6 +7,7 @@ dependencies {
     api(libs.jackson.databind)
     api(libs.jackson.module.kotlin)
     api(libs.jackson.datatype.jsr310)
+    api(libs.jackson.dataformat.yaml)
     //endregion jackson
 
     //region ktor

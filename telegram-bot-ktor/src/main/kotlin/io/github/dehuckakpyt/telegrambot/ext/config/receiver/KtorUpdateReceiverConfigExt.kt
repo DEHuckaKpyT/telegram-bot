@@ -13,6 +13,6 @@ import io.github.dehuckakpyt.telegrambot.receiver.WebhookUpdateReceiver
 
 /** Activate and configure webhook for receiving updates */
 fun UpdateReceiverConfig.webhook(block: WebhookConfig.() -> Unit) {
-    val webhookConfig = WebhookConfig().apply(block)
-    updateReceiver = { WebhookUpdateReceiver(telegramBot, receiving.updateResolver, webhookConfig) }
+    webhook.apply(block)
+    updateReceiver = { WebhookUpdateReceiver(telegramBot, receiving.updateResolver, receiving.webhook) }
 }

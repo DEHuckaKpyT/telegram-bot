@@ -15,8 +15,8 @@ import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 
 /** Activate and configure long polling for receiving updates */
 fun UpdateReceiverConfig.longPolling(block: LongPollingConfig.() -> Unit) {
-    val longPollingConfig = LongPollingConfig().apply(block)
-    updateReceiver = { LongPollingUpdateReceiver(telegramBot, receiving.updateResolver, longPollingConfig) }
+    longPolling.apply(block)
+    updateReceiver = { LongPollingUpdateReceiver(telegramBot, receiving.updateResolver, receiving.longPolling) }
 }
 
 /** Declare chain handlers */

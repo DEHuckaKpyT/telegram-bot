@@ -4,7 +4,6 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.TelegramBotImpl
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
-import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.TelegramBotReceiverActualConfigImpl
 import io.github.dehuckakpyt.telegrambot.container.message.factory.*
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
@@ -80,7 +79,7 @@ object TelegramBotFactory {
         actual.telegramBot = TelegramBotImpl(actual.token, actual.username, actual.clientConfiguration, telegramBotEventManager)
         actual.templater = config.templater?.invoke(actual) ?: RegexTemplater()
 
-        val telegramBotEventListening = TelegramBotEventListening(telegramBotEventManager, actual.telegramMessageSource, config.eventListeningPreventDefaults)
+        val telegramBotEventListening = TelegramBotEventListening(telegramBotEventManager, actual.telegramMessageSource, config.eventListeningPreventDefaults ?: false)
         config.eventListening?.invoke(telegramBotEventListening)
 
         context.telegramMessageSource = actual.telegramMessageSource
@@ -108,6 +107,8 @@ object TelegramBotFactory {
         actualReceiving.chainManager = ChainManager(actualReceiving.chainSource, actualReceiving.contentConverter)
         actualReceiving.exceptionHandler = exceptionHandler?.invoke(actual) ?: ExceptionHandlerImpl(actual.telegramBot, actualReceiving.messageTemplate, actual.templater)
         actualReceiving.chainExceptionHandler = chainExceptionHandler?.invoke(actual) ?: ChainExceptionHandlerImpl(actualReceiving.messageTemplate, actual.templater)
+        actualReceiving.longPolling = longPolling
+        actualReceiving.webhook = webhook
 
         val chainResolver = ChainResolver(actualReceiving.callbackSerializer, actualReceiving.chainExceptionHandler, actualReceiving.chainManager)
         val messageArgumentFactories: List<MessageContainerFactory> = listOf(
@@ -146,6 +147,6 @@ object TelegramBotFactory {
         context.botUpdateHandling = botUpdateHandling
         context.buttonFactory = buttonFactory
         context.inputFactory = InputFactoryImpl()
-        context.updateReceiver = updateReceiver?.invoke(actual) ?: LongPollingUpdateReceiver(actual.telegramBot, updateResolver, LongPollingConfig())
+        context.updateReceiver = updateReceiver?.invoke(actual) ?: LongPollingUpdateReceiver(actual.telegramBot, updateResolver, actualReceiving.longPolling)
     }
 }
