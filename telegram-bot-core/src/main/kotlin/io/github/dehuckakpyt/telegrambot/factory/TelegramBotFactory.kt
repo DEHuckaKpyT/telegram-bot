@@ -14,11 +14,13 @@ import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListeni
 import io.github.dehuckakpyt.telegrambot.event.managing.TelegramBotEventManager
 import io.github.dehuckakpyt.telegrambot.exception.handler.ExceptionHandlerImpl
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandlerImpl
+import io.github.dehuckakpyt.telegrambot.ext.config.merge
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactoryImpl
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactoryImpl
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
 import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
+import io.github.dehuckakpyt.telegrambot.parser.properties.TelegramBotPropertiesParser
 import io.github.dehuckakpyt.telegrambot.receiver.LongPollingUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.resolver.DialogUpdateResolver
@@ -67,7 +69,9 @@ object TelegramBotFactory {
      *
      * @return telegram bot context
      */
-    fun createTelegramBotContext(config: TelegramBotConfig): TelegramBotContext {
+    fun createTelegramBotContext(config: TelegramBotConfig, yamlPath: String = "telegram-bot.yaml"): TelegramBotContext {
+        config.merge(TelegramBotPropertiesParser.parse(yamlPath))
+
         val actual = TelegramBotActualConfigImpl()
         val context = TelegramBotContextImpl()
 

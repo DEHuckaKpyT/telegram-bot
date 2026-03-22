@@ -1,29 +1,19 @@
 package io.github.dehuckakpyt.telegrambot.parser.properties
 
 import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.NullNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
+import com.fasterxml.jackson.databind.node.*
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import io.github.dehuckakpyt.telegrambot.config.TelegramBotProperties
+import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
 import io.github.dehuckakpyt.telegrambot.exception.parser.properties.TelegramBotPropertiesParseException
-import java.nio.file.Files
-import java.nio.file.Path
-import kotlin.time.Duration
 import io.github.dehuckakpyt.telegrambot.exception.parser.properties.TelegramBotPropertiesParseException.Reason
+import kotlin.time.Duration
 
 /**
- * Parser for [io.github.dehuckakpyt.telegrambot.config.TelegramBotProperties] from yaml.
+ * Parser for [TelegramBotProperties] from yaml.
  *
  * Supports:
  * - root key `telegram-bot`
@@ -34,7 +24,7 @@ import io.github.dehuckakpyt.telegrambot.exception.parser.properties.TelegramBot
  *   with `telegram-bot:` root -> use `${telegram-bot...}`,
  *   without `telegram-bot:` root -> use `${...}`.
  */
-object TelegramBotPropertiesParser {
+internal object TelegramBotPropertiesParser {
     private const val ROOT_KEY = "telegram-bot"
 
     private val objectMapper = ObjectMapper(YAMLFactory())
@@ -50,14 +40,14 @@ object TelegramBotPropertiesParser {
     /**
      * Parses [TelegramBotProperties] from yaml content.
      */
-    fun parse(yaml: String, env: Map<String, String> = System.getenv()): TelegramBotProperties {
+    internal fun parseYamlText(yaml: String, env: Map<String, String> = System.getenv()): TelegramBotProperties {
         if (yaml.isBlank()) return TelegramBotProperties()
 
         val yamlRootNode = objectMapper.readTree(yaml) ?: return TelegramBotProperties()
         val yamlRootObject = (yamlRootNode as? ObjectNode) ?: return TelegramBotProperties()
-        val hasTelegramBotRoot = yamlRootObject.has(ROOT_KEY) && yamlRootObject[ROOT_KEY] is ObjectNode
-        val propertiesRoot = extractPropertiesRoot(yamlRootObject, hasTelegramBotRoot)
-        val normalizedTree = YamlNodeNormalizer.normalizeObjectNode(propertiesRoot)
+        val normalizedRoot = YamlNodeNormalizer.normalizeObjectNode(yamlRootObject)
+        val hasTelegramBotRoot = normalizedRoot.has(ROOT_KEY) && normalizedRoot[ROOT_KEY] is ObjectNode
+        val normalizedTree = extractPropertiesRoot(normalizedRoot, hasTelegramBotRoot)
         val resolvedTree = PlaceholderResolver(
             rootNode = normalizedTree,
             env = env,
@@ -69,12 +59,17 @@ object TelegramBotPropertiesParser {
     }
 
     /**
-     * Parses [TelegramBotProperties] from yaml file.
+     * Parses [TelegramBotProperties] from classpath resource (for example, `telegram-bot.yaml`).
+     *
+     * If the resource does not exist, returns empty [TelegramBotProperties].
      */
-    fun parse(path: Path, env: Map<String, String> = System.getenv()): TelegramBotProperties {
-        if (!Files.exists(path) || !Files.isRegularFile(path)) return TelegramBotProperties()
-        val yaml = Files.readString(path)
-        return parse(yaml, env)
+    internal fun parse(resourceName: String, env: Map<String, String> = System.getenv()): TelegramBotProperties {
+        val classLoader = Thread.currentThread().contextClassLoader ?: TelegramBotPropertiesParser::class.java.classLoader
+        val yaml = classLoader.getResourceAsStream(resourceName)
+            ?.bufferedReader(Charsets.UTF_8)
+            ?.use { it.readText() }
+            ?: return TelegramBotProperties()
+        return parseYamlText(yaml, env)
     }
 
     /**
@@ -93,7 +88,7 @@ object TelegramBotPropertiesParser {
          * - regular nested object keys are kept as-is
          * - dotted keys like "receiving.long-polling.timeout" are expanded into nested objects.
          */
-        fun normalizeObjectNode(source: ObjectNode): ObjectNode {
+        internal fun normalizeObjectNode(source: ObjectNode): ObjectNode {
             val normalizedObject = JsonNodeFactory.instance.objectNode()
             for ((key, value) in source.properties()) {
                 val keyParts = key.split('.')
@@ -105,10 +100,11 @@ object TelegramBotPropertiesParser {
 
         private fun normalizeNode(node: JsonNode): JsonNode = when (node) {
             is ObjectNode -> normalizeObjectNode(node)
-            is ArrayNode -> JsonNodeFactory.instance.arrayNode().also { array ->
+            is ArrayNode  -> JsonNodeFactory.instance.arrayNode().also { array ->
                 node.forEach { array.add(normalizeNode(it)) }
             }
-            else -> node
+
+            else          -> node
         }
 
         /**
@@ -139,6 +135,7 @@ object TelegramBotPropertiesParser {
     ) {
         // Cache of already resolved property references to avoid repeated evaluation.
         private val resolvedReferenceCache = hashMapOf<String, String?>()
+
         // Active resolution stack for cycle detection (e.g. a -> b -> a).
         private val resolvingReferencePaths = hashSetOf<String>()
 
@@ -146,7 +143,7 @@ object TelegramBotPropertiesParser {
          * Resolves placeholders in all text nodes of the tree.
          * Placeholder lookup order: yaml properties -> env -> default (if provided).
          */
-        fun resolveTree(node: JsonNode, currentPath: String? = null): JsonNode = when (node) {
+        internal fun resolveTree(node: JsonNode, currentPath: String? = null): JsonNode = when (node) {
             is ObjectNode -> JsonNodeFactory.instance.objectNode().also { targetObject ->
                 for ((fieldName, fieldValue) in node.properties()) {
                     val fieldPath = listOfNotNull(currentPath, fieldName).joinToString(".")
@@ -154,14 +151,16 @@ object TelegramBotPropertiesParser {
                     targetObject.set<JsonNode>(fieldName, resolvedValue)
                 }
             }
-            is ArrayNode -> JsonNodeFactory.instance.arrayNode().also { targetArray ->
+
+            is ArrayNode  -> JsonNodeFactory.instance.arrayNode().also { targetArray ->
                 node.forEachIndexed { index, item ->
                     val itemPath = listOfNotNull(currentPath, index.toString()).joinToString(".")
                     targetArray.add(resolveTree(item, itemPath))
                 }
             }
-            is TextNode -> resolveTextNode(node, currentPath)
-            else -> node
+
+            is TextNode   -> resolveTextNode(node, currentPath)
+            else          -> node
         }
 
         /**
@@ -250,17 +249,19 @@ object TelegramBotPropertiesParser {
             }
             try {
                 val resolved = when (propertyNode) {
-                    null, is NullNode -> null
-                    is TextNode -> when (val resolvedNode = resolveTextNode(propertyNode, propertyPath)) {
+                    null, is NullNode           -> null
+                    is TextNode                 -> when (val resolvedNode = resolveTextNode(propertyNode, propertyPath)) {
                         is NullNode -> null
-                        else -> resolvedNode.asText()
+                        else        -> resolvedNode.asText()
                     }
+
                     is ObjectNode, is ArrayNode -> throw TelegramBotPropertiesParseException(
                         reason = Reason.COMPLEX_REFERENCE_NOT_SUPPORTED,
                         path = currentPath,
                         placeholder = propertyPath,
                     )
-                    else -> propertyNode.asText()
+
+                    else                        -> propertyNode.asText()
                 }
                 resolvedReferenceCache[propertyPath] = resolved
                 return resolved
@@ -300,8 +301,8 @@ object TelegramBotPropertiesParser {
             for (segment in dottedPath.split('.')) {
                 current = when (current) {
                     is ObjectNode -> current[segment] ?: return null
-                    is ArrayNode -> segment.toIntOrNull()?.let { idx -> current.get(idx) } ?: return null
-                    else -> return null
+                    is ArrayNode  -> segment.toIntOrNull()?.let { idx -> current.get(idx) } ?: return null
+                    else          -> return null
                 }
             }
             return current

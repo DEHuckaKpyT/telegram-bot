@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambotexample
 
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
+import io.github.dehuckakpyt.telegrambot.ext.config.client
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.handling
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.longPolling
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.updateHandling
@@ -9,6 +10,7 @@ import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handling.exceptionCommand
 import io.github.dehuckakpyt.telegrambotexample.handling.startCommand
 import io.github.dehuckakpyt.telegrambotexample.handling.update.onSomeEvent
+import org.apache.http.HttpHost
 
 /**
  * Created on 13.08.2023.
@@ -18,8 +20,16 @@ import io.github.dehuckakpyt.telegrambotexample.handling.update.onSomeEvent
  */
 suspend fun main(args: Array<String>): Unit {
     val config = TelegramBotConfig().apply {
-        token = "<>"
-        username = "<>"
+        // token = "<>" // in telegram-bot.yaml
+        // username = "<>" // in telegram-bot.yaml
+
+        client {
+            engine {
+                customizeClient {
+                    setProxy(HttpHost("127.0.0.1", 2080))
+                }
+            }
+        }
 
         receiving {
             longPolling {

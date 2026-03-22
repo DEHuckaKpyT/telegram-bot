@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.ext.config
 
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
-import io.github.dehuckakpyt.telegrambot.config.TelegramBotProperties
+import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ResourceContent
 import io.ktor.client.*

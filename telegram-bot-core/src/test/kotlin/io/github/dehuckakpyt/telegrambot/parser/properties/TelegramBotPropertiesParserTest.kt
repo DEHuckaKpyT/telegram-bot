@@ -30,7 +30,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
                   secret-token-random-generation-print-on-startup: true
         """.trimIndent()
 
-        val properties = TelegramBotPropertiesParser.parse(
+        val properties = TelegramBotPropertiesParser.parseYamlText(
             yaml = yaml,
             env = mapOf("TELEGRAM_BOT_TOKEN" to "env-token"),
         )
@@ -60,11 +60,28 @@ class TelegramBotPropertiesParserTest : FreeSpec({
               receiving.webhook.url-host: https://example.com
         """.trimIndent()
 
-        val properties = TelegramBotPropertiesParser.parse(yaml)
+        val properties = TelegramBotPropertiesParser.parseYamlText(yaml)
 
         properties.token shouldBe "my-token"
         properties.receiving?.longPolling?.timeout shouldBe 55
         properties.receiving?.webhook?.urlHost shouldBe "https://example.com"
+    }
+
+    "parse dotted telegram-bot root keys at top level" {
+        val yaml = $$"""
+            telegram-bot.token: ${TELEGRAM_BOT_TOKEN}
+            telegram-bot.username: my-bot
+            telegram-bot.receiving.webhook.url-host: https://${telegram-bot.username}.example.com
+        """.trimIndent()
+
+        val properties = TelegramBotPropertiesParser.parseYamlText(
+            yaml = yaml,
+            env = mapOf("TELEGRAM_BOT_TOKEN" to "env-token"),
+        )
+
+        properties.token shouldBe "env-token"
+        properties.username shouldBe "my-bot"
+        properties.receiving?.webhook?.urlHost shouldBe "https://my-bot.example.com"
     }
 
     "parse spring-style default placeholders and nullable empty default" {
@@ -74,7 +91,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
               username: ${TELEGRAM_BOT_USERNAME:}
         """.trimIndent()
 
-        val properties = TelegramBotPropertiesParser.parse(
+        val properties = TelegramBotPropertiesParser.parseYamlText(
             yaml = yaml,
             env = emptyMap(),
         )
@@ -90,7 +107,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
               username: ""
         """.trimIndent()
 
-        val properties = TelegramBotPropertiesParser.parse(yaml)
+        val properties = TelegramBotPropertiesParser.parseYamlText(yaml)
 
         properties.token shouldBe "my-token"
         properties.username shouldBe null
@@ -104,7 +121,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
               receiving.webhook.url-host: https://${telegram-bot.username}.example.com
         """.trimIndent()
 
-        val properties = TelegramBotPropertiesParser.parse(yaml)
+        val properties = TelegramBotPropertiesParser.parseYamlText(yaml)
 
         properties.token shouldBe "my-token"
         properties.username shouldBe "my-bot"
@@ -120,7 +137,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
         """.trimIndent()
 
         shouldThrow<IllegalArgumentException> {
-            TelegramBotPropertiesParser.parse(yaml, env = emptyMap())
+            TelegramBotPropertiesParser.parseYamlText(yaml, env = emptyMap())
         }
     }
 
@@ -131,7 +148,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
             receiving.webhook.url-host: https://${username}.example.com
         """.trimIndent()
 
-        val properties = TelegramBotPropertiesParser.parse(yaml, env = emptyMap())
+        val properties = TelegramBotPropertiesParser.parseYamlText(yaml, env = emptyMap())
 
         properties.token shouldBe "my-token"
         properties.username shouldBe "my-bot"
@@ -146,7 +163,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
         """.trimIndent()
 
         val exception = shouldThrow<IllegalArgumentException> {
-            TelegramBotPropertiesParser.parse(yaml, env = emptyMap())
+            TelegramBotPropertiesParser.parseYamlText(yaml, env = emptyMap())
         }
 
         exception.message?.contains("Cyclic placeholder reference detected") shouldBe true
@@ -159,7 +176,7 @@ class TelegramBotPropertiesParserTest : FreeSpec({
         """.trimIndent()
 
         val exception = shouldThrow<IllegalArgumentException> {
-            TelegramBotPropertiesParser.parse(yaml, env = emptyMap())
+            TelegramBotPropertiesParser.parseYamlText(yaml, env = emptyMap())
         }
 
         exception.message?.contains("Cyclic placeholder reference detected") shouldBe true

@@ -24,6 +24,7 @@ dependencies {
 
     //region springframework
     testApi(libs.spring.boot.starter.test)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     //endregion springframework
 }
 

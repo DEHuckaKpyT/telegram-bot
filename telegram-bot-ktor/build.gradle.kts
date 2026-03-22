@@ -7,4 +7,5 @@ dependencies {
     api(libs.koin.ktor)
     api(libs.koin.logger.slf4j)
     implementation(project(":telegram-bot-core"))
+    testImplementation(kotlin("test"))
 }

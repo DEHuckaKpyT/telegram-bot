@@ -1,8 +1,7 @@
-package io.github.dehuckakpyt.telegrambot.config
+package io.github.dehuckakpyt.telegrambot.config.properties
 
-import io.github.dehuckakpyt.telegrambot.config.receiver.WebhookConfig.SecretTokenRandomGeneration
+import io.github.dehuckakpyt.telegrambot.config.receiver.WebhookConfig
 import kotlin.time.Duration
-
 
 /**
  * Configuration subset that can be loaded from property-like sources (yaml, env).
@@ -27,7 +26,7 @@ data class TelegramBotProperties(
             /** Delay between when internal error while long polling. Defaults to 5_000. */
             public var retryDelay: Long? = null,
 
-            /** . */
+            /** Timeout to wait for in-flight long-polling processing during shutdown before forcing stop. */
             public var gracefulShutdownTimeout: Duration? = null,
         )
 
@@ -76,7 +75,7 @@ data class TelegramBotProperties(
              * Generation random secret token.
              * Defaults `RANDOM_UUID`.
              */
-            var secretTokenRandomGeneration: SecretTokenRandomGeneration? = null,
+            var secretTokenRandomGeneration: WebhookConfig.SecretTokenRandomGeneration? = null,
 
             /**
              * Printing to log generated secret token.
