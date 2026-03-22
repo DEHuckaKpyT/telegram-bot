@@ -35,6 +35,8 @@ fun TelegramBotConfig.merge(properties: TelegramBotProperties): TelegramBotConfi
     if (token == null) token = properties.token
     if (username == null) username = properties.username
 
+    if (receiving.mode == null) receiving.mode = properties.receiving?.mode
+
     val longPolling = receiving.longPolling
     val longPollingProperties = properties.receiving?.longPolling
     if (longPolling.limit == null) longPolling.limit = longPollingProperties?.limit

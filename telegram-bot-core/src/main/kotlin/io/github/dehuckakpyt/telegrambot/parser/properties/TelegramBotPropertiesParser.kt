@@ -1,15 +1,20 @@
 package io.github.dehuckakpyt.telegrambot.parser.properties
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.*
-import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.node.*
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.github.dehuckakpyt.telegrambot.config.constants.properties.PropertiesConstants.PROPERTIES_ROOT
 import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
+import io.github.dehuckakpyt.telegrambot.config.receiver.ReceivingMode
 import io.github.dehuckakpyt.telegrambot.exception.parser.properties.TelegramBotPropertiesParseException
 import io.github.dehuckakpyt.telegrambot.exception.parser.properties.TelegramBotPropertiesParseException.Reason
+import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.KotlinDurationDeserializer
+import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.TelegramBotReceivingModeDeserializer
 import kotlin.time.Duration
 
 /**
@@ -25,7 +30,6 @@ import kotlin.time.Duration
  *   without `telegram-bot:` root -> use `${...}`.
  */
 internal object TelegramBotPropertiesParser {
-    private const val ROOT_KEY = "telegram-bot"
 
     private val objectMapper = ObjectMapper(YAMLFactory())
         .registerKotlinModule()
@@ -34,19 +38,20 @@ internal object TelegramBotPropertiesParser {
         .registerModule(
             SimpleModule().apply {
                 addDeserializer(Duration::class.java, KotlinDurationDeserializer())
+                addDeserializer(ReceivingMode::class.java, TelegramBotReceivingModeDeserializer())
             }
         )
 
     /**
      * Parses [TelegramBotProperties] from yaml content.
      */
-    internal fun parseYamlText(yaml: String, env: Map<String, String> = System.getenv()): TelegramBotProperties {
+    internal fun parseYamlContent(yaml: String, env: Map<String, String> = System.getenv()): TelegramBotProperties {
         if (yaml.isBlank()) return TelegramBotProperties()
 
         val yamlRootNode = objectMapper.readTree(yaml) ?: return TelegramBotProperties()
         val yamlRootObject = (yamlRootNode as? ObjectNode) ?: return TelegramBotProperties()
         val normalizedRoot = YamlNodeNormalizer.normalizeObjectNode(yamlRootObject)
-        val hasTelegramBotRoot = normalizedRoot.has(ROOT_KEY) && normalizedRoot[ROOT_KEY] is ObjectNode
+        val hasTelegramBotRoot = normalizedRoot.has(PROPERTIES_ROOT) && normalizedRoot[PROPERTIES_ROOT] is ObjectNode
         val normalizedTree = extractPropertiesRoot(normalizedRoot, hasTelegramBotRoot)
         val resolvedTree = PlaceholderResolver(
             rootNode = normalizedTree,
@@ -69,7 +74,7 @@ internal object TelegramBotPropertiesParser {
             ?.bufferedReader(Charsets.UTF_8)
             ?.use { it.readText() }
             ?: return TelegramBotProperties()
-        return parseYamlText(yaml, env)
+        return parseYamlContent(yaml, env)
     }
 
     /**
@@ -77,7 +82,7 @@ internal object TelegramBotPropertiesParser {
      */
     private fun extractPropertiesRoot(root: ObjectNode, hasTelegramBotRoot: Boolean): ObjectNode {
         if (hasTelegramBotRoot) {
-            return root[ROOT_KEY] as ObjectNode
+            return root[PROPERTIES_ROOT] as ObjectNode
         }
         return root
     }
@@ -278,13 +283,13 @@ internal object TelegramBotPropertiesParser {
          */
         private fun lookupPropertyReference(placeholderKey: String): PropertyLookupResult {
             return if (yamlUsesTelegramBotRoot) {
-                if (!placeholderKey.startsWith("$ROOT_KEY.")) return PropertyLookupResult.NotFound
-                val pathWithoutRoot = placeholderKey.removePrefix("$ROOT_KEY.")
+                if (!placeholderKey.startsWith("$PROPERTIES_ROOT.")) return PropertyLookupResult.NotFound
+                val pathWithoutRoot = placeholderKey.removePrefix("$PROPERTIES_ROOT.")
                 findNodeByPath(pathWithoutRoot)
                     ?.let { PropertyLookupResult.Found(pathWithoutRoot, it) }
                     ?: PropertyLookupResult.NotFound
             } else {
-                if (placeholderKey.startsWith("$ROOT_KEY.")) return PropertyLookupResult.NotFound
+                if (placeholderKey.startsWith("$PROPERTIES_ROOT.")) return PropertyLookupResult.NotFound
                 findNodeByPath(placeholderKey)
                     ?.let { PropertyLookupResult.Found(placeholderKey, it) }
                     ?: PropertyLookupResult.NotFound
@@ -389,26 +394,5 @@ internal object TelegramBotPropertiesParser {
             val endIndexExclusive: Int,
             val token: String,
         )
-    }
-
-    /**
-     * Converts ISO-8601 duration string (`PT10S`, `PT5M`, etc.) to Kotlin [Duration].
-     */
-    private class KotlinDurationDeserializer : StdScalarDeserializer<Duration>(Duration::class.java) {
-        override fun deserialize(parser: JsonParser, context: DeserializationContext): Duration {
-            val value = parser.valueAsString
-                ?: throw TelegramBotPropertiesParseException(
-                    reason = Reason.INVALID_DURATION,
-                    details = "Duration value must not be null.",
-                )
-            return runCatching { Duration.Companion.parse(value) }
-                .getOrElse {
-                    throw TelegramBotPropertiesParseException(
-                        reason = Reason.INVALID_DURATION,
-                        details = "Invalid kotlin.time.Duration value '$value'.",
-                        cause = it,
-                    )
-                }
-        }
     }
 }

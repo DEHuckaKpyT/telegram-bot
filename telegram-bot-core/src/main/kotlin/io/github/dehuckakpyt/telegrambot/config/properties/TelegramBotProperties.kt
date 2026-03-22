@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.config.properties
 
+import io.github.dehuckakpyt.telegrambot.config.receiver.ReceivingMode
 import io.github.dehuckakpyt.telegrambot.config.receiver.WebhookConfig
 import kotlin.time.Duration
 
@@ -12,9 +13,11 @@ data class TelegramBotProperties(
     val receiving: ReceivingProperties? = null,
 ) {
     data class ReceivingProperties(
+        val mode: ReceivingMode? = null,
         val longPolling: LongPollingProperties? = null,
         val webhook: WebhookProperties? = null,
     ) {
+
         data class LongPollingProperties(
 
             /** Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100. */

@@ -74,4 +74,8 @@ data class UpdateReceiverConfig(
     val longPolling: LongPollingConfig = LongPollingConfig(),
 
     val webhook: WebhookConfig = WebhookConfig(),
-)
+) {
+
+    var mode: ReceivingMode? = null
+        internal set
+}

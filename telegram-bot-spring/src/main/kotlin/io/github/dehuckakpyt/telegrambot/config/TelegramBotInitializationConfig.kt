@@ -2,9 +2,13 @@ package io.github.dehuckakpyt.telegrambot.config
 
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.config.constant.SpringPropertiesConstant.TELEGRAM_BOT_ENABLED
+import io.github.dehuckakpyt.telegrambot.config.constants.properties.PropertiesConstants.PROPERTIES_ROOT
 import io.github.dehuckakpyt.telegrambot.config.expression.ConfigExpression
 import io.github.dehuckakpyt.telegrambot.config.holder.AdministrationConfigHolder
+import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
+import io.github.dehuckakpyt.telegrambot.config.receiver.ReceivingMode.WEBHOOK
 import io.github.dehuckakpyt.telegrambot.context.TelegramBotContext
+import io.github.dehuckakpyt.telegrambot.ext.config.merge
 import io.github.dehuckakpyt.telegrambot.factory.TelegramBotFactory
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
@@ -18,6 +22,7 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
 import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
+import io.github.dehuckakpyt.telegrambot.receiver.WebhookUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
 import io.github.dehuckakpyt.telegrambot.source.chat.TelegramChatSource
@@ -27,10 +32,11 @@ import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.SpringMessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+import org.springframework.boot.context.properties.bind.Bindable
+import org.springframework.boot.context.properties.bind.Binder
 import org.springframework.context.SmartLifecycle
 import org.springframework.context.annotation.Bean
 import org.springframework.context.support.GenericApplicationContext
@@ -57,8 +63,6 @@ class TelegramBotInitializationConfig(
     telegramChatStatusEventSource: TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>?,
     telegramChatStatusEventSourceExpression: ConfigExpression<TelegramChatStatusEventSource<out TelegramChatStatusEvent<out Any>>>?,
     updateReceiverExpression: ConfigExpression<UpdateReceiver>?,
-    @Value("\${telegram-bot.token}") botToken: String?,
-    @Value("\${telegram-bot.username}") botUsername: String?,
     telegramBotConfig: TelegramBotConfig?,
 ) : SmartLifecycle {
     private final val logger = LoggerFactory.getLogger(TelegramBotInitializationConfig::class.java)
@@ -67,8 +71,7 @@ class TelegramBotInitializationConfig(
     init {
         //TODO clean up this code part
         val config: TelegramBotConfig = (telegramBotConfig ?: TelegramBotConfig()).apply {
-            if (token == null) token = botToken
-            if (username == null) username = botUsername
+            merge(bindTelegramBotProperties())
 
             if (receiving.messageTemplate == null) receiving.messageTemplate = { springMessageTemplate }
 
@@ -94,7 +97,23 @@ class TelegramBotInitializationConfig(
 
             if (receiving.chainSource == null && chainSourceExpression != null) receiving.chainSource = chainSourceExpression::configure
             if (receiving.callbackContentSource == null && callbackContentSourceExpression != null) receiving.callbackContentSource = callbackContentSourceExpression::configure
-            if (receiving.updateReceiver == null && updateReceiverExpression != null) receiving.updateReceiver = updateReceiverExpression::configure
+
+            if (receiving.updateReceiver == null) {
+                if (updateReceiverExpression != null) {
+                    receiving.updateReceiver = updateReceiverExpression::configure
+                } else {
+                    if (receiving.mode == WEBHOOK) {
+                        receiving.updateReceiver = {
+                            WebhookUpdateReceiver(
+                                applicationContext = applicationContext,
+                                bot = this.telegramBot,
+                                updateResolver = this.receiving.updateResolver,
+                                config = this.receiving.webhook
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         botContext = TelegramBotFactory.createTelegramBotContext(config)
@@ -157,4 +176,9 @@ class TelegramBotInitializationConfig(
     }
 
     override fun isRunning(): Boolean = running
+
+    private fun bindTelegramBotProperties(): TelegramBotProperties =
+        Binder.get(applicationContext.environment)
+            .bind(PROPERTIES_ROOT, Bindable.of(TelegramBotProperties::class.java))
+            .orElse(TelegramBotProperties())
 }
