@@ -19,10 +19,10 @@ telegram-bot:
       front-end-config:
         default-page-size: 25
     
-  spring:
-#    update-receiver: webhook
-#    update-receiver.webhook.url.host: "https://my.domain.com"
-#    update-receiver.webhook.secret-token-random-generation.print-on-startup: true
+  receiving:
+#    mode: webhook
+#    webhook.url-host: "https://my.domain.com"
+#    webhook.secret-token-random-generation-print-on-startup: true
 
   source-jpa:
     user-source.enabled: false
