@@ -190,7 +190,16 @@ internal object TelegramBotPropertiesParser {
                     cursor = placeholderMatch.endIndexExclusive
                 }
                 rebuilt.append(resolvedText, cursor, resolvedText.length)
-                resolvedText = rebuilt.toString()
+                val rebuiltText = rebuilt.toString()
+                if (rebuiltText == resolvedText) {
+                    throw TelegramBotPropertiesParseException(
+                        reason = Reason.CYCLIC_REFERENCE,
+                        path = currentPath,
+                        placeholder = placeholderMatches.firstOrNull()?.token,
+                        details = "Placeholder resolution made no progress.",
+                    )
+                }
+                resolvedText = rebuiltText
             }
 
             if (rawText == resolvedText && findPlaceholders(rawText).isEmpty()) {

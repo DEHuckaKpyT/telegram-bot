@@ -1,6 +1,7 @@
 # Get started
 
-To use the library, all you need to do is add a dependency, build a config, specify token and create the bot context.
+To use the library, all you need to do is add a dependency, build a config and create the bot context.
+Token/username can be provided from code, `application.*` application properties or `telegram-bot.yaml`.
 
 <tabs id="bot-creating" group="telegram-bot-code">
     <tab title="Spring" group-key="spring">
@@ -108,8 +109,9 @@ To use the library, all you need to do is add a dependency, build a config, spec
         <code-block lang="kotlin">
             fun main(args: Array&lt;String&gt;): Unit {
                 val config = TelegramBotConfig().apply {
-                    token = "&lt;bot token required&gt;"
-                    username = "&lt;bot username required&gt;"
+                    // token/username can be loaded from resources/telegram-bot.yaml
+                    // token = "&lt;bot token required&gt;"
+                    // username = "&lt;bot username required&gt;"
                     receiving {
                         handling {
                             startCommand()
@@ -124,6 +126,11 @@ To use the library, all you need to do is add a dependency, build a config, spec
                 readlnOrNull()
                 updateReceiver.stop()
             }
+        </code-block>
+        <code>resources/telegram-bot.yaml</code>
+        <code-block lang="yaml">
+            telegram-bot.token: ${TELEGRAM_BOT_TOKEN}
+            telegram-bot.username: ${TELEGRAM_BOT_USERNAME}
         </code-block>
         <code>com/example/myproject/handler/StartHandler.kt</code>
         <code-block lang="kotlin">

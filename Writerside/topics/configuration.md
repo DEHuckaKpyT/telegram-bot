@@ -3,19 +3,19 @@
 ## All settings:
 
 ```kotlin
-class TelegramBotConfig {
-
+data class TelegramBotConfig(
     /** Telegram bot token */
-    var token: String? = null
+    var token: String? = null,
     /** Telegram bot username */
-    var username: String? = null
+    var username: String? = null,
     /** Telegram bot client additional configuration */
-    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null
+    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
     /** Source for saving messages */
-    var messageSource: (TelegramBotActualConfig.() -> MessageSource)? = null
+    var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage<out Any>>)? = null,
     /** Templater for build message templates */
-    var templater: (TelegramBotActualConfig.() -> Templater)? = null
-    var receiving: UpdateReceiverConfig = UpdateReceiverConfig()
+    var templater: (TelegramBotActualConfig.() -> Templater)? = null,
+    val receiving: UpdateReceiverConfig = UpdateReceiverConfig(),
+) {
     /** Telegram bot client additional configuration */
     fun client(block: HttpClientConfig<ApacheEngineConfig>.() -> Unit) {
         clientConfiguration = block
@@ -58,13 +58,43 @@ data class UpdateReceiverConfig(
     var handling: BotHandling.() -> Unit = {},
     /** Update handlers declaration */
     var updateHandling: BotUpdateHandling.() -> Unit = {},
+    /** Long polling settings */
+    val longPolling: LongPollingConfig = LongPollingConfig(),
+    /** Webhook settings */
+    val webhook: WebhookConfig = WebhookConfig(),
+    /** Receiving mode (LONG_POLLING / WEBHOOK) */
+    var mode: ReceivingMode? = null,
     /** Activate and configure long polling for receiving updates */
     fun longPolling(block: LongPollingConfig.() -> Unit)
+    /** Activate and configure webhook for receiving updates */
+    fun webhook(block: WebhookConfig.() -> Unit)
     /** Declare chain handlers */
     fun handling(block: BotHandling.() -> Unit)
     /** Declare any update handlers */
     fun update(block: BotUpdateHandling.() -> Unit)
 )
+```
+
+## Configuration sources and priority
+
+You can configure the bot using:
+
+- code (`TelegramBotConfig`)
+- application properties/config (`application.*`) for Spring and Ktor
+- classpath file `telegram-bot.yaml`
+
+Priority is:
+
+`code > application config > telegram-bot.yaml > defaults`
+
+Example of `telegram-bot.yaml`:
+
+```yaml
+telegram-bot:
+  token: ${TELEGRAM_BOT_TOKEN}
+  username: ${TELEGRAM_BOT_USERNAME:}
+  receiving:
+    mode: long-polling
 ```
 
 ## Set your custom implementations

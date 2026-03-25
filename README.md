@@ -32,6 +32,8 @@ Example of applications in [example-spring](https://github.com/DEHuckaKpyT/teleg
 
 ## Quick start
 
+Token/username can be provided from code, `application.*` application config or `telegram-bot.yaml`.
+
 `build.gradle.kts`
 ```kotlin
 repositories {
@@ -50,8 +52,9 @@ Can be used for integrate with any frameworks manually.
 ```kotlin
 fun main(args: Array<String>): Unit {
     val config = TelegramBotConfig().apply {
-        token = "<bot token required>"
-        username = "<bot username required>"
+        // token/username can be loaded from resources/telegram-bot.yaml
+        // token = "<bot token required>"
+        // username = "<bot username required>"
         
         receiving {
             handling {
@@ -68,6 +71,11 @@ fun main(args: Array<String>): Unit {
     readlnOrNull()
     updateReceiver.stop()
 }
+```
+`resources/telegram-bot.yaml`
+```yaml
+telegram-bot.token: ${TELEGRAM_BOT_TOKEN}
+telegram-bot.username: ${TELEGRAM_BOT_USERNAME}
 ```
 `com/example/myproject/handler/StartHandler.kt`
 ```kotlin

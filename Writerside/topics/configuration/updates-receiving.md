@@ -31,10 +31,11 @@ It available only for web frameworks (Spring and Ktor). *But don't get too upset
         <p>You can configure it easily:</p>
         <code-block lang="yaml">
             telegram-bot:
-                spring:
-                    update-receiver: webhook
-                    # URL to your bot application
-                    update-receiver.webhook.url.host: "https://my.domain.com/api/my-awesome-bot"
+              receiving:
+                mode: webhook
+                webhook:
+                  # URL to your bot application
+                  url-host: "https://my.domain.com/api/my-awesome-bot"
         </code-block>
         <p>
           By default, a unique random token will be generated for the <code>X-Telegram-Bot-Api-Secret-Token</code> header. 
@@ -51,52 +52,52 @@ It available only for web frameworks (Spring and Ktor). *But don't get too upset
           </thead>
           <tbody>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver</code></td>
+              <td><code>telegram-bot.receiving.mode</code></td>
               <td><code>long-polling</code></td>
               <td>Choosing <code>long polling</code> or <code>webhook</code></td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.url.host</code></td>
+              <td><code>telegram-bot.receiving.webhook.url-host</code></td>
               <td>-</td>
-              <td><b>Required</b>: Base URL of your application. Will be concatenated with <code>url.path</code>.</td>
+              <td><b>Required</b>: Base URL of your application. Will be concatenated with <code>url-path</code>.</td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.url.path</code></td>
+              <td><code>telegram-bot.receiving.webhook.url-path</code></td>
               <td><code>/updates/receive</code></td>
               <td>API endpoint path. Will be appended to host</td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.certificate.path</code></td>
+              <td><code>telegram-bot.receiving.webhook.certificate-path</code></td>
               <td>-</td>
               <td>Path to certificate (e.g. <code>/cert.pem</code>)</td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.ip-address</code></td>
+              <td><code>telegram-bot.receiving.webhook.ip-address</code></td>
               <td>-</td>
               <td>Fixed IP instead of DNS-resolved</td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.max-connections</code></td>
+              <td><code>telegram-bot.receiving.webhook.max-connections</code></td>
               <td>-</td>
               <td>Maximum simultaneous HTTPS connections</td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.drop-pending-updates</code></td>
+              <td><code>telegram-bot.receiving.webhook.drop-pending-updates</code></td>
               <td>-</td>
               <td><b>true</b> = drop all unprocessed updates</td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.secret-token</code></td>
+              <td><code>telegram-bot.receiving.webhook.secret-token</code></td>
               <td>-</td>
               <td>Custom token for <code>X-Telegram-Bot-Api-Secret-Token</code> header</td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.secret-token.random-generation</code></td>
+              <td><code>telegram-bot.receiving.webhook.secret-token-random-generation</code></td>
               <td><code>RANDOM_UUID</code></td>
               <td>Token generation: <code>NONE</code>, <code>RANDOM_UUID</code>, <code>RANDOM_256_CHARS</code></td>
             </tr>
             <tr>
-              <td><code>telegram-bot.spring.update-receiver.webhook.secret-token.random-generation.print-on-startup</code></td>
+              <td><code>telegram-bot.receiving.webhook.secret-token-random-generation-print-on-startup</code></td>
               <td><code>false</code></td>
               <td><b>true</b> = print generated token on startup</td>
             </tr>

@@ -184,4 +184,20 @@ class TelegramBotPropertiesParserTest : FreeSpec({
 
         exception.message?.contains("Cyclic placeholder reference detected") shouldBe true
     }
+
+    "fail on self-referencing env placeholder value" {
+        val yaml = $$"""
+            telegram-bot:
+              token: ${TELEGRAM_BOT_TOKEN}
+        """.trimIndent()
+
+        val exception = shouldThrow<IllegalArgumentException> {
+            TelegramBotPropertiesParser.parseYamlContent(
+                yaml = yaml,
+                env = mapOf("TELEGRAM_BOT_TOKEN" to "\${TELEGRAM_BOT_TOKEN}"),
+            )
+        }
+
+        exception.message?.contains("Cyclic placeholder reference detected") shouldBe true
+    }
 })
