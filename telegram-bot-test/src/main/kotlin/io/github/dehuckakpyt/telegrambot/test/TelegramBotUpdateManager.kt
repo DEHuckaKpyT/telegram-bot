@@ -13,23 +13,24 @@ import io.mockk.every
 import io.mockk.mockkConstructor
 import io.mockk.spyk
 import kotlinx.coroutines.channels.Channel
+import org.slf4j.LoggerFactory
 
 
 /**
- * Created on 13.02.2024.
- *<p>
- *
  * @author Denis Matytsin
  */
 internal object TelegramBotUpdateManager {
+    private val logger = LoggerFactory.getLogger(TelegramBotUpdateManager::class.java)
+
     internal val updatesChannel = Channel<List<Update>>()
     internal lateinit var updateResolver: UpdateResolver
-    internal val objectMapper = Class.forName("io.github.dehuckakpyt.telegrambot.api.client.TelegramApiClient")
+    internal val objectMapper = Class.forName("io.github.dehuckakpyt.telegrambot.config.constants.api.client.ApiConstants")
         .getDeclaredField("DEFAULT_MAPPER")
         .apply { isAccessible = true }
         .get(null) as JsonMapper
 
     init {
+        logger.debug("Initializing Mocked TelegramBot...")
         val telegramBotActualConfigClass = Class.forName("io.github.dehuckakpyt.telegrambot.config.TelegramBotActualConfigImpl").kotlin
         mockkConstructor(telegramBotActualConfigClass)
         val mockTelegramBot = spyk(MockTelegramBot())
@@ -41,5 +42,6 @@ internal object TelegramBotUpdateManager {
             MockUpdateReceiver(receiving.updateResolver)
         }
         every { anyConstructed<UpdateReceiverConfig>() getProperty "updateReceiver" } returns mockUpdateReceiver
+        logger.debug("Mocked TelegramBot initialized successfully.")
     }
 }
