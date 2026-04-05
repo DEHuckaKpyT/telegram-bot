@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambotexample.plugin
 
+import io.github.dehuckakpyt.telegrambot.ext.config.client
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.handling
 import io.github.dehuckakpyt.telegrambot.ext.config.receiver.longPolling
 import io.github.dehuckakpyt.telegrambot.ext.source.inDatabase
@@ -13,6 +14,7 @@ import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.*
 import io.ktor.server.application.*
+import org.apache.http.HttpHost
 
 
 /**
@@ -23,6 +25,14 @@ import io.ktor.server.application.*
  */
 fun Application.configureTelegramBot() {
     install(TelegramBot) {
+        client {
+            engine {
+                customizeClient {
+                    setProxy(HttpHost("127.0.0.1", 2080))
+                }
+            }
+        }
+
         telegramMessageSource = { TelegramMessageSource.inDatabase }
 
         receiving {

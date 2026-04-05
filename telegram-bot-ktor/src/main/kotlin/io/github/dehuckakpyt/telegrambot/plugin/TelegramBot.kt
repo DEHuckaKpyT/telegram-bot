@@ -25,6 +25,7 @@ import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
 import io.ktor.server.config.*
 import org.koin.core.qualifier.named
+import org.koin.ktor.plugin.koinModule
 import org.koin.mp.KoinPlatform.getKoin
 
 
@@ -55,20 +56,22 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
     val telegramBot = context.telegramBot
     val updateReceiver = context.updateReceiver
 
-    val koin = getKoin()
-    koin.declare<TelegramBot>(telegramBot)
-    koin.declare<UpdateReceiver>(updateReceiver)
-    koin.declare<BotHandling>(context.botHandling)
-    koin.declare<BotUpdateHandling>(context.botUpdateHandling)
-    koin.declare<Templater>(context.templater)
-    koin.declare<ButtonFactory>(context.buttonFactory)
-    koin.declare<InputFactory>(context.inputFactory)
-    koin.declare(context.telegramMessageSource)
-    koin.declare(context.telegramUserSource)
-    koin.declare<ChainSource>(context.chainSource)
-    koin.declare<CallbackContentSource>(context.callbackContentSource)
-    koin.declare(context.chainManager)
+    application.koinModule {
+        single<TelegramBot> { telegramBot }
+        single<UpdateReceiver> { updateReceiver }
+        single<BotHandling> { context.botHandling }
+        single<BotUpdateHandling> { context.botUpdateHandling }
+        single<Templater> { context.templater }
+        single<ButtonFactory> { context.buttonFactory }
+        single<InputFactory> { context.inputFactory }
+        single { context.telegramMessageSource }
+        single { context.telegramUserSource }
+        single<ChainSource> { context.chainSource }
+        single<CallbackContentSource> { context.callbackContentSource }
+        single { context.chainManager }
+    }
 
+    val koin = getKoin()
     koin.getAll<BotHandler>()
     koin.getAll<BotUpdateHandler>()
 

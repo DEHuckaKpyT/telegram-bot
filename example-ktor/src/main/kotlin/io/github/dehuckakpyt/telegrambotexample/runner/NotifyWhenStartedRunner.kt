@@ -4,8 +4,8 @@ import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.template.Templating
 import io.github.dehuckakpyt.telegrambot.template.Templating.Companion.with
 import io.github.dehuckakpyt.telegrambotexample.template.runnerNotifyWhenStarted
-import org.koin.core.annotation.Single
-import org.koin.core.component.get
+import org.koin.core.annotation.Provided
+import org.koin.core.annotation.Singleton
 
 
 /**
@@ -14,11 +14,12 @@ import org.koin.core.component.get
  *
  * @author Denis Matytsin
  */
-@Single
-class NotifyWhenStartedRunner : Runner, Templating {
+@Singleton
+class NotifyWhenStartedRunner(
+    @Provided private val bot: TelegramBot,
+) : Runner, Templating {
     // всегда доступен TelegramBot для отправки сообщений
     // достаточно просто воспользоваться Koin
-    private val bot = get<TelegramBot>()
     private val chatIdToNotify = 1165327523L
 
     override suspend fun execute() {

@@ -20,5 +20,5 @@ fun Application.module() {
     configureDatabase()
     configureTelegramBot()
 
-//    startRunners()
+    startRunners()
 }

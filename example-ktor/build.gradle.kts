@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     alias(libs.plugins.org.jetbrains.kotlin.jvm)
-    alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.koin.compiler)
 }
 
 dependencies {
@@ -26,13 +26,8 @@ dependencies {
     implementation(libs.exposed.java.time)
     implementation(libs.hikaricp)
     implementation(libs.org.postgresql.postgresql)
-    compileOnly(libs.koin.annotations)
-    ksp(libs.koin.ksp.compiler)
+    implementation(libs.koin.annotations)
     //endregion other
-}
-
-ksp { 
-    arg("KOIN_DEFAULT_MODULE", "true")
 }
 
 java {
@@ -46,8 +41,4 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
-}
-
-sourceSets.main {
-    java.srcDirs("build/generated/ksp/main/kotlin")
 }

@@ -8,22 +8,19 @@ org-jetbrains-kotlin-plugin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", vers
 
 org-springframework-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 
-com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "google-ksp" }
-
+koin-compiler = { id = "io.insert-koin.compiler.plugin", version = "0.6.2" }
 io-github-gradle-nexus-publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 io-spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
 
 [versions]
 
-kotlin = "2.2.21"
+kotlin = "2.3.20"
 kotlinx-coroutines = "1.10.2"
-google-ksp = "2.2.21-2.0.4"
 ktor = "3.4.2"
 jackson = "2.21.2"
 spring-boot = "3.5.10"
 spring-framework = "6.5.9"
 koin = "4.2.0"
-koin-additional = "2.3.1"
 jetbrains-exposed = "1.2.0"
 hypersistence = "3.15.2"
 kotest = "6.1.10"
@@ -48,10 +45,6 @@ kotlin-scripting-compiler-embeddable = { group = "org.jetbrains.kotlin", name = 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "kotlinx-coroutines" }
 
-symbol-processing = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "google-ksp" }
-symbol-processing-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "google-ksp" }
-symbol-processing-cmdline = { group = "com.google.devtools.ksp", name = "symbol-processing-cmdline", version.ref = "google-ksp" }
-
 ktor-client-apache-jvm = { group = "io.ktor", name = "ktor-client-apache-jvm", version.ref = "ktor" }
 ktor-client-content-negotiation-jvm = { group = "io.ktor", name = "ktor-client-content-negotiation-jvm", version.ref = "ktor" }
 ktor-serialization-jackson-jvm = { group = "io.ktor", name = "ktor-serialization-jackson-jvm", version.ref = "ktor" }
@@ -74,8 +67,7 @@ spring-security-core = { group = "org.springframework.security", name = "spring-
 
 koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin" }
 koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }
-koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-additional" }
-koin-ksp-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-additional" }
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin" }
 
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "jetbrains-exposed" }
 exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "jetbrains-exposed" }
