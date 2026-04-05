@@ -13,6 +13,7 @@ import io.github.dehuckakpyt.telegrambotexample.handler.exceptionCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.templateCommand
 import io.github.dehuckakpyt.telegrambotexample.handler.withArgsCommand
 import io.ktor.client.plugins.*
+import org.apache.http.HttpHost
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -33,6 +34,11 @@ class BotConfig {
             defaultRequest {
                 url {
                     host = "api.telegram.org"
+                }
+            }
+            engine { 
+                customizeClient {
+                    setProxy(HttpHost("127.0.0.1", 2080))
                 }
             }
         }

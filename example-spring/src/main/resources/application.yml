@@ -19,7 +19,7 @@ telegram-bot:
       front-end-config:
         default-page-size: 25
     
-  receiving:
+#  receiving:
 #    mode: webhook
 #    webhook.url-host: "https://my.domain.com"
 #    webhook.secret-token-random-generation-print-on-startup: true
