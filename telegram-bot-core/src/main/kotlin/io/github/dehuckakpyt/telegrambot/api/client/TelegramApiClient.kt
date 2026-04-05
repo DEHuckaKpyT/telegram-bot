@@ -7,7 +7,7 @@ import io.github.dehuckakpyt.telegrambot.exception.api.TelegramBotApiException
 import io.github.dehuckakpyt.telegrambot.ext.toJson
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -21,9 +21,9 @@ import io.ktor.http.ContentType.Application.Json
  */
 public class TelegramApiClient(
     private val token: String,
-    clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
+    clientConfiguration: (HttpClientConfig<Apache5EngineConfig>.() -> Unit)? = null,
 ) {
-    val client = HttpClient(Apache) {
+    val client = HttpClient(Apache5) {
         DEFAULT_CLIENT_CONFIGURATION(token)
         clientConfiguration?.invoke(this)
     }

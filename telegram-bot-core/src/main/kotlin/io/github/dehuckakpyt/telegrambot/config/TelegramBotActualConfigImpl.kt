@@ -6,7 +6,7 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 
 
 /**
@@ -18,7 +18,7 @@ import io.ktor.client.engine.apache.*
 internal class TelegramBotActualConfigImpl : TelegramBotActualConfig {
     override lateinit var token: String
     override var username: String? = null
-    override var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null
+    override var clientConfiguration: (HttpClientConfig<Apache5EngineConfig>.() -> Unit)? = null
     override lateinit var telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>
     override lateinit var telegramBot: TelegramBot
     override lateinit var templater: Templater

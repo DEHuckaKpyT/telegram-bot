@@ -12,7 +12,7 @@ import io.github.dehuckakpyt.telegrambot.api.serializer.StringInputSerializer
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.StringInput
 import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
@@ -47,7 +47,7 @@ public object ApiConstants {
         )
     }
 
-    public val DEFAULT_CLIENT_CONFIGURATION: HttpClientConfig<ApacheEngineConfig>.(String) -> Unit = { token ->
+    public val DEFAULT_CLIENT_CONFIGURATION: HttpClientConfig<Apache5EngineConfig>.(String) -> Unit = { token ->
         install(ContentNegotiation) {
             register(Json, JacksonConverter(DEFAULT_MAPPER))
         }

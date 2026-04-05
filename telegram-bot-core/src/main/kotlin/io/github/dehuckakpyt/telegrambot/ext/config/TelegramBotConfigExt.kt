@@ -5,7 +5,7 @@ import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ResourceContent
 import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 
 
 /**
@@ -21,7 +21,7 @@ fun TelegramBotConfig.eventListening(preventDefaults: Boolean = false, block: Te
 }
 
 /** Customize telegram bot's client */
-fun TelegramBotConfig.client(block: HttpClientConfig<ApacheEngineConfig>.() -> Unit) {
+fun TelegramBotConfig.client(block: HttpClientConfig<Apache5EngineConfig>.() -> Unit) {
     clientConfiguration = block
 }
 

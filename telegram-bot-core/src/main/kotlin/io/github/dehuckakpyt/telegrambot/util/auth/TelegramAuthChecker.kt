@@ -1,8 +1,8 @@
 package io.github.dehuckakpyt.telegrambot.util.auth
 
 import io.github.dehuckakpyt.telegrambot.model.telegram.User
-import org.apache.commons.codec.binary.Hex
 import java.security.MessageDigest
+import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -70,6 +70,6 @@ class TelegramAuthChecker(
         val secretKey = SecretKeySpec(key, "HmacSHA256")
         hmacSha256.init(secretKey)
         val result = hmacSha256.doFinal(data.toByteArray())
-        return Hex.encodeHexString(result)
+        return HexFormat.of().formatHex(result)
     }
 }

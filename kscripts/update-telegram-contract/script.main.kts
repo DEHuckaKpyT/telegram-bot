@@ -313,7 +313,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
         .addImport("io.github.dehuckakpyt.telegrambot.ext", "appendContent", "appendContentIfNotNull", "appendIfNotNull")
         .addImport("io.github.dehuckakpyt.telegrambot.ext", "toJson")
         .addImport("io.ktor.client", "HttpClientConfig")
-        .addImport("io.ktor.client.engine.apache", "ApacheEngineConfig")
+        .addImport("io.ktor.client.engine.apache5", "Apache5EngineConfig")
         .addImport("kotlinx.coroutines", "Dispatchers", "runBlocking")
         .addType(
             TypeSpec.classBuilder("TelegramBotImpl")
@@ -325,7 +325,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
                         .defaultValue("null")
                         .build())
                     .addParameter(ParameterSpec.builder("clientConfiguration", LambdaTypeName.get(receiver = ClassName("io.ktor.client", "HttpClientConfig")
-                        .parameterizedBy(ClassName("io.ktor.client.engine.apache", "ApacheEngineConfig")), returnType = Unit::class.asTypeName()).copy(nullable = true))
+                        .parameterizedBy(ClassName("io.ktor.client.engine.apache5", "Apache5EngineConfig")), returnType = Unit::class.asTypeName()).copy(nullable = true))
                         .defaultValue("null")
                         .build())
                     .addParameter("eventManager", ClassName("io.github.dehuckakpyt.telegrambot.event.managing", "TelegramBotEventManager"))

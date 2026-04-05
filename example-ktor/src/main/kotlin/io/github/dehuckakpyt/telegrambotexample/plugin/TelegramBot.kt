@@ -14,7 +14,7 @@ import io.github.dehuckakpyt.telegrambot.source.user.TelegramUserSource
 import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handler.*
 import io.ktor.server.application.*
-import org.apache.http.HttpHost
+import org.apache.hc.core5.http.HttpHost
 
 
 /**

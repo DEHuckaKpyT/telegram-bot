@@ -209,7 +209,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.VerifyUser
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.apache.ApacheEngineConfig
+import io.ktor.client.engine.apache5.Apache5EngineConfig
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.Double
@@ -231,7 +231,7 @@ import kotlinx.coroutines.runBlocking
 public class TelegramBotImpl(
     token: String,
     username: String? = null,
-    clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
+    clientConfiguration: (HttpClientConfig<Apache5EngineConfig>.() -> Unit)? = null,
     private val eventManager: TelegramBotEventManager,
 ) : TelegramBot {
     override val username: String = username ?: runBlocking(Dispatchers.Default) { getMe()

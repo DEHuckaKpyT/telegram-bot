@@ -35,7 +35,7 @@ import io.github.dehuckakpyt.telegrambot.source.user.EmptyTelegramUserSource
 import io.github.dehuckakpyt.telegrambot.template.MessageTemplate
 import io.github.dehuckakpyt.telegrambot.template.RegexTemplater
 import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 
 
 /**
@@ -57,7 +57,7 @@ object TelegramBotFactory {
      *
      * @return telegram bot instance for making requests
      */
-    fun createTelegramBot(token: String, username: String, clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null): TelegramBot =
+    fun createTelegramBot(token: String, username: String, clientConfiguration: (HttpClientConfig<Apache5EngineConfig>.() -> Unit)? = null): TelegramBot =
         TelegramBotImpl(token, username, clientConfiguration, TelegramBotEventManager())
 
     /**

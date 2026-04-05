@@ -7,7 +7,7 @@ import io.github.dehuckakpyt.telegrambot.config.constants.receiver.LongPollingUp
 import io.github.dehuckakpyt.telegrambot.config.receiver.LongPollingConfig
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import kotlinx.coroutines.*
-import org.apache.http.ConnectionClosedException
+import org.apache.hc.core5.http.ConnectionClosedException
 import org.slf4j.LoggerFactory
 import kotlin.time.Duration
 

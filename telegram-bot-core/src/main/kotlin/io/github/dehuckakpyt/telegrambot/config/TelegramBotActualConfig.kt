@@ -6,7 +6,7 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 
 
 /**
@@ -18,7 +18,7 @@ import io.ktor.client.engine.apache.*
 interface TelegramBotActualConfig {
     val token: String
     val username: String?
-    val clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)?
+    val clientConfiguration: (HttpClientConfig<Apache5EngineConfig>.() -> Unit)?
     val telegramMessageSource: TelegramMessageSource<out TelegramMessage<out Any>>
     val telegramBot: TelegramBot
     val templater: Templater

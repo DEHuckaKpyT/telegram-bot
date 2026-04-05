@@ -6,7 +6,7 @@ import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
 import io.github.dehuckakpyt.telegrambot.source.message.TelegramMessageSource
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 
 
 /**
@@ -42,7 +42,7 @@ data class TelegramBotConfig(
     var username: String? = null,
 
     /** Telegram bot client additional configuration */
-    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
+    var clientConfiguration: (HttpClientConfig<Apache5EngineConfig>.() -> Unit)? = null,
 
     /** Source for saving messages */
     var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage<out Any>>)? = null,
