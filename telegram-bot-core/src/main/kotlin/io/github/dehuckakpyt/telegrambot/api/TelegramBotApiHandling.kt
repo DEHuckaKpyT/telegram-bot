@@ -28,6 +28,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContent
+import io.github.dehuckakpyt.telegrambot.model.telegram.KeyboardButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.LabeledPrice
 import io.github.dehuckakpyt.telegrambot.model.telegram.LinkPreviewOptions
 import io.github.dehuckakpyt.telegrambot.model.telegram.MaskPosition
@@ -39,6 +40,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.OwnedGifts
 import io.github.dehuckakpyt.telegrambot.model.telegram.PassportElementError
 import io.github.dehuckakpyt.telegrambot.model.telegram.Poll
 import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedInlineMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedKeyboardButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
@@ -1490,10 +1492,17 @@ public abstract class TelegramBotApiHandling {
      * question. It can be specified instead of *question_parse_mode*
      * @param isAnonymous *True*, if the poll needs to be anonymous, defaults to *True*
      * @param type Poll type, “quiz” or “regular”, defaults to “regular”
-     * @param allowsMultipleAnswers *True*, if the poll allows multiple answers, ignored for polls
-     * in quiz mode, defaults to *False*
-     * @param correctOptionId 0-based identifier of the correct answer option, required for polls in
-     * quiz mode
+     * @param allowsMultipleAnswers Pass *True*, if the poll allows multiple answers, defaults to
+     * *False*
+     * @param allowsRevoting Pass *True*, if the poll allows to change chosen answer options,
+     * defaults to *False* for quizzes and to *True* for regular polls
+     * @param shuffleOptions Pass *True*, if the poll options must be shown in random order
+     * @param allowAddingOptions Pass *True*, if answer options can be added to the poll after
+     * creation; not supported for anonymous polls and quizzes
+     * @param hideResultsUntilCloses Pass *True*, if poll results must be shown only after the poll
+     * closes
+     * @param correctOptionIds A JSON-serialized list of monotonically increasing 0-based
+     * identifiers of the correct answer options, required for polls in quiz mode
      * @param explanation Text that is shown when a user chooses an incorrect answer or taps on the
      * lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities
      * parsing
@@ -1501,13 +1510,19 @@ public abstract class TelegramBotApiHandling {
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param explanationEntities A JSON-serialized list of special entities that appear in the poll
      * explanation. It can be specified instead of *explanation_parse_mode*
-     * @param openPeriod Amount of time in seconds the poll will be active after creation, 5-600.
-     * Can't be used together with *close_date*.
+     * @param openPeriod Amount of time in seconds the poll will be active after creation,
+     * 5-2628000. Can't be used together with *close_date*.
      * @param closeDate Point in time (Unix timestamp) when the poll will be automatically closed.
-     * Must be at least 5 and no more than 600 seconds in the future. Can't be used together with
+     * Must be at least 5 and no more than 2628000 seconds in the future. Can't be used together with
      * *open_period*.
      * @param isClosed Pass *True* if the poll needs to be immediately closed. This can be useful
      * for poll preview.
+     * @param description Description of the poll to be sent, 0-1024 characters after entities
+     * parsing
+     * @param descriptionParseMode Mode for parsing entities in the poll description. See
+     * [formatting options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param descriptionEntities A JSON-serialized list of special entities that appear in the poll
+     * description, which can be specified instead of *description_parse_mode*
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -1535,13 +1550,20 @@ public abstract class TelegramBotApiHandling {
         isAnonymous: Boolean? = null,
         type: String? = null,
         allowsMultipleAnswers: Boolean? = null,
-        correctOptionId: Long? = null,
+        allowsRevoting: Boolean? = null,
+        shuffleOptions: Boolean? = null,
+        allowAddingOptions: Boolean? = null,
+        hideResultsUntilCloses: Boolean? = null,
+        correctOptionIds: Iterable<Long>? = null,
         explanation: String? = null,
         explanationParseMode: String? = null,
         explanationEntities: Iterable<MessageEntity>? = null,
         openPeriod: Int? = null,
         closeDate: Long? = null,
         isClosed: Boolean? = null,
+        description: String? = null,
+        descriptionParseMode: String? = null,
+        descriptionEntities: Iterable<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
@@ -1559,13 +1581,20 @@ public abstract class TelegramBotApiHandling {
         isAnonymous = isAnonymous,
         type = type,
         allowsMultipleAnswers = allowsMultipleAnswers,
-        correctOptionId = correctOptionId,
+        allowsRevoting = allowsRevoting,
+        shuffleOptions = shuffleOptions,
+        allowAddingOptions = allowAddingOptions,
+        hideResultsUntilCloses = hideResultsUntilCloses,
+        correctOptionIds = correctOptionIds,
         explanation = explanation,
         explanationParseMode = explanationParseMode,
         explanationEntities = explanationEntities,
         openPeriod = openPeriod,
         closeDate = closeDate,
         isClosed = isClosed,
+        description = description,
+        descriptionParseMode = descriptionParseMode,
+        descriptionEntities = descriptionEntities,
         disableNotification = disableNotification,
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
@@ -2624,6 +2653,26 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
+     * Use this method to get the token of a managed bot. Returns the token as *String* on success.
+     *
+     * @param userId User identifier of the managed bot whose token will be returned
+     */
+    public suspend fun Container.getManagedBotToken(userId: Long): String = bot.getManagedBotToken(
+        userId = userId,
+    )
+
+    /**
+     * Use this method to revoke the current token of a managed bot and generate a new one. Returns
+     * the new token as *String* on success.
+     *
+     * @param userId User identifier of the managed bot whose token will be replaced
+     */
+    public suspend fun Container.replaceManagedBotToken(userId: Long): String =
+            bot.replaceManagedBotToken(
+        userId = userId,
+    )
+
+    /**
      * Use this method to change the list of the bot's commands. See [this
      * manual](https://core.telegram.org/bots/features#commands) for more details about bot commands.
      * Returns *True* on success.
@@ -2842,11 +2891,11 @@ public abstract class TelegramBotApiHandling {
      * @param text Text that will be shown along with the gift; 0-128 characters
      * @param textParseMode Mode for parsing entities in the text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
-     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
-     * ignored.
+     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and
+     * “date_time” are ignored.
      * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
      * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
-     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+     * “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
      */
     public suspend fun Container.sendGift(
         giftId: String,
@@ -2878,11 +2927,11 @@ public abstract class TelegramBotApiHandling {
      * 0-128 characters
      * @param textParseMode Mode for parsing entities in the text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Entities
-     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are
-     * ignored.
+     * other than “bold”, “italic”, “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and
+     * “date_time” are ignored.
      * @param textEntities A JSON-serialized list of special entities that appear in the gift text.
      * It can be specified instead of *text_parse_mode*. Entities other than “bold”, “italic”,
-     * “underline”, “strikethrough”, “spoiler”, and “custom_emoji” are ignored.
+     * “underline”, “strikethrough”, “spoiler”, “custom_emoji”, and “date_time” are ignored.
      */
     public suspend fun Container.giftPremiumSubscription(
         userId: Long,
@@ -3429,6 +3478,62 @@ public abstract class TelegramBotApiHandling {
             bot.deleteStory(
         businessConnectionId = businessConnectionId,
         storyId = storyId,
+    )
+
+    /**
+     * Use this method to set the result of an interaction with a [Web
+     * App](https://core.telegram.org/bots/webapps) and send a corresponding message on behalf of the
+     * user to the chat from which the query originated. On success, a
+     * [SentWebAppMessage](https://core.telegram.org/bots/api/#sentwebappmessage) object is returned.
+     *
+     * @param webAppQueryId Unique identifier for the query to be answered
+     * @param result A JSON-serialized object describing the message to be sent
+     */
+    public suspend fun Container.answerWebAppQuery(webAppQueryId: String,
+            result: InlineQueryResult): SentWebAppMessage = bot.answerWebAppQuery(
+        webAppQueryId = webAppQueryId,
+        result = result,
+    )
+
+    /**
+     * Stores a message that can be sent by a user of a Mini App. Returns a
+     * [PreparedInlineMessage](https://core.telegram.org/bots/api/#preparedinlinemessage) object.
+     *
+     * @param userId Unique identifier of the target user that can use the prepared message
+     * @param result A JSON-serialized object describing the message to be sent
+     * @param allowUserChats Pass *True* if the message can be sent to private chats with users
+     * @param allowBotChats Pass *True* if the message can be sent to private chats with bots
+     * @param allowGroupChats Pass *True* if the message can be sent to group and supergroup chats
+     * @param allowChannelChats Pass *True* if the message can be sent to channel chats
+     */
+    public suspend fun Container.savePreparedInlineMessage(
+        userId: Long,
+        result: InlineQueryResult,
+        allowUserChats: Boolean? = null,
+        allowBotChats: Boolean? = null,
+        allowGroupChats: Boolean? = null,
+        allowChannelChats: Boolean? = null,
+    ): PreparedInlineMessage = bot.savePreparedInlineMessage(
+        userId = userId,
+        result = result,
+        allowUserChats = allowUserChats,
+        allowBotChats = allowBotChats,
+        allowGroupChats = allowGroupChats,
+        allowChannelChats = allowChannelChats,
+    )
+
+    /**
+     * Stores a keyboard button that can be used by a user within a Mini App. Returns a
+     * [PreparedKeyboardButton](https://core.telegram.org/bots/api/#preparedkeyboardbutton) object.
+     *
+     * @param userId Unique identifier of the target user that can use the button
+     * @param button A JSON-serialized object describing the button to be saved. The button must be
+     * of the type *request_users*, *request_chat*, or *request_managed_bot*
+     */
+    public suspend fun Container.savePreparedKeyboardButton(userId: Long, button: KeyboardButton):
+            PreparedKeyboardButton = bot.savePreparedKeyboardButton(
+        userId = userId,
+        button = button,
     )
 
     /**
@@ -4114,48 +4219,6 @@ public abstract class TelegramBotApiHandling {
         isPersonal = isPersonal,
         nextOffset = nextOffset,
         button = button,
-    )
-
-    /**
-     * Use this method to set the result of an interaction with a [Web
-     * App](https://core.telegram.org/bots/webapps) and send a corresponding message on behalf of the
-     * user to the chat from which the query originated. On success, a
-     * [SentWebAppMessage](https://core.telegram.org/bots/api/#sentwebappmessage) object is returned.
-     *
-     * @param webAppQueryId Unique identifier for the query to be answered
-     * @param result A JSON-serialized object describing the message to be sent
-     */
-    public suspend fun Container.answerWebAppQuery(webAppQueryId: String,
-            result: InlineQueryResult): SentWebAppMessage = bot.answerWebAppQuery(
-        webAppQueryId = webAppQueryId,
-        result = result,
-    )
-
-    /**
-     * Stores a message that can be sent by a user of a Mini App. Returns a
-     * [PreparedInlineMessage](https://core.telegram.org/bots/api/#preparedinlinemessage) object.
-     *
-     * @param userId Unique identifier of the target user that can use the prepared message
-     * @param result A JSON-serialized object describing the message to be sent
-     * @param allowUserChats Pass *True* if the message can be sent to private chats with users
-     * @param allowBotChats Pass *True* if the message can be sent to private chats with bots
-     * @param allowGroupChats Pass *True* if the message can be sent to group and supergroup chats
-     * @param allowChannelChats Pass *True* if the message can be sent to channel chats
-     */
-    public suspend fun Container.savePreparedInlineMessage(
-        userId: Long,
-        result: InlineQueryResult,
-        allowUserChats: Boolean? = null,
-        allowBotChats: Boolean? = null,
-        allowGroupChats: Boolean? = null,
-        allowChannelChats: Boolean? = null,
-    ): PreparedInlineMessage = bot.savePreparedInlineMessage(
-        userId = userId,
-        result = result,
-        allowUserChats = allowUserChats,
-        allowBotChats = allowBotChats,
-        allowGroupChats = allowGroupChats,
-        allowChannelChats = allowChannelChats,
     )
 
     /**

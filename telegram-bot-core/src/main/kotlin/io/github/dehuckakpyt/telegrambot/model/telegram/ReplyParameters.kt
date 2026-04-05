@@ -24,8 +24,8 @@ import kotlin.collections.List
  * topic. Always *True* for messages sent on behalf of a business account.
  * @param quote *Optional*. Quoted part of the message to be replied to; 0-1024 characters after
  * entities parsing. The quote must be an exact substring of the message to be replied to, including
- * *bold*, *italic*, *underline*, *strikethrough*, *spoiler*, and *custom_emoji* entities. The message
- * will fail to send if the quote isn't found in the original message.
+ * *bold*, *italic*, *underline*, *strikethrough*, *spoiler*, *custom_emoji*, and *date_time* entities.
+ * The message will fail to send if the quote isn't found in the original message.
  * @param quoteParseMode *Optional*. Mode for parsing entities in the quote. See [formatting
  * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
  * @param quoteEntities *Optional*. A JSON-serialized list of special entities that appear in the
@@ -33,6 +33,8 @@ import kotlin.collections.List
  * @param quotePosition *Optional*. Position of the quote in the original message in UTF-16 code
  * units
  * @param checklistTaskId *Optional*. Identifier of the specific checklist task to be replied to
+ * @param pollOptionId *Optional*. Persistent identifier of the specific poll option to be replied
+ * to
  */
 public data class ReplyParameters(
     /**
@@ -61,8 +63,8 @@ public data class ReplyParameters(
     /**
      * *Optional*. Quoted part of the message to be replied to; 0-1024 characters after entities
      * parsing. The quote must be an exact substring of the message to be replied to, including *bold*,
-     * *italic*, *underline*, *strikethrough*, *spoiler*, and *custom_emoji* entities. The message will
-     * fail to send if the quote isn't found in the original message.
+     * *italic*, *underline*, *strikethrough*, *spoiler*, *custom_emoji*, and *date_time* entities. The
+     * message will fail to send if the quote isn't found in the original message.
      */
     @get:JsonProperty("quote")
     @param:JsonProperty("quote")
@@ -93,6 +95,12 @@ public data class ReplyParameters(
     @get:JsonProperty("checklist_task_id")
     @param:JsonProperty("checklist_task_id")
     public val checklistTaskId: Long? = null,
+    /**
+     * *Optional*. Persistent identifier of the specific poll option to be replied to
+     */
+    @get:JsonProperty("poll_option_id")
+    @param:JsonProperty("poll_option_id")
+    public val pollOptionId: String? = null,
 ) {
     public constructor(
         messageId: Long,
@@ -103,6 +111,7 @@ public data class ReplyParameters(
         quoteEntities: List<MessageEntity>? = null,
         quotePosition: Int? = null,
         checklistTaskId: Long? = null,
+        pollOptionId: String? = null,
     ) : this(messageId, chatId.toString(), allowSendingWithoutReply, quote, quoteParseMode,
-            quoteEntities, quotePosition, checklistTaskId)
+            quoteEntities, quotePosition, checklistTaskId, pollOptionId)
 }

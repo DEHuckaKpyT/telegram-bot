@@ -100,6 +100,10 @@ class BotUpdateHandling internal constructor(
         resolver.removedChatBoost = block
     }
 
+    fun managedBot(block: suspend ManagedBotUpdated.() -> Unit): Unit {
+        resolver.managedBot = block
+    }
+
     /**
      * Set the next step in the dialog.
      *

@@ -16,7 +16,8 @@ import kotlin.collections.List
  *
  * @param text Text of the quoted part of a message that is replied to by the given message
  * @param entities *Optional*. Special entities that appear in the quote. Currently, only *bold*,
- * *italic*, *underline*, *strikethrough*, *spoiler*, and *custom_emoji* entities are kept in quotes.
+ * *italic*, *underline*, *strikethrough*, *spoiler*, *custom_emoji*, and *date_time* entities are kept
+ * in quotes.
  * @param position Approximate quote position in the original message in UTF-16 code units as
  * specified by the sender
  * @param isManual *Optional*. *True*, if the quote was chosen manually by the message sender.
@@ -31,7 +32,8 @@ public data class TextQuote(
     public val text: String,
     /**
      * *Optional*. Special entities that appear in the quote. Currently, only *bold*, *italic*,
-     * *underline*, *strikethrough*, *spoiler*, and *custom_emoji* entities are kept in quotes.
+     * *underline*, *strikethrough*, *spoiler*, *custom_emoji*, and *date_time* entities are kept in
+     * quotes.
      */
     @get:JsonProperty("entities")
     @param:JsonProperty("entities")

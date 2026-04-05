@@ -32,6 +32,7 @@ internal class EventUpdateResolver {
     internal var chatJoinRequest: (suspend ChatJoinRequest.() -> Unit)? = null
     internal var chatBoost: (suspend ChatBoostUpdated.() -> Unit)? = null
     internal var removedChatBoost: (suspend ChatBoostRemoved.() -> Unit)? = null
+    internal var managedBot: (suspend ManagedBotUpdated.() -> Unit)? = null
 
     suspend fun processUpdate(update: Update): Unit {
         try {
@@ -54,6 +55,7 @@ internal class EventUpdateResolver {
                 update.chatJoinRequest != null -> chatJoinRequest?.invoke(update.chatJoinRequest)
                 update.chatBoost != null -> chatBoost?.invoke(update.chatBoost)
                 update.removedChatBoost != null -> removedChatBoost?.invoke(update.removedChatBoost)
+                update.managedBot != null -> managedBot?.invoke(update.managedBot)
             }
         } catch (throwable: Throwable) {
             logger.error("Failed to handle update.", throwable)
@@ -69,7 +71,7 @@ internal class EventUpdateResolver {
             if (messageReaction != null) add("message_reaction")
             if (messageReactionCount != null) add("message_reaction_count")
             if (inlineQuery != null) add("inline_query")
-            if (chosenInlineResult != null) add("chosen_inline_query")
+            if (chosenInlineResult != null) add("chosen_inline_result")
             if (callbackQuery != null) add("callback_query")
             if (shippingQuery != null) add("shipping_query")
             if (preCheckoutQuery != null) add("pre_checkout_query")
@@ -80,5 +82,6 @@ internal class EventUpdateResolver {
             if (chatJoinRequest != null) add("chat_join_request")
             if (chatBoost != null) add("chat_boost")
             if (removedChatBoost != null) add("removed_chat_boost")
+            if (managedBot != null) add("managed_bot")
         }
 }

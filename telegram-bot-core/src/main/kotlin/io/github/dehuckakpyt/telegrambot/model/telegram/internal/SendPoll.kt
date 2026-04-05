@@ -35,8 +35,16 @@ internal data class SendPoll(
     public val type: String? = null,
     @get:JsonProperty("allows_multiple_answers")
     public val allowsMultipleAnswers: Boolean? = null,
-    @get:JsonProperty("correct_option_id")
-    public val correctOptionId: Long? = null,
+    @get:JsonProperty("allows_revoting")
+    public val allowsRevoting: Boolean? = null,
+    @get:JsonProperty("shuffle_options")
+    public val shuffleOptions: Boolean? = null,
+    @get:JsonProperty("allow_adding_options")
+    public val allowAddingOptions: Boolean? = null,
+    @get:JsonProperty("hide_results_until_closes")
+    public val hideResultsUntilCloses: Boolean? = null,
+    @get:JsonProperty("correct_option_ids")
+    public val correctOptionIds: Iterable<Long>? = null,
     @get:JsonProperty("explanation")
     public val explanation: String? = null,
     @get:JsonProperty("explanation_parse_mode")
@@ -49,6 +57,12 @@ internal data class SendPoll(
     public val closeDate: Long? = null,
     @get:JsonProperty("is_closed")
     public val isClosed: Boolean? = null,
+    @get:JsonProperty("description")
+    public val description: String? = null,
+    @get:JsonProperty("description_parse_mode")
+    public val descriptionParseMode: String? = null,
+    @get:JsonProperty("description_entities")
+    public val descriptionEntities: Iterable<MessageEntity>? = null,
     @get:JsonProperty("disable_notification")
     public val disableNotification: Boolean? = null,
     @get:JsonProperty("protect_content")

@@ -58,6 +58,8 @@ import kotlin.collections.List
  * @param replyToStory *Optional*. For replies to a story, the original story
  * @param replyToChecklistTaskId *Optional*. Identifier of the specific checklist task that is being
  * replied to
+ * @param replyToPollOptionId *Optional*. Persistent identifier of the specific poll option that is
+ * being replied to
  * @param viaBot *Optional*. Bot through which the message was sent
  * @param editDate *Optional*. Date the message was last edited in Unix time
  * @param hasProtectedContent *Optional*. *True*, if the message can't be forwarded
@@ -180,8 +182,12 @@ import kotlin.collections.List
  * @param giveawayWinners *Optional*. A giveaway with public winners was completed
  * @param giveawayCompleted *Optional*. Service message: a giveaway without public winners was
  * completed
+ * @param managedBotCreated *Optional*. Service message: user created a bot that will be managed by
+ * the current bot
  * @param paidMessagePriceChanged *Optional*. Service message: the price for paid messages has
  * changed in the chat
+ * @param pollOptionAdded *Optional*. Service message: answer option was added to a poll
+ * @param pollOptionDeleted *Optional*. Service message: answer option was deleted from a poll
  * @param suggestedPostApproved *Optional*. Service message: a suggested post was approved
  * @param suggestedPostApprovalFailed *Optional*. Service message: approval of a suggested post has
  * failed
@@ -335,6 +341,12 @@ public data class Message(
     @get:JsonProperty("reply_to_checklist_task_id")
     @param:JsonProperty("reply_to_checklist_task_id")
     public val replyToChecklistTaskId: Long? = null,
+    /**
+     * *Optional*. Persistent identifier of the specific poll option that is being replied to
+     */
+    @get:JsonProperty("reply_to_poll_option_id")
+    @param:JsonProperty("reply_to_poll_option_id")
+    public val replyToPollOptionId: String? = null,
     /**
      * *Optional*. Bot through which the message was sent
      */
@@ -827,11 +839,29 @@ public data class Message(
     @param:JsonProperty("giveaway_completed")
     public val giveawayCompleted: GiveawayCompleted? = null,
     /**
+     * *Optional*. Service message: user created a bot that will be managed by the current bot
+     */
+    @get:JsonProperty("managed_bot_created")
+    @param:JsonProperty("managed_bot_created")
+    public val managedBotCreated: ManagedBotCreated? = null,
+    /**
      * *Optional*. Service message: the price for paid messages has changed in the chat
      */
     @get:JsonProperty("paid_message_price_changed")
     @param:JsonProperty("paid_message_price_changed")
     public val paidMessagePriceChanged: PaidMessagePriceChanged? = null,
+    /**
+     * *Optional*. Service message: answer option was added to a poll
+     */
+    @get:JsonProperty("poll_option_added")
+    @param:JsonProperty("poll_option_added")
+    public val pollOptionAdded: PollOptionAdded? = null,
+    /**
+     * *Optional*. Service message: answer option was deleted from a poll
+     */
+    @get:JsonProperty("poll_option_deleted")
+    @param:JsonProperty("poll_option_deleted")
+    public val pollOptionDeleted: PollOptionDeleted? = null,
     /**
      * *Optional*. Service message: a suggested post was approved
      */

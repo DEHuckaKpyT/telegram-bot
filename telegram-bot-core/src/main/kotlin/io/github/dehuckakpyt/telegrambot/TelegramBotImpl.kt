@@ -6,17 +6,225 @@ import io.github.dehuckakpyt.telegrambot.ext.appendContent
 import io.github.dehuckakpyt.telegrambot.ext.appendContentIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.appendIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.toJson
-import io.github.dehuckakpyt.telegrambot.model.telegram.*
+import io.github.dehuckakpyt.telegrambot.model.telegram.AcceptedGiftTypes
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotName
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotShortDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.BusinessConnection
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatAdministratorRights
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatFullInfo
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatMember
+import io.github.dehuckakpyt.telegrambot.model.telegram.ChatPermissions
+import io.github.dehuckakpyt.telegrambot.model.telegram.File
+import io.github.dehuckakpyt.telegrambot.model.telegram.ForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.GameHighScore
+import io.github.dehuckakpyt.telegrambot.model.telegram.Gifts
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResult
+import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputChecklist
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContent
+import io.github.dehuckakpyt.telegrambot.model.telegram.KeyboardButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.LabeledPrice
+import io.github.dehuckakpyt.telegrambot.model.telegram.LinkPreviewOptions
+import io.github.dehuckakpyt.telegrambot.model.telegram.MaskPosition
+import io.github.dehuckakpyt.telegrambot.model.telegram.MenuButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.Message
+import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
+import io.github.dehuckakpyt.telegrambot.model.telegram.MessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.OwnedGifts
+import io.github.dehuckakpyt.telegrambot.model.telegram.PassportElementError
+import io.github.dehuckakpyt.telegrambot.model.telegram.Poll
+import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedInlineMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedKeyboardButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
+import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
+import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
+import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
+import io.github.dehuckakpyt.telegrambot.model.telegram.StarAmount
+import io.github.dehuckakpyt.telegrambot.model.telegram.StarTransactions
+import io.github.dehuckakpyt.telegrambot.model.telegram.Sticker
+import io.github.dehuckakpyt.telegrambot.model.telegram.StickerSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.Story
+import io.github.dehuckakpyt.telegrambot.model.telegram.StoryArea
+import io.github.dehuckakpyt.telegrambot.model.telegram.SuggestedPostParameters
+import io.github.dehuckakpyt.telegrambot.model.telegram.Update
+import io.github.dehuckakpyt.telegrambot.model.telegram.User
+import io.github.dehuckakpyt.telegrambot.model.telegram.UserChatBoosts
+import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfileAudios
+import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfilePhotos
+import io.github.dehuckakpyt.telegrambot.model.telegram.WebhookInfo
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerCallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerInlineQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerPreCheckoutQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerShippingQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerWebAppQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ApproveChatJoinRequest
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ApproveSuggestedPost
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.BanChatMember
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.BanChatSenderChat
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CloseForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CloseGeneralForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ConvertGiftToStars
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CopyMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CopyMessages
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateChatSubscriptionInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateInvoiceLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeclineChatJoinRequest
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeclineSuggestedPost
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteBusinessMessages
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteChatPhoto
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteChatStickerSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMessages
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMyCommands
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteStickerFromSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteStickerSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteStory
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteWebhook
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditChatSubscriptionInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditGeneralForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageCaptionByChatIdAndMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageCaptionByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageLiveLocationByChatIdAndMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageLiveLocationByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageReplyMarkupByChatIdAndMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageReplyMarkupByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageTextByChatIdAndMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageTextByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditUserStarSubscription
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ExportChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ForwardMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ForwardMessages
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetBusinessAccountGifts
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetBusinessAccountStarBalance
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetBusinessConnection
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChat
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatAdministrators
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatGifts
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatMember
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatMemberCount
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatMenuButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetCustomEmojiStickers
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetFile
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetGameHighScores
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetManagedBotToken
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyCommands
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyDefaultAdministratorRights
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyName
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyShortDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetStarTransactions
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetStickerSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUpdates
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserChatBoosts
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserGifts
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserProfileAudios
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserProfilePhotos
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GiftPremiumSubscription
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.HideGeneralForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.LeaveChat
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.PinChatMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.PromoteChatMember
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReadBusinessMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RefundStarPayment
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RemoveBusinessAccountProfilePhoto
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RemoveChatVerification
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RemoveUserVerification
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReopenGeneralForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.ReplaceManagedBotToken
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RepostStory
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RestrictChatMember
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RevokeChatInviteLink
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SavePreparedInlineMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SavePreparedKeyboardButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendChatAction
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendContact
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendDice
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendGame
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendGift
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendInvoice
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendLocation
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessageDraft
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendPoll
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendVenue
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountBio
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountGiftSettings
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountName
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountUsername
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatAdministratorCustomTitle
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatMemberTag
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatMenuButton
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatPermissions
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatStickerSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatTitle
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetCustomEmojiStickerSetThumbnail
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetGameScoreByChatIdAndMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetGameScoreByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMessageReaction
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyCommands
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyDefaultAdministratorRights
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyName
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyShortDescription
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetPassportDataErrors
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerEmojiList
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerKeywords
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerMaskPosition
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerPositionInSet
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetStickerSetTitle
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetUserEmojiStatus
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopMessageLiveLocationByChatIdAndMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopMessageLiveLocationByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.StopPoll
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.TransferBusinessAccountStars
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.TransferGift
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnbanChatMember
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnbanChatSenderChat
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnhideGeneralForumTopic
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllChatMessages
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllForumTopicMessages
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinAllGeneralForumTopicMessages
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UnpinChatMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.UpgradeGift
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.VerifyChat
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.VerifyUser
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import io.github.dehuckakpyt.telegrambot.model.telegram.input.Input
-import io.github.dehuckakpyt.telegrambot.model.telegram.internal.*
-import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.apache.ApacheEngineConfig
+import kotlin.Any
+import kotlin.Boolean
+import kotlin.Double
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.Unit
+import kotlin.collections.Iterable
+import kotlin.collections.List
+import kotlin.collections.MutableMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /**
- * Created on 02.03.2026.
+ * Created on 05.04.2026.
  *
  * @author KScript
  */
@@ -26,8 +234,10 @@ public class TelegramBotImpl(
     clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
     private val eventManager: TelegramBotEventManager,
 ) : TelegramBot {
+    override val username: String = username ?: runBlocking(Dispatchers.Default) { getMe()
+            }.username!!
+
     override val client: TelegramApiClient = TelegramApiClient(token, clientConfiguration)
-    override val username: String = username ?: runBlocking(Dispatchers.Default) { getMe() }.username!!
 
     override suspend fun getUpdates(
         offset: Long?,
@@ -1023,13 +1233,20 @@ public class TelegramBotImpl(
         isAnonymous: Boolean?,
         type: String?,
         allowsMultipleAnswers: Boolean?,
-        correctOptionId: Long?,
+        allowsRevoting: Boolean?,
+        shuffleOptions: Boolean?,
+        allowAddingOptions: Boolean?,
+        hideResultsUntilCloses: Boolean?,
+        correctOptionIds: Iterable<Long>?,
         explanation: String?,
         explanationParseMode: String?,
         explanationEntities: Iterable<MessageEntity>?,
         openPeriod: Int?,
         closeDate: Long?,
         isClosed: Boolean?,
+        description: String?,
+        descriptionParseMode: String?,
+        descriptionEntities: Iterable<MessageEntity>?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
@@ -1048,13 +1265,20 @@ public class TelegramBotImpl(
             isAnonymous = isAnonymous,
             type = type,
             allowsMultipleAnswers = allowsMultipleAnswers,
-            correctOptionId = correctOptionId,
+            allowsRevoting = allowsRevoting,
+            shuffleOptions = shuffleOptions,
+            allowAddingOptions = allowAddingOptions,
+            hideResultsUntilCloses = hideResultsUntilCloses,
+            correctOptionIds = correctOptionIds,
             explanation = explanation,
             explanationParseMode = explanationParseMode,
             explanationEntities = explanationEntities,
             openPeriod = openPeriod,
             closeDate = closeDate,
             isClosed = isClosed,
+            description = description,
+            descriptionParseMode = descriptionParseMode,
+            descriptionEntities = descriptionEntities,
             disableNotification = disableNotification,
             protectContent = protectContent,
             allowPaidBroadcast = allowPaidBroadcast,
@@ -1073,13 +1297,20 @@ public class TelegramBotImpl(
         put("isAnonymous", isAnonymous)
         put("type", type)
         put("allowsMultipleAnswers", allowsMultipleAnswers)
-        put("correctOptionId", correctOptionId)
+        put("allowsRevoting", allowsRevoting)
+        put("shuffleOptions", shuffleOptions)
+        put("allowAddingOptions", allowAddingOptions)
+        put("hideResultsUntilCloses", hideResultsUntilCloses)
+        put("correctOptionIds", correctOptionIds)
         put("explanation", explanation)
         put("explanationParseMode", explanationParseMode)
         put("explanationEntities", explanationEntities)
         put("openPeriod", openPeriod)
         put("closeDate", closeDate)
         put("isClosed", isClosed)
+        put("description", description)
+        put("descriptionParseMode", descriptionParseMode)
+        put("descriptionEntities", descriptionEntities)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
@@ -1928,6 +2159,24 @@ public class TelegramBotImpl(
         put("businessConnectionId", businessConnectionId)
     }
 
+    override suspend fun getManagedBotToken(userId: Long): String =
+            client.postJson<String>("getManagedBotToken",
+        GetManagedBotToken(
+            userId = userId
+        )
+    ).afterMethod("getManagedBotToken") {
+        put("userId", userId)
+    }
+
+    override suspend fun replaceManagedBotToken(userId: Long): String =
+            client.postJson<String>("replaceManagedBotToken",
+        ReplaceManagedBotToken(
+            userId = userId
+        )
+    ).afterMethod("replaceManagedBotToken") {
+        put("userId", userId)
+    }
+
     override suspend fun setMyCommands(
         commands: Iterable<BotCommand>,
         scope: BotCommandScope?,
@@ -2560,6 +2809,54 @@ public class TelegramBotImpl(
         put("storyId", storyId)
     }
 
+    override suspend fun answerWebAppQuery(webAppQueryId: String, result: InlineQueryResult):
+            SentWebAppMessage = client.postJson<SentWebAppMessage>("answerWebAppQuery",
+        AnswerWebAppQuery(
+            webAppQueryId = webAppQueryId,
+            result = result
+        )
+    ).afterMethod("answerWebAppQuery") {
+        put("webAppQueryId", webAppQueryId)
+        put("result", result)
+    }
+
+    override suspend fun savePreparedInlineMessage(
+        userId: Long,
+        result: InlineQueryResult,
+        allowUserChats: Boolean?,
+        allowBotChats: Boolean?,
+        allowGroupChats: Boolean?,
+        allowChannelChats: Boolean?,
+    ): PreparedInlineMessage = client.postJson<PreparedInlineMessage>("savePreparedInlineMessage",
+        SavePreparedInlineMessage(
+            userId = userId,
+            result = result,
+            allowUserChats = allowUserChats,
+            allowBotChats = allowBotChats,
+            allowGroupChats = allowGroupChats,
+            allowChannelChats = allowChannelChats
+        )
+    ).afterMethod("savePreparedInlineMessage") {
+        put("userId", userId)
+        put("result", result)
+        put("allowUserChats", allowUserChats)
+        put("allowBotChats", allowBotChats)
+        put("allowGroupChats", allowGroupChats)
+        put("allowChannelChats", allowChannelChats)
+    }
+
+    override suspend fun savePreparedKeyboardButton(userId: Long, button: KeyboardButton):
+            PreparedKeyboardButton =
+            client.postJson<PreparedKeyboardButton>("savePreparedKeyboardButton",
+        SavePreparedKeyboardButton(
+            userId = userId,
+            button = button
+        )
+    ).afterMethod("savePreparedKeyboardButton") {
+        put("userId", userId)
+        put("button", button)
+    }
+
     override suspend fun editMessageText(
         chatId: String,
         messageId: Long,
@@ -3078,42 +3375,6 @@ public class TelegramBotImpl(
         put("isPersonal", isPersonal)
         put("nextOffset", nextOffset)
         put("button", button)
-    }
-
-    override suspend fun answerWebAppQuery(webAppQueryId: String, result: InlineQueryResult):
-            SentWebAppMessage = client.postJson<SentWebAppMessage>("answerWebAppQuery",
-        AnswerWebAppQuery(
-            webAppQueryId = webAppQueryId,
-            result = result
-        )
-    ).afterMethod("answerWebAppQuery") {
-        put("webAppQueryId", webAppQueryId)
-        put("result", result)
-    }
-
-    override suspend fun savePreparedInlineMessage(
-        userId: Long,
-        result: InlineQueryResult,
-        allowUserChats: Boolean?,
-        allowBotChats: Boolean?,
-        allowGroupChats: Boolean?,
-        allowChannelChats: Boolean?,
-    ): PreparedInlineMessage = client.postJson<PreparedInlineMessage>("savePreparedInlineMessage",
-        SavePreparedInlineMessage(
-            userId = userId,
-            result = result,
-            allowUserChats = allowUserChats,
-            allowBotChats = allowBotChats,
-            allowGroupChats = allowGroupChats,
-            allowChannelChats = allowChannelChats
-        )
-    ).afterMethod("savePreparedInlineMessage") {
-        put("userId", userId)
-        put("result", result)
-        put("allowUserChats", allowUserChats)
-        put("allowBotChats", allowBotChats)
-        put("allowGroupChats", allowGroupChats)
-        put("allowChannelChats", allowChannelChats)
     }
 
     override suspend fun sendInvoice(

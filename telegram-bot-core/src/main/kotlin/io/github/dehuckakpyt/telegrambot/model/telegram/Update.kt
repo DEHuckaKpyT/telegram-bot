@@ -69,6 +69,8 @@ import kotlin.Long
  * in the chat to receive these updates.
  * @param removedChatBoost *Optional*. A boost was removed from a chat. The bot must be an
  * administrator in the chat to receive these updates.
+ * @param managedBot *Optional*. A new bot was created to be managed by the bot or token of a bot
+ * was changed
  */
 public data class Update(
     /**
@@ -242,4 +244,10 @@ public data class Update(
     @get:JsonProperty("removed_chat_boost")
     @param:JsonProperty("removed_chat_boost")
     public val removedChatBoost: ChatBoostRemoved? = null,
+    /**
+     * *Optional*. A new bot was created to be managed by the bot or token of a bot was changed
+     */
+    @get:JsonProperty("managed_bot")
+    @param:JsonProperty("managed_bot")
+    public val managedBot: ManagedBotUpdated? = null,
 )

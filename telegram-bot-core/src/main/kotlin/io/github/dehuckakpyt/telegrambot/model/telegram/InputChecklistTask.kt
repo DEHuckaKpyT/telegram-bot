@@ -19,7 +19,7 @@ import kotlin.collections.List
  * options](https://core.telegram.org/bots/api#formatting-options) for more details.
  * @param textEntities *Optional*. List of special entities that appear in the text, which can be
  * specified instead of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*,
- * *spoiler*, and *custom_emoji* entities are allowed.
+ * *spoiler*, *custom_emoji*, and *date_time* entities are allowed.
  */
 public data class InputChecklistTask(
     /**
@@ -44,8 +44,8 @@ public data class InputChecklistTask(
     public val parseMode: String? = null,
     /**
      * *Optional*. List of special entities that appear in the text, which can be specified instead
-     * of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*, *spoiler*, and
-     * *custom_emoji* entities are allowed.
+     * of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*, *spoiler*,
+     * *custom_emoji*, and *date_time* entities are allowed.
      */
     @get:JsonProperty("text_entities")
     @param:JsonProperty("text_entities")

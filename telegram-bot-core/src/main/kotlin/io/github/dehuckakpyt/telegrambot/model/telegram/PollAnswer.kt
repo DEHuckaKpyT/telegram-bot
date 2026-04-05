@@ -19,6 +19,8 @@ import kotlin.collections.List
  * anonymous
  * @param optionIds 0-based identifiers of chosen answer options. May be empty if the vote was
  * retracted.
+ * @param optionPersistentIds Persistent identifiers of the chosen answer options. May be empty if
+ * the vote was retracted.
  */
 public data class PollAnswer(
     /**
@@ -45,4 +47,10 @@ public data class PollAnswer(
     @get:JsonProperty("option_ids")
     @param:JsonProperty("option_ids")
     public val optionIds: List<Long>,
+    /**
+     * Persistent identifiers of the chosen answer options. May be empty if the vote was retracted.
+     */
+    @get:JsonProperty("option_persistent_ids")
+    @param:JsonProperty("option_persistent_ids")
+    public val optionPersistentIds: List<String>,
 )

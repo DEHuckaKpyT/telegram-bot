@@ -41,6 +41,8 @@ import kotlin.String
  * chats. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
  * @param allowsUsersToCreateTopics *Optional*. *True*, if the bot allows users to create and delete
  * topics in private chats. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
+ * @param canManageBots *Optional*. *True*, if other bots can be created to be controlled by the
+ * bot. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
  */
 public data class User(
     /**
@@ -144,4 +146,11 @@ public data class User(
     @get:JsonProperty("allows_users_to_create_topics")
     @param:JsonProperty("allows_users_to_create_topics")
     public val allowsUsersToCreateTopics: Boolean? = null,
+    /**
+     * *Optional*. *True*, if other bots can be created to be controlled by the bot. Returned only
+     * in [getMe](https://core.telegram.org/bots/api/#getme).
+     */
+    @get:JsonProperty("can_manage_bots")
+    @param:JsonProperty("can_manage_bots")
+    public val canManageBots: Boolean? = null,
 )

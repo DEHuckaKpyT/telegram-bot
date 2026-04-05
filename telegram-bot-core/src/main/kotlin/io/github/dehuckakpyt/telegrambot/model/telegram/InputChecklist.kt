@@ -17,7 +17,7 @@ import kotlin.collections.List
  * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
  * @param titleEntities *Optional*. List of special entities that appear in the title, which can be
  * specified instead of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*,
- * *spoiler*, and *custom_emoji* entities are allowed.
+ * *spoiler*, *custom_emoji*, and *date_time* entities are allowed.
  * @param tasks List of 1-30 tasks in the checklist
  * @param othersCanAddTasks *Optional*. Pass *True* if other users can add tasks to the checklist
  * @param othersCanMarkTasksAsDone *Optional*. Pass *True* if other users can mark tasks as done or
@@ -39,8 +39,8 @@ public data class InputChecklist(
     public val parseMode: String? = null,
     /**
      * *Optional*. List of special entities that appear in the title, which can be specified instead
-     * of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*, *spoiler*, and
-     * *custom_emoji* entities are allowed.
+     * of parse_mode. Currently, only *bold*, *italic*, *underline*, *strikethrough*, *spoiler*,
+     * *custom_emoji*, and *date_time* entities are allowed.
      */
     @get:JsonProperty("title_entities")
     @param:JsonProperty("title_entities")
