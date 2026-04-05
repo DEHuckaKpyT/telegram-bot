@@ -5,7 +5,7 @@
 
 [![Telegram](https://img.shields.io/badge/Telegram-Join%20Chat-2CA5E0?logo=telegram&logoColor=white)](https://t.me/+8YNQBUvqe-phMzYy)
 
-[![Telegram Bot API version](https://img.shields.io/badge/Bot_Api-9.5-blue?logo=telegram)](https://core.telegram.org/bots/api)
+[![Telegram Bot API version](https://img.shields.io/badge/Bot_Api-9.6-blue?logo=telegram)](https://core.telegram.org/bots/api)
 [![GitHub License](https://img.shields.io/github/license/DEHuckaKpyT/telegram-bot?logo=apache&logoColor=red&label=License&color=orange)](https://github.com/DEHuckaKpyT/telegram-bot/blob/master/LICENSE.txt)
 
 Kotlin library for creating Telegram Bots. You can use clean version, with implementation for [Spring](https://spring.io/), [Ktor](https://ktor.io/)+[Koin](https://insert-koin.io/) or create with you own implementation.
