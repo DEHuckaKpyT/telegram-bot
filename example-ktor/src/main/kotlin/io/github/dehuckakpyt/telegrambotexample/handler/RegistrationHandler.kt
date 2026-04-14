@@ -20,7 +20,7 @@ import org.koin.core.annotation.Factory
 class RegistrationHandler : BotHandler({
     val phonePattern = Regex("\\+?[78]?[\\s\\-]?\\(?\\d{3}\\)?[\\s\\-]?\\d{3}([\\s\\-]?\\d{2}){2}")
 
-    command("/register", next = "get contact") {
+    command("/register", next = "get contact", description = "2. Register in bot") {
         sendMessage(register, replyMarkup = contactKeyboard(registerContactButton))
     }
 

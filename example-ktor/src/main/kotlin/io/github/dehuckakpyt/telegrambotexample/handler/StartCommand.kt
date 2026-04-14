@@ -4,7 +4,7 @@ import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambotexample.template.start
 
 fun BotHandling.startCommand() {
-    command("/start") {
+    command("/start", description = "1. Start command") {
         sendMessage(start)
         sendMessage("Привет, меня зовут ${bot.username} :-)")
     }

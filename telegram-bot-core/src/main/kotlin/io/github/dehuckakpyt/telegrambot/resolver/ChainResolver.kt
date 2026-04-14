@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.container.message.MessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.CallbackSerializer
 import io.github.dehuckakpyt.telegrambot.exception.handler.chain.ChainExceptionHandler
 import io.github.dehuckakpyt.telegrambot.ext.container.chatId
+import io.github.dehuckakpyt.telegrambot.ext.kotlin.ensurePrefix
 import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import kotlin.reflect.KClass
 
@@ -84,7 +85,7 @@ internal class ChainResolver(
      * @param command name of the command, started with the '/' (for example, '/start', '/help')
      */
     fun getCommand(command: String): suspend CommandContainer.() -> Unit {
-        return actionByCommand[command] ?: chainExceptionHandler.whenCommandNotFound(command)
+        return actionByCommand[command.ensurePrefix("/")] ?: chainExceptionHandler.whenCommandNotFound(command)
     }
 
     /**

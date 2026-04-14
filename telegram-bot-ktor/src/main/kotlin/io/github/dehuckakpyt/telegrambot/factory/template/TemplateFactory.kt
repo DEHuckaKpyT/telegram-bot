@@ -1,7 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.factory.template
 
 import io.github.dehuckakpyt.telegrambot.context.InternalKoinContext
-import io.github.dehuckakpyt.telegrambot.ext.toKebabCase
+import io.github.dehuckakpyt.telegrambot.ext.kotlin.toKebabCase
 import io.ktor.server.config.*
 import org.koin.core.qualifier.named
 import kotlin.properties.PropertyDelegateProvider

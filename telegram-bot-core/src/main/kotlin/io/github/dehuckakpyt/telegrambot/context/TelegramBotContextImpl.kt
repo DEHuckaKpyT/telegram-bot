@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.manager.TelegramBotManager
 import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
@@ -27,6 +28,7 @@ import io.github.dehuckakpyt.telegrambot.template.Templater
 internal class TelegramBotContextImpl : TelegramBotContext {
     override lateinit var telegramBot: TelegramBot
     override lateinit var updateReceiver: UpdateReceiver
+    override lateinit var telegramBotManager: TelegramBotManager
     override lateinit var botHandling: BotHandling
     override lateinit var botUpdateHandling: BotUpdateHandling
     override lateinit var templater: Templater

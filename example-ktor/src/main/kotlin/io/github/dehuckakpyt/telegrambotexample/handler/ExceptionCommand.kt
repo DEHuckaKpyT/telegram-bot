@@ -13,12 +13,12 @@ import io.github.dehuckakpyt.telegrambotexample.exception.CustomException
  */
 fun BotHandling.exceptionCommand() {
 
-    command("/exception") {
+    command("/exception", description = "Throw unexpected exception") {
         // По умолчанию - ошибка, которая выведется в чат пользователю
         throw ChatException("Обычная ошибка")
     }
 
-    command("/custom_exception") {
+    command("/custom_exception", description = "Throw expected exception") {
         // Также можно добавить свои ошибки и действия для них
         throw CustomException("Своя ошибка")
     }

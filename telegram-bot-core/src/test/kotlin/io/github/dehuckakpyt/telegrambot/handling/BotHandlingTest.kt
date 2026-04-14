@@ -9,6 +9,7 @@ import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.template.Templater
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.mockk.*
 
@@ -19,7 +20,7 @@ class BotHandlingTest : FreeSpec({
     val templater = mockk<Templater>()
     val buttonFactory = mockk<ButtonFactory>()
 
-    val handling = BotHandling(bot, chainResolver, contentConverter, templater, buttonFactory)
+    val handling = BotHandling(bot, chainResolver, contentConverter, null, templater, buttonFactory)
 
     afterAny {
         clearAllMocks()
@@ -34,10 +35,39 @@ class BotHandlingTest : FreeSpec({
         every { chainResolver.addCommand(command, next, action) } just runs
 
         // Act
-        handling.command(command, next, action)
+        handling.command(command, next, action = action)
 
         // Assert
         verify { chainResolver.addCommand(command, next, action) }
+    }
+
+    "add command handler when command does not start with slash" {
+        // Arrange
+        val command = "command_name"
+        val next = "next_step_name"
+        val action = mockk<suspend CommandContainer.() -> Unit>()
+
+        every { chainResolver.addCommand("/$command", next, action) } just runs
+
+        // Act
+        handling.command(command, next, action = action)
+
+        // Assert
+        verify { chainResolver.addCommand("/$command", next, action) }
+    }
+
+    "throw exception when command contains unsupported symbols" {
+        // Arrange
+        val command = "/Command-name"
+        val action = mockk<suspend CommandContainer.() -> Unit>()
+
+        // Act
+        shouldThrow<IllegalArgumentException> {
+            handling.command(command, action = action)
+        }
+
+        // Assert
+        verify(exactly = 0) { chainResolver.addCommand(any(), any(), any()) }
     }
 
     "add step handler" - {

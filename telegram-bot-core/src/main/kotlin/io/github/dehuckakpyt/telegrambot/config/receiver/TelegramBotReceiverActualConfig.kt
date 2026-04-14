@@ -8,6 +8,7 @@ import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
+import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -38,6 +39,7 @@ interface TelegramBotReceiverActualConfig {
     val exceptionHandler: ExceptionHandler
     val chainExceptionHandler: ChainExceptionHandler
     val updateResolver: UpdateResolver
+    val updateReceiver: UpdateReceiver
     val longPolling: LongPollingConfig
     val webhook: WebhookConfig
 }

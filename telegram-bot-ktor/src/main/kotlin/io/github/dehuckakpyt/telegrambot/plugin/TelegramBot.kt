@@ -15,7 +15,7 @@ import io.github.dehuckakpyt.telegrambot.handler.BotHandler
 import io.github.dehuckakpyt.telegrambot.handler.BotUpdateHandler
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
-import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
+import io.github.dehuckakpyt.telegrambot.manager.TelegramBotManager
 import io.github.dehuckakpyt.telegrambot.receiver.WebhookUpdateReceiver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -54,11 +54,11 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
 
     val context = TelegramBotFactory.createTelegramBotContext(pluginConfig)
     val telegramBot = context.telegramBot
-    val updateReceiver = context.updateReceiver
+    val telegramBotManager = context.telegramBotManager
 
     application.koinModule {
         single<TelegramBot> { telegramBot }
-        single<UpdateReceiver> { updateReceiver }
+        single<TelegramBotManager> { telegramBotManager }
         single<BotHandling> { context.botHandling }
         single<BotUpdateHandling> { context.botUpdateHandling }
         single<Templater> { context.templater }
@@ -77,13 +77,13 @@ val TelegramBot = createApplicationPlugin(name = "telegram-bot", "telegram-bot",
 
     fun startTelegramBot() {
         application.log.info("Starting telegram-bot '${telegramBot.username}'..")
-        updateReceiver.start()
+        telegramBotManager.start()
         application.log.info("Telegram-bot '${telegramBot.username}' started.")
     }
 
     fun stopTelegramBot() {
         application.log.info("Stopping telegram-bot '${telegramBot.username}'..")
-        updateReceiver.stop()
+        telegramBotManager.stop()
         application.log.info("Telegram-bot '${telegramBot.username}' stopped.")
     }
 

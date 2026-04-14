@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.config
 
+import io.github.dehuckakpyt.telegrambot.config.edit.EditConfig
 import io.github.dehuckakpyt.telegrambot.config.receiver.UpdateReceiverConfig
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramMessage
@@ -53,6 +54,9 @@ data class TelegramBotConfig(
     /** Configure receiving */
     val receiving: UpdateReceiverConfig = UpdateReceiverConfig(),
 
+    /** Configure edit behavior (sets on bot starting) */
+    val edit: EditConfig = EditConfig(),
+
     /** Listening for react to telegram bot's events */
     internal var eventListening: (TelegramBotEventListening.() -> Unit)? = null,
     internal var eventListeningPreventDefaults: Boolean? = null,
@@ -61,5 +65,10 @@ data class TelegramBotConfig(
     /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit) {
         receiving.apply(block)
+    }
+
+    /** Configure edit behavior */
+    fun edit(block: EditConfig.() -> Unit) {
+        edit.apply(block)
     }
 }

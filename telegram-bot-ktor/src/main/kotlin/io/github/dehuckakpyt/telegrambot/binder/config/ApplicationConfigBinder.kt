@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties.EditProperties.EditCommandsProperties.EditCommandsSource
 import io.github.dehuckakpyt.telegrambot.config.receiver.ReceivingMode
+import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.EditCommandsSourceDeserializer
 import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.KotlinDurationDeserializer
 import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.TelegramBotReceivingModeDeserializer
 import io.ktor.server.config.*
@@ -23,6 +25,7 @@ internal object ApplicationConfigBinder {
             SimpleModule().apply {
                 addDeserializer(Duration::class.java, KotlinDurationDeserializer())
                 addDeserializer(ReceivingMode::class.java, TelegramBotReceivingModeDeserializer())
+                addDeserializer(EditCommandsSource::class.java, EditCommandsSourceDeserializer())
             }
         )
 

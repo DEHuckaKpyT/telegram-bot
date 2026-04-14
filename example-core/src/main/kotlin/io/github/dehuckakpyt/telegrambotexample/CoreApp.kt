@@ -10,7 +10,7 @@ import io.github.dehuckakpyt.telegrambotexample.exception.CustomExceptionHandler
 import io.github.dehuckakpyt.telegrambotexample.handling.exceptionCommand
 import io.github.dehuckakpyt.telegrambotexample.handling.startCommand
 import io.github.dehuckakpyt.telegrambotexample.handling.update.onSomeEvent
-import org.apache.http.HttpHost
+import org.apache.hc.core5.http.HttpHost
 
 /**
  * Created on 13.08.2023.
@@ -52,12 +52,12 @@ suspend fun main(args: Array<String>): Unit {
 
     val context = TelegramBotFactory.createTelegramBotContext(config)
     val bot = context.telegramBot
-    val updateReceiver = context.updateReceiver
+    val telegramBotManager = context.telegramBotManager
     val templater = context.templater
 
-    updateReceiver.start()
+    telegramBotManager.start()
     bot.sendMessage(1165327523L, "Telegram Bot ${bot.username} started!")
 
     readlnOrNull()
-    updateReceiver.stop()
+    telegramBotManager.stop()
 }

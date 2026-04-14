@@ -8,6 +8,7 @@ import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramUser
+import io.github.dehuckakpyt.telegrambot.receiver.UpdateReceiver
 import io.github.dehuckakpyt.telegrambot.resolver.UpdateResolver
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.github.dehuckakpyt.telegrambot.source.chain.ChainSource
@@ -40,4 +41,5 @@ internal class TelegramBotReceiverActualConfigImpl : TelegramBotReceiverActualCo
     override lateinit var longPolling: LongPollingConfig
     override lateinit var webhook: WebhookConfig
     override lateinit var updateResolver: UpdateResolver
+    override lateinit var updateReceiver: UpdateReceiver
 }

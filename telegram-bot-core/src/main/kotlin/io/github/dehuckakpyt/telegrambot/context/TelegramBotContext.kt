@@ -6,6 +6,7 @@ import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.handling.BotHandling
 import io.github.dehuckakpyt.telegrambot.handling.BotUpdateHandling
+import io.github.dehuckakpyt.telegrambot.manager.TelegramBotManager
 import io.github.dehuckakpyt.telegrambot.manager.chain.ChainManager
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChat
 import io.github.dehuckakpyt.telegrambot.model.source.TelegramChatStatusEvent
@@ -34,7 +35,11 @@ interface TelegramBotContext {
     val telegramBot: TelegramBot
 
     /** Updates receiver for react to users actions. */
+    @Deprecated("Must be replaces with actual class for managing bot.", replaceWith = ReplaceWith("telegramBotManager"))
     val updateReceiver: UpdateReceiver
+
+    /** Main manager class for start, stop bot and more in the future. */
+    val telegramBotManager: TelegramBotManager
 
     /** Handler for declare dialog actions to react on updates. */
     val botHandling: BotHandling

@@ -1,5 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.ext.config
 
+import io.github.dehuckakpyt.telegrambot.config.edit.commands.CommandsBlankDescription
+import io.github.dehuckakpyt.telegrambot.config.edit.commands.CommandsSource
 import io.github.dehuckakpyt.telegrambot.config.TelegramBotConfig
 import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
 import io.github.dehuckakpyt.telegrambot.event.listening.TelegramBotEventListening
@@ -34,6 +36,16 @@ fun TelegramBotConfig.client(block: HttpClientConfig<Apache5EngineConfig>.() -> 
 fun TelegramBotConfig.merge(properties: TelegramBotProperties): TelegramBotConfig {
     if (token == null) token = properties.token
     if (username == null) username = properties.username
+
+    val editCommands = edit.commands
+    val editCommandsProperties = properties.edit?.commands
+    if (editCommands.source == null) editCommands.source = editCommandsProperties?.source?.let {
+        CommandsSource.valueOf(it.name)
+    }
+    if (editCommands.blankDescription == null) editCommands.blankDescription = editCommandsProperties?.blankDescription?.let {
+        CommandsBlankDescription.valueOf(it.name)
+    }
+    if (editCommands.definition == null) editCommands.definition = editCommandsProperties?.definition
 
     if (receiving.mode == null) receiving.mode = properties.receiving?.mode
 

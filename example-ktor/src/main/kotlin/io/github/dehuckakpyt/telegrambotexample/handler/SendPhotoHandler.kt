@@ -14,7 +14,7 @@ import org.koin.core.annotation.Factory
  */
 @Factory
 class SendPhotoHandler : BotHandler({
-    command("/photo") {
+    command("/photo", description = "2. Retrieve a photo") {
         val message = sendPhoto(NamedResourceContent("Hello.jpg", "/images/cat.jpg"))
         val fileId = message.photo!![0].fileId
 

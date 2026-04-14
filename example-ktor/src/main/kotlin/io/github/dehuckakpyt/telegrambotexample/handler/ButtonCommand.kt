@@ -19,7 +19,7 @@ fun BotHandling.buttonCommand() {
     val longString =
         "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"
 
-    command("/buttons") {
+    command("/buttons", description = "test commands") {
         sendMessage(
             "text", replyMarkup = inlineKeyboard(
                 callbackButton("only next", "empty callback"),

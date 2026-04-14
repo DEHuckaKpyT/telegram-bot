@@ -8,14 +8,39 @@ import kotlin.time.Duration
  * Configuration subset that can be loaded from property-like sources (yaml, env).
  */
 data class TelegramBotProperties(
-    val token: String? = null,
-    val username: String? = null,
-    val receiving: ReceivingProperties? = null,
+    var token: String? = null,
+    var username: String? = null,
+    var edit: EditProperties? = null,
+    var receiving: ReceivingProperties? = null,
 ) {
+    data class EditProperties(
+        var commands: EditCommandsProperties? = null,
+    ) {
+        data class EditCommandsProperties(
+            /** Command descriptions source. */
+            var source: EditCommandsSource? = null,
+
+            /** Blank description handling mode. */
+            var blankDescription: EditCommandsBlankDescription? = null,
+
+            /** Command descriptions map where key is command and value is description. */
+            var definition: Map<String, String>? = null,
+        ) {
+            enum class EditCommandsSource {
+                CONFIG,
+                CODE,
+            }
+            enum class EditCommandsBlankDescription {
+                SKIP,
+                FAIL,
+            }
+        }
+    }
+
     data class ReceivingProperties(
-        val mode: ReceivingMode? = null,
-        val longPolling: LongPollingProperties? = null,
-        val webhook: WebhookProperties? = null,
+        var mode: ReceivingMode? = null,
+        var longPolling: LongPollingProperties? = null,
+        var webhook: WebhookProperties? = null,
     ) {
 
         data class LongPollingProperties(

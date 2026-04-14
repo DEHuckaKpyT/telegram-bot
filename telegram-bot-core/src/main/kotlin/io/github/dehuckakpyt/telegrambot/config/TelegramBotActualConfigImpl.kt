@@ -10,9 +10,6 @@ import io.ktor.client.engine.apache5.*
 
 
 /**
- * Created on 27.12.2023.
- *<p>
- *
  * @author Denis Matytsin
  */
 internal class TelegramBotActualConfigImpl : TelegramBotActualConfig {

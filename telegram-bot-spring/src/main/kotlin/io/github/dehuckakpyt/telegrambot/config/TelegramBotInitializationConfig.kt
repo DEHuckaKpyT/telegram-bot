@@ -162,7 +162,7 @@ class TelegramBotInitializationConfig(
 
         // start receiving updates
         logger.info("Starting telegram-bot '${botContext.telegramBot.username}'..")
-        botContext.updateReceiver.start()
+        botContext.telegramBotManager.start()
         running = true
         logger.info("Telegram-bot '${botContext.telegramBot.username}' started.")
     }
@@ -170,7 +170,7 @@ class TelegramBotInitializationConfig(
     override fun stop() {
         // stop receiving updates
         logger.info("Stopping telegram-bot '${botContext.telegramBot.username}'..")
-        botContext.updateReceiver.stop()
+        botContext.telegramBotManager.stop()
         running = false
         logger.info("Telegram-bot '${botContext.telegramBot.username}' stopped.")
     }

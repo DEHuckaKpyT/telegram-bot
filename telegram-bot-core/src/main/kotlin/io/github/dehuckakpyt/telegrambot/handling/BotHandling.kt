@@ -12,6 +12,7 @@ import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.fromContentOrNull
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
+import io.github.dehuckakpyt.telegrambot.holder.command.CommandDescriptionsHolder
 import io.github.dehuckakpyt.telegrambot.resolver.ChainResolver
 import io.github.dehuckakpyt.telegrambot.template.Templater
 import kotlin.reflect.KClass
@@ -30,6 +31,7 @@ class BotHandling internal constructor(
     public override val bot: TelegramBot,
     private val chainResolver: ChainResolver,
     private val contentConverter: ContentConverter,
+    private val commandDescriptionsHolder: CommandDescriptionsHolder?,
     templater: Templater,
     buttonFactory: ButtonFactory,
 ) : TelegramBotApiExtHandling(),
@@ -37,15 +39,29 @@ class BotHandling internal constructor(
     Templater by templater,
     ButtonFactory by buttonFactory {
 
+    private val commandRegex = Regex($$"^[a-z0-9_]+$")
+
     /**
      * Declare an action for the command.
      *
      * @param command name of the command, started with the '/' (for example, '/start', '/help')
      * @param next name of the next step (for example, 'get_name', 'get_phone')
+     * @param description command description for Telegram menu (required when `telegram-bot.edit.commands.source=code` is configured)
      * @param action lambda, which will be invoked
      */
-    fun command(command: String, next: String? = null, action: suspend CommandContainer.() -> Unit) {
+    fun command(command: String, next: String? = null, description: String? = null, action: suspend CommandContainer.() -> Unit) {
+        val trimmedCommand = command.removePrefix("/")
+
+        if (trimmedCommand.length !in 1..32) {
+            throw IllegalArgumentException("The command length must be between 1 and 32 characters, but was ${trimmedCommand.length} (${trimmedCommand}).")
+        }
+        if (!trimmedCommand.matches(commandRegex)) {
+            throw IllegalArgumentException("The command can contain only lowercase English letters, digits and underscores with optional '/' as first symbol, but was '$command'.")
+        }
+
         chainResolver.addCommand(command, next, action)
+
+        commandDescriptionsHolder?.put(command, description)
     }
 
     /**

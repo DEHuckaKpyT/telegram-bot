@@ -1,6 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.converter
 
-import io.github.dehuckakpyt.telegrambot.ext.toUUID
+import io.github.dehuckakpyt.telegrambot.ext.kotlin.toUUID
 import io.github.dehuckakpyt.telegrambot.source.callback.CallbackContentSource
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
