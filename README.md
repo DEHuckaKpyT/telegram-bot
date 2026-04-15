@@ -63,13 +63,13 @@ fun main(args: Array<String>): Unit {
         }
     }
     val context = TelegramBotFactory.createTelegramBotContext(config)
-    val updateReceiver = context.updateReceiver
+    val telegramBotManager = context.telegramBotManager
     // get telegramBot, templater, buttonFactory and other from created context...
     
     // start and stop for example only, use this methods with starting and stopping your application
-    updateReceiver.start()
+    telegramBotManager.start()
     readlnOrNull()
-    updateReceiver.stop()
+    telegramBotManager.stop()
 }
 ```
 `resources/telegram-bot.yaml`

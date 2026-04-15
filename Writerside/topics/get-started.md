@@ -120,11 +120,11 @@ Token/username can be provided from code, `application.*` application properties
                 }
                 val context = TelegramBotFactory.createTelegramBotContext(config)
                 val bot = context.telegramBot
-                val updateReceiver = context.updateReceiver
+                val telegramBotManager = context.telegramBotManager
                 // start and stop for example only, use this methods with starting and stopping your application
-                updateReceiver.start()
+                telegramBotManager.start()
                 readlnOrNull()
-                updateReceiver.stop()
+                telegramBotManager.stop()
             }
         </code-block>
         <code>resources/telegram-bot.yaml</code>

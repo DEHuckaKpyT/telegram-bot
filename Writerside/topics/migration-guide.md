@@ -1,5 +1,12 @@
 # Migration guide
 
+### From 1.3.0 to 1.4.0
+
+`TelegramBotContext.updateReceiver` is deprecated for lifecycle operations.
+
+- Old style: `context.updateReceiver.start()` / `context.updateReceiver.stop()`
+- New style: `context.telegramBotManager.start()` / `context.telegramBotManager.stop()`
+
 ### From 1.1.1 to 1.2.0
 
 Receiver mode configuration was moved to unified `receiving` properties.

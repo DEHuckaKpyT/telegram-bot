@@ -9,20 +9,26 @@ data class TelegramBotConfig(
     /** Telegram bot username */
     var username: String? = null,
     /** Telegram bot client additional configuration */
-    var clientConfiguration: (HttpClientConfig<ApacheEngineConfig>.() -> Unit)? = null,
+    var clientConfiguration: (HttpClientConfig<Apache5EngineConfig>.() -> Unit)? = null,
     /** Source for saving messages */
     var telegramMessageSource: (TelegramBotActualConfig.() -> TelegramMessageSource<out TelegramMessage<out Any>>)? = null,
     /** Templater for build message templates */
     var templater: (TelegramBotActualConfig.() -> Templater)? = null,
     val receiving: UpdateReceiverConfig = UpdateReceiverConfig(),
+    /** Configure startup edit behavior (for example, bot menu commands) */
+    val edit: EditConfig = EditConfig(),
 ) {
     /** Telegram bot client additional configuration */
-    fun client(block: HttpClientConfig<ApacheEngineConfig>.() -> Unit) {
+    fun client(block: HttpClientConfig<Apache5EngineConfig>.() -> Unit) {
         clientConfiguration = block
     }
     /** Configure receiving */
     fun receiving(block: UpdateReceiverConfig.() -> Unit) {
         receiving.apply(block)
+    }
+    /** Configure startup edit behavior */
+    fun edit(block: EditConfig.() -> Unit) {
+        edit.apply(block)
     }
 }
 ```
@@ -53,7 +59,7 @@ data class UpdateReceiverConfig(
     /** Handler for process exceptions in message chains */
     var chainExceptionHandler: (TelegramBotActualConfig.() -> ChainExceptionHandler)? = null,
     /** Receiver for getting and handling updates */
-    var updateReceiver: (TelegramBotActualConfig.(UpdateResolver) -> UpdateReceiver)? = null,
+    var updateReceiver: (TelegramBotActualConfig.() -> UpdateReceiver)? = null,
     /** Handlers declaration */
     var handling: BotHandling.() -> Unit = {},
     /** Update handlers declaration */
@@ -74,6 +80,11 @@ data class UpdateReceiverConfig(
     fun update(block: BotUpdateHandling.() -> Unit)
 )
 ```
+
+## Startup bot changes
+
+Bot changes applied during application startup are described on a separate page:
+<a href="startup-edits.md">Startup bot edits</a>.
 
 ## Configuration sources and priority
 
