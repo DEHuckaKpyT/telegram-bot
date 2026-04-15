@@ -3,16 +3,16 @@ telegram-bot:
   token: ${TELEGRAM_BOT_TOKEN}
   username: ${TELEGRAM_BOT_USERNAME}
   
-  edit:
-    commands:
-      # disabled or from code like in example or from config (definition) 
-      source: config # default null | config | code
-      # validate descriptions content especially in code
-      blank-description: skip # default skip | fail
-      definition:
-        start: Start description
-        chain: Test cycle step
-        register: Test step types
+#  edit:
+#    commands:
+#      # disabled or from code like in example or from config (definition) 
+#      source: config # default null | config | code
+#      # validate descriptions content especially in code
+#      blank-description: skip # default skip | fail
+#      definition:
+#        start: Start description
+#        chain: Test cycle step
+#        register: Test step types
 
   administration:
     access:
