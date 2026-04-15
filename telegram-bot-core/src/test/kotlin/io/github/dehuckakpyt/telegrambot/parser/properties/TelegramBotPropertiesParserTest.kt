@@ -1,5 +1,6 @@
 package io.github.dehuckakpyt.telegrambot.parser.properties
 
+import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties.EditProperties.EditCommandsProperties.EditCommandsSource.CODE
 import io.github.dehuckakpyt.telegrambot.config.receiver.ReceivingMode.LONG_POLLING
 import io.github.dehuckakpyt.telegrambot.config.receiver.WebhookConfig
 import io.kotest.assertions.throwables.shouldThrow
@@ -8,6 +9,21 @@ import io.kotest.matchers.shouldBe
 import kotlin.time.Duration
 
 class TelegramBotPropertiesParserTest : FreeSpec({
+
+    "parse edit commands source in lower case" {
+        val yaml = """
+            telegram-bot:
+              token: my-token
+              edit:
+                commands:
+                  source: code
+        """.trimIndent()
+
+        val properties = TelegramBotPropertiesParser.parseYamlContent(yaml)
+
+        properties.edit?.commands?.source shouldBe CODE
+    }
+
     "parse telegram-bot root with kebab-case and env placeholders" {
         val yaml = $$"""
             telegram-bot:

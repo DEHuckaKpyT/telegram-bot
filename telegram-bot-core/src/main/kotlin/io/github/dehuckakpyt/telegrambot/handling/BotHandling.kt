@@ -10,6 +10,7 @@ import io.github.dehuckakpyt.telegrambot.container.message.MessageType.TEXT
 import io.github.dehuckakpyt.telegrambot.container.message.TextMessageContainer
 import io.github.dehuckakpyt.telegrambot.converter.ContentConverter
 import io.github.dehuckakpyt.telegrambot.converter.fromContentOrNull
+import io.github.dehuckakpyt.telegrambot.ext.kotlin.ensurePrefix
 import io.github.dehuckakpyt.telegrambot.factory.input.InputFactory
 import io.github.dehuckakpyt.telegrambot.factory.keyboard.button.ButtonFactory
 import io.github.dehuckakpyt.telegrambot.holder.command.CommandDescriptionsHolder
@@ -39,7 +40,8 @@ class BotHandling internal constructor(
     Templater by templater,
     ButtonFactory by buttonFactory {
 
-    private val commandRegex = Regex($$"^[a-z0-9_]+$")
+    // Telegram Bot API command charset: lowercase latin letters, digits, underscores.
+    private val commandRegex = Regex("^[a-z0-9_]+$")
 
     /**
      * Declare an action for the command.
@@ -50,8 +52,11 @@ class BotHandling internal constructor(
      * @param action lambda, which will be invoked
      */
     fun command(command: String, next: String? = null, description: String? = null, action: suspend CommandContainer.() -> Unit) {
-        val trimmedCommand = command.removePrefix("/")
+        // Always store commands in canonical format with leading slash (`/start`).
+        val normalizedCommand = command.ensurePrefix("/")
+        val trimmedCommand = normalizedCommand.removePrefix("/")
 
+        // Validate command against Telegram API constraints before registration.
         if (trimmedCommand.length !in 1..32) {
             throw IllegalArgumentException("The command length must be between 1 and 32 characters, but was ${trimmedCommand.length} (${trimmedCommand}).")
         }
@@ -59,9 +64,9 @@ class BotHandling internal constructor(
             throw IllegalArgumentException("The command can contain only lowercase English letters, digits and underscores with optional '/' as first symbol, but was '$command'.")
         }
 
-        chainResolver.addCommand(command, next, action)
+        chainResolver.addCommand(normalizedCommand, next, action)
 
-        commandDescriptionsHolder?.put(command, description)
+        commandDescriptionsHolder?.put(normalizedCommand, description)
     }
 
     /**

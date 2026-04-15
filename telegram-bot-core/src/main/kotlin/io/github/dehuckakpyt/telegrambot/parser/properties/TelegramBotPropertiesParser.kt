@@ -9,10 +9,12 @@ import com.fasterxml.jackson.databind.node.*
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.dehuckakpyt.telegrambot.config.constants.properties.PropertiesConstants.PROPERTIES_ROOT
+import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties.EditProperties.EditCommandsProperties.EditCommandsSource
 import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
 import io.github.dehuckakpyt.telegrambot.config.receiver.ReceivingMode
 import io.github.dehuckakpyt.telegrambot.exception.parser.properties.TelegramBotPropertiesParseException
 import io.github.dehuckakpyt.telegrambot.exception.parser.properties.TelegramBotPropertiesParseException.Reason
+import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.EditCommandsSourceDeserializer
 import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.KotlinDurationDeserializer
 import io.github.dehuckakpyt.telegrambot.mapper.jackson.deserializer.TelegramBotReceivingModeDeserializer
 import kotlin.time.Duration
@@ -39,6 +41,7 @@ internal object TelegramBotPropertiesParser {
             SimpleModule().apply {
                 addDeserializer(Duration::class.java, KotlinDurationDeserializer())
                 addDeserializer(ReceivingMode::class.java, TelegramBotReceivingModeDeserializer())
+                addDeserializer(EditCommandsSource::class.java, EditCommandsSourceDeserializer())
             }
         )
 

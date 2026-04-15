@@ -20,7 +20,7 @@ internal class CommandDescriptionsHolder(
     orderDescriptionDelimiter: String = ". ",
 ) {
     /** Regex for optional ordered format: `N<delimiter>Description`. */
-    private val orderedDescriptionRegex = Regex("^(\\d+)${orderDescriptionDelimiter}(.+)$")
+    private val orderedDescriptionRegex = Regex("^(\\d+)${Regex.escape(orderDescriptionDelimiter)}(.+)$")
 
     /** Final command list in Telegram Bot API format. */
     internal val botCommands: List<BotCommand>
@@ -39,16 +39,19 @@ internal class CommandDescriptionsHolder(
      * Blank description handling depends on [EditCommandsConfig.blankDescription].
      */
     public fun put(command: String, description: String? = null) {
+        // Blank descriptions are either rejected or ignored depending on config.
         if (description.isNullOrBlank()) {
             if (editCommandsConfig.blankDescription == FAIL) throw IllegalArgumentException("The command description must not be blank when 'telegram-bot.edit.commands.source=code' is configured.")
             else /* editCommandsConfig.blankDescription == SKIP */ return
         }
 
+        // Optional numeric prefix (`1. `) controls ordering in Telegram menu.
         val (order, cleanDescription) = parseDescription(description)
         if (cleanDescription.length !in 1..256) {
             throw IllegalArgumentException("The command description length must be between 1 and 256 characters, but was ${cleanDescription.length} (${cleanDescription}).")
         }
 
+        // Telegram Bot API expects command name without leading slash.
         val cleanCommand = command.removePrefix("/")
         descriptionsByCommandRaw.removeAll { it.command == cleanCommand }
 

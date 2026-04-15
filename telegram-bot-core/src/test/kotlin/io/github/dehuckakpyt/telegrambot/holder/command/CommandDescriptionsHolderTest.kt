@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.holder.command
 
 import io.github.dehuckakpyt.telegrambot.config.edit.commands.CommandsBlankDescription
 import io.github.dehuckakpyt.telegrambot.config.edit.commands.EditCommandsConfig
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
@@ -21,10 +22,10 @@ class CommandDescriptionsHolderTest : FreeSpec({
         holder.put("/calculate", "3. Calculate")
 
         // Assert
-        holder.descriptionsByCommand shouldBe listOf(
-            "start" to "Start command",
-            "help" to "Help",
-            "calculate" to "Calculate",
+        holder.botCommands shouldBe listOf(
+            BotCommand("start", "Start command"),
+            BotCommand("help", "Help"),
+            BotCommand("calculate", "Calculate"),
         )
     }
 
@@ -38,8 +39,8 @@ class CommandDescriptionsHolderTest : FreeSpec({
         holder.put("/start", "Start command")
 
         // Assert
-        holder.descriptionsByCommand shouldBe listOf(
-            "start" to "Start command",
+        holder.botCommands shouldBe listOf(
+            BotCommand("start", "Start command"),
         )
     }
 
@@ -65,6 +66,6 @@ class CommandDescriptionsHolderTest : FreeSpec({
         shouldNotThrowAny {
             holder.put("/start", null)
         }
-        holder.descriptionsByCommand shouldBe emptyList()
+        holder.botCommands shouldBe emptyList()
     }
 })

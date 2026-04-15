@@ -7,6 +7,8 @@ import io.github.dehuckakpyt.telegrambot.config.properties.TelegramBotProperties
 
 
 /**
+ * Deserializes `telegram-bot.edit.commands.source` from case-insensitive textual values.
+ *
  * @author Denis Matytsin
  */
 class EditCommandsSourceDeserializer : StdScalarDeserializer<EditCommandsSource>(EditCommandsSource::class.java) {
