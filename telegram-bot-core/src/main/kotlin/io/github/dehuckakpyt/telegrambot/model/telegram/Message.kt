@@ -17,14 +17,14 @@ import kotlin.collections.List
  * @param messageId Unique message identifier inside this chat. In specific instances (e.g., message
  * containing a video sent to a big chat), the server might automatically schedule a message instead of
  * sending it immediately. In such cases, this field will be 0 and the relevant message will be
- * unusable until it is actually sent
+ * unusable until it is actually sent.
  * @param messageThreadId *Optional*. Unique identifier of a message thread or forum topic to which
  * the message belongs; for supergroups and private chats only
  * @param directMessagesTopic *Optional*. Information about the direct messages chat topic that
  * contains the message
  * @param from *Optional*. Sender of the message; may be empty for messages sent to channels. For
  * backward compatibility, if the message was sent on behalf of a chat, the field contains a fake
- * sender user in non-channel chats
+ * sender user in non-channel chats.
  * @param senderChat *Optional*. Sender of the message when sent on behalf of a chat. For example,
  * the supergroup itself for messages sent by its anonymous administrators or a linked channel for
  * messages automatically forwarded to the channel's discussion group. For backward compatibility, if
@@ -39,6 +39,10 @@ import kotlin.collections.List
  * only
  * @param date Date the message was sent in Unix time. It is always a positive number, representing
  * a valid date.
+ * @param guestQueryId *Optional*. The unique identifier for the guest query. Use this identifier
+ * with the method [answerGuestQuery](https://core.telegram.org/bots/api/#answerguestquery) to send a
+ * response message. If non-empty, the message belongs to the chat where the guest bot was summoned,
+ * which may not coincide with other existing bot chats sharing the same identifier.
  * @param businessConnectionId *Optional*. Unique identifier of the business connection from which
  * the message was received. If non-empty, the message belongs to a chat of the corresponding business
  * account that is independent from any potential bot chat which might share the same identifier.
@@ -61,6 +65,10 @@ import kotlin.collections.List
  * @param replyToPollOptionId *Optional*. Persistent identifier of the specific poll option that is
  * being replied to
  * @param viaBot *Optional*. Bot through which the message was sent
+ * @param guestBotCallerUser *Optional*. For a message sent by a guest bot, this is the user whose
+ * original message triggered the bot's response
+ * @param guestBotCallerChat *Optional*. For a message sent by a guest bot, this is the chat whose
+ * original message triggered the bot's response
  * @param editDate *Optional*. Date the message was last edited in Unix time
  * @param hasProtectedContent *Optional*. *True*, if the message can't be forwarded
  * @param isFromOffline *Optional*. *True*, if the message was sent by an implicit action, for
@@ -83,9 +91,11 @@ import kotlin.collections.List
  * suggested post, then it can't be edited.
  * @param effectId *Optional*. Unique identifier of the message effect added to the message
  * @param animation *Optional*. Message is an animation, information about the animation. For
- * backward compatibility, when this field is set, the *document* field will also be set
+ * backward compatibility, when this field is set, the *document* field will also be set.
  * @param audio *Optional*. Message is an audio file, information about the file
  * @param document *Optional*. Message is a general file, information about the file
+ * @param livePhoto *Optional*. Message is a live photo, information about the live photo. For
+ * backward compatibility, when this field is set, the *photo* field will also be set.
  * @param paidMedia *Optional*. Message contains paid media; information about the paid media
  * @param photo *Optional*. Message is a photo, available sizes of the photo
  * @param sticker *Optional*. Message is a sticker, information about the sticker
@@ -108,7 +118,7 @@ import kotlin.collections.List
  * ](https://core.telegram.org/bots/api/#games)
  * @param poll *Optional*. Message is a native poll, information about the poll
  * @param venue *Optional*. Message is a venue, information about the venue. For backward
- * compatibility, when this field is set, the *location* field will also be set
+ * compatibility, when this field is set, the *location* field will also be set.
  * @param location *Optional*. Message is a shared location, information about the location
  * @param newChatMembers *Optional*. New members that were added to the group or supergroup and
  * information about them (the bot itself may be one of these members)
@@ -210,7 +220,7 @@ public data class Message(
      * Unique message identifier inside this chat. In specific instances (e.g., message containing a
      * video sent to a big chat), the server might automatically schedule a message instead of sending
      * it immediately. In such cases, this field will be 0 and the relevant message will be unusable
-     * until it is actually sent
+     * until it is actually sent.
      */
     @get:JsonProperty("message_id")
     @param:JsonProperty("message_id")
@@ -231,7 +241,7 @@ public data class Message(
     /**
      * *Optional*. Sender of the message; may be empty for messages sent to channels. For backward
      * compatibility, if the message was sent on behalf of a chat, the field contains a fake sender
-     * user in non-channel chats
+     * user in non-channel chats.
      */
     @get:JsonProperty("from")
     @param:JsonProperty("from")
@@ -273,6 +283,15 @@ public data class Message(
     @get:JsonProperty("date")
     @param:JsonProperty("date")
     override val date: Long,
+    /**
+     * *Optional*. The unique identifier for the guest query. Use this identifier with the method
+     * [answerGuestQuery](https://core.telegram.org/bots/api/#answerguestquery) to send a response
+     * message. If non-empty, the message belongs to the chat where the guest bot was summoned, which
+     * may not coincide with other existing bot chats sharing the same identifier.
+     */
+    @get:JsonProperty("guest_query_id")
+    @param:JsonProperty("guest_query_id")
+    public val guestQueryId: String? = null,
     /**
      * *Optional*. Unique identifier of the business connection from which the message was received.
      * If non-empty, the message belongs to a chat of the corresponding business account that is
@@ -353,6 +372,20 @@ public data class Message(
     @get:JsonProperty("via_bot")
     @param:JsonProperty("via_bot")
     public val viaBot: User? = null,
+    /**
+     * *Optional*. For a message sent by a guest bot, this is the user whose original message
+     * triggered the bot's response
+     */
+    @get:JsonProperty("guest_bot_caller_user")
+    @param:JsonProperty("guest_bot_caller_user")
+    public val guestBotCallerUser: User? = null,
+    /**
+     * *Optional*. For a message sent by a guest bot, this is the chat whose original message
+     * triggered the bot's response
+     */
+    @get:JsonProperty("guest_bot_caller_chat")
+    @param:JsonProperty("guest_bot_caller_chat")
+    public val guestBotCallerChat: Chat? = null,
     /**
      * *Optional*. Date the message was last edited in Unix time
      */
@@ -436,7 +469,7 @@ public data class Message(
     public val effectId: String? = null,
     /**
      * *Optional*. Message is an animation, information about the animation. For backward
-     * compatibility, when this field is set, the *document* field will also be set
+     * compatibility, when this field is set, the *document* field will also be set.
      */
     @get:JsonProperty("animation")
     @param:JsonProperty("animation")
@@ -453,6 +486,13 @@ public data class Message(
     @get:JsonProperty("document")
     @param:JsonProperty("document")
     public val document: Document? = null,
+    /**
+     * *Optional*. Message is a live photo, information about the live photo. For backward
+     * compatibility, when this field is set, the *photo* field will also be set.
+     */
+    @get:JsonProperty("live_photo")
+    @param:JsonProperty("live_photo")
+    public val livePhoto: LivePhoto? = null,
     /**
      * *Optional*. Message contains paid media; information about the paid media
      */
@@ -555,7 +595,7 @@ public data class Message(
     public val poll: Poll? = null,
     /**
      * *Optional*. Message is a venue, information about the venue. For backward compatibility, when
-     * this field is set, the *location* field will also be set
+     * this field is set, the *location* field will also be set.
      */
     @get:JsonProperty("venue")
     @param:JsonProperty("venue")

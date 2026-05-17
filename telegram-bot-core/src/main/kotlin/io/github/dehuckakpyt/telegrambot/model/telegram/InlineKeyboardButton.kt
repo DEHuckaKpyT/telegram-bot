@@ -29,27 +29,27 @@ import kotlin.String
  * that will be launched when the user presses the button. The Web App will be able to send an
  * arbitrary message on behalf of the user using the method
  * [answerWebAppQuery](https://core.telegram.org/bots/api/#answerwebappquery). Available only in
- * private chats between a user and the bot. Not supported for messages sent on behalf of a Telegram
- * Business account.
+ * private chats between a user and the bot. Not supported for messages sent on behalf of a business
+ * account.
  * @param loginUrl *Optional*. An HTTPS URL used to automatically authorize the user. Can be used as
  * a replacement for the [Telegram Login Widget](https://core.telegram.org/widgets/login).
  * @param switchInlineQuery *Optional*. If set, pressing the button will prompt the user to select
  * one of their chats, open that chat and insert the bot's username and the specified inline query in
  * the input field. May be empty, in which case just the bot's username will be inserted. Not supported
- * for messages sent in channel direct messages chats and on behalf of a Telegram Business account.
+ * for messages sent in channel direct messages chats and on behalf of a business account.
  * @param switchInlineQueryCurrentChat *Optional*. If set, pressing the button will insert the bot's
  * username and the specified inline query in the current chat's input field. May be empty, in which
  * case only the bot's username will be inserted.  
  *
  * This offers a quick way for the user to open your bot in inline mode in the same chat - good for
  * selecting something from multiple options. Not supported in channels and for messages sent in
- * channel direct messages chats and on behalf of a Telegram Business account.
+ * channel direct messages chats and on behalf of a business account.
  * @param switchInlineQueryChosenChat *Optional*. If set, pressing the button will prompt the user
  * to select one of their chats of the specified type, open that chat and insert the bot's username and
  * the specified inline query in the input field. Not supported for messages sent in channel direct
- * messages chats and on behalf of a Telegram Business account.
+ * messages chats and on behalf of a business account.
  * @param copyText *Optional*. Description of the button that copies the specified text to the
- * clipboard.
+ * clipboard
  * @param callbackGame *Optional*. Description of the game that will be launched when the user
  * presses the button.  
  *
@@ -106,7 +106,7 @@ public data class InlineKeyboardButton(
      * on behalf of the user using the method
      * [answerWebAppQuery](https://core.telegram.org/bots/api/#answerwebappquery). Available only in
      * private chats between a user and the bot. Not supported for messages sent on behalf of a
-     * Telegram Business account.
+     * business account.
      */
     @get:JsonProperty("web_app")
     @param:JsonProperty("web_app")
@@ -122,7 +122,7 @@ public data class InlineKeyboardButton(
      * *Optional*. If set, pressing the button will prompt the user to select one of their chats,
      * open that chat and insert the bot's username and the specified inline query in the input field.
      * May be empty, in which case just the bot's username will be inserted. Not supported for messages
-     * sent in channel direct messages chats and on behalf of a Telegram Business account.
+     * sent in channel direct messages chats and on behalf of a business account.
      */
     @get:JsonProperty("switch_inline_query")
     @param:JsonProperty("switch_inline_query")
@@ -134,7 +134,7 @@ public data class InlineKeyboardButton(
      *
      * This offers a quick way for the user to open your bot in inline mode in the same chat - good
      * for selecting something from multiple options. Not supported in channels and for messages sent
-     * in channel direct messages chats and on behalf of a Telegram Business account.
+     * in channel direct messages chats and on behalf of a business account.
      */
     @get:JsonProperty("switch_inline_query_current_chat")
     @param:JsonProperty("switch_inline_query_current_chat")
@@ -143,13 +143,13 @@ public data class InlineKeyboardButton(
      * *Optional*. If set, pressing the button will prompt the user to select one of their chats of
      * the specified type, open that chat and insert the bot's username and the specified inline query
      * in the input field. Not supported for messages sent in channel direct messages chats and on
-     * behalf of a Telegram Business account.
+     * behalf of a business account.
      */
     @get:JsonProperty("switch_inline_query_chosen_chat")
     @param:JsonProperty("switch_inline_query_chosen_chat")
     public val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat? = null,
     /**
-     * *Optional*. Description of the button that copies the specified text to the clipboard.
+     * *Optional*. Description of the button that copies the specified text to the clipboard
      */
     @get:JsonProperty("copy_text")
     @param:JsonProperty("copy_text")

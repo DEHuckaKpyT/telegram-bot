@@ -14,13 +14,13 @@ import kotlin.String
  *
  * @author KScript
  *
- * @param requestId Signed 32-bit identifier of the request. Must be unique within the message
+ * @param requestId Signed 32-bit identifier of the request. Must be unique within the message.
  * @param suggestedName *Optional*. Suggested name for the bot
  * @param suggestedUsername *Optional*. Suggested username for the bot
  */
 public data class KeyboardButtonRequestManagedBot(
     /**
-     * Signed 32-bit identifier of the request. Must be unique within the message
+     * Signed 32-bit identifier of the request. Must be unique within the message.
      */
     @get:JsonProperty("request_id")
     @param:JsonProperty("request_id")

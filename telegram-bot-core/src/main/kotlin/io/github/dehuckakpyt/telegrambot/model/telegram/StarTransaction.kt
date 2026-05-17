@@ -22,9 +22,9 @@ import kotlin.String
  * by the transaction; from 0 to 999999999
  * @param date Date the transaction was created in Unix time
  * @param source *Optional*. Source of an incoming transaction (e.g., a user purchasing goods or
- * services, Fragment refunding a failed withdrawal). Only for incoming transactions
+ * services, Fragment refunding a failed withdrawal). Only for incoming transactions.
  * @param receiver *Optional*. Receiver of an outgoing transaction (e.g., a user for a purchase
- * refund, Fragment for a withdrawal). Only for outgoing transactions
+ * refund, Fragment for a withdrawal). Only for outgoing transactions.
  */
 public data class StarTransaction(
     /**
@@ -56,14 +56,14 @@ public data class StarTransaction(
     public val date: Long,
     /**
      * *Optional*. Source of an incoming transaction (e.g., a user purchasing goods or services,
-     * Fragment refunding a failed withdrawal). Only for incoming transactions
+     * Fragment refunding a failed withdrawal). Only for incoming transactions.
      */
     @get:JsonProperty("source")
     @param:JsonProperty("source")
     public val source: TransactionPartner? = null,
     /**
      * *Optional*. Receiver of an outgoing transaction (e.g., a user for a purchase refund, Fragment
-     * for a withdrawal). Only for outgoing transactions
+     * for a withdrawal). Only for outgoing transactions.
      */
     @get:JsonProperty("receiver")
     @param:JsonProperty("receiver")

@@ -23,14 +23,17 @@ import kotlin.Boolean
  * stickers and use inline bots
  * @param canAddWebPagePreviews *Optional*. *True*, if the user is allowed to add web page previews
  * to their messages
- * @param canEditTag *Optional*. *True*, if the user is allowed to edit their own tag
+ * @param canReactToMessages *Optional*. *True*, if the user is allowed to react to messages. If
+ * omitted, defaults to the value of *can_send_messages*.
+ * @param canEditTag *Optional*. *True*, if the user is allowed to edit their own tag. If omitted,
+ * defaults to the value of *can_pin_messages*.
  * @param canChangeInfo *Optional*. *True*, if the user is allowed to change the chat title, photo
- * and other settings. Ignored in public supergroups
+ * and other settings. Ignored in public supergroups.
  * @param canInviteUsers *Optional*. *True*, if the user is allowed to invite new users to the chat
  * @param canPinMessages *Optional*. *True*, if the user is allowed to pin messages. Ignored in
- * public supergroups
+ * public supergroups.
  * @param canManageTopics *Optional*. *True*, if the user is allowed to create forum topics. If
- * omitted defaults to the value of can_pin_messages
+ * omitted defaults to the value of can_pin_messages.
  */
 public data class ChatPermissions(
     /**
@@ -96,14 +99,22 @@ public data class ChatPermissions(
     @param:JsonProperty("can_add_web_page_previews")
     public val canAddWebPagePreviews: Boolean? = null,
     /**
-     * *Optional*. *True*, if the user is allowed to edit their own tag
+     * *Optional*. *True*, if the user is allowed to react to messages. If omitted, defaults to the
+     * value of *can_send_messages*.
+     */
+    @get:JsonProperty("can_react_to_messages")
+    @param:JsonProperty("can_react_to_messages")
+    public val canReactToMessages: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the user is allowed to edit their own tag. If omitted, defaults to the
+     * value of *can_pin_messages*.
      */
     @get:JsonProperty("can_edit_tag")
     @param:JsonProperty("can_edit_tag")
     public val canEditTag: Boolean? = null,
     /**
      * *Optional*. *True*, if the user is allowed to change the chat title, photo and other
-     * settings. Ignored in public supergroups
+     * settings. Ignored in public supergroups.
      */
     @get:JsonProperty("can_change_info")
     @param:JsonProperty("can_change_info")
@@ -115,14 +126,14 @@ public data class ChatPermissions(
     @param:JsonProperty("can_invite_users")
     public val canInviteUsers: Boolean? = null,
     /**
-     * *Optional*. *True*, if the user is allowed to pin messages. Ignored in public supergroups
+     * *Optional*. *True*, if the user is allowed to pin messages. Ignored in public supergroups.
      */
     @get:JsonProperty("can_pin_messages")
     @param:JsonProperty("can_pin_messages")
     public val canPinMessages: Boolean? = null,
     /**
      * *Optional*. *True*, if the user is allowed to create forum topics. If omitted defaults to the
-     * value of can_pin_messages
+     * value of can_pin_messages.
      */
     @get:JsonProperty("can_manage_topics")
     @param:JsonProperty("can_manage_topics")

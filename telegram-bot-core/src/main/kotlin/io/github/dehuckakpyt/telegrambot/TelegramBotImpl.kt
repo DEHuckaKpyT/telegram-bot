@@ -7,6 +7,7 @@ import io.github.dehuckakpyt.telegrambot.ext.appendContentIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.appendIfNotNull
 import io.github.dehuckakpyt.telegrambot.ext.toJson
 import io.github.dehuckakpyt.telegrambot.model.telegram.AcceptedGiftTypes
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotAccessSettings
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
@@ -28,6 +29,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputChecklist
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
@@ -48,6 +50,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedKeyboardButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
+import io.github.dehuckakpyt.telegrambot.model.telegram.SentGuestMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.StarAmount
@@ -64,6 +67,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfileAudios
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfilePhotos
 import io.github.dehuckakpyt.telegrambot.model.telegram.WebhookInfo
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerCallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerGuestQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerInlineQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerPreCheckoutQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerShippingQuery
@@ -83,11 +87,13 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateForumTo
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.CreateInvoiceLink
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeclineChatJoinRequest
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeclineSuggestedPost
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteAllMessageReactions
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteBusinessMessages
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteChatPhoto
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteChatStickerSet
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMessageReaction
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMessages
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteMyCommands
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.DeleteStickerFromSet
@@ -122,6 +128,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetChatMenuBu
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetCustomEmojiStickers
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetFile
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetGameHighScores
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetManagedBotAccessSettings
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetManagedBotToken
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyCommands
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetMyDefaultAdministratorRights
@@ -133,6 +140,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetStickerSet
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUpdates
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserChatBoosts
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserGifts
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserPersonalChatMessages
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserProfileAudios
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GetUserProfilePhotos
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.GiftPremiumSubscription
@@ -162,7 +170,6 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendInvoice
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendLocation
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessageDraft
-import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendPoll
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendVenue
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountBio
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountGiftSettings
@@ -178,6 +185,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetChatTitle
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetCustomEmojiStickerSetThumbnail
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetGameScoreByChatIdAndMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetGameScoreByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetManagedBotAccessSettings
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMessageReaction
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyCommands
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetMyDefaultAdministratorRights
@@ -224,7 +232,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /**
- * Created on 05.04.2026.
+ * Created on 17.05.2026.
  *
  * @author KScript
  */
@@ -549,6 +557,65 @@ public class TelegramBotImpl(
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
     }.afterMethod("sendPhoto") {
         put("chatId", chatId)
+        put("photo", photo)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
+        put("caption", caption)
+        put("parseMode", parseMode)
+        put("captionEntities", captionEntities)
+        put("showCaptionAboveMedia", showCaptionAboveMedia)
+        put("hasSpoiler", hasSpoiler)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun sendLivePhoto(
+        chatId: String,
+        livePhoto: Input,
+        photo: Input,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        caption: String?,
+        parseMode: String?,
+        captionEntities: Iterable<MessageEntity>?,
+        showCaptionAboveMedia: Boolean?,
+        hasSpoiler: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+    ): Message = client.postMultiPart<Message>("sendLivePhoto") {
+        append("chat_id", chatId)
+        appendContent("live_photo", livePhoto)
+        appendContent("photo", photo)
+        appendIfNotNull("business_connection_id", businessConnectionId)
+        appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("direct_messages_topic_id", directMessagesTopicId)
+        appendIfNotNull("caption", caption)
+        appendIfNotNull("parse_mode", parseMode)
+        appendIfNotNull("caption_entities", client.toJson(captionEntities))
+        appendIfNotNull("show_caption_above_media", showCaptionAboveMedia)
+        appendIfNotNull("has_spoiler", hasSpoiler)
+        appendIfNotNull("disable_notification", disableNotification)
+        appendIfNotNull("protect_content", protectContent)
+        appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
+        appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
+        appendIfNotNull("reply_parameters", client.toJson(replyParameters))
+        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+    }.afterMethod("sendLivePhoto") {
+        put("chatId", chatId)
+        put("livePhoto", livePhoto)
         put("photo", photo)
         put("businessConnectionId", businessConnectionId)
         put("messageThreadId", messageThreadId)
@@ -969,15 +1036,19 @@ public class TelegramBotImpl(
         appendIfNotNull("suggested_post_parameters", client.toJson(suggestedPostParameters))
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-        
+
         media.forEach { media ->
             appendContent(media.media)
         }
-        
+
+        media.forEach { media ->
+            appendContentIfNotNull(media.photo)
+        }
+
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
-        
+
         media.forEach { media ->
             appendContentIfNotNull(media.cover)
         }
@@ -1023,15 +1094,19 @@ public class TelegramBotImpl(
         appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
         appendIfNotNull("message_effect_id", messageEffectId)
         appendIfNotNull("reply_parameters", client.toJson(replyParameters))
-        
+
         media.forEach { media ->
             appendContent(media.media)
         }
-        
+
         media.forEach { media ->
             appendContentIfNotNull(media.thumbnail)
         }
-        
+
+        media.forEach { media ->
+            appendContentIfNotNull(media.photo)
+        }
+
         media.forEach { media ->
             appendContentIfNotNull(media.cover)
         }
@@ -1237,56 +1312,94 @@ public class TelegramBotImpl(
         shuffleOptions: Boolean?,
         allowAddingOptions: Boolean?,
         hideResultsUntilCloses: Boolean?,
+        membersOnly: Boolean?,
+        countryCodes: Iterable<String>?,
         correctOptionIds: Iterable<Long>?,
         explanation: String?,
         explanationParseMode: String?,
         explanationEntities: Iterable<MessageEntity>?,
+        explanationMedia: InputPollMedia?,
         openPeriod: Int?,
         closeDate: Long?,
         isClosed: Boolean?,
         description: String?,
         descriptionParseMode: String?,
         descriptionEntities: Iterable<MessageEntity>?,
+        media: InputPollMedia?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
-    ): Message = client.postJson<Message>("sendPoll",
-        SendPoll(
-            chatId = chatId,
-            question = question,
-            options = options,
-            businessConnectionId = businessConnectionId,
-            messageThreadId = messageThreadId,
-            questionParseMode = questionParseMode,
-            questionEntities = questionEntities,
-            isAnonymous = isAnonymous,
-            type = type,
-            allowsMultipleAnswers = allowsMultipleAnswers,
-            allowsRevoting = allowsRevoting,
-            shuffleOptions = shuffleOptions,
-            allowAddingOptions = allowAddingOptions,
-            hideResultsUntilCloses = hideResultsUntilCloses,
-            correctOptionIds = correctOptionIds,
-            explanation = explanation,
-            explanationParseMode = explanationParseMode,
-            explanationEntities = explanationEntities,
-            openPeriod = openPeriod,
-            closeDate = closeDate,
-            isClosed = isClosed,
-            description = description,
-            descriptionParseMode = descriptionParseMode,
-            descriptionEntities = descriptionEntities,
-            disableNotification = disableNotification,
-            protectContent = protectContent,
-            allowPaidBroadcast = allowPaidBroadcast,
-            messageEffectId = messageEffectId,
-            replyParameters = replyParameters,
-            replyMarkup = replyMarkup
-        )
-    ).afterMethod("sendPoll") {
+    ): Message = client.postMultiPart<Message>("sendPoll") {
+        append("chat_id", chatId)
+        append("question", question)
+        append("options", client.toJson(options))
+        appendIfNotNull("business_connection_id", businessConnectionId)
+        appendIfNotNull("message_thread_id", messageThreadId)
+        appendIfNotNull("question_parse_mode", questionParseMode)
+        appendIfNotNull("question_entities", client.toJson(questionEntities))
+        appendIfNotNull("is_anonymous", isAnonymous)
+        appendIfNotNull("type", type)
+        appendIfNotNull("allows_multiple_answers", allowsMultipleAnswers)
+        appendIfNotNull("allows_revoting", allowsRevoting)
+        appendIfNotNull("shuffle_options", shuffleOptions)
+        appendIfNotNull("allow_adding_options", allowAddingOptions)
+        appendIfNotNull("hide_results_until_closes", hideResultsUntilCloses)
+        appendIfNotNull("members_only", membersOnly)
+        appendIfNotNull("country_codes", client.toJson(countryCodes))
+        appendIfNotNull("correct_option_ids", client.toJson(correctOptionIds))
+        appendIfNotNull("explanation", explanation)
+        appendIfNotNull("explanation_parse_mode", explanationParseMode)
+        appendIfNotNull("explanation_entities", client.toJson(explanationEntities))
+        appendIfNotNull("explanation_media", client.toJson(explanationMedia))
+        appendIfNotNull("open_period", openPeriod)
+        appendIfNotNull("close_date", closeDate)
+        appendIfNotNull("is_closed", isClosed)
+        appendIfNotNull("description", description)
+        appendIfNotNull("description_parse_mode", descriptionParseMode)
+        appendIfNotNull("description_entities", client.toJson(descriptionEntities))
+        appendIfNotNull("media", client.toJson(media))
+        appendIfNotNull("disable_notification", disableNotification)
+        appendIfNotNull("protect_content", protectContent)
+        appendIfNotNull("allow_paid_broadcast", allowPaidBroadcast)
+        appendIfNotNull("message_effect_id", messageEffectId)
+        appendIfNotNull("reply_parameters", client.toJson(replyParameters))
+        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
+
+        options.forEach { options ->
+            appendContentIfNotNull(options.media?.media)
+        }
+
+        options.forEach { options ->
+            appendContentIfNotNull(options.media?.thumbnail)
+        }
+
+        options.forEach { options ->
+            appendContentIfNotNull(options.media?.photo)
+        }
+
+        options.forEach { options ->
+            appendContentIfNotNull(options.media?.cover)
+        }
+
+        appendContentIfNotNull(explanationMedia?.media)
+
+        appendContentIfNotNull(explanationMedia?.thumbnail)
+
+        appendContentIfNotNull(explanationMedia?.photo)
+
+        appendContentIfNotNull(explanationMedia?.cover)
+
+        appendContentIfNotNull(media?.media)
+
+        appendContentIfNotNull(media?.thumbnail)
+
+        appendContentIfNotNull(media?.photo)
+
+        appendContentIfNotNull(media?.cover)
+    }.afterMethod("sendPoll") {
         put("chatId", chatId)
         put("question", question)
         put("options", options)
@@ -1301,16 +1414,20 @@ public class TelegramBotImpl(
         put("shuffleOptions", shuffleOptions)
         put("allowAddingOptions", allowAddingOptions)
         put("hideResultsUntilCloses", hideResultsUntilCloses)
+        put("membersOnly", membersOnly)
+        put("countryCodes", countryCodes)
         put("correctOptionIds", correctOptionIds)
         put("explanation", explanation)
         put("explanationParseMode", explanationParseMode)
         put("explanationEntities", explanationEntities)
+        put("explanationMedia", explanationMedia)
         put("openPeriod", openPeriod)
         put("closeDate", closeDate)
         put("isClosed", isClosed)
         put("description", description)
         put("descriptionParseMode", descriptionParseMode)
         put("descriptionEntities", descriptionEntities)
+        put("media", media)
         put("disableNotification", disableNotification)
         put("protectContent", protectContent)
         put("allowPaidBroadcast", allowPaidBroadcast)
@@ -1321,7 +1438,7 @@ public class TelegramBotImpl(
 
     override suspend fun sendChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: String,
         checklist: InputChecklist,
         disableNotification: Boolean?,
         protectContent: Boolean?,
@@ -1394,24 +1511,24 @@ public class TelegramBotImpl(
     override suspend fun sendMessageDraft(
         chatId: Long,
         draftId: Long,
-        text: String,
         messageThreadId: Long?,
+        text: String?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
     ): Boolean = client.postJson<Boolean>("sendMessageDraft",
         SendMessageDraft(
             chatId = chatId,
             draftId = draftId,
-            text = text,
             messageThreadId = messageThreadId,
+            text = text,
             parseMode = parseMode,
             entities = entities
         )
     ).afterMethod("sendMessageDraft") {
         put("chatId", chatId)
         put("draftId", draftId)
-        put("text", text)
         put("messageThreadId", messageThreadId)
+        put("text", text)
         put("parseMode", parseMode)
         put("entities", entities)
     }
@@ -1926,13 +2043,15 @@ public class TelegramBotImpl(
         put("chatId", chatId)
     }
 
-    override suspend fun getChatAdministrators(chatId: String): List<ChatMember> =
-            client.postJson<List<ChatMember>>("getChatAdministrators",
+    override suspend fun getChatAdministrators(chatId: String, returnBots: Boolean?):
+            List<ChatMember> = client.postJson<List<ChatMember>>("getChatAdministrators",
         GetChatAdministrators(
-            chatId = chatId
+            chatId = chatId,
+            returnBots = returnBots
         )
     ).afterMethod("getChatAdministrators") {
         put("chatId", chatId)
+        put("returnBots", returnBots)
     }
 
     override suspend fun getChatMemberCount(chatId: String): Int =
@@ -1953,6 +2072,17 @@ public class TelegramBotImpl(
     ).afterMethod("getChatMember") {
         put("chatId", chatId)
         put("userId", userId)
+    }
+
+    override suspend fun getUserPersonalChatMessages(userId: Long, limit: Int): List<Message> =
+            client.postJson<List<Message>>("getUserPersonalChatMessages",
+        GetUserPersonalChatMessages(
+            userId = userId,
+            limit = limit
+        )
+    ).afterMethod("getUserPersonalChatMessages") {
+        put("userId", userId)
+        put("limit", limit)
     }
 
     override suspend fun setChatStickerSet(chatId: String, stickerSetName: String): Boolean =
@@ -2139,6 +2269,17 @@ public class TelegramBotImpl(
         put("cacheTime", cacheTime)
     }
 
+    override suspend fun answerGuestQuery(guestQueryId: String, result: InlineQueryResult):
+            SentGuestMessage = client.postJson<SentGuestMessage>("answerGuestQuery",
+        AnswerGuestQuery(
+            guestQueryId = guestQueryId,
+            result = result
+        )
+    ).afterMethod("answerGuestQuery") {
+        put("guestQueryId", guestQueryId)
+        put("result", result)
+    }
+
     override suspend fun getUserChatBoosts(chatId: String, userId: Long): UserChatBoosts =
             client.postJson<UserChatBoosts>("getUserChatBoosts",
         GetUserChatBoosts(
@@ -2175,6 +2316,31 @@ public class TelegramBotImpl(
         )
     ).afterMethod("replaceManagedBotToken") {
         put("userId", userId)
+    }
+
+    override suspend fun getManagedBotAccessSettings(userId: Long): BotAccessSettings =
+            client.postJson<BotAccessSettings>("getManagedBotAccessSettings",
+        GetManagedBotAccessSettings(
+            userId = userId
+        )
+    ).afterMethod("getManagedBotAccessSettings") {
+        put("userId", userId)
+    }
+
+    override suspend fun setManagedBotAccessSettings(
+        userId: Long,
+        isAccessRestricted: Boolean,
+        addedUserIds: Iterable<Long>?,
+    ): Boolean = client.postJson<Boolean>("setManagedBotAccessSettings",
+        SetManagedBotAccessSettings(
+            userId = userId,
+            isAccessRestricted = isAccessRestricted,
+            addedUserIds = addedUserIds
+        )
+    ).afterMethod("setManagedBotAccessSettings") {
+        put("userId", userId)
+        put("isAccessRestricted", isAccessRestricted)
+        put("addedUserIds", addedUserIds)
     }
 
     override suspend fun setMyCommands(
@@ -2931,11 +3097,13 @@ public class TelegramBotImpl(
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-        
+
         appendContent(media.media)
-        
+
         appendContentIfNotNull(media.thumbnail)
-        
+
+        appendContentIfNotNull(media.photo)
+
         appendContentIfNotNull(media.cover)
     }.afterMethod("editMessageMedia") {
         put("chatId", chatId)
@@ -3003,7 +3171,7 @@ public class TelegramBotImpl(
 
     override suspend fun editMessageChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: String,
         messageId: Long,
         checklist: InputChecklist,
         replyMarkup: InlineKeyboardMarkup?,
@@ -3113,6 +3281,41 @@ public class TelegramBotImpl(
         put("messageIds", messageIds)
     }
 
+    override suspend fun deleteMessageReaction(
+        chatId: String,
+        messageId: Long,
+        userId: Long?,
+        actorChatId: Long?,
+    ): Boolean = client.postJson<Boolean>("deleteMessageReaction",
+        DeleteMessageReaction(
+            chatId = chatId,
+            messageId = messageId,
+            userId = userId,
+            actorChatId = actorChatId
+        )
+    ).afterMethod("deleteMessageReaction") {
+        put("chatId", chatId)
+        put("messageId", messageId)
+        put("userId", userId)
+        put("actorChatId", actorChatId)
+    }
+
+    override suspend fun deleteAllMessageReactions(
+        chatId: String,
+        userId: Long?,
+        actorChatId: Long?,
+    ): Boolean = client.postJson<Boolean>("deleteAllMessageReactions",
+        DeleteAllMessageReactions(
+            chatId = chatId,
+            userId = userId,
+            actorChatId = actorChatId
+        )
+    ).afterMethod("deleteAllMessageReactions") {
+        put("chatId", chatId)
+        put("userId", userId)
+        put("actorChatId", actorChatId)
+    }
+
     override suspend fun sendSticker(
         chatId: String,
         sticker: Input,
@@ -3203,7 +3406,7 @@ public class TelegramBotImpl(
         append("stickers", client.toJson(stickers))
         appendIfNotNull("sticker_type", stickerType)
         appendIfNotNull("needs_repainting", needsRepainting)
-        
+
         stickers.forEach { stickers ->
             appendContent(stickers.sticker)
         }
@@ -3224,7 +3427,7 @@ public class TelegramBotImpl(
         append("user_id", userId)
         append("name", name)
         append("sticker", client.toJson(sticker))
-        
+
         appendContent(sticker.sticker)
     }.afterMethod("addStickerToSet") {
         put("userId", userId)
@@ -3262,7 +3465,7 @@ public class TelegramBotImpl(
         append("name", name)
         append("old_sticker", oldSticker)
         append("sticker", client.toJson(sticker))
-        
+
         appendContent(sticker.sticker)
     }.afterMethod("replaceStickerInSet") {
         put("userId", userId)
@@ -3639,7 +3842,7 @@ public class TelegramBotImpl(
     }
 
     override suspend fun sendGame(
-        chatId: Long,
+        chatId: String,
         gameShortName: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
@@ -3785,11 +3988,13 @@ public class TelegramBotImpl(
         append("media", client.toJson(media))
         appendIfNotNull("business_connection_id", businessConnectionId)
         appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-        
+
         appendContent(media.media)
-        
+
         appendContentIfNotNull(media.thumbnail)
-        
+
+        appendContentIfNotNull(media.photo)
+
         appendContentIfNotNull(media.cover)
     }.afterMethod("editMessageMedia") {
         put("inlineMessageId", inlineMessageId)

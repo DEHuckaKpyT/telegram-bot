@@ -20,7 +20,7 @@ import kotlin.String
  * (block quotation), “expandable_blockquote” (collapsed-by-default block quotation), “code” (monowidth
  * string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users
  * [without usernames](https://telegram.org/blog/edit#new-mentions)), “custom_emoji” (for inline custom
- * emoji stickers), or “date_time” (for formatted date and time)
+ * emoji stickers), or “date_time” (for formatted date and time).
  * @param offset Offset in [UTF-16 code units](https://core.telegram.org/api/entities#entity-length)
  * to the start of the entity
  * @param length Length of the entity in [UTF-16 code
@@ -30,7 +30,7 @@ import kotlin.String
  * @param language *Optional*. For “pre” only, the programming language of the entity text
  * @param customEmojiId *Optional*. For “custom_emoji” only, unique identifier of the custom emoji.
  * Use [getCustomEmojiStickers](https://core.telegram.org/bots/api/#getcustomemojistickers) to get full
- * information about the sticker
+ * information about the sticker.
  * @param unixTime *Optional*. For “date_time” only, the Unix time associated with the entity
  * @param dateTimeFormat *Optional*. For “date_time” only, the string that defines the formatting of
  * the date and time. See [date-time entity
@@ -47,7 +47,7 @@ public data class MessageEntity(
      * quotation), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text
      * URLs), “text_mention” (for users [without
      * usernames](https://telegram.org/blog/edit#new-mentions)), “custom_emoji” (for inline custom
-     * emoji stickers), or “date_time” (for formatted date and time)
+     * emoji stickers), or “date_time” (for formatted date and time).
      */
     @get:JsonProperty("type")
     @param:JsonProperty("type")
@@ -87,7 +87,7 @@ public data class MessageEntity(
     /**
      * *Optional*. For “custom_emoji” only, unique identifier of the custom emoji. Use
      * [getCustomEmojiStickers](https://core.telegram.org/bots/api/#getcustomemojistickers) to get full
-     * information about the sticker
+     * information about the sticker.
      */
     @get:JsonProperty("custom_emoji_id")
     @param:JsonProperty("custom_emoji_id")

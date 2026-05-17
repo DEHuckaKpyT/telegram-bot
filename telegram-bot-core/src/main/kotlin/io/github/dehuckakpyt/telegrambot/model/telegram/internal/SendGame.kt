@@ -12,7 +12,7 @@ import kotlin.String
  */
 internal data class SendGame(
     @get:JsonProperty("chat_id")
-    public val chatId: Long,
+    public val chatId: String,
     @get:JsonProperty("game_short_name")
     public val gameShortName: String,
     @get:JsonProperty("business_connection_id")

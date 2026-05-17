@@ -18,7 +18,7 @@ import kotlin.String
  * @param fill The background fill that is combined with the pattern
  * @param intensity Intensity of the pattern when it is shown above the filled background; 0-100
  * @param isInverted *Optional*. *True*, if the background fill must be applied only to the pattern
- * itself. All other pixels are black in this case. For dark themes only
+ * itself. All other pixels are black in this case. For dark themes only.
  * @param isMoving *Optional*. *True*, if the background moves slightly when the device is tilted
  */
 public data class BackgroundTypePattern(
@@ -48,7 +48,7 @@ public data class BackgroundTypePattern(
     public val intensity: Int,
     /**
      * *Optional*. *True*, if the background fill must be applied only to the pattern itself. All
-     * other pixels are black in this case. For dark themes only
+     * other pixels are black in this case. For dark themes only.
      */
     @get:JsonProperty("is_inverted")
     @param:JsonProperty("is_inverted")

@@ -14,7 +14,7 @@ import kotlin.collections.List
  * @author KScript
  *
  * @param requestId Identifier of the request
- * @param users Information about users shared with the bot.
+ * @param users Information about users shared with the bot
  */
 public data class UsersShared(
     /**
@@ -24,7 +24,7 @@ public data class UsersShared(
     @param:JsonProperty("request_id")
     public val requestId: Long,
     /**
-     * Information about users shared with the bot.
+     * Information about users shared with the bot
      */
     @get:JsonProperty("users")
     @param:JsonProperty("users")

@@ -35,6 +35,9 @@ public data class InputPaidMediaPhoto(
     override val type: String = "photo"
 
     @get:JsonIgnore
+    override val photo: Input? = null
+
+    @get:JsonIgnore
     override val thumbnail: Input? = null
 
     @get:JsonIgnore

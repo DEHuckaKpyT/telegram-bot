@@ -3,6 +3,7 @@ package io.github.dehuckakpyt.telegrambot.api
 import io.github.dehuckakpyt.telegrambot.TelegramBot
 import io.github.dehuckakpyt.telegrambot.container.Container
 import io.github.dehuckakpyt.telegrambot.model.telegram.AcceptedGiftTypes
+import io.github.dehuckakpyt.telegrambot.model.telegram.BotAccessSettings
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommand
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotCommandScope
 import io.github.dehuckakpyt.telegrambot.model.telegram.BotDescription
@@ -24,6 +25,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InlineQueryResultsButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputChecklist
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
@@ -44,6 +46,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.PreparedKeyboardButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReactionType
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyMarkup
 import io.github.dehuckakpyt.telegrambot.model.telegram.ReplyParameters
+import io.github.dehuckakpyt.telegrambot.model.telegram.SentGuestMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.SentWebAppMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.ShippingOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.StarAmount
@@ -124,7 +127,7 @@ public abstract class TelegramBotApiHandling {
      * the parameter *secret_token*. If specified, the request will contain a header
      * “X-Telegram-Bot-Api-Secret-Token” with the secret token as content.
      *
-     * @param url HTTPS URL to send updates to. Use an empty string to remove webhook integration
+     * @param url HTTPS URL to send updates to. Use an empty string to remove webhook integration.
      * @param certificate Upload your public key certificate so that the root certificate in use can
      * be checked. See our [self-signed guide](https://core.telegram.org/bots/self-signed) for details.
      * @param ipAddress The fixed IP address which will be used to send webhook requests instead of
@@ -234,7 +237,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -244,7 +247,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendMessage(
         text: String,
@@ -285,7 +288,7 @@ public abstract class TelegramBotApiHandling {
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
      * @param fromChatId Unique identifier for the chat where the original message was sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
      * for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -332,7 +335,7 @@ public abstract class TelegramBotApiHandling {
      * of [MessageId](https://core.telegram.org/bots/api/#messageid) of the sent messages is returned.
      *
      * @param fromChatId Unique identifier for the chat where the original messages were sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat
      * *from_chat_id* to forward. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
@@ -372,7 +375,7 @@ public abstract class TelegramBotApiHandling {
      * [MessageId](https://core.telegram.org/bots/api/#messageid) of the sent message on success.
      *
      * @param fromChatId Unique identifier for the chat where the original message was sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
      * for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -380,7 +383,7 @@ public abstract class TelegramBotApiHandling {
      * will be sent; required if the message is sent to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the copied video in the message
      * @param caption New caption for media, 0-1024 characters after entities parsing. If not
-     * specified, the original caption is kept
+     * specified, the original caption is kept.
      * @param parseMode Mode for parsing entities in the new caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param captionEntities A JSON-serialized list of special entities that appear in the new
@@ -395,7 +398,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * only available when copying to private chats
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -405,7 +408,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.copyMessage(
         fromChatId: String,
@@ -456,7 +459,7 @@ public abstract class TelegramBotApiHandling {
      * messages is returned.
      *
      * @param fromChatId Unique identifier for the chat where the original messages were sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat
      * *from_chat_id* to copy. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
@@ -521,7 +524,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -531,7 +534,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendPhoto(
         photo: Input,
@@ -552,6 +555,93 @@ public abstract class TelegramBotApiHandling {
         replyMarkup: ReplyMarkup? = null,
     ): Message = bot.sendPhoto(
         chatId = chat.id,
+        photo = photo,
+        businessConnectionId = businessConnectionId,
+        messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        showCaptionAboveMedia = showCaptionAboveMedia,
+        hasSpoiler = hasSpoiler,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
+        messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
+        replyParameters = replyParameters,
+        replyMarkup = replyMarkup,
+    )
+
+    /**
+     * Use this method to send live photos. On success, the sent
+     * [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param livePhoto Live photo video to send. The video must be no longer than 10 seconds and
+     * must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the
+     * Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param photo The static photo to send. Pass a file_id as String to send a photo that exists
+     * on the Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
+     * @param caption Video caption (may also be used when resending videos by *file_id*), 0-1024
+     * characters after entities parsing
+     * @param parseMode Mode for parsing entities in the video caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
+     * media
+     * @param hasSpoiler Pass *True* if the video needs to be covered with a spoiler animation
+     * @param disableNotification Sends the message
+     * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
+     * notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance.
+     * @param messageEffectId Unique identifier of the message effect to be added to the message;
+     * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
+     * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
+     * keyboard or to force a reply from the user.
+     */
+    public suspend fun Container.sendLivePhoto(
+        livePhoto: Input,
+        photo: Input,
+        businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message = bot.sendLivePhoto(
+        chatId = chat.id,
+        livePhoto = livePhoto,
         photo = photo,
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
@@ -612,7 +702,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -622,7 +712,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendAudio(
         audio: Input,
@@ -703,7 +793,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -713,7 +803,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendDocument(
         document: Input,
@@ -802,7 +892,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -812,7 +902,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendVideo(
         video: Input,
@@ -907,7 +997,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -917,7 +1007,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendAnimation(
         animation: Input,
@@ -997,7 +1087,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -1007,7 +1097,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendVoice(
         voice: Input,
@@ -1053,7 +1143,7 @@ public abstract class TelegramBotApiHandling {
      * @param videoNote Video note to send. Pass a file_id as String to send a video note that
      * exists on the Telegram servers (recommended) or upload a new video using multipart/form-data.
      * [More information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending
-     * video notes by a URL is currently unsupported
+     * video notes by a URL is currently unsupported.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
@@ -1077,7 +1167,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -1087,7 +1177,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendVideoNote(
         videoNote: Input,
@@ -1152,7 +1242,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
      * suggested post to send; for direct messages chats only. If the message is sent as a reply to
      * another suggested post, then that suggested post is automatically declined.
@@ -1160,7 +1250,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendPaidMedia(
         starCount: Int,
@@ -1200,10 +1290,10 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Use this method to send a group of photos, videos, documents or audios as an album. Documents
-     * and audio files can be only grouped in an album with messages of the same type. On success, an
-     * array of [Message](https://core.telegram.org/bots/api/#message) objects that were sent is
-     * returned.
+     * Use this method to send a group of photos, live photos, videos, documents or audios as an
+     * album. Documents and audio files can be only grouped in an album with messages of the same type.
+     * On success, an array of [Message](https://core.telegram.org/bots/api/#message) objects that were
+     * sent is returned.
      *
      * @param media A JSON-serialized array describing messages to be sent, must include 2-10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
@@ -1220,7 +1310,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -1264,7 +1354,7 @@ public abstract class TelegramBotApiHandling {
      * 0-1500
      * @param livePeriod Period in seconds during which the location will be updated (see [Live
      * Locations](https://telegram.org/blog/live-locations), should be between 60 and 86400, or
-     * 0x7FFFFFFF for live locations that can be edited indefinitely.
+     * 0x7FFFFFFF for live locations that can be edited indefinitely
      * @param heading For live locations, a direction in which the user is moving, in degrees. Must
      * be between 1 and 360 if specified.
      * @param proximityAlertRadius For live locations, a maximum distance for proximity alerts about
@@ -1277,7 +1367,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -1287,7 +1377,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendLocation(
         latitude: Double,
@@ -1354,7 +1444,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -1364,7 +1454,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendVenue(
         latitude: Double,
@@ -1430,7 +1520,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -1440,7 +1530,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendContact(
         phoneNumber: String,
@@ -1480,16 +1570,16 @@ public abstract class TelegramBotApiHandling {
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
      * @param question Poll question, 1-300 characters
-     * @param options A JSON-serialized list of 2-12 answer options
+     * @param options A JSON-serialized list of 1-12 answer options
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
      * for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param questionParseMode Mode for parsing entities in the question. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Currently,
-     * only custom emoji entities are allowed
+     * only custom emoji entities are allowed.
      * @param questionEntities A JSON-serialized list of special entities that appear in the poll
-     * question. It can be specified instead of *question_parse_mode*
+     * question. It can be specified instead of *question_parse_mode*.
      * @param isAnonymous *True*, if the poll needs to be anonymous, defaults to *True*
      * @param type Poll type, “quiz” or “regular”, defaults to “regular”
      * @param allowsMultipleAnswers Pass *True*, if the poll allows multiple answers, defaults to
@@ -1501,6 +1591,13 @@ public abstract class TelegramBotApiHandling {
      * creation; not supported for anonymous polls and quizzes
      * @param hideResultsUntilCloses Pass *True*, if poll results must be shown only after the poll
      * closes
+     * @param membersOnly Pass *True*, if voting is limited to users who have been members of the
+     * chat where the poll is being sent for more than 24 hours; for channel chats only
+     * @param countryCodes A JSON-serialized list of 0-12 two-letter [ISO 3166-1
+     * alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes indicating the
+     * countries from which users can vote in the poll; for channel chats only. Use “FT” as a country
+     * code to allow users with anonymous numbers to vote. If omitted or empty, then users from any
+     * country can participate in the poll.
      * @param correctOptionIds A JSON-serialized list of monotonically increasing 0-based
      * identifiers of the correct answer options, required for polls in quiz mode
      * @param explanation Text that is shown when a user chooses an incorrect answer or taps on the
@@ -1509,7 +1606,8 @@ public abstract class TelegramBotApiHandling {
      * @param explanationParseMode Mode for parsing entities in the explanation. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param explanationEntities A JSON-serialized list of special entities that appear in the poll
-     * explanation. It can be specified instead of *explanation_parse_mode*
+     * explanation. It can be specified instead of *explanation_parse_mode*.
+     * @param explanationMedia Media added to the quiz explanation
      * @param openPeriod Amount of time in seconds the poll will be active after creation,
      * 5-2628000. Can't be used together with *close_date*.
      * @param closeDate Point in time (Unix timestamp) when the poll will be automatically closed.
@@ -1523,6 +1621,7 @@ public abstract class TelegramBotApiHandling {
      * [formatting options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param descriptionEntities A JSON-serialized list of special entities that appear in the poll
      * description, which can be specified instead of *description_parse_mode*
+     * @param media Media added to the poll description
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -1531,14 +1630,14 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendPoll(
         question: String,
@@ -1554,16 +1653,20 @@ public abstract class TelegramBotApiHandling {
         shuffleOptions: Boolean? = null,
         allowAddingOptions: Boolean? = null,
         hideResultsUntilCloses: Boolean? = null,
+        membersOnly: Boolean? = null,
+        countryCodes: Iterable<String>? = null,
         correctOptionIds: Iterable<Long>? = null,
         explanation: String? = null,
         explanationParseMode: String? = null,
         explanationEntities: Iterable<MessageEntity>? = null,
+        explanationMedia: InputPollMedia? = null,
         openPeriod: Int? = null,
         closeDate: Long? = null,
         isClosed: Boolean? = null,
         description: String? = null,
         descriptionParseMode: String? = null,
         descriptionEntities: Iterable<MessageEntity>? = null,
+        media: InputPollMedia? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
@@ -1585,16 +1688,20 @@ public abstract class TelegramBotApiHandling {
         shuffleOptions = shuffleOptions,
         allowAddingOptions = allowAddingOptions,
         hideResultsUntilCloses = hideResultsUntilCloses,
+        membersOnly = membersOnly,
+        countryCodes = countryCodes,
         correctOptionIds = correctOptionIds,
         explanation = explanation,
         explanationParseMode = explanationParseMode,
         explanationEntities = explanationEntities,
+        explanationMedia = explanationMedia,
         openPeriod = openPeriod,
         closeDate = closeDate,
         isClosed = isClosed,
         description = description,
         descriptionParseMode = descriptionParseMode,
         descriptionEntities = descriptionEntities,
+        media = media,
         disableNotification = disableNotification,
         protectContent = protectContent,
         allowPaidBroadcast = allowPaidBroadcast,
@@ -1649,7 +1756,7 @@ public abstract class TelegramBotApiHandling {
      * will be sent; required if the message is sent to a direct messages chat
      * @param emoji Emoji on which the dice throw animation is based. Currently, must be one of
      * “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values
-     * 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
+     * 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”.
      * @param disableNotification Sends the message
      * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
      * notification with no sound.
@@ -1658,7 +1765,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -1668,7 +1775,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendDice(
         businessConnectionId: String? = null,
@@ -1699,12 +1806,16 @@ public abstract class TelegramBotApiHandling {
 
     /**
      * Use this method to stream a partial message to a user while the message is being generated.
-     * Returns *True* on success.
+     * Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the
+     * output is finalized, you **must** call
+     * [sendMessage](https://core.telegram.org/bots/api/#sendmessage) with the complete message to
+     * persist it in the user's chat. Returns *True* on success.
      *
      * @param draftId Unique identifier of the message draft; must be non-zero. Changes of drafts
-     * with the same identifier are animated
-     * @param text Text of the message to be sent, 1-4096 characters after entities parsing
+     * with the same identifier are animated.
      * @param messageThreadId Unique identifier for the target message thread
+     * @param text Text of the message to be sent, 0-4096 characters after entities parsing. Pass an
+     * empty text to show a “Thinking…” placeholder.
      * @param parseMode Mode for parsing entities in the message text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which
@@ -1712,15 +1823,15 @@ public abstract class TelegramBotApiHandling {
      */
     public suspend fun Container.sendMessageDraft(
         draftId: Long,
-        text: String,
         messageThreadId: Long? = null,
+        text: String? = null,
         parseMode: String? = null,
         entities: Iterable<MessageEntity>? = null,
     ): Boolean = bot.sendMessageDraft(
         chatId = chat.id,
         draftId = draftId,
-        text = text,
         messageThreadId = messageThreadId,
+        text = text,
         parseMode = parseMode,
         entities = entities,
     )
@@ -1923,7 +2034,7 @@ public abstract class TelegramBotApiHandling {
      * *can_send_polls* permission will imply the *can_send_messages* permission.
      * @param untilDate Date when restrictions will be lifted for the user; Unix time. If user is
      * restricted for more than 366 days or less than 30 seconds from the current time, they are
-     * considered to be restricted forever
+     * considered to be restricted forever.
      */
     public suspend fun Container.restrictChatMember(
         userId: Long,
@@ -1953,7 +2064,7 @@ public abstract class TelegramBotApiHandling {
      * @param canManageVideoChats Pass *True* if the administrator can manage video chats
      * @param canRestrictMembers Pass *True* if the administrator can restrict, ban or unban chat
      * members, or access supergroup statistics. For backward compatibility, defaults to *True* for
-     * promotions of channel administrators
+     * promotions of channel administrators.
      * @param canPromoteMembers Pass *True* if the administrator can add new administrators with a
      * subset of their own privileges or demote administrators that they have promoted, directly or
      * indirectly (promoted by administrators that were appointed by him)
@@ -2116,7 +2227,7 @@ public abstract class TelegramBotApiHandling {
      * @param memberLimit The maximum number of users that can be members of the chat simultaneously
      * after joining the chat via this invite link; 1-99999
      * @param createsJoinRequest *True*, if users joining the chat via the link need to be approved
-     * by chat administrators. If *True*, *member_limit* can't be specified
+     * by chat administrators. If *True*, *member_limit* can't be specified.
      */
     public suspend fun Container.createChatInviteLink(
         name: String? = null,
@@ -2143,7 +2254,7 @@ public abstract class TelegramBotApiHandling {
      * @param memberLimit The maximum number of users that can be members of the chat simultaneously
      * after joining the chat via this invite link; 1-99999
      * @param createsJoinRequest *True*, if users joining the chat via the link need to be approved
-     * by chat administrators. If *True*, *member_limit* can't be specified
+     * by chat administrators. If *True*, *member_limit* can't be specified.
      */
     public suspend fun Container.editChatInviteLink(
         inviteLink: String,
@@ -2359,12 +2470,16 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Use this method to get a list of administrators in a chat, which aren't bots. Returns an
-     * Array of [ChatMember](https://core.telegram.org/bots/api/#chatmember) objects.
+     * Use this method to get a list of administrators in a chat. Returns an Array of
+     * [ChatMember](https://core.telegram.org/bots/api/#chatmember) objects.
+     *
+     * @param returnBots Pass *True* to additionally receive all bots that are administrators of the
+     * chat. By default, bots other than the current bot are omitted.
      */
-    public suspend fun Container.getChatAdministrators(): List<ChatMember> =
-            bot.getChatAdministrators(
+    public suspend fun Container.getChatAdministrators(returnBots: Boolean? = null):
+            List<ChatMember> = bot.getChatAdministrators(
         chatId = chat.id,
+        returnBots = returnBots,
     )
 
     /**
@@ -2384,6 +2499,20 @@ public abstract class TelegramBotApiHandling {
     public suspend fun Container.getChatMember(userId: Long): ChatMember = bot.getChatMember(
         chatId = chat.id,
         userId = userId,
+    )
+
+    /**
+     * Use this method to get the last messages from the personal chat (i.e., the chat currently
+     * added to their profile) of a given user. On success, an array of
+     * [Message](https://core.telegram.org/bots/api/#message) objects is returned.
+     *
+     * @param userId Unique identifier for the target user
+     * @param limit The maximum number of messages to return; 1-20
+     */
+    public suspend fun Container.getUserPersonalChatMessages(userId: Long, limit: Int):
+            List<Message> = bot.getUserPersonalChatMessages(
+        userId = userId,
+        limit = limit,
     )
 
     /**
@@ -2430,7 +2559,7 @@ public abstract class TelegramBotApiHandling {
      * @param name Topic name, 1-128 characters
      * @param iconColor Color of the topic icon in RGB format. Currently, must be one of 7322096
      * (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2),
-     * or 16478047 (0xFB6F5F)
+     * or 16478047 (0xFB6F5F).
      * @param iconCustomEmojiId Unique identifier of the custom emoji shown as the topic icon. Use
      * [getForumTopicIconStickers](https://core.telegram.org/bots/api/#getforumtopiciconstickers) to
      * get all allowed custom emoji identifiers.
@@ -2454,11 +2583,11 @@ public abstract class TelegramBotApiHandling {
      *
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      * @param name New topic name, 0-128 characters. If not specified or empty, the current name of
-     * the topic will be kept
+     * the topic will be kept.
      * @param iconCustomEmojiId New unique identifier of the custom emoji shown as the topic icon.
      * Use [getForumTopicIconStickers](https://core.telegram.org/bots/api/#getforumtopiciconstickers)
      * to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not
-     * specified, the current icon will be kept
+     * specified, the current icon will be kept.
      */
     public suspend fun Container.editForumTopic(
         messageThreadId: Long,
@@ -2598,7 +2727,7 @@ public abstract class TelegramBotApiHandling {
      *
      * @param callbackQueryId Unique identifier for the query to be answered
      * @param text Text of the notification. If not specified, nothing will be shown to the user,
-     * 0-200 characters
+     * 0-200 characters.
      * @param showAlert If *True*, an alert will be shown by the client instead of a notification at
      * the top of the chat screen. Defaults to *false*.
      * @param url URL that will be opened by the user's client. If you have created a
@@ -2625,6 +2754,19 @@ public abstract class TelegramBotApiHandling {
         showAlert = showAlert,
         url = url,
         cacheTime = cacheTime,
+    )
+
+    /**
+     * Use this method to reply to a received guest message. On success, a
+     * [SentGuestMessage](https://core.telegram.org/bots/api/#sentguestmessage) object is returned.
+     *
+     * @param guestQueryId Unique identifier for the query to be answered
+     * @param result A JSON-serialized object describing the message to be sent
+     */
+    public suspend fun Container.answerGuestQuery(guestQueryId: String, result: InlineQueryResult):
+            SentGuestMessage = bot.answerGuestQuery(
+        guestQueryId = guestQueryId,
+        result = result,
     )
 
     /**
@@ -2673,6 +2815,36 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
+     * Use this method to get the access settings of a managed bot. Returns a
+     * [BotAccessSettings](https://core.telegram.org/bots/api/#botaccesssettings) object on success.
+     *
+     * @param userId User identifier of the managed bot whose access settings will be returned
+     */
+    public suspend fun Container.getManagedBotAccessSettings(userId: Long): BotAccessSettings =
+            bot.getManagedBotAccessSettings(
+        userId = userId,
+    )
+
+    /**
+     * Use this method to change the access settings of a managed bot. Returns *True* on success.
+     *
+     * @param userId User identifier of the managed bot whose access settings will be changed
+     * @param isAccessRestricted Pass *True*, if only selected users can access the bot. The bot's
+     * owner can always access it.
+     * @param addedUserIds A JSON-serialized list of up to 10 identifiers of users who will have
+     * access to the bot in addition to its owner. Ignored if *is_access_restricted* is false.
+     */
+    public suspend fun Container.setManagedBotAccessSettings(
+        userId: Long,
+        isAccessRestricted: Boolean,
+        addedUserIds: Iterable<Long>? = null,
+    ): Boolean = bot.setManagedBotAccessSettings(
+        userId = userId,
+        isAccessRestricted = isAccessRestricted,
+        addedUserIds = addedUserIds,
+    )
+
+    /**
      * Use this method to change the list of the bot's commands. See [this
      * manual](https://core.telegram.org/bots/features#commands) for more details about bot commands.
      * Returns *True* on success.
@@ -2683,7 +2855,7 @@ public abstract class TelegramBotApiHandling {
      * relevant. Defaults to
      * [BotCommandScopeDefault](https://core.telegram.org/bots/api/#botcommandscopedefault).
      * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied
-     * to all users from the given scope, for whose language there are no dedicated commands
+     * to all users from the given scope, for whose language there are no dedicated commands.
      */
     public suspend fun Container.setMyCommands(
         commands: Iterable<BotCommand>,
@@ -2705,7 +2877,7 @@ public abstract class TelegramBotApiHandling {
      * relevant. Defaults to
      * [BotCommandScopeDefault](https://core.telegram.org/bots/api/#botcommandscopedefault).
      * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied
-     * to all users from the given scope, for whose language there are no dedicated commands
+     * to all users from the given scope, for whose language there are no dedicated commands.
      */
     public suspend fun Container.deleteMyCommands(scope: BotCommandScope? = null,
             languageCode: String? = null): Boolean = bot.deleteMyCommands(
@@ -2825,7 +2997,7 @@ public abstract class TelegramBotApiHandling {
      * button. Returns *True* on success.
      *
      * @param menuButton A JSON-serialized object for the bot's new menu button. Defaults to
-     * [MenuButtonDefault](https://core.telegram.org/bots/api/#menubuttondefault)
+     * [MenuButtonDefault](https://core.telegram.org/bots/api/#menubuttondefault).
      */
     public suspend fun Container.setChatMenuButton(menuButton: MenuButton? = null): Boolean =
             bot.setChatMenuButton(
@@ -3024,7 +3196,7 @@ public abstract class TelegramBotApiHandling {
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. All
      * messages must be from the same chat. See
      * [deleteMessage](https://core.telegram.org/bots/api/#deletemessage) for limitations on which
-     * messages can be deleted
+     * messages can be deleted.
      */
     public suspend fun Container.deleteBusinessMessages(businessConnectionId: String,
             messageIds: Iterable<Long>): Boolean = bot.deleteBusinessMessages(
@@ -3177,7 +3349,7 @@ public abstract class TelegramBotApiHandling {
      * applied before pagination.
      * @param offset Offset of the first entry to return as received from the previous request; use
      * empty string to get the first chunk of results
-     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100
+     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100.
      */
     public suspend fun Container.getBusinessAccountGifts(
         businessConnectionId: String,
@@ -3223,7 +3395,7 @@ public abstract class TelegramBotApiHandling {
      * applied before pagination.
      * @param offset Offset of the first entry to return as received from the previous request; use
      * an empty string to get the first chunk of results
-     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100
+     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100.
      */
     public suspend fun Container.getUserGifts(
         userId: Long,
@@ -3269,7 +3441,7 @@ public abstract class TelegramBotApiHandling {
      * applied before pagination.
      * @param offset Offset of the first entry to return as received from the previous request; use
      * an empty string to get the first chunk of results
-     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100
+     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100.
      */
     public suspend fun Container.getChatGifts(
         excludeUnsaved: Boolean? = null,
@@ -3528,7 +3700,7 @@ public abstract class TelegramBotApiHandling {
      *
      * @param userId Unique identifier of the target user that can use the button
      * @param button A JSON-serialized object describing the button to be saved. The button must be
-     * of the type *request_users*, *request_chat*, or *request_managed_bot*
+     * of the type *request_users*, *request_chat*, or *request_managed_bot*.
      */
     public suspend fun Container.savePreparedKeyboardButton(userId: Long, button: KeyboardButton):
             PreparedKeyboardButton = bot.savePreparedKeyboardButton(
@@ -3544,7 +3716,7 @@ public abstract class TelegramBotApiHandling {
      * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
+     * to edit.
      * @param text New text of the message, 1-4096 characters after entities parsing
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
@@ -3554,7 +3726,7 @@ public abstract class TelegramBotApiHandling {
      * can be specified instead of *parse_mode*
      * @param linkPreviewOptions Link preview generation options for the message
      * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageText(
         messageId: Long,
@@ -3583,7 +3755,7 @@ public abstract class TelegramBotApiHandling {
      * sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
+     * to edit.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param caption New caption of the message, 0-1024 characters after entities parsing
@@ -3594,7 +3766,7 @@ public abstract class TelegramBotApiHandling {
      * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
      * media. Supported only for animation, photo and video messages.
      * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageCaption(
         messageId: Long,
@@ -3616,23 +3788,23 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Use this method to edit animation, audio, document, photo, or video messages, or to add media
-     * to text messages. If a message is part of a message album, then it can be edited only to an
-     * audio for audio albums, only to a document for document albums and to a photo or a video
-     * otherwise. When an inline message is edited, a new file can't be uploaded; use a previously
-     * uploaded file via its file_id or specify a URL. On success, if the edited message is not an
-     * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
-     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
-     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
-     * sent.
+     * Use this method to edit animation, audio, document, live photo, photo, or video messages, or
+     * to add media to text messages. If a message is part of a message album, then it can be edited
+     * only to an audio for audio albums, only to a document for document albums and to a photo, a live
+     * photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use
+     * a previously uploaded file via its file_id or specify a URL. On success, if the edited message
+     * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
+     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
+     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
+     * they were sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
+     * to edit.
      * @param media A JSON-serialized object for a new media content of the message
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageMedia(
         messageId: Long,
@@ -3656,7 +3828,7 @@ public abstract class TelegramBotApiHandling {
      * returned.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
+     * to edit.
      * @param latitude Latitude of new location
      * @param longitude Longitude of new location
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
@@ -3665,7 +3837,7 @@ public abstract class TelegramBotApiHandling {
      * from the message send date. If 0x7FFFFFFF is specified, then the location can be updated
      * forever. Otherwise, the new value must not exceed the current *live_period* by more than a day,
      * and the live location expiration date must remain within the next 90 days. If not specified,
-     * then *live_period* remains unchanged
+     * then *live_period* remains unchanged.
      * @param horizontalAccuracy The radius of uncertainty for the location, measured in meters;
      * 0-1500
      * @param heading Direction in which the user is moving, in degrees. Must be between 1 and 360
@@ -3673,7 +3845,7 @@ public abstract class TelegramBotApiHandling {
      * @param proximityAlertRadius The maximum distance for proximity alerts about approaching
      * another chat member, in meters. Must be between 1 and 100000 if specified.
      * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageLiveLocation(
         messageId: Long,
@@ -3705,11 +3877,11 @@ public abstract class TelegramBotApiHandling {
      * returned.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * with live location to stop
+     * with live location to stop.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.stopMessageLiveLocation(
         messageId: Long,
@@ -3754,11 +3926,11 @@ public abstract class TelegramBotApiHandling {
      * they were sent.
      *
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
-     * to edit
+     * to edit.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageReplyMarkup(
         messageId: Long,
@@ -3779,7 +3951,7 @@ public abstract class TelegramBotApiHandling {
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new message [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.stopPoll(
         messageId: Long,
@@ -3800,7 +3972,7 @@ public abstract class TelegramBotApiHandling {
      * @param messageId Identifier of a suggested post message to approve
      * @param sendDate Point in time (Unix timestamp) when the post is expected to be published;
      * omit if the date has already been specified when the suggested post was created. If specified,
-     * then the date must be not more than 2678400 seconds (30 days) in the future
+     * then the date must be not more than 2678400 seconds (30 days) in the future.
      */
     public suspend fun Container.approveSuggestedPost(messageId: Long, sendDate: Long? = null):
             Boolean = bot.approveSuggestedPost(
@@ -3854,12 +4026,50 @@ public abstract class TelegramBotApiHandling {
      *
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See
      * [deleteMessage](https://core.telegram.org/bots/api/#deletemessage) for limitations on which
-     * messages can be deleted
+     * messages can be deleted.
      */
     public suspend fun Container.deleteMessages(messageIds: Iterable<Long>): Boolean =
             bot.deleteMessages(
         chatId = chat.id,
         messageIds = messageIds,
+    )
+
+    /**
+     * Use this method to remove a reaction from a message in a group or a supergroup chat. The bot
+     * must have the 'can_delete_messages' administrator right in the chat. Returns *True* on success.
+     *
+     * @param messageId Identifier of the target message
+     * @param userId Identifier of the user whose reaction will be removed, if the reaction was
+     * added by a user
+     * @param actorChatId Identifier of the chat whose reaction will be removed, if the reaction was
+     * added by a chat
+     */
+    public suspend fun Container.deleteMessageReaction(
+        messageId: Long,
+        userId: Long? = null,
+        actorChatId: Long? = null,
+    ): Boolean = bot.deleteMessageReaction(
+        chatId = chat.id,
+        messageId = messageId,
+        userId = userId,
+        actorChatId = actorChatId,
+    )
+
+    /**
+     * Use this method to remove up to 10000 recent reactions in a group or a supergroup chat added
+     * by a given user or chat. The bot must have the 'can_delete_messages' administrator right in the
+     * chat. Returns *True* on success.
+     *
+     * @param userId Identifier of the user whose reactions will be removed, if the reactions were
+     * added by a user
+     * @param actorChatId Identifier of the chat whose reactions will be removed, if the reactions
+     * were added by a chat
+     */
+    public suspend fun Container.deleteAllMessageReactions(userId: Long? = null, actorChatId: Long?
+            = null): Boolean = bot.deleteAllMessageReactions(
+        chatId = chat.id,
+        userId = userId,
+        actorChatId = actorChatId,
     )
 
     /**
@@ -3887,7 +4097,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -3897,7 +4107,7 @@ public abstract class TelegramBotApiHandling {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendSticker(
         sticker: Input,
@@ -4171,7 +4381,7 @@ public abstract class TelegramBotApiHandling {
      *
      * @param name Sticker set name
      * @param customEmojiId Custom emoji identifier of a sticker from the sticker set; pass an empty
-     * string to drop the thumbnail and use the first sticker as the thumbnail.
+     * string to drop the thumbnail and use the first sticker as the thumbnail
      */
     public suspend fun Container.setCustomEmojiStickerSetThumbnail(name: String,
             customEmojiId: String? = null): Boolean = bot.setCustomEmojiStickerSetThumbnail(
@@ -4256,7 +4466,7 @@ public abstract class TelegramBotApiHandling {
      * the sent message will have a *Pay* button, allowing multiple users to pay directly from the
      * forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message
      * will have a *URL* button with a deep link to the bot (instead of a *Pay* button), with the value
-     * used as the start parameter
+     * used as the start parameter.
      * @param providerData JSON-serialized data about the invoice, which will be shared with the
      * payment provider. A detailed description of required fields should be provided by the payment
      * provider.
@@ -4287,7 +4497,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -4611,7 +4821,7 @@ public abstract class TelegramBotApiHandling {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param replyParameters Description of the message to reply to
@@ -4651,9 +4861,9 @@ public abstract class TelegramBotApiHandling {
      * @param userId User identifier
      * @param score New score, must be non-negative
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the sent
-     * message
+     * message.
      * @param force Pass *True* if the high score is allowed to decrease. This can be useful when
-     * fixing mistakes or banning cheaters
+     * fixing mistakes or banning cheaters.
      * @param disableEditMessage Pass *True* if the game message should not be automatically edited
      * to include the current scoreboard
      */
@@ -4683,9 +4893,9 @@ public abstract class TelegramBotApiHandling {
      *
      * @param userId Target user id
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the sent
-     * message
+     * message.
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      */
     public suspend fun Container.getGameHighScores(
         userId: Long,
@@ -4706,7 +4916,7 @@ public abstract class TelegramBotApiHandling {
      * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      * @param text New text of the message, 1-4096 characters after entities parsing
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
@@ -4716,7 +4926,7 @@ public abstract class TelegramBotApiHandling {
      * can be specified instead of *parse_mode*
      * @param linkPreviewOptions Link preview generation options for the message
      * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageText(
         inlineMessageId: String,
@@ -4744,7 +4954,7 @@ public abstract class TelegramBotApiHandling {
      * sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param caption New caption of the message, 0-1024 characters after entities parsing
@@ -4755,7 +4965,7 @@ public abstract class TelegramBotApiHandling {
      * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
      * media. Supported only for animation, photo and video messages.
      * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageCaption(
         inlineMessageId: String,
@@ -4776,23 +4986,23 @@ public abstract class TelegramBotApiHandling {
     )
 
     /**
-     * Use this method to edit animation, audio, document, photo, or video messages, or to add media
-     * to text messages. If a message is part of a message album, then it can be edited only to an
-     * audio for audio albums, only to a document for document albums and to a photo or a video
-     * otherwise. When an inline message is edited, a new file can't be uploaded; use a previously
-     * uploaded file via its file_id or specify a URL. On success, if the edited message is not an
-     * inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned,
-     * otherwise *True* is returned. Note that business messages that were not sent by the bot and do
-     * not contain an inline keyboard can only be edited within **48 hours** from the time they were
-     * sent.
+     * Use this method to edit animation, audio, document, live photo, photo, or video messages, or
+     * to add media to text messages. If a message is part of a message album, then it can be edited
+     * only to an audio for audio albums, only to a document for document albums and to a photo, a live
+     * photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use
+     * a previously uploaded file via its file_id or specify a URL. On success, if the edited message
+     * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
+     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
+     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
+     * they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      * @param media A JSON-serialized object for a new media content of the message
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageMedia(
         inlineMessageId: String,
@@ -4815,7 +5025,7 @@ public abstract class TelegramBotApiHandling {
      * returned.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      * @param latitude Latitude of new location
      * @param longitude Longitude of new location
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
@@ -4824,7 +5034,7 @@ public abstract class TelegramBotApiHandling {
      * from the message send date. If 0x7FFFFFFF is specified, then the location can be updated
      * forever. Otherwise, the new value must not exceed the current *live_period* by more than a day,
      * and the live location expiration date must remain within the next 90 days. If not specified,
-     * then *live_period* remains unchanged
+     * then *live_period* remains unchanged.
      * @param horizontalAccuracy The radius of uncertainty for the location, measured in meters;
      * 0-1500
      * @param heading Direction in which the user is moving, in degrees. Must be between 1 and 360
@@ -4832,7 +5042,7 @@ public abstract class TelegramBotApiHandling {
      * @param proximityAlertRadius The maximum distance for proximity alerts about approaching
      * another chat member, in meters. Must be between 1 and 100000 if specified.
      * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageLiveLocation(
         inlineMessageId: String,
@@ -4863,11 +5073,11 @@ public abstract class TelegramBotApiHandling {
      * returned.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for a new [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.stopMessageLiveLocation(
         inlineMessageId: String,
@@ -4887,11 +5097,11 @@ public abstract class TelegramBotApiHandling {
      * they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
      * @param replyMarkup A JSON-serialized object for an [inline
-     * keyboard](https://core.telegram.org/bots/features#inline-keyboards).
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun Container.editMessageReplyMarkup(
         inlineMessageId: String,
@@ -4912,9 +5122,9 @@ public abstract class TelegramBotApiHandling {
      * @param userId User identifier
      * @param score New score, must be non-negative
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
-     * of the inline message
+     * of the inline message.
      * @param force Pass *True* if the high score is allowed to decrease. This can be useful when
-     * fixing mistakes or banning cheaters
+     * fixing mistakes or banning cheaters.
      * @param disableEditMessage Pass *True* if the game message should not be automatically edited
      * to include the current scoreboard
      */

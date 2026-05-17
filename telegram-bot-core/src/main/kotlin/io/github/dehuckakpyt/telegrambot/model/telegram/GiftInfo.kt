@@ -28,7 +28,7 @@ import kotlin.collections.List
  * @param isPrivate *Optional*. *True*, if the sender and gift text are shown only to the gift
  * receiver; otherwise, everyone will be able to see them
  * @param uniqueGiftNumber *Optional*. Unique number reserved for this gift when upgraded. See the
- * *number* field in [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
+ * *number* field in [UniqueGift](https://core.telegram.org/bots/api/#uniquegift).
  */
 public data class GiftInfo(
     /**
@@ -90,7 +90,7 @@ public data class GiftInfo(
     public val isPrivate: Boolean? = null,
     /**
      * *Optional*. Unique number reserved for this gift when upgraded. See the *number* field in
-     * [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
+     * [UniqueGift](https://core.telegram.org/bots/api/#uniquegift).
      */
     @get:JsonProperty("unique_gift_number")
     @param:JsonProperty("unique_gift_number")

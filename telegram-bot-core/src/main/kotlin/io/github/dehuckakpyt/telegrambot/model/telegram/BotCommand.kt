@@ -12,7 +12,7 @@ import kotlin.String
  *
  * @param command Text of the command; 1-32 characters. Can contain only lowercase English letters,
  * digits and underscores.
- * @param description Description of the command; 1-256 characters.
+ * @param description Description of the command; 1-256 characters
  */
 public data class BotCommand(
     /**
@@ -23,7 +23,7 @@ public data class BotCommand(
     @param:JsonProperty("command")
     public val command: String,
     /**
-     * Description of the command; 1-256 characters.
+     * Description of the command; 1-256 characters
      */
     @get:JsonProperty("description")
     @param:JsonProperty("description")

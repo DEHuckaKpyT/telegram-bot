@@ -28,7 +28,7 @@ import kotlin.collections.List
  * @param maxConnections *Optional*. The maximum allowed number of simultaneous HTTPS connections to
  * the webhook for update delivery
  * @param allowedUpdates *Optional*. A list of update types the bot is subscribed to. Defaults to
- * all update types except *chat_member*
+ * all update types except *chat_member*, *message_reaction*, and *message_reaction_count*.
  */
 public data class WebhookInfo(
     /**
@@ -85,7 +85,7 @@ public data class WebhookInfo(
     public val maxConnections: Int? = null,
     /**
      * *Optional*. A list of update types the bot is subscribed to. Defaults to all update types
-     * except *chat_member*
+     * except *chat_member*, *message_reaction*, and *message_reaction_count*.
      */
     @get:JsonProperty("allowed_updates")
     @param:JsonProperty("allowed_updates")

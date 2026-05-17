@@ -20,7 +20,7 @@ import kotlin.String
  * @param message *Optional*. Message sent by the bot with the callback button that originated the
  * query
  * @param inlineMessageId *Optional*. Identifier of the message sent via the bot in inline mode,
- * that originated the query.
+ * that originated the query
  * @param chatInstance Global identifier, uniquely corresponding to the chat to which the message
  * with the callback button was sent. Useful for high scores in
  * [games](https://core.telegram.org/bots/api/#games).
@@ -51,7 +51,7 @@ public data class CallbackQuery(
     public val message: MaybeInaccessibleMessage? = null,
     /**
      * *Optional*. Identifier of the message sent via the bot in inline mode, that originated the
-     * query.
+     * query
      */
     @get:JsonProperty("inline_message_id")
     @param:JsonProperty("inline_message_id")

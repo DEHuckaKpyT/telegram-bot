@@ -14,9 +14,10 @@ import kotlin.collections.List
  * @param text Option text, 1-100 characters
  * @param textParseMode *Optional*. Mode for parsing entities in the text. See [formatting
  * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Currently, only
- * custom emoji entities are allowed
+ * custom emoji entities are allowed.
  * @param textEntities *Optional*. A JSON-serialized list of special entities that appear in the
- * poll option text. It can be specified instead of *text_parse_mode*
+ * poll option text. It can be specified instead of *text_parse_mode*.
+ * @param media *Optional*. Media added to the poll option
  */
 public data class InputPollOption(
     /**
@@ -28,16 +29,22 @@ public data class InputPollOption(
     /**
      * *Optional*. Mode for parsing entities in the text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details. Currently,
-     * only custom emoji entities are allowed
+     * only custom emoji entities are allowed.
      */
     @get:JsonProperty("text_parse_mode")
     @param:JsonProperty("text_parse_mode")
     public val textParseMode: String? = null,
     /**
      * *Optional*. A JSON-serialized list of special entities that appear in the poll option text.
-     * It can be specified instead of *text_parse_mode*
+     * It can be specified instead of *text_parse_mode*.
      */
     @get:JsonProperty("text_entities")
     @param:JsonProperty("text_entities")
     public val textEntities: List<MessageEntity>? = null,
+    /**
+     * *Optional*. Media added to the poll option
+     */
+    @get:JsonProperty("media")
+    @param:JsonProperty("media")
+    public val media: InputPollOptionMedia? = null,
 )

@@ -26,7 +26,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [Message](https://core.telegram.org/bots/api/#message) is returned.
      *
      * @param fromChatId Unique identifier for the chat where the original message was sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
      * for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -72,7 +72,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * of [MessageId](https://core.telegram.org/bots/api/#messageid) of the sent messages is returned.
      *
      * @param fromChatId Unique identifier for the chat where the original messages were sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat
      * *from_chat_id* to forward. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
@@ -111,7 +111,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [MessageId](https://core.telegram.org/bots/api/#messageid) of the sent message on success.
      *
      * @param fromChatId Unique identifier for the chat where the original message was sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageId Message identifier in the chat specified in *from_chat_id*
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
      * for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -119,7 +119,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * will be sent; required if the message is sent to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the copied video in the message
      * @param caption New caption for media, 0-1024 characters after entities parsing. If not
-     * specified, the original caption is kept
+     * specified, the original caption is kept.
      * @param parseMode Mode for parsing entities in the new caption. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param captionEntities A JSON-serialized list of special entities that appear in the new
@@ -134,7 +134,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * only available when copying to private chats
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -144,7 +144,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.copyMessage(
         fromChatId: Long,
@@ -194,7 +194,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * messages is returned.
      *
      * @param fromChatId Unique identifier for the chat where the original messages were sent (or
-     * channel username in the format `@channelusername`)
+     * username of the target bot, supergroup or channel in the format `@username`)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat
      * *from_chat_id* to copy. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
@@ -258,7 +258,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -268,7 +268,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendPhoto(
         photo: String,
@@ -288,6 +288,264 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
     ): Message = sendPhoto(
+        photo = StringInput(photo),
+        businessConnectionId = businessConnectionId,
+        messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        showCaptionAboveMedia = showCaptionAboveMedia,
+        hasSpoiler = hasSpoiler,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
+        messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
+        replyParameters = replyParameters,
+        replyMarkup = replyMarkup,
+    )
+
+    /**
+     * Use this method to send live photos. On success, the sent
+     * [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param livePhoto Live photo video to send. The video must be no longer than 10 seconds and
+     * must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the
+     * Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param photo The static photo to send. Pass a file_id as String to send a photo that exists
+     * on the Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
+     * @param caption Video caption (may also be used when resending videos by *file_id*), 0-1024
+     * characters after entities parsing
+     * @param parseMode Mode for parsing entities in the video caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
+     * media
+     * @param hasSpoiler Pass *True* if the video needs to be covered with a spoiler animation
+     * @param disableNotification Sends the message
+     * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
+     * notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance.
+     * @param messageEffectId Unique identifier of the message effect to be added to the message;
+     * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
+     * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
+     * keyboard or to force a reply from the user.
+     */
+    public suspend fun Container.sendLivePhoto(
+        livePhoto: String,
+        photo: Input,
+        businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message = sendLivePhoto(
+        livePhoto = StringInput(livePhoto),
+        photo = photo,
+        businessConnectionId = businessConnectionId,
+        messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        showCaptionAboveMedia = showCaptionAboveMedia,
+        hasSpoiler = hasSpoiler,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
+        messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
+        replyParameters = replyParameters,
+        replyMarkup = replyMarkup,
+    )
+
+    /**
+     * Use this method to send live photos. On success, the sent
+     * [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param livePhoto Live photo video to send. The video must be no longer than 10 seconds and
+     * must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the
+     * Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param photo The static photo to send. Pass a file_id as String to send a photo that exists
+     * on the Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
+     * @param caption Video caption (may also be used when resending videos by *file_id*), 0-1024
+     * characters after entities parsing
+     * @param parseMode Mode for parsing entities in the video caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
+     * media
+     * @param hasSpoiler Pass *True* if the video needs to be covered with a spoiler animation
+     * @param disableNotification Sends the message
+     * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
+     * notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance.
+     * @param messageEffectId Unique identifier of the message effect to be added to the message;
+     * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
+     * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
+     * keyboard or to force a reply from the user.
+     */
+    public suspend fun Container.sendLivePhoto(
+        livePhoto: Input,
+        photo: String,
+        businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message = sendLivePhoto(
+        livePhoto = livePhoto,
+        photo = StringInput(photo),
+        businessConnectionId = businessConnectionId,
+        messageThreadId = messageThreadId,
+        directMessagesTopicId = directMessagesTopicId,
+        caption = caption,
+        parseMode = parseMode,
+        captionEntities = captionEntities,
+        showCaptionAboveMedia = showCaptionAboveMedia,
+        hasSpoiler = hasSpoiler,
+        disableNotification = disableNotification,
+        protectContent = protectContent,
+        allowPaidBroadcast = allowPaidBroadcast,
+        messageEffectId = messageEffectId,
+        suggestedPostParameters = suggestedPostParameters,
+        replyParameters = replyParameters,
+        replyMarkup = replyMarkup,
+    )
+
+    /**
+     * Use this method to send live photos. On success, the sent
+     * [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param livePhoto Live photo video to send. The video must be no longer than 10 seconds and
+     * must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the
+     * Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param photo The static photo to send. Pass a file_id as String to send a photo that exists
+     * on the Telegram servers (recommended) or upload a new video using multipart/form-data. [More
+     * information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending live
+     * photos by a URL is currently unsupported.
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
+     * @param caption Video caption (may also be used when resending videos by *file_id*), 0-1024
+     * characters after entities parsing
+     * @param parseMode Mode for parsing entities in the video caption. See [formatting
+     * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption,
+     * which can be specified instead of *parse_mode*
+     * @param showCaptionAboveMedia Pass *True*, if the caption must be shown above the message
+     * media
+     * @param hasSpoiler Pass *True* if the video needs to be covered with a spoiler animation
+     * @param disableNotification Sends the message
+     * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
+     * notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance.
+     * @param messageEffectId Unique identifier of the message effect to be added to the message;
+     * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
+     * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
+     * keyboard or to force a reply from the user.
+     */
+    public suspend fun Container.sendLivePhoto(
+        livePhoto: String,
+        photo: String,
+        businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
+        caption: String? = null,
+        parseMode: String? = null,
+        captionEntities: Iterable<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message = sendLivePhoto(
+        livePhoto = StringInput(livePhoto),
         photo = StringInput(photo),
         businessConnectionId = businessConnectionId,
         messageThreadId = messageThreadId,
@@ -348,7 +606,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -358,7 +616,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendAudio(
         audio: String,
@@ -438,7 +696,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -448,7 +706,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendDocument(
         document: String,
@@ -536,7 +794,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -546,7 +804,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendVideo(
         video: String,
@@ -640,7 +898,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -650,7 +908,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendAnimation(
         animation: String,
@@ -729,7 +987,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -739,7 +997,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendVoice(
         voice: String,
@@ -784,7 +1042,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param videoNote Video note to send. Pass a file_id as String to send a video note that
      * exists on the Telegram servers (recommended) or upload a new video using multipart/form-data.
      * [More information on Sending Files ](https://core.telegram.org/bots/api/#sending-files). Sending
-     * video notes by a URL is currently unsupported
+     * video notes by a URL is currently unsupported.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
@@ -808,7 +1066,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -818,7 +1076,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendVideoNote(
         videoNote: String,
@@ -877,7 +1135,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * [broadcasting
      * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
      * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
-     * balance
+     * balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message;
      * for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
@@ -887,7 +1145,7 @@ public abstract class TelegramBotApiExtHandling : TelegramBotApiHandling() {
      * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
      * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
-     * keyboard or to force a reply from the user
+     * keyboard or to force a reply from the user.
      */
     public suspend fun Container.sendSticker(
         sticker: String,

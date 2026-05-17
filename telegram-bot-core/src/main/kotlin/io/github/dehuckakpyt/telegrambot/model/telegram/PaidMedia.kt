@@ -7,8 +7,9 @@ import kotlin.String
 /**
  * This object describes paid media. Currently, it can be one of
  *
- * * [PaidMediaPreview](https://core.telegram.org/bots/api/#paidmediapreview)
+ * * [PaidMediaLivePhoto](https://core.telegram.org/bots/api/#paidmedialivephoto)
  * * [PaidMediaPhoto](https://core.telegram.org/bots/api/#paidmediaphoto)
+ * * [PaidMediaPreview](https://core.telegram.org/bots/api/#paidmediapreview)
  * * [PaidMediaVideo](https://core.telegram.org/bots/api/#paidmediavideo)
  *
  * @see [PaidMedia] (https://core.telegram.org/bots/api/#paidmedia)
@@ -22,8 +23,9 @@ import kotlin.String
     visible = true,
 )
 @JsonSubTypes(
-    JsonSubTypes.Type(value = PaidMediaPreview::class, name = "preview"),
+    JsonSubTypes.Type(value = PaidMediaLivePhoto::class, name = "live_photo"),
     JsonSubTypes.Type(value = PaidMediaPhoto::class, name = "photo"),
+    JsonSubTypes.Type(value = PaidMediaPreview::class, name = "preview"),
     JsonSubTypes.Type(value = PaidMediaVideo::class, name = "video"),
 )
 public sealed interface PaidMedia {

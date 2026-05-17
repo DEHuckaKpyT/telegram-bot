@@ -9,12 +9,12 @@ import com.fasterxml.jackson.`annotation`.JsonProperty
  *
  * @author KScript
  *
- * @param newOwner *Optional*. The user which will be the new owner of the chat if the previous
+ * @param newOwner *Optional*. The user who will become the new owner of the chat if the previous
  * owner does not return to the chat
  */
 public data class ChatOwnerLeft(
     /**
-     * *Optional*. The user which will be the new owner of the chat if the previous owner does not
+     * *Optional*. The user who will become the new owner of the chat if the previous owner does not
      * return to the chat
      */
     @get:JsonProperty("new_owner")

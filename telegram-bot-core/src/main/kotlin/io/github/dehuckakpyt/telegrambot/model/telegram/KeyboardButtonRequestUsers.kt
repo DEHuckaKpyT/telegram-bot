@@ -17,7 +17,7 @@ import kotlin.Long
  *
  * @param requestId Signed 32-bit identifier of the request that will be received back in the
  * [UsersShared](https://core.telegram.org/bots/api/#usersshared) object. Must be unique within the
- * message
+ * message.
  * @param userIsBot *Optional*. Pass *True* to request bots, pass *False* to request regular users.
  * If not specified, no additional restrictions are applied.
  * @param userIsPremium *Optional*. Pass *True* to request premium users, pass *False* to request
@@ -31,7 +31,7 @@ public data class KeyboardButtonRequestUsers(
     /**
      * Signed 32-bit identifier of the request that will be received back in the
      * [UsersShared](https://core.telegram.org/bots/api/#usersshared) object. Must be unique within the
-     * message
+     * message.
      */
     @get:JsonProperty("request_id")
     @param:JsonProperty("request_id")

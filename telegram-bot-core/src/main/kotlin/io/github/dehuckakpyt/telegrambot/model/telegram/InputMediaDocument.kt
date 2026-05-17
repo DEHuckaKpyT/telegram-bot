@@ -92,6 +92,9 @@ public data class InputMediaDocument(
     override val type: String = "document"
 
     @get:JsonIgnore
+    override val photo: Input? = null
+
+    @get:JsonIgnore
     override val cover: Input? = null
 
     public constructor(

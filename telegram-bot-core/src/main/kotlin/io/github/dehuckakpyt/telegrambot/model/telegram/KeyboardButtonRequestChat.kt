@@ -16,9 +16,9 @@ import kotlin.Long
  *
  * @param requestId Signed 32-bit identifier of the request, which will be received back in the
  * [ChatShared](https://core.telegram.org/bots/api/#chatshared) object. Must be unique within the
- * message
+ * message.
  * @param chatIsChannel Pass *True* to request a channel chat, pass *False* to request a group or a
- * supergroup chat.
+ * supergroup chat
  * @param chatIsForum *Optional*. Pass *True* to request a forum supergroup, pass *False* to request
  * a non-forum chat. If not specified, no additional restrictions are applied.
  * @param chatHasUsername *Optional*. Pass *True* to request a supergroup or a channel with a
@@ -42,13 +42,13 @@ public data class KeyboardButtonRequestChat(
     /**
      * Signed 32-bit identifier of the request, which will be received back in the
      * [ChatShared](https://core.telegram.org/bots/api/#chatshared) object. Must be unique within the
-     * message
+     * message.
      */
     @get:JsonProperty("request_id")
     @param:JsonProperty("request_id")
     public val requestId: Long,
     /**
-     * Pass *True* to request a channel chat, pass *False* to request a group or a supergroup chat.
+     * Pass *True* to request a channel chat, pass *False* to request a group or a supergroup chat
      */
     @get:JsonProperty("chat_is_channel")
     @param:JsonProperty("chat_is_channel")

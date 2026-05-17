@@ -20,7 +20,7 @@ import kotlin.String
  * identifier for 5 minutes to send messages until the join request is processed, assuming no other
  * administrator contacted the user.
  * @param date Date the request was sent in Unix time
- * @param bio *Optional*. Bio of the user.
+ * @param bio *Optional*. Bio of the user
  * @param inviteLink *Optional*. Chat invite link that was used by the user to send the join request
  */
 public data class ChatJoinRequest(
@@ -54,7 +54,7 @@ public data class ChatJoinRequest(
     @param:JsonProperty("date")
     public val date: Long,
     /**
-     * *Optional*. Bio of the user.
+     * *Optional*. Bio of the user
      */
     @get:JsonProperty("bio")
     @param:JsonProperty("bio")

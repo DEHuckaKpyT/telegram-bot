@@ -120,6 +120,9 @@ public data class InputMediaAnimation(
     override val type: String = "animation"
 
     @get:JsonIgnore
+    override val photo: Input? = null
+
+    @get:JsonIgnore
     override val cover: Input? = null
 
     public constructor(

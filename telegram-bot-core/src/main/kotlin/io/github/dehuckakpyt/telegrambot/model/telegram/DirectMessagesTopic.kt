@@ -15,7 +15,7 @@ import kotlin.Long
  * most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing
  * this identifier.
  * @param user *Optional*. Information about the user that created the topic. Currently, it is
- * always present
+ * always present.
  */
 public data class DirectMessagesTopic(
     /**
@@ -29,7 +29,7 @@ public data class DirectMessagesTopic(
     public val topicId: Long,
     /**
      * *Optional*. Information about the user that created the topic. Currently, it is always
-     * present
+     * present.
      */
     @get:JsonProperty("user")
     @param:JsonProperty("user")

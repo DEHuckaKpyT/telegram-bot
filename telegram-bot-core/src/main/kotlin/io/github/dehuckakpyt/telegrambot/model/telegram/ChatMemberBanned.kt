@@ -15,7 +15,7 @@ import kotlin.String
  * @param status The member's status in the chat, always “kicked”
  * @param user Information about the user
  * @param untilDate Date when restrictions will be lifted for this user; Unix time. If 0, then the
- * user is banned forever
+ * user is banned forever.
  */
 public data class ChatMemberBanned(
     /**
@@ -32,7 +32,7 @@ public data class ChatMemberBanned(
     override val user: User,
     /**
      * Date when restrictions will be lifted for this user; Unix time. If 0, then the user is banned
-     * forever
+     * forever.
      */
     @get:JsonProperty("until_date")
     @param:JsonProperty("until_date")

@@ -14,10 +14,10 @@ internal data class SendMessageDraft(
     public val chatId: Long,
     @get:JsonProperty("draft_id")
     public val draftId: Long,
-    @get:JsonProperty("text")
-    public val text: String,
     @get:JsonProperty("message_thread_id")
     public val messageThreadId: Long? = null,
+    @get:JsonProperty("text")
+    public val text: String? = null,
     @get:JsonProperty("parse_mode")
     public val parseMode: String? = null,
     @get:JsonProperty("entities")

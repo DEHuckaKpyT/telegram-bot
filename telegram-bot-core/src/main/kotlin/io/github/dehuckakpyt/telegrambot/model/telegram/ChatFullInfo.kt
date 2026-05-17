@@ -104,8 +104,8 @@ import kotlin.collections.List
  * the user
  * @param uniqueGiftColors *Optional*. The color scheme based on a unique gift that must be used for
  * the chat's name, message replies and link previews
- * @param paidMessageStarCount *Optional*. The number of Telegram Stars a general user have to pay
- * to send a message to the chat
+ * @param paidMessageStarCount *Optional*. The number of Telegram Stars a general user has to pay to
+ * send a message to the chat
  */
 public data class ChatFullInfo(
     /**
@@ -441,7 +441,7 @@ public data class ChatFullInfo(
     @param:JsonProperty("unique_gift_colors")
     public val uniqueGiftColors: UniqueGiftColors? = null,
     /**
-     * *Optional*. The number of Telegram Stars a general user have to pay to send a message to the
+     * *Optional*. The number of Telegram Stars a general user has to pay to send a message to the
      * chat
      */
     @get:JsonProperty("paid_message_star_count")

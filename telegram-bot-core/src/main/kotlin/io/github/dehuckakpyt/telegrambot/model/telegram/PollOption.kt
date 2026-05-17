@@ -17,6 +17,7 @@ import kotlin.collections.List
  * @param text Option text, 1-100 characters
  * @param textEntities *Optional*. Special entities that appear in the option *text*. Currently,
  * only custom emoji entities are allowed in poll option texts
+ * @param media *Optional*. Media added to the poll option
  * @param voterCount Number of users who voted for this option; may be 0 if unknown
  * @param addedByUser *Optional*. User who added the option; omitted if the option wasn't added by a
  * user after poll creation
@@ -45,6 +46,12 @@ public data class PollOption(
     @get:JsonProperty("text_entities")
     @param:JsonProperty("text_entities")
     public val textEntities: List<MessageEntity>? = null,
+    /**
+     * *Optional*. Media added to the poll option
+     */
+    @get:JsonProperty("media")
+    @param:JsonProperty("media")
+    public val media: PollMedia? = null,
     /**
      * Number of users who voted for this option; may be 0 if unknown
      */

@@ -13,7 +13,7 @@ import kotlin.String
  *
  * @param isDisabled *Optional*. *True*, if the link preview is disabled
  * @param url *Optional*. URL to use for the link preview. If empty, then the first URL found in the
- * message text will be used
+ * message text will be used.
  * @param preferSmallMedia *Optional*. *True*, if the media in the link preview is supposed to be
  * shrunk; ignored if the URL isn't explicitly specified or media size change isn't supported for the
  * preview
@@ -32,7 +32,7 @@ public data class LinkPreviewOptions(
     public val isDisabled: Boolean? = null,
     /**
      * *Optional*. URL to use for the link preview. If empty, then the first URL found in the
-     * message text will be used
+     * message text will be used.
      */
     @get:JsonProperty("url")
     @param:JsonProperty("url")

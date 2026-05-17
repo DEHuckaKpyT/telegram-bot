@@ -27,7 +27,9 @@ import org.jetbrains.kotlin.com.google.common.base.CaseFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
 import kotlin.io.path.readText
+import kotlin.io.path.writeText
 
 val getDefaultValueFromDescriptionRegex = Regex("^(?:Always (.+)\\..+)|(?:.+, always “([a-z0-9_]+)”)$")
 val getMustBeValueFromDescriptionRegex = Regex("^.+, must be \\*?([a-z0-9_]+)\\*?$")
@@ -43,6 +45,19 @@ val client = HttpClient(Apache5) {
     install(ContentNegotiation) {
         register(Json, JacksonConverter(jacksonObjectMapper()))
     }
+}
+
+fun FileSpec.writeToLf(directory: java.nio.file.Path) {
+    val outputDirectory = packageName
+        .takeIf { it.isNotEmpty() }
+        ?.split('.')
+        ?.fold(directory) { path, segment -> path.resolve(segment) }
+        ?: directory
+    val outputFile = outputDirectory.resolve("$name.kt")
+    val generatedCode = buildString { writeTo(this) }.replace("\r\n", "\n")
+
+    outputDirectory.createDirectories()
+    outputFile.writeText(generatedCode)
 }
 
 runBlocking {
@@ -108,7 +123,7 @@ suspend fun createMockTelegramBot(methods: List<List<Method>>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(testModulePath)
+        file.writeToLf(testModulePath)
     }
 }
 
@@ -157,7 +172,7 @@ suspend fun createTelegramBotApiHandling(methods: List<List<Method>>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -218,7 +233,7 @@ suspend fun createTelegramBotApiExtHandling(methods: List<List<Method>>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -234,7 +249,7 @@ suspend fun createApiMethods(methods: List<List<Method>>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -289,7 +304,7 @@ suspend fun createExtensionApiMethods(methods: List<List<Method>>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -358,8 +373,8 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file1.writeTo(coreModulePath)
-        file2.writeTo(coreModulePath)
+        file1.writeToLf(coreModulePath)
+        file2.writeToLf(coreModulePath)
     }
 }
 
@@ -457,7 +472,7 @@ fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method, objectsByN
     val statement = buildString {
         append("return client.postMultiPart<$returnClassName>(\"${method.name}\") {")
         method.arguments.forEach { arg -> append("\n    ").append(arg.toAppendStatement()) }
-        method.arguments.forEach { arg -> arg.toAppendContentInsideObjectsStatements(objectsByName)?.let { statements -> statements.forEach { statement -> append("\n    ").append(statement) } } }
+        method.arguments.forEach { arg -> arg.toAppendContentInsideObjectsStatements(objectsByName)?.let { statements -> statements.forEach { statement -> appendContentInsideObjectStatement(statement) } } }
         append("\n}.afterMethod(\"${method.name}\") {")
         append(method.arguments.joinToString(separator = "") { "\n    put(\"${it.nameCamelCase}\", ${it.nameCamelCase})" })
         append("\n}")
@@ -468,6 +483,13 @@ fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method, objectsByN
     return this
 }
 
+fun StringBuilder.appendContentInsideObjectStatement(statement: String) {
+    append("\n")
+    statement.lineSequence().forEach { line ->
+        append("\n    ").append(line)
+    }
+}
+
 fun Argument.toAppendContentInsideObjectsStatements(objectsByName: Map<String, Object>): List<String>? {
     if (typeInfo !is ReferenceType && typeInfo !is ArrayType) return null
 
@@ -476,7 +498,8 @@ fun Argument.toAppendContentInsideObjectsStatements(objectsByName: Map<String, O
         if (reference in setOf("Input", "InputFile", "ContentInput", "ReplyMarkup")) return null
 
         val paths = mutableListOf<String>()
-        evaluateInputPathsInside(nameCamelCase, reference, objectsByName, paths)
+        val path = if (required) nameCamelCase else "$nameCamelCase?"
+        evaluateInputPathsInside(path, reference, objectsByName, paths)
 
         return paths
     }
@@ -488,7 +511,8 @@ fun Argument.toAppendContentInsideObjectsStatements(objectsByName: Map<String, O
         if (reference in setOf("Input", "InputFile", "ContentInput", "ReplyMarkup")) return null
 
         val paths = mutableListOf<String>()
-        evaluateInputPathsInside("$nameCamelCase.forEach { $nameCamelCase -> $nameCamelCase", reference, objectsByName, paths)
+        val forEach = if (required) "$nameCamelCase.forEach" else "$nameCamelCase?.forEach"
+        evaluateInputPathsInside("$forEach { $nameCamelCase -> $nameCamelCase", reference, objectsByName, paths)
 
         return paths
     }
@@ -501,23 +525,17 @@ fun evaluateInputPathsInside(path: String, currentObjectName: String, objectsByN
         for (property in currentObject.properties) {
             if (property.typeInfo.isCommon) continue
             if (property.typeInfo is ReferenceType) {
-                val currentPath = "$path.${property.nameCamelCase}"
                 if (property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
-                    paths.add("${property.required.appendContentMethodName}($currentPath)")
+                    val nullable = property.required.not() || path.endsWith("?")
+                    paths.add(createAppendContentStatement(path, property.nameCamelCase, nullable))
                 } else {
+                    val currentPath = createNestedPath(path, property.nameCamelCase, property.required.not())
                     evaluateInputPathsInside(currentPath, property.typeInfo.reference, objectsByName, paths)
                 }
             }
             if (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { it is StringType } && property.typeInfo.anyOf.any { it is ReferenceType && it.reference in setOf("Input", "InputFile", "ContentInput") }) {
-                val nullable = property.required.not() || path.contains('?')
-                val appendContentMethodName = if (nullable) "appendContentIfNotNull" else "appendContent"
-                if (!path.contains("forEach")) {
-                    val currentPath = "$path.${property.nameCamelCase}"
-                    paths.add("\n    $appendContentMethodName($currentPath)")
-                } else {
-                    val (firstPart, secondPart) = path.split(" -> ")
-                    paths.add("\n    $firstPart ->\n        $appendContentMethodName($secondPart.${property.nameCamelCase})\n    }")
-                }
+                val nullable = property.required.not() || path.endsWith("?")
+                paths.add(createAppendContentStatement(path, property.nameCamelCase, nullable))
             }
 //        if (property.typeInfo is ArrayType && property.typeInfo.array is ReferenceType) {
 //            val dot = if (property.required.not() || path.contains('?')) "?." else "."
@@ -542,23 +560,17 @@ fun evaluateInputPathsInside(path: String, currentObjectName: String, objectsByN
         for (property in currentObject.properties!!) {
             if (property.typeInfo.isCommon) continue
             if (property.typeInfo is ReferenceType) {
-                val currentPath = "$path.${property.nameCamelCase}"
                 if (property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
-                    paths.add("${property.required.appendContentMethodName}($currentPath)")
+                    val nullable = property.required.not() || path.endsWith("?")
+                    paths.add(createAppendContentStatement(path, property.nameCamelCase, nullable))
                 } else {
+                    val currentPath = createNestedPath(path, property.nameCamelCase, property.required.not())
                     evaluateInputPathsInside(currentPath, property.typeInfo.reference, objectsByName, paths)
                 }
             }
             if (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { it is StringType } && property.typeInfo.anyOf.any { it is ReferenceType && it.reference in setOf("Input", "InputFile", "ContentInput") }) {
-                val nullable = property.required.not() || path.contains('?')
-                val appendContentMethodName = if (nullable) "appendContentIfNotNull" else "appendContent"
-                if (!path.contains("forEach")) {
-                    val currentPath = "$path.${property.nameCamelCase}"
-                    paths.add("\n    $appendContentMethodName($currentPath)")
-                } else {
-                    val (firstPart, secondPart) = path.split(" -> ")
-                    paths.add("\n    $firstPart ->\n        $appendContentMethodName($secondPart.${property.nameCamelCase})\n    }")
-                }
+                val nullable = property.required.not() || path.endsWith("?")
+                paths.add(createAppendContentStatement(path, property.nameCamelCase, nullable))
             }
 //        if (property.typeInfo is ArrayType && property.typeInfo.array is ReferenceType) {
 //            val dot = if (property.required.not() || path.contains('?')) "?." else "."
@@ -579,6 +591,25 @@ fun evaluateInputPathsInside(path: String, currentObjectName: String, objectsByN
 //        }
         }
     }
+}
+
+fun createAppendContentStatement(path: String, propertyName: String, nullable: Boolean): String {
+    val appendContentMethodName = if (nullable) "appendContentIfNotNull" else "appendContent"
+    if (!path.contains("forEach")) return "$appendContentMethodName(${createPropertyAccess(path, propertyName)})"
+
+    val (firstPart, secondPart) = path.split(" -> ")
+    return "$firstPart ->\n    $appendContentMethodName(${createPropertyAccess(secondPart, propertyName)})\n}"
+}
+
+fun createNestedPath(path: String, propertyName: String, nullable: Boolean): String {
+    val propertyAccess = createPropertyAccess(path, propertyName)
+    return if (nullable) "$propertyAccess?" else propertyAccess
+}
+
+fun createPropertyAccess(path: String, propertyName: String): String {
+    val receiver = path.removeSuffix("?")
+    val separator = if (path.endsWith("?")) "?." else "."
+    return "$receiver$separator$propertyName"
 }
 
 val Boolean.appendMethodName get(): String = if (this) "append" else "appendIfNotNull"
@@ -624,7 +655,7 @@ suspend fun createInternalPropertiesObject(obj: PropertiesObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -729,7 +760,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
             .build()
 
         withContext(Dispatchers.IO) {
-            file.writeTo(coreModulePath)
+            file.writeToLf(coreModulePath)
         }
         return
     }
@@ -768,7 +799,7 @@ suspend fun createAnyOfObject(obj: AnyOfObject, objectsByName: Map<String, Objec
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -807,7 +838,7 @@ suspend fun createMultiTypeIntLongAndStringPropertiesObject(obj: PropertiesObjec
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -847,7 +878,7 @@ suspend fun createMultiTypeInputFileAndStringPropertiesObject(obj: PropertiesObj
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -868,7 +899,7 @@ suspend fun createSimplePropertiesObject(obj: PropertiesObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -882,7 +913,7 @@ suspend fun createUnknownObject(obj: UnknownObject) {
         .build()
 
     withContext(Dispatchers.IO) {
-        file.writeTo(coreModulePath)
+        file.writeToLf(coreModulePath)
     }
 }
 
@@ -1076,7 +1107,7 @@ suspend fun Contract.replaceMethodTypes() {
                         .build()
 
                     withContext(Dispatchers.IO) {
-                        file.writeTo(coreModulePath)
+                        file.writeToLf(coreModulePath)
                     }
                 }
                 argument.typeInfo = ReferenceType("reference", interfaceName)

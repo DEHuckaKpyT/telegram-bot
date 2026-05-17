@@ -14,7 +14,7 @@ import kotlin.String
  * @author KScript
  *
  * @param text Text of the button. If none of the fields other than *text*, *icon_custom_emoji_id*,
- * and *style* are used, it will be sent as a message when the button is pressed
+ * and *style* are used, it will be sent as a message when the button is pressed.
  * @param iconCustomEmojiId *Optional*. Unique identifier of the custom emoji shown before the text
  * of the button. Can only be used by bots that purchased additional usernames on
  * [Fragment](https://fragment.com) or in the messages directly sent by the bot to private, group and
@@ -44,7 +44,7 @@ import kotlin.String
 public data class KeyboardButton(
     /**
      * Text of the button. If none of the fields other than *text*, *icon_custom_emoji_id*, and
-     * *style* are used, it will be sent as a message when the button is pressed
+     * *style* are used, it will be sent as a message when the button is pressed.
      */
     @get:JsonProperty("text")
     @param:JsonProperty("text")

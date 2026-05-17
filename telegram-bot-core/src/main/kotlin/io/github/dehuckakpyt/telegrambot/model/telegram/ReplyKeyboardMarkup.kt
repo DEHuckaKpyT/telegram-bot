@@ -8,8 +8,8 @@ import kotlin.collections.List
 /**
  * This object represents a [custom keyboard](https://core.telegram.org/bots/features#keyboards)
  * with reply options (see [Introduction to bots](https://core.telegram.org/bots/features#keyboards)
- * for details and examples). Not supported in channels and for messages sent on behalf of a Telegram
- * Business account.
+ * for details and examples). Not supported in channels and for messages sent on behalf of a business
+ * account.
  *
  * @see [ReplyKeyboardMarkup] (https://core.telegram.org/bots/api/#replykeyboardmarkup)
  *

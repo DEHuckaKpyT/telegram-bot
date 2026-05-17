@@ -10,7 +10,7 @@ import kotlin.String
  *
  * @author KScript
  *
- * @param location Venue location. Can't be a live location
+ * @param location Venue location. Can't be a live location.
  * @param title Name of the venue
  * @param address Address of the venue
  * @param foursquareId *Optional*. Foursquare identifier of the venue
@@ -22,7 +22,7 @@ import kotlin.String
  */
 public data class Venue(
     /**
-     * Venue location. Can't be a live location
+     * Venue location. Can't be a live location.
      */
     @get:JsonProperty("location")
     @param:JsonProperty("location")

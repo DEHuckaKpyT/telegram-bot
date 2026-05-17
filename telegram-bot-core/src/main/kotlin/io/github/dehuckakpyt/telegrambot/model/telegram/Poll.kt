@@ -25,6 +25,12 @@ import kotlin.collections.List
  * @param type Poll type, currently can be “regular” or “quiz”
  * @param allowsMultipleAnswers *True*, if the poll allows multiple answers
  * @param allowsRevoting *True*, if the poll allows to change the chosen answer options
+ * @param membersOnly *True* if voting is limited to users who have been members of the chat where
+ * the poll was originally sent for more than 24 hours
+ * @param countryCodes *Optional*. A list of two-letter [ISO 3166-1
+ * alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes indicating the countries
+ * from which users can vote in the poll. The country code “FT” is used for users with anonymous
+ * numbers. If omitted, then users from any country can participate in the poll.
  * @param correctOptionIds *Optional*. Array of 0-based identifiers of the correct answer options.
  * Available only for polls in quiz mode which are closed or were sent (not forwarded) by the bot or to
  * the private chat with the bot.
@@ -32,6 +38,7 @@ import kotlin.collections.List
  * on the lamp icon in a quiz-style poll, 0-200 characters
  * @param explanationEntities *Optional*. Special entities like usernames, URLs, bot commands, etc.
  * that appear in the *explanation*
+ * @param explanationMedia *Optional*. Media added to the quiz explanation
  * @param openPeriod *Optional*. Amount of time in seconds the poll will be active after creation
  * @param closeDate *Optional*. Point in time (Unix timestamp) when the poll will be automatically
  * closed
@@ -39,6 +46,8 @@ import kotlin.collections.List
  * [Message](https://core.telegram.org/bots/api/#message) object only
  * @param descriptionEntities *Optional*. Special entities like usernames, URLs, bot commands, etc.
  * that appear in the description
+ * @param media *Optional*. Media added to the poll description; for polls inside the
+ * [Message](https://core.telegram.org/bots/api/#message) object only
  */
 public data class Poll(
     /**
@@ -103,6 +112,22 @@ public data class Poll(
     @param:JsonProperty("allows_revoting")
     public val allowsRevoting: Boolean,
     /**
+     * *True* if voting is limited to users who have been members of the chat where the poll was
+     * originally sent for more than 24 hours
+     */
+    @get:JsonProperty("members_only")
+    @param:JsonProperty("members_only")
+    public val membersOnly: Boolean,
+    /**
+     * *Optional*. A list of two-letter [ISO 3166-1
+     * alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes indicating the
+     * countries from which users can vote in the poll. The country code “FT” is used for users with
+     * anonymous numbers. If omitted, then users from any country can participate in the poll.
+     */
+    @get:JsonProperty("country_codes")
+    @param:JsonProperty("country_codes")
+    public val countryCodes: List<String>? = null,
+    /**
      * *Optional*. Array of 0-based identifiers of the correct answer options. Available only for
      * polls in quiz mode which are closed or were sent (not forwarded) by the bot or to the private
      * chat with the bot.
@@ -124,6 +149,12 @@ public data class Poll(
     @get:JsonProperty("explanation_entities")
     @param:JsonProperty("explanation_entities")
     public val explanationEntities: List<MessageEntity>? = null,
+    /**
+     * *Optional*. Media added to the quiz explanation
+     */
+    @get:JsonProperty("explanation_media")
+    @param:JsonProperty("explanation_media")
+    public val explanationMedia: PollMedia? = null,
     /**
      * *Optional*. Amount of time in seconds the poll will be active after creation
      */
@@ -150,4 +181,11 @@ public data class Poll(
     @get:JsonProperty("description_entities")
     @param:JsonProperty("description_entities")
     public val descriptionEntities: List<MessageEntity>? = null,
+    /**
+     * *Optional*. Media added to the poll description; for polls inside the
+     * [Message](https://core.telegram.org/bots/api/#message) object only
+     */
+    @get:JsonProperty("media")
+    @param:JsonProperty("media")
+    public val media: PollMedia? = null,
 )

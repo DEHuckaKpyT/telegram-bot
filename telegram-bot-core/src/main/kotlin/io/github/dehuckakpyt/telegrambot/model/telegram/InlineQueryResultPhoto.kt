@@ -17,7 +17,7 @@ import kotlin.collections.List
  *
  * @param id Unique identifier for this result, 1-64 bytes
  * @param photoUrl A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not
- * exceed 5MB
+ * exceed 5MB.
  * @param thumbnailUrl URL of the thumbnail for the photo
  * @param photoWidth *Optional*. Width of the photo
  * @param photoHeight *Optional*. Height of the photo
@@ -43,7 +43,7 @@ public data class InlineQueryResultPhoto(
     @param:JsonProperty("id")
     override val id: String,
     /**
-     * A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not exceed 5MB
+     * A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not exceed 5MB.
      */
     @get:JsonProperty("photo_url")
     @param:JsonProperty("photo_url")

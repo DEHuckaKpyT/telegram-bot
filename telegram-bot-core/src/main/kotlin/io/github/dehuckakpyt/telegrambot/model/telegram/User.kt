@@ -30,11 +30,12 @@ import kotlin.String
  * @param canReadAllGroupMessages *Optional*. *True*, if [privacy
  * mode](https://core.telegram.org/bots/features#privacy-mode) is disabled for the bot. Returned only
  * in [getMe](https://core.telegram.org/bots/api/#getme).
+ * @param supportsGuestQueries *Optional*. *True*, if the bot supports guest queries from chats it
+ * is not a member of. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
  * @param supportsInlineQueries *Optional*. *True*, if the bot supports inline queries. Returned
  * only in [getMe](https://core.telegram.org/bots/api/#getme).
- * @param canConnectToBusiness *Optional*. *True*, if the bot can be connected to a Telegram
- * Business account to receive its messages. Returned only in
- * [getMe](https://core.telegram.org/bots/api/#getme).
+ * @param canConnectToBusiness *Optional*. *True*, if the bot can be connected to a user account to
+ * manage it. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
  * @param hasMainWebApp *Optional*. *True*, if the bot has a main Web App. Returned only in
  * [getMe](https://core.telegram.org/bots/api/#getme).
  * @param hasTopicsEnabled *Optional*. *True*, if the bot has forum topic mode enabled in private
@@ -112,6 +113,13 @@ public data class User(
     @param:JsonProperty("can_read_all_group_messages")
     public val canReadAllGroupMessages: Boolean? = null,
     /**
+     * *Optional*. *True*, if the bot supports guest queries from chats it is not a member of.
+     * Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
+     */
+    @get:JsonProperty("supports_guest_queries")
+    @param:JsonProperty("supports_guest_queries")
+    public val supportsGuestQueries: Boolean? = null,
+    /**
      * *Optional*. *True*, if the bot supports inline queries. Returned only in
      * [getMe](https://core.telegram.org/bots/api/#getme).
      */
@@ -119,8 +127,8 @@ public data class User(
     @param:JsonProperty("supports_inline_queries")
     public val supportsInlineQueries: Boolean? = null,
     /**
-     * *Optional*. *True*, if the bot can be connected to a Telegram Business account to receive its
-     * messages. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
+     * *Optional*. *True*, if the bot can be connected to a user account to manage it. Returned only
+     * in [getMe](https://core.telegram.org/bots/api/#getme).
      */
     @get:JsonProperty("can_connect_to_business")
     @param:JsonProperty("can_connect_to_business")

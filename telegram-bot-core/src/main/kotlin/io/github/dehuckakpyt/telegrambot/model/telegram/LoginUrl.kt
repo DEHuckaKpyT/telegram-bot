@@ -27,14 +27,14 @@ import kotlin.String
  * **NOTE:** You **must** always check the hash of the received data to verify the authentication
  * and the integrity of the data as described in [Checking
  * authorization](https://core.telegram.org/widgets/login#checking-authorization).
- * @param forwardText *Optional*. New text of the button in forwarded messages.
+ * @param forwardText *Optional*. New text of the button in forwarded messages
  * @param botUsername *Optional*. Username of a bot, which will be used for user authorization. See
  * [Setting up a bot](https://core.telegram.org/widgets/login#setting-up-a-bot) for more details. If
  * not specified, the current bot's username will be assumed. The *url*'s domain must be the same as
  * the domain linked with the bot. See [Linking your domain to the
  * bot](https://core.telegram.org/widgets/login#linking-your-domain-to-the-bot) for more details.
  * @param requestWriteAccess *Optional*. Pass *True* to request the permission for your bot to send
- * messages to the user.
+ * messages to the user
  */
 public data class LoginUrl(
     /**
@@ -51,7 +51,7 @@ public data class LoginUrl(
     @param:JsonProperty("url")
     public val url: String,
     /**
-     * *Optional*. New text of the button in forwarded messages.
+     * *Optional*. New text of the button in forwarded messages
      */
     @get:JsonProperty("forward_text")
     @param:JsonProperty("forward_text")
@@ -67,7 +67,7 @@ public data class LoginUrl(
     @param:JsonProperty("bot_username")
     public val botUsername: String? = null,
     /**
-     * *Optional*. Pass *True* to request the permission for your bot to send messages to the user.
+     * *Optional*. Pass *True* to request the permission for your bot to send messages to the user
      */
     @get:JsonProperty("request_write_access")
     @param:JsonProperty("request_write_access")

@@ -15,7 +15,7 @@ import kotlin.collections.List
  * @param totalCount The total number of gifts owned by the user or the chat
  * @param gifts The list of gifts
  * @param nextOffset *Optional*. Offset for the next request. If empty, then there are no more
- * results
+ * results.
  */
 public data class OwnedGifts(
     /**
@@ -31,7 +31,7 @@ public data class OwnedGifts(
     @param:JsonProperty("gifts")
     public val gifts: List<OwnedGift>,
     /**
-     * *Optional*. Offset for the next request. If empty, then there are no more results
+     * *Optional*. Offset for the next request. If empty, then there are no more results.
      */
     @get:JsonProperty("next_offset")
     @param:JsonProperty("next_offset")

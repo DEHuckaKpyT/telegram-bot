@@ -9,7 +9,7 @@ import kotlin.Boolean
  * new keyboard is sent by a bot. An exception is made for one-time keyboards that are hidden
  * immediately after the user presses a button (see
  * [ReplyKeyboardMarkup](https://core.telegram.org/bots/api/#replykeyboardmarkup)). Not supported in
- * channels and for messages sent on behalf of a Telegram Business account.
+ * channels and for messages sent on behalf of a business account.
  *
  * @see [ReplyKeyboardRemove] (https://core.telegram.org/bots/api/#replykeyboardremove)
  *

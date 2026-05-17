@@ -22,7 +22,7 @@ import kotlin.collections.List
  * @param mpeg4Duration *Optional*. Video duration in seconds
  * @param thumbnailUrl URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
  * @param thumbnailMimeType *Optional*. MIME type of the thumbnail, must be one of “image/jpeg”,
- * “image/gif”, or “video/mp4”. Defaults to “image/jpeg”
+ * “image/gif”, or “video/mp4”. Defaults to “image/jpeg”.
  * @param title *Optional*. Title for the result
  * @param caption *Optional*. Caption of the MPEG-4 file to be sent, 0-1024 characters after
  * entities parsing
@@ -76,7 +76,7 @@ public data class InlineQueryResultMpeg4Gif(
     public val thumbnailUrl: String,
     /**
      * *Optional*. MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or
-     * “video/mp4”. Defaults to “image/jpeg”
+     * “video/mp4”. Defaults to “image/jpeg”.
      */
     @get:JsonProperty("thumbnail_mime_type")
     @param:JsonProperty("thumbnail_mime_type")

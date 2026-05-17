@@ -30,6 +30,7 @@ import kotlin.String
  * and use inline bots
  * @param canAddWebPagePreviews *True*, if the user is allowed to add web page previews to their
  * messages
+ * @param canReactToMessages *True*, if the user is allowed to react to messages
  * @param canEditTag *True*, if the user is allowed to edit their own tag
  * @param canChangeInfo *True*, if the user is allowed to change the chat title, photo and other
  * settings
@@ -37,7 +38,7 @@ import kotlin.String
  * @param canPinMessages *True*, if the user is allowed to pin messages
  * @param canManageTopics *True*, if the user is allowed to create forum topics
  * @param untilDate Date when restrictions will be lifted for this user; Unix time. If 0, then the
- * user is restricted forever
+ * user is restricted forever.
  */
 public data class ChatMemberRestricted(
     /**
@@ -126,6 +127,12 @@ public data class ChatMemberRestricted(
     @param:JsonProperty("can_add_web_page_previews")
     public val canAddWebPagePreviews: Boolean,
     /**
+     * *True*, if the user is allowed to react to messages
+     */
+    @get:JsonProperty("can_react_to_messages")
+    @param:JsonProperty("can_react_to_messages")
+    public val canReactToMessages: Boolean,
+    /**
      * *True*, if the user is allowed to edit their own tag
      */
     @get:JsonProperty("can_edit_tag")
@@ -157,7 +164,7 @@ public data class ChatMemberRestricted(
     public val canManageTopics: Boolean,
     /**
      * Date when restrictions will be lifted for this user; Unix time. If 0, then the user is
-     * restricted forever
+     * restricted forever.
      */
     @get:JsonProperty("until_date")
     @param:JsonProperty("until_date")

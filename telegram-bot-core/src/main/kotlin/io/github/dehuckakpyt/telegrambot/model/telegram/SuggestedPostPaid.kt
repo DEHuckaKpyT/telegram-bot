@@ -15,7 +15,7 @@ import kotlin.String
  * [Message](https://core.telegram.org/bots/api/#message) object in this field will not contain the
  * *reply_to_message* field even if it itself is a reply.
  * @param currency Currency in which the payment was made. Currently, one of “XTR” for Telegram
- * Stars or “TON” for toncoins
+ * Stars or “TON” for toncoins.
  * @param amount *Optional*. The amount of the currency that was received by the channel in
  * nanotoncoins; for payments in toncoins only
  * @param starAmount *Optional*. The amount of Telegram Stars that was received by the channel; for
@@ -32,7 +32,7 @@ public data class SuggestedPostPaid(
     public val suggestedPostMessage: Message? = null,
     /**
      * Currency in which the payment was made. Currently, one of “XTR” for Telegram Stars or “TON”
-     * for toncoins
+     * for toncoins.
      */
     @get:JsonProperty("currency")
     @param:JsonProperty("currency")

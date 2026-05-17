@@ -6,7 +6,7 @@ import kotlin.Long
 /**
  * This [object](https://core.telegram.org/bots/api/#available-types) represents an incoming update.
  *  
- * At most **one** of the optional parameters can be present in any given update.
+ * At most **one** of the optional fields can be present in any given update.
  *
  * @see [Update] (https://core.telegram.org/bots/api/#update)
  *
@@ -33,6 +33,10 @@ import kotlin.Long
  * account
  * @param deletedBusinessMessages *Optional*. Messages were deleted from a connected business
  * account
+ * @param guestMessage *Optional*. New guest message. The bot can use the field
+ * *Message.guest_query_id* and the method
+ * [answerGuestQuery](https://core.telegram.org/bots/api/#answerguestquery) to send a message in
+ * response.
  * @param messageReaction *Optional*. A reaction to a message was changed by a user. The bot must be
  * an administrator in the chat and must explicitly specify `"message_reaction"` in the list of
  * *allowed_updates* to receive these updates. The update isn't received for reactions set by bots.
@@ -49,13 +53,13 @@ import kotlin.Long
  * these updates for your bot.
  * @param callbackQuery *Optional*. New incoming callback query
  * @param shippingQuery *Optional*. New incoming shipping query. Only for invoices with flexible
- * price
+ * price.
  * @param preCheckoutQuery *Optional*. New incoming pre-checkout query. Contains full information
- * about checkout
+ * about checkout.
  * @param purchasedPaidMedia *Optional*. A user purchased paid media with a non-empty payload sent
  * by the bot in a non-channel chat
  * @param poll *Optional*. New poll state. Bots receive only updates about manually stopped polls
- * and polls, which are sent by the bot
+ * and polls, which are sent by the bot.
  * @param pollAnswer *Optional*. A user changed their answer in a non-anonymous poll. Bots receive
  * new votes only in polls that were sent by the bot itself.
  * @param myChatMember *Optional*. The bot's chat member status was updated in a chat. For private
@@ -69,8 +73,8 @@ import kotlin.Long
  * in the chat to receive these updates.
  * @param removedChatBoost *Optional*. A boost was removed from a chat. The bot must be an
  * administrator in the chat to receive these updates.
- * @param managedBot *Optional*. A new bot was created to be managed by the bot or token of a bot
- * was changed
+ * @param managedBot *Optional*. A new bot was created to be managed by the bot, or token or owner
+ * of a managed bot was changed
  */
 public data class Update(
     /**
@@ -138,6 +142,14 @@ public data class Update(
     @param:JsonProperty("deleted_business_messages")
     public val deletedBusinessMessages: BusinessMessagesDeleted? = null,
     /**
+     * *Optional*. New guest message. The bot can use the field *Message.guest_query_id* and the
+     * method [answerGuestQuery](https://core.telegram.org/bots/api/#answerguestquery) to send a
+     * message in response.
+     */
+    @get:JsonProperty("guest_message")
+    @param:JsonProperty("guest_message")
+    public val guestMessage: Message? = null,
+    /**
      * *Optional*. A reaction to a message was changed by a user. The bot must be an administrator
      * in the chat and must explicitly specify `"message_reaction"` in the list of *allowed_updates* to
      * receive these updates. The update isn't received for reactions set by bots.
@@ -176,13 +188,13 @@ public data class Update(
     @param:JsonProperty("callback_query")
     public val callbackQuery: CallbackQuery? = null,
     /**
-     * *Optional*. New incoming shipping query. Only for invoices with flexible price
+     * *Optional*. New incoming shipping query. Only for invoices with flexible price.
      */
     @get:JsonProperty("shipping_query")
     @param:JsonProperty("shipping_query")
     public val shippingQuery: ShippingQuery? = null,
     /**
-     * *Optional*. New incoming pre-checkout query. Contains full information about checkout
+     * *Optional*. New incoming pre-checkout query. Contains full information about checkout.
      */
     @get:JsonProperty("pre_checkout_query")
     @param:JsonProperty("pre_checkout_query")
@@ -196,7 +208,7 @@ public data class Update(
     public val purchasedPaidMedia: PaidMediaPurchased? = null,
     /**
      * *Optional*. New poll state. Bots receive only updates about manually stopped polls and polls,
-     * which are sent by the bot
+     * which are sent by the bot.
      */
     @get:JsonProperty("poll")
     @param:JsonProperty("poll")
@@ -245,7 +257,8 @@ public data class Update(
     @param:JsonProperty("removed_chat_boost")
     public val removedChatBoost: ChatBoostRemoved? = null,
     /**
-     * *Optional*. A new bot was created to be managed by the bot or token of a bot was changed
+     * *Optional*. A new bot was created to be managed by the bot, or token or owner of a managed
+     * bot was changed
      */
     @get:JsonProperty("managed_bot")
     @param:JsonProperty("managed_bot")

@@ -37,7 +37,7 @@ import kotlin.collections.List
  * @param isUpgradeSeparate *Optional*. *True*, if the gift's upgrade was purchased after the gift
  * was sent; for gifts received on behalf of business accounts only
  * @param uniqueGiftNumber *Optional*. Unique number reserved for this gift when upgraded. See the
- * *number* field in [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
+ * *number* field in [UniqueGift](https://core.telegram.org/bots/api/#uniquegift).
  */
 public data class OwnedGiftRegular(
     /**
@@ -133,7 +133,7 @@ public data class OwnedGiftRegular(
     public val isUpgradeSeparate: Boolean? = null,
     /**
      * *Optional*. Unique number reserved for this gift when upgraded. See the *number* field in
-     * [UniqueGift](https://core.telegram.org/bots/api/#uniquegift)
+     * [UniqueGift](https://core.telegram.org/bots/api/#uniquegift).
      */
     @get:JsonProperty("unique_gift_number")
     @param:JsonProperty("unique_gift_number")

@@ -14,7 +14,7 @@ import kotlin.collections.List
  *
  * @param title Title of the game
  * @param description Description of the game
- * @param photo Photo that will be displayed in the game message in chats.
+ * @param photo Photo that will be displayed in the game message in chats
  * @param text *Optional*. Brief description of the game or high scores included in the game
  * message. Can be automatically edited to include current high scores for the game when the bot calls
  * [setGameScore](https://core.telegram.org/bots/api/#setgamescore), or manually edited using
@@ -22,7 +22,7 @@ import kotlin.collections.List
  * @param textEntities *Optional*. Special entities that appear in *text*, such as usernames, URLs,
  * bot commands, etc.
  * @param animation *Optional*. Animation that will be displayed in the game message in chats.
- * Upload via [BotFather](https://t.me/botfather)
+ * Upload via [BotFather](https://t.me/botfather).
  */
 public data class Game(
     /**
@@ -38,7 +38,7 @@ public data class Game(
     @param:JsonProperty("description")
     public val description: String,
     /**
-     * Photo that will be displayed in the game message in chats.
+     * Photo that will be displayed in the game message in chats
      */
     @get:JsonProperty("photo")
     @param:JsonProperty("photo")
@@ -61,7 +61,7 @@ public data class Game(
     public val textEntities: List<MessageEntity>? = null,
     /**
      * *Optional*. Animation that will be displayed in the game message in chats. Upload via
-     * [BotFather](https://t.me/botfather)
+     * [BotFather](https://t.me/botfather).
      */
     @get:JsonProperty("animation")
     @param:JsonProperty("animation")
