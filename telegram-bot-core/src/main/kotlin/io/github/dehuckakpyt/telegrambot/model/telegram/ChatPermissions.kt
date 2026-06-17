@@ -10,8 +10,8 @@ import kotlin.Boolean
  *
  * @author KScript
  *
- * @param canSendMessages *Optional*. *True*, if the user is allowed to send text messages,
- * contacts, giveaways, giveaway winners, invoices, locations and venues
+ * @param canSendMessages *Optional*. *True*, if the user is allowed to send text messages, rich
+ * messages, contacts, giveaways, giveaway winners, invoices, locations and venues
  * @param canSendAudios *Optional*. *True*, if the user is allowed to send audios
  * @param canSendDocuments *Optional*. *True*, if the user is allowed to send documents
  * @param canSendPhotos *Optional*. *True*, if the user is allowed to send photos
@@ -37,8 +37,8 @@ import kotlin.Boolean
  */
 public data class ChatPermissions(
     /**
-     * *Optional*. *True*, if the user is allowed to send text messages, contacts, giveaways,
-     * giveaway winners, invoices, locations and venues
+     * *Optional*. *True*, if the user is allowed to send text messages, rich messages, contacts,
+     * giveaways, giveaway winners, invoices, locations and venues
      */
     @get:JsonProperty("can_send_messages")
     @param:JsonProperty("can_send_messages")

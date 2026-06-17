@@ -44,6 +44,9 @@ import kotlin.String
  * topics in private chats. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
  * @param canManageBots *Optional*. *True*, if other bots can be created to be controlled by the
  * bot. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
+ * @param supportsJoinRequestQueries *Optional*. *True*, if the bot supports join request queries
+ * and can be assigned to process them. Returned only in
+ * [getMe](https://core.telegram.org/bots/api/#getme).
  */
 public data class User(
     /**
@@ -161,4 +164,11 @@ public data class User(
     @get:JsonProperty("can_manage_bots")
     @param:JsonProperty("can_manage_bots")
     public val canManageBots: Boolean? = null,
+    /**
+     * *Optional*. *True*, if the bot supports join request queries and can be assigned to process
+     * them. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).
+     */
+    @get:JsonProperty("supports_join_request_queries")
+    @param:JsonProperty("supports_join_request_queries")
+    public val supportsJoinRequestQueries: Boolean? = null,
 )

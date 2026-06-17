@@ -26,6 +26,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputRichMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContent
 import io.github.dehuckakpyt.telegrambot.model.telegram.KeyboardButton
@@ -1496,7 +1497,7 @@ public interface TelegramBotApi {
      * persist it in the user's chat. Returns *True* on success.
      *
      * @param chatId Unique identifier for the target private chat
-     * @param draftId Unique identifier of the message draft; must be non-zero. Changes of drafts
+     * @param draftId Unique identifier of the message draft; must be non-zero. Changes to drafts
      * with the same identifier are animated.
      * @param messageThreadId Unique identifier for the target message thread
      * @param text Text of the message to be sent, 0-4096 characters after entities parsing. Pass an
@@ -1980,6 +1981,27 @@ public interface TelegramBotApi {
      * @param userId Unique identifier of the target user
      */
     public suspend fun declineChatJoinRequest(chatId: String, userId: Long): Boolean
+
+    /**
+     * Use this method to process a received chat join request query. Returns *True* on success.
+     *
+     * @param chatJoinRequestQueryId Unique identifier of the join request query
+     * @param result Result of the query. Must be either “approve” to allow the user to join the
+     * chat, “decline” to disallow the user to join the chat, or “queue” to leave the decision to other
+     * administrators.
+     */
+    public suspend fun answerChatJoinRequestQuery(chatJoinRequestQueryId: String, result: String):
+            Boolean
+
+    /**
+     * Use this method to process a received chat join request query by showing a Mini App to the
+     * user before deciding the outcome. Returns *True* on success.
+     *
+     * @param chatJoinRequestQueryId Unique identifier of the join request query
+     * @param webAppUrl The URL of the Mini App to be opened
+     */
+    public suspend fun sendChatJoinRequestWebApp(chatJoinRequestQueryId: String, webAppUrl: String):
+            Boolean
 
     /**
      * Use this method to set a new profile photo for the chat. Photos can't be changed for private
@@ -3119,8 +3141,8 @@ public interface TelegramBotApi {
             PreparedKeyboardButton
 
     /**
-     * Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages.
-     * On success, if the edited message is not an inline message, the edited
+     * Use this method to edit text, rich and [game](https://core.telegram.org/bots/api/#games)
+     * messages. On success, if the edited message is not an inline message, the edited
      * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
      * returned. Note that business messages that were not sent by the bot and do not contain an inline
      * keyboard can only be edited within **48 hours** from the time they were sent.
@@ -3129,25 +3151,28 @@ public interface TelegramBotApi {
      * target chat or username of the target bot, supergroup or channel in the format `@username`.
      * @param messageId Required if *inline_message_id* is not specified. Identifier of the message
      * to edit.
-     * @param text New text of the message, 1-4096 characters after entities parsing
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
+     * @param text New text of the message, 1-4096 characters after entity parsing; required if
+     * *rich_message* isn't specified
      * @param parseMode Mode for parsing entities in the message text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which
      * can be specified instead of *parse_mode*
      * @param linkPreviewOptions Link preview generation options for the message
+     * @param richMessage New rich content of the message; required if *text* isn't specified
      * @param replyMarkup A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun editMessageText(
         chatId: String,
         messageId: Long,
-        text: String,
         businessConnectionId: String? = null,
+        text: String? = null,
         parseMode: String? = null,
         entities: Iterable<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
+        richMessage: InputRichMessage? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
@@ -3187,14 +3212,14 @@ public interface TelegramBotApi {
 
     /**
      * Use this method to edit animation, audio, document, live photo, photo, or video messages, or
-     * to add media to text messages. If a message is part of a message album, then it can be edited
-     * only to an audio for audio albums, only to a document for document albums and to a photo, a live
-     * photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use
-     * a previously uploaded file via its file_id or specify a URL. On success, if the edited message
-     * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
-     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
-     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
-     * they were sent.
+     * to replace a text or a rich message with a media. If a message is part of a message album, then
+     * it can be edited only to an audio for audio albums, only to a document for document albums and
+     * to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file
+     * can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success,
+     * if the edited message is not an inline message, the edited
+     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
+     * returned. Note that business messages that were not sent by the bot and do not contain an inline
+     * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param chatId Required if *inline_message_id* is not specified. Unique identifier for the
      * target chat or username of the target bot, supergroup or channel in the format `@username`.
@@ -3707,6 +3732,75 @@ public interface TelegramBotApi {
     public suspend fun deleteStickerSet(name: String): Boolean
 
     /**
+     * Use this method to send rich messages. If the message contains a block with a media element,
+     * then the bot must have the right to send the media to the chat. On success, the sent
+     * [Message](https://core.telegram.org/bots/api/#message) is returned.
+     *
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup
+     * or channel in the format `@username`
+     * @param richMessage The message to be sent
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which
+     * the message will be sent
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum;
+     * for forum supergroups and private chats of bots with forum topic mode enabled only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message
+     * will be sent; required if the message is sent to a direct messages chat
+     * @param disableNotification Sends the message
+     * [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a
+     * notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass *True* to allow up to 1000 messages per second, ignoring
+     * [broadcasting
+     * limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once)
+     * for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's
+     * balance.
+     * @param messageEffectId Unique identifier of the message effect to be added to the message;
+     * for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the
+     * suggested post to send; for direct messages chats only. If the message is sent as a reply to
+     * another suggested post, then that suggested post is automatically declined.
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an [inline
+     * keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply
+     * keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply
+     * keyboard or to force a reply from the user.
+     */
+    public suspend fun sendRichMessage(
+        chatId: String,
+        richMessage: InputRichMessage,
+        businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Message
+
+    /**
+     * Use this method to stream a partial rich message to a user while the message is being
+     * generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview -
+     * once the output is finalized, you **must** call
+     * [sendRichMessage](https://core.telegram.org/bots/api/#sendrichmessage) with the complete message
+     * to persist it in the user's chat. Returns *True* on success.
+     *
+     * @param chatId Unique identifier for the target private chat
+     * @param draftId Unique identifier of the message draft; must be non-zero. Changes to drafts
+     * with the same identifier are animated.
+     * @param richMessage The partial message to be streamed
+     * @param messageThreadId Unique identifier for the target message thread
+     */
+    public suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long? = null,
+    ): Boolean
+
+    /**
      * Use this method to send answers to an inline query. On success, *True* is returned.  
      * No more than **50** results per query are allowed.
      *
@@ -4119,32 +4213,35 @@ public interface TelegramBotApi {
     ): List<GameHighScore>
 
     /**
-     * Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages.
-     * On success, if the edited message is not an inline message, the edited
+     * Use this method to edit text, rich and [game](https://core.telegram.org/bots/api/#games)
+     * messages. On success, if the edited message is not an inline message, the edited
      * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
      * returned. Note that business messages that were not sent by the bot and do not contain an inline
      * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
      * of the inline message.
-     * @param text New text of the message, 1-4096 characters after entities parsing
      * @param businessConnectionId Unique identifier of the business connection on behalf of which
      * the message to be edited was sent
+     * @param text New text of the message, 1-4096 characters after entity parsing; required if
+     * *rich_message* isn't specified
      * @param parseMode Mode for parsing entities in the message text. See [formatting
      * options](https://core.telegram.org/bots/api/#formatting-options) for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which
      * can be specified instead of *parse_mode*
      * @param linkPreviewOptions Link preview generation options for the message
+     * @param richMessage New rich content of the message; required if *text* isn't specified
      * @param replyMarkup A JSON-serialized object for an [inline
      * keyboard](https://core.telegram.org/bots/features#inline-keyboards)
      */
     public suspend fun editMessageText(
         inlineMessageId: String,
-        text: String,
         businessConnectionId: String? = null,
+        text: String? = null,
         parseMode: String? = null,
         entities: Iterable<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
+        richMessage: InputRichMessage? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
     ): Boolean
 
@@ -4181,14 +4278,14 @@ public interface TelegramBotApi {
 
     /**
      * Use this method to edit animation, audio, document, live photo, photo, or video messages, or
-     * to add media to text messages. If a message is part of a message album, then it can be edited
-     * only to an audio for audio albums, only to a document for document albums and to a photo, a live
-     * photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use
-     * a previously uploaded file via its file_id or specify a URL. On success, if the edited message
-     * is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is
-     * returned, otherwise *True* is returned. Note that business messages that were not sent by the
-     * bot and do not contain an inline keyboard can only be edited within **48 hours** from the time
-     * they were sent.
+     * to replace a text or a rich message with a media. If a message is part of a message album, then
+     * it can be edited only to an audio for audio albums, only to a document for document albums and
+     * to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file
+     * can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success,
+     * if the edited message is not an inline message, the edited
+     * [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is
+     * returned. Note that business messages that were not sent by the bot and do not contain an inline
+     * keyboard can only be edited within **48 hours** from the time they were sent.
      *
      * @param inlineMessageId Required if *chat_id* and *message_id* are not specified. Identifier
      * of the inline message.

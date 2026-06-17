@@ -28,7 +28,7 @@ fun Application.configureTelegramBot() {
         client {
             engine {
                 customizeClient {
-                    setProxy(HttpHost("127.0.0.1", 2080))
+                    setProxy(HttpHost("127.0.0.1", 10808))
                 }
             }
         }

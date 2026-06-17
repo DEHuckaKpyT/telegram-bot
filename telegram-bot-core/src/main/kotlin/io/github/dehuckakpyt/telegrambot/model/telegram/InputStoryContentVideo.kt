@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import kotlin.Boolean
 import kotlin.Double
 import kotlin.String
@@ -34,7 +35,7 @@ public data class InputStoryContentVideo(
      */
     @get:JsonProperty("video")
     @param:JsonProperty("video")
-    public val video: String,
+    public val video: ContentInput,
     /**
      * *Optional*. Precise duration of the video in seconds; 0-60
      */

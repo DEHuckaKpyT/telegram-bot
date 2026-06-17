@@ -32,6 +32,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputRichMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContent
 import io.github.dehuckakpyt.telegrambot.model.telegram.KeyboardButton
@@ -67,6 +68,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfileAudios
 import io.github.dehuckakpyt.telegrambot.model.telegram.UserProfilePhotos
 import io.github.dehuckakpyt.telegrambot.model.telegram.WebhookInfo
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerCallbackQuery
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerChatJoinRequestQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerGuestQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerInlineQuery
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.AnswerPreCheckoutQuery
@@ -106,6 +108,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditForumTopi
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditGeneralForumTopic
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageCaptionByChatIdAndMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageCaptionByInlineMessageId
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageChecklist
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageLiveLocationByChatIdAndMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageLiveLocationByInlineMessageId
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.EditMessageReplyMarkupByChatIdAndMessageId
@@ -162,6 +165,8 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.RevokeChatInv
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SavePreparedInlineMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SavePreparedKeyboardButton
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendChatAction
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendChatJoinRequestWebApp
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendChecklist
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendContact
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendDice
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendGame
@@ -170,6 +175,8 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendInvoice
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendLocation
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendMessageDraft
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendRichMessage
+import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendRichMessageDraft
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SendVenue
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountBio
 import io.github.dehuckakpyt.telegrambot.model.telegram.`internal`.SetBusinessAccountGiftSettings
@@ -232,7 +239,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /**
- * Created on 17.05.2026.
+ * Created on 17.06.2026.
  *
  * @author KScript
  */
@@ -1445,16 +1452,18 @@ public class TelegramBotImpl(
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postMultiPart<Message>("sendChecklist") {
-        append("business_connection_id", businessConnectionId)
-        append("chat_id", chatId)
-        append("checklist", client.toJson(checklist))
-        appendIfNotNull("disable_notification", disableNotification)
-        appendIfNotNull("protect_content", protectContent)
-        appendIfNotNull("message_effect_id", messageEffectId)
-        appendIfNotNull("reply_parameters", client.toJson(replyParameters))
-        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.afterMethod("sendChecklist") {
+    ): Message = client.postJson<Message>("sendChecklist",
+        SendChecklist(
+            businessConnectionId = businessConnectionId,
+            chatId = chatId,
+            checklist = checklist,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            messageEffectId = messageEffectId,
+            replyParameters = replyParameters,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("sendChecklist") {
         put("businessConnectionId", businessConnectionId)
         put("chatId", chatId)
         put("checklist", checklist)
@@ -1940,6 +1949,28 @@ public class TelegramBotImpl(
     ).afterMethod("declineChatJoinRequest") {
         put("chatId", chatId)
         put("userId", userId)
+    }
+
+    override suspend fun answerChatJoinRequestQuery(chatJoinRequestQueryId: String, result: String):
+            Boolean = client.postJson<Boolean>("answerChatJoinRequestQuery",
+        AnswerChatJoinRequestQuery(
+            chatJoinRequestQueryId = chatJoinRequestQueryId,
+            result = result
+        )
+    ).afterMethod("answerChatJoinRequestQuery") {
+        put("chatJoinRequestQueryId", chatJoinRequestQueryId)
+        put("result", result)
+    }
+
+    override suspend fun sendChatJoinRequestWebApp(chatJoinRequestQueryId: String,
+            webAppUrl: String): Boolean = client.postJson<Boolean>("sendChatJoinRequestWebApp",
+        SendChatJoinRequestWebApp(
+            chatJoinRequestQueryId = chatJoinRequestQueryId,
+            webAppUrl = webAppUrl
+        )
+    ).afterMethod("sendChatJoinRequestWebApp") {
+        put("chatJoinRequestQueryId", chatJoinRequestQueryId)
+        put("webAppUrl", webAppUrl)
     }
 
     override suspend fun setChatPhoto(chatId: String, photo: Input): Boolean =
@@ -2444,6 +2475,12 @@ public class TelegramBotImpl(
     override suspend fun setMyProfilePhoto(photo: InputProfilePhoto): Boolean =
             client.postMultiPart<Boolean>("setMyProfilePhoto") {
         append("photo", client.toJson(photo))
+
+        appendContentIfNotNull((photo as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhotoStatic)?.photo)
+
+        appendContentIfNotNull((photo as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhotoAnimated)?.animation)
     }.afterMethod("setMyProfilePhoto") {
         put("photo", photo)
     }
@@ -2664,6 +2701,12 @@ public class TelegramBotImpl(
         append("business_connection_id", businessConnectionId)
         append("photo", client.toJson(photo))
         appendIfNotNull("is_public", isPublic)
+
+        appendContentIfNotNull((photo as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhotoStatic)?.photo)
+
+        appendContentIfNotNull((photo as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhotoAnimated)?.animation)
     }.afterMethod("setBusinessAccountProfilePhoto") {
         put("businessConnectionId", businessConnectionId)
         put("photo", photo)
@@ -2901,6 +2944,12 @@ public class TelegramBotImpl(
         appendIfNotNull("areas", client.toJson(areas))
         appendIfNotNull("post_to_chat_page", postToChatPage)
         appendIfNotNull("protect_content", protectContent)
+
+        appendContentIfNotNull((content as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContentPhoto)?.photo)
+
+        appendContentIfNotNull((content as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContentVideo)?.video)
     }.afterMethod("postStory") {
         put("businessConnectionId", businessConnectionId)
         put("content", content)
@@ -2954,6 +3003,12 @@ public class TelegramBotImpl(
         appendIfNotNull("parse_mode", parseMode)
         appendIfNotNull("caption_entities", client.toJson(captionEntities))
         appendIfNotNull("areas", client.toJson(areas))
+
+        appendContentIfNotNull((content as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContentPhoto)?.photo)
+
+        appendContentIfNotNull((content as?
+            io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContentVideo)?.video)
     }.afterMethod("editStory") {
         put("businessConnectionId", businessConnectionId)
         put("storyId", storyId)
@@ -3026,31 +3081,34 @@ public class TelegramBotImpl(
     override suspend fun editMessageText(
         chatId: String,
         messageId: Long,
-        text: String,
         businessConnectionId: String?,
+        text: String?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = client.postJson<Message>("editMessageText",
         EditMessageTextByChatIdAndMessageId(
             chatId = chatId,
             messageId = messageId,
-            text = text,
             businessConnectionId = businessConnectionId,
+            text = text,
             parseMode = parseMode,
             entities = entities,
             linkPreviewOptions = linkPreviewOptions,
+            richMessage = richMessage,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageText") {
         put("chatId", chatId)
         put("messageId", messageId)
-        put("text", text)
         put("businessConnectionId", businessConnectionId)
+        put("text", text)
         put("parseMode", parseMode)
         put("entities", entities)
         put("linkPreviewOptions", linkPreviewOptions)
+        put("richMessage", richMessage)
         put("replyMarkup", replyMarkup)
     }
 
@@ -3175,13 +3233,15 @@ public class TelegramBotImpl(
         messageId: Long,
         checklist: InputChecklist,
         replyMarkup: InlineKeyboardMarkup?,
-    ): Message = client.postMultiPart<Message>("editMessageChecklist") {
-        append("business_connection_id", businessConnectionId)
-        append("chat_id", chatId)
-        append("message_id", messageId)
-        append("checklist", client.toJson(checklist))
-        appendIfNotNull("reply_markup", client.toJson(replyMarkup))
-    }.afterMethod("editMessageChecklist") {
+    ): Message = client.postJson<Message>("editMessageChecklist",
+        EditMessageChecklist(
+            businessConnectionId = businessConnectionId,
+            chatId = chatId,
+            messageId = messageId,
+            checklist = checklist,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("editMessageChecklist") {
         put("businessConnectionId", businessConnectionId)
         put("chatId", chatId)
         put("messageId", messageId)
@@ -3555,6 +3615,68 @@ public class TelegramBotImpl(
         put("name", name)
     }
 
+    override suspend fun sendRichMessage(
+        chatId: String,
+        richMessage: InputRichMessage,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+    ): Message = client.postJson<Message>("sendRichMessage",
+        SendRichMessage(
+            chatId = chatId,
+            richMessage = richMessage,
+            businessConnectionId = businessConnectionId,
+            messageThreadId = messageThreadId,
+            directMessagesTopicId = directMessagesTopicId,
+            disableNotification = disableNotification,
+            protectContent = protectContent,
+            allowPaidBroadcast = allowPaidBroadcast,
+            messageEffectId = messageEffectId,
+            suggestedPostParameters = suggestedPostParameters,
+            replyParameters = replyParameters,
+            replyMarkup = replyMarkup
+        )
+    ).afterMethod("sendRichMessage") {
+        put("chatId", chatId)
+        put("richMessage", richMessage)
+        put("businessConnectionId", businessConnectionId)
+        put("messageThreadId", messageThreadId)
+        put("directMessagesTopicId", directMessagesTopicId)
+        put("disableNotification", disableNotification)
+        put("protectContent", protectContent)
+        put("allowPaidBroadcast", allowPaidBroadcast)
+        put("messageEffectId", messageEffectId)
+        put("suggestedPostParameters", suggestedPostParameters)
+        put("replyParameters", replyParameters)
+        put("replyMarkup", replyMarkup)
+    }
+
+    override suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long?,
+    ): Boolean = client.postJson<Boolean>("sendRichMessageDraft",
+        SendRichMessageDraft(
+            chatId = chatId,
+            draftId = draftId,
+            richMessage = richMessage,
+            messageThreadId = messageThreadId
+        )
+    ).afterMethod("sendRichMessageDraft") {
+        put("chatId", chatId)
+        put("draftId", draftId)
+        put("richMessage", richMessage)
+        put("messageThreadId", messageThreadId)
+    }
+
     override suspend fun answerInlineQuery(
         inlineQueryId: String,
         results: Iterable<InlineQueryResult>,
@@ -3924,29 +4046,32 @@ public class TelegramBotImpl(
 
     override suspend fun editMessageText(
         inlineMessageId: String,
-        text: String,
         businessConnectionId: String?,
+        text: String?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = client.postJson<Boolean>("editMessageText",
         EditMessageTextByInlineMessageId(
             inlineMessageId = inlineMessageId,
-            text = text,
             businessConnectionId = businessConnectionId,
+            text = text,
             parseMode = parseMode,
             entities = entities,
             linkPreviewOptions = linkPreviewOptions,
+            richMessage = richMessage,
             replyMarkup = replyMarkup
         )
     ).afterMethod("editMessageText") {
         put("inlineMessageId", inlineMessageId)
-        put("text", text)
         put("businessConnectionId", businessConnectionId)
+        put("text", text)
         put("parseMode", parseMode)
         put("entities", entities)
         put("linkPreviewOptions", linkPreviewOptions)
+        put("richMessage", richMessage)
         put("replyMarkup", replyMarkup)
     }
 

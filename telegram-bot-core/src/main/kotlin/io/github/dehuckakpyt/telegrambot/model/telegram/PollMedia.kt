@@ -15,6 +15,7 @@ import kotlin.collections.List
  * received in a poll option
  * @param document *Optional*. Media is a general file, information about the file; currently, can't
  * be received in a poll option
+ * @param link *Optional*. The HTTP link attached to the poll option
  * @param livePhoto *Optional*. Media is a live photo, information about the live photo
  * @param location *Optional*. Media is a shared location, information about the location
  * @param photo *Optional*. Media is a photo, available sizes of the photo
@@ -44,6 +45,12 @@ public data class PollMedia(
     @get:JsonProperty("document")
     @param:JsonProperty("document")
     public val document: Document? = null,
+    /**
+     * *Optional*. The HTTP link attached to the poll option
+     */
+    @get:JsonProperty("link")
+    @param:JsonProperty("link")
+    public val link: Link? = null,
     /**
      * *Optional*. Media is a live photo, information about the live photo
      */

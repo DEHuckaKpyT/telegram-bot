@@ -324,7 +324,7 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
 
     val file2 = FileSpec.builder(telegramBotClassPackageName, "TelegramBotImpl")
         .indent("    ")
-        .addInternalImports(methods)
+        .addInternalImports(methods, objectsByName)
         .addImport("io.github.dehuckakpyt.telegrambot.ext", "appendContent", "appendContentIfNotNull", "appendIfNotNull")
         .addImport("io.github.dehuckakpyt.telegrambot.ext", "toJson")
         .addImport("io.ktor.client", "HttpClientConfig")
@@ -378,12 +378,12 @@ suspend fun createMethods(methods: List<List<Method>>, objects: List<Object>) {
     }
 }
 
-fun FileSpec.Builder.addInternalImports(groupedMethods: List<List<Method>>) = apply {
+fun FileSpec.Builder.addInternalImports(groupedMethods: List<List<Method>>, objectsByName: Map<String, Object>) = apply {
     groupedMethods.forEach { methods ->
         val mainMethod = methods.first()
         if (mainMethod.arguments.size == 0) return@forEach
 
-        if (mainMethod.maybeMultipart.not()) {
+        if (mainMethod.requiresMultipart(objectsByName).not()) {
             addImport(objectsInternalPackageName, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, mainMethod.name) + (mainMethod.postJsonClassNamePostfix ?: ""))
         }
     }
@@ -413,7 +413,7 @@ suspend fun TypeSpec.Builder.addTelegramBotImplMethods(groupedMethods: List<List
                 .addParameters(method.arguments, specifyNull = false)
                 .returns(method.returnType.toClassTypeName())
                 .addGetMethodIfNecessary(method)
-                .addPostMethodJsonIfNecessary(method)
+                .addPostMethodJsonIfNecessary(method, objectsByName)
                 .addPostMethodMultipartIfNecessary(method, objectsByName)
                 .build()
         )
@@ -435,8 +435,8 @@ fun FunSpec.Builder.addGetMethodIfNecessary(method: Method): FunSpec.Builder {
     return this
 }
 
-suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpec.Builder {
-    if (method.arguments.size == 0 || method.maybeMultipart) return this
+suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method, objectsByName: Map<String, Object>): FunSpec.Builder {
+    if (method.arguments.size == 0 || method.requiresMultipart(objectsByName)) return this
 
     val obj = method.toPropertiesObject()
     createInternalPropertiesObject(obj)
@@ -460,7 +460,7 @@ suspend fun FunSpec.Builder.addPostMethodJsonIfNecessary(method: Method): FunSpe
 }
 
 fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method, objectsByName: Map<String, Object>): FunSpec.Builder {
-    if (method.arguments.size == 0 || method.maybeMultipart.not()) return this
+    if (method.arguments.size == 0 || method.requiresMultipart(objectsByName).not()) return this
 
     val returnType = method.returnType.toClassTypeName()
     val returnClassName = when (returnType) {
@@ -482,6 +482,47 @@ fun FunSpec.Builder.addPostMethodMultipartIfNecessary(method: Method, objectsByN
 
     return this
 }
+
+fun Method.requiresMultipart(objectsByName: Map<String, Object>): Boolean =
+    arguments.any { argument ->
+        argument.typeInfo.hasMultipartHint(objectsByName) ||
+                argument.toAppendContentInsideObjectsStatements(objectsByName).orEmpty().isNotEmpty()
+    }
+
+fun Type.hasMultipartHint(objectsByName: Map<String, Object>, visitedObjects: MutableSet<String> = mutableSetOf()): Boolean = when (this) {
+    is ReferenceType -> reference in setOf("Input", "InputFile", "ContentInput") ||
+            objectsByName[reference]?.hasMultipartHint(objectsByName, visitedObjects).orFalse()
+
+    is ArrayType -> array.hasMultipartHint(objectsByName, visitedObjects)
+
+    is AnyOfType -> anyOf.any { it.hasMultipartHint(objectsByName, visitedObjects) }
+
+    else -> false
+}
+
+fun Object.hasMultipartHint(objectsByName: Map<String, Object>, visitedObjects: MutableSet<String>): Boolean {
+    if (visitedObjects.add(name).not()) return false
+
+    return when (this) {
+        is PropertiesObject -> properties.any { property ->
+            property.description.hasMultipartHint() || property.typeInfo.hasMultipartHint(objectsByName, visitedObjects)
+        }
+
+        is AnyOfObject -> properties.orEmpty().any { property ->
+            property.description.hasMultipartHint() || property.typeInfo.hasMultipartHint(objectsByName, visitedObjects)
+        } || anyOf.any { it.hasMultipartHint(objectsByName, visitedObjects) }
+
+        else -> false
+    }
+}
+
+fun String.hasMultipartHint(): Boolean =
+    contains("multipart/form-data") || contains("attach://")
+
+fun String.isUploadOnly(): Boolean =
+    contains("can't be reused") || contains("can only be uploaded")
+
+fun Boolean?.orFalse(): Boolean = this ?: false
 
 fun StringBuilder.appendContentInsideObjectStatement(statement: String) {
     append("\n")
@@ -557,7 +598,7 @@ fun evaluateInputPathsInside(path: String, currentObjectName: String, objectsByN
         }
     }
     if (currentObject is AnyOfObject) {
-        for (property in currentObject.properties!!) {
+        for (property in currentObject.properties.orEmpty()) {
             if (property.typeInfo.isCommon) continue
             if (property.typeInfo is ReferenceType) {
                 if (property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
@@ -590,6 +631,24 @@ fun evaluateInputPathsInside(path: String, currentObjectName: String, objectsByN
 //            evaluateInputPathsInside(currentPath, nextObject.parentName!!, objectsByName, paths)
 //        }
         }
+
+        val parentPropertyNames = currentObject.properties.orEmpty().mapTo(mutableSetOf()) { it.name }
+        for (type in currentObject.anyOf) {
+            if (type !is ReferenceType) continue
+            val variantObject = objectsByName[type.reference] as? PropertiesObject ?: continue
+
+            for (property in variantObject.properties) {
+                if (property.name in parentPropertyNames) continue
+                val variantPath = "$path as? $objectsPackageName.${variantObject.name}"
+
+                if (property.typeInfo is ReferenceType && property.typeInfo.reference in setOf("Input", "InputFile", "ContentInput")) {
+                    paths.add(createAppendContentStatement(variantPath, property.nameCamelCase, nullable = true))
+                }
+                if (property.typeInfo is AnyOfType && property.typeInfo.anyOf.size == 2 && property.typeInfo.anyOf.any { it is StringType } && property.typeInfo.anyOf.any { it is ReferenceType && it.reference in setOf("Input", "InputFile", "ContentInput") }) {
+                    paths.add(createAppendContentStatement(variantPath, property.nameCamelCase, nullable = true))
+                }
+            }
+        }
     }
 }
 
@@ -609,7 +668,7 @@ fun createNestedPath(path: String, propertyName: String, nullable: Boolean): Str
 fun createPropertyAccess(path: String, propertyName: String): String {
     val receiver = path.removeSuffix("?")
     val separator = if (path.endsWith("?")) "?." else "."
-    return "$receiver$separator$propertyName"
+    return if (" as? " in receiver) "($receiver)?.$propertyName" else "$receiver$separator$propertyName"
 }
 
 val Boolean.appendMethodName get(): String = if (this) "append" else "appendIfNotNull"
@@ -1201,6 +1260,12 @@ fun Contract.replaceObjectTypes() {
             // thumbnail's you can upload only
             if (_property.name == "thumbnail" && _property.description.contains("Thumbnails can't be reused and can be only uploaded as a new file")) {
                 properties[i] = _property.copy(typeInfo = ReferenceType("reference", "Input"))
+                _property = properties[i]
+            }
+            // fields that are uploaded by attach:// inside another JSON object
+            if (_property.typeInfo is StringType && _property.description.hasMultipartHint()) {
+                val reference = if (_property.description.isUploadOnly()) "ContentInput" else "Input"
+                properties[i] = _property.copy(typeInfo = ReferenceType("reference", reference))
                 _property = properties[i]
             }
             // all ids can be greater than Int.MAX

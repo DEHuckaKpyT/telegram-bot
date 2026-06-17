@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import kotlin.Double
 import kotlin.String
 
@@ -27,7 +28,7 @@ public data class InputProfilePhotoAnimated(
      */
     @get:JsonProperty("animation")
     @param:JsonProperty("animation")
-    public val animation: String,
+    public val animation: ContentInput,
     /**
      * *Optional*. Timestamp in seconds of the frame that will be used as the static profile photo.
      * Defaults to 0.0.

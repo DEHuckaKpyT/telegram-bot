@@ -90,6 +90,7 @@ import kotlin.collections.List
  * is a suggested post in a channel direct messages chat. If the message is an approved or declined
  * suggested post, then it can't be edited.
  * @param effectId *Optional*. Unique identifier of the message effect added to the message
+ * @param richMessage *Optional*. Message is a rich formatted message
  * @param animation *Optional*. Message is an animation, information about the animation. For
  * backward compatibility, when this field is set, the *document* field will also be set.
  * @param audio *Optional*. Message is an audio file, information about the file
@@ -467,6 +468,12 @@ public data class Message(
     @get:JsonProperty("effect_id")
     @param:JsonProperty("effect_id")
     public val effectId: String? = null,
+    /**
+     * *Optional*. Message is a rich formatted message
+     */
+    @get:JsonProperty("rich_message")
+    @param:JsonProperty("rich_message")
+    public val richMessage: RichMessage? = null,
     /**
      * *Optional*. Message is an animation, information about the animation. For backward
      * compatibility, when this field is set, the *document* field will also be set.

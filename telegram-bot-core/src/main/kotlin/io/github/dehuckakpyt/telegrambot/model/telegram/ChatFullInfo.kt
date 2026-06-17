@@ -106,6 +106,8 @@ import kotlin.collections.List
  * the chat's name, message replies and link previews
  * @param paidMessageStarCount *Optional*. The number of Telegram Stars a general user has to pay to
  * send a message to the chat
+ * @param guardBot *Optional*. The bot that processes join request queries in the chat. The field is
+ * only available to chat administrators.
  */
 public data class ChatFullInfo(
     /**
@@ -447,4 +449,11 @@ public data class ChatFullInfo(
     @get:JsonProperty("paid_message_star_count")
     @param:JsonProperty("paid_message_star_count")
     public val paidMessageStarCount: Int? = null,
+    /**
+     * *Optional*. The bot that processes join request queries in the chat. The field is only
+     * available to chat administrators.
+     */
+    @get:JsonProperty("guard_bot")
+    @param:JsonProperty("guard_bot")
+    public val guardBot: User? = null,
 )

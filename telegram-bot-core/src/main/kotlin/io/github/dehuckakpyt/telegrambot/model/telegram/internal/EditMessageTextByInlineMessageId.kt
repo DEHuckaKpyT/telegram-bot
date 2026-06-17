@@ -2,6 +2,7 @@ package io.github.dehuckakpyt.telegrambot.model.telegram.`internal`
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
 import io.github.dehuckakpyt.telegrambot.model.telegram.InlineKeyboardMarkup
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputRichMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.LinkPreviewOptions
 import io.github.dehuckakpyt.telegrambot.model.telegram.MessageEntity
 import kotlin.String
@@ -13,16 +14,18 @@ import kotlin.collections.Iterable
 internal data class EditMessageTextByInlineMessageId(
     @get:JsonProperty("inline_message_id")
     public val inlineMessageId: String,
-    @get:JsonProperty("text")
-    public val text: String,
     @get:JsonProperty("business_connection_id")
     public val businessConnectionId: String? = null,
+    @get:JsonProperty("text")
+    public val text: String? = null,
     @get:JsonProperty("parse_mode")
     public val parseMode: String? = null,
     @get:JsonProperty("entities")
     public val entities: Iterable<MessageEntity>? = null,
     @get:JsonProperty("link_preview_options")
     public val linkPreviewOptions: LinkPreviewOptions? = null,
+    @get:JsonProperty("rich_message")
+    public val richMessage: InputRichMessage? = null,
     @get:JsonProperty("reply_markup")
     public val replyMarkup: InlineKeyboardMarkup? = null,
 )

@@ -28,6 +28,7 @@ import io.github.dehuckakpyt.telegrambot.model.telegram.InputPaidMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollMedia
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputPollOption
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputProfilePhoto
+import io.github.dehuckakpyt.telegrambot.model.telegram.InputRichMessage
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputSticker
 import io.github.dehuckakpyt.telegrambot.model.telegram.InputStoryContent
 import io.github.dehuckakpyt.telegrambot.model.telegram.KeyboardButton
@@ -654,6 +655,12 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun declineChatJoinRequest(chatId: String, userId: Long): Boolean = mockk()
 
+    override suspend fun answerChatJoinRequestQuery(chatJoinRequestQueryId: String, result: String):
+            Boolean = mockk()
+
+    override suspend fun sendChatJoinRequestWebApp(chatJoinRequestQueryId: String,
+            webAppUrl: String): Boolean = mockk()
+
     override suspend fun setChatPhoto(chatId: String, photo: Input): Boolean = mockk()
 
     override suspend fun deleteChatPhoto(chatId: String): Boolean = mockk()
@@ -981,11 +988,12 @@ internal class MockTelegramBot : TelegramBot {
     override suspend fun editMessageText(
         chatId: String,
         messageId: Long,
-        text: String,
         businessConnectionId: String?,
+        text: String?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Message = mockk()
 
@@ -1156,6 +1164,28 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun deleteStickerSet(name: String): Boolean = mockk()
 
+    override suspend fun sendRichMessage(
+        chatId: String,
+        richMessage: InputRichMessage,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+    ): Message = mockk()
+
+    override suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long?,
+    ): Boolean = mockk()
+
     override suspend fun answerInlineQuery(
         inlineQueryId: String,
         results: Iterable<InlineQueryResult>,
@@ -1284,11 +1314,12 @@ internal class MockTelegramBot : TelegramBot {
 
     override suspend fun editMessageText(
         inlineMessageId: String,
-        text: String,
         businessConnectionId: String?,
+        text: String?,
         parseMode: String?,
         entities: Iterable<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
     ): Boolean = mockk()
 

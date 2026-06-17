@@ -22,6 +22,11 @@ import kotlin.String
  * @param date Date the request was sent in Unix time
  * @param bio *Optional*. Bio of the user
  * @param inviteLink *Optional*. Chat invite link that was used by the user to send the join request
+ * @param queryId *Optional*. Identifier of the join request query. If present, then the bot must
+ * call [sendChatJoinRequestWebApp](https://core.telegram.org/bots/api/#sendchatjoinrequestwebapp) or
+ * directly call
+ * [answerChatJoinRequestQuery](https://core.telegram.org/bots/api/#answerchatjoinrequestquery) within
+ * 10 seconds.
  */
 public data class ChatJoinRequest(
     /**
@@ -65,4 +70,14 @@ public data class ChatJoinRequest(
     @get:JsonProperty("invite_link")
     @param:JsonProperty("invite_link")
     public val inviteLink: ChatInviteLink? = null,
+    /**
+     * *Optional*. Identifier of the join request query. If present, then the bot must call
+     * [sendChatJoinRequestWebApp](https://core.telegram.org/bots/api/#sendchatjoinrequestwebapp) or
+     * directly call
+     * [answerChatJoinRequestQuery](https://core.telegram.org/bots/api/#answerchatjoinrequestquery)
+     * within 10 seconds.
+     */
+    @get:JsonProperty("query_id")
+    @param:JsonProperty("query_id")
+    public val queryId: String? = null,
 )

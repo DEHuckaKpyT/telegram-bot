@@ -1,13 +1,13 @@
 {
   "version": {
     "major": 10,
-    "minor": 0,
+    "minor": 1,
     "patch": 0
   },
   "recent_changes": {
     "year": 2026,
-    "month": 5,
-    "day": 8
+    "month": 6,
+    "day": 11
   },
   "methods": [
     {
@@ -4186,7 +4186,7 @@
         },
         {
           "name": "draft_id",
-          "description": "Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.",
+          "description": "Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.",
           "required": true,
           "type_info": {
             "type": "integer",
@@ -5471,6 +5471,70 @@
         "default": true
       },
       "documentation_link": "https://core.telegram.org/bots/api/#declinechatjoinrequest"
+    },
+    {
+      "name": "answerChatJoinRequestQuery",
+      "description": "Use this method to process a received chat join request query. Returns *True* on success.",
+      "arguments": [
+        {
+          "name": "chat_join_request_query_id",
+          "description": "Unique identifier of the join request query",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "result",
+          "description": "Result of the query. Must be either “approve” to allow the user to join the chat, “decline” to disallow the user to join the chat, or “queue” to leave the decision to other administrators.",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": [
+              "approve",
+              "decline",
+              "queue"
+            ]
+          }
+        }
+      ],
+      "maybe_multipart": false,
+      "return_type": {
+        "type": "bool",
+        "default": true
+      },
+      "documentation_link": "https://core.telegram.org/bots/api/#answerchatjoinrequestquery"
+    },
+    {
+      "name": "sendChatJoinRequestWebApp",
+      "description": "Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Returns *True* on success.",
+      "arguments": [
+        {
+          "name": "chat_join_request_query_id",
+          "description": "Unique identifier of the join request query",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "web_app_url",
+          "description": "The URL of the Mini App to be opened",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "maybe_multipart": false,
+      "return_type": {
+        "type": "bool",
+        "default": true
+      },
+      "documentation_link": "https://core.telegram.org/bots/api/#sendchatjoinrequestwebapp"
     },
     {
       "name": "setChatPhoto",
@@ -8632,7 +8696,7 @@
     },
     {
       "name": "editMessageText",
-      "description": "Use this method to edit text and [game](https://core.telegram.org/bots/api/#games) messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within **48 hours** from the time they were sent.",
+      "description": "Use this method to edit text, rich and [game](https://core.telegram.org/bots/api/#games) messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within **48 hours** from the time they were sent.",
       "arguments": [
         {
           "name": "business_connection_id",
@@ -8681,8 +8745,8 @@
         },
         {
           "name": "text",
-          "description": "New text of the message, 1-4096 characters after entities parsing",
-          "required": true,
+          "description": "New text of the message, 1-4096 characters after entity parsing; required if *rich\\_message* isn't specified",
+          "required": false,
           "type_info": {
             "type": "string",
             "min_len": 1,
@@ -8721,6 +8785,15 @@
           }
         },
         {
+          "name": "rich_message",
+          "description": "New rich content of the message; required if *text* isn't specified",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "InputRichMessage"
+          }
+        },
+        {
           "name": "reply_markup",
           "description": "A JSON-serialized object for an [inline keyboard](https://core.telegram.org/bots/features#inline-keyboards)",
           "required": false,
@@ -8730,7 +8803,7 @@
           }
         }
       ],
-      "maybe_multipart": false,
+      "maybe_multipart": true,
       "return_type": {
         "type": "any_of",
         "any_of": [
@@ -8863,7 +8936,7 @@
     },
     {
       "name": "editMessageMedia",
-      "description": "Use this method to edit animation, audio, document, live photo, photo, or video messages, or to add media to text messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file\\_id or specify a URL. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within **48 hours** from the time they were sent.",
+      "description": "Use this method to edit animation, audio, document, live photo, photo, or video messages, or to replace a text or a rich message with a media. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file\\_id or specify a URL. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api/#message) is returned, otherwise *True* is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within **48 hours** from the time they were sent.",
       "arguments": [
         {
           "name": "business_connection_id",
@@ -10314,6 +10387,197 @@
         "default": true
       },
       "documentation_link": "https://core.telegram.org/bots/api/#deletestickerset"
+    },
+    {
+      "name": "sendRichMessage",
+      "description": "Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent [Message](https://core.telegram.org/bots/api/#message) is returned.",
+      "arguments": [
+        {
+          "name": "business_connection_id",
+          "description": "Unique identifier of the business connection on behalf of which the message will be sent",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "chat_id",
+          "description": "Unique identifier for the target chat or username of the target bot, supergroup or channel in the format `@username`",
+          "required": true,
+          "type_info": {
+            "type": "any_of",
+            "any_of": [
+              {
+                "type": "integer",
+                "enumeration": []
+              },
+              {
+                "type": "string",
+                "enumeration": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "message_thread_id",
+          "description": "Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only",
+          "required": false,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "direct_messages_topic_id",
+          "description": "Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat",
+          "required": false,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "rich_message",
+          "description": "The message to be sent",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "InputRichMessage"
+          }
+        },
+        {
+          "name": "disable_notification",
+          "description": "Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a notification with no sound.",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        },
+        {
+          "name": "protect_content",
+          "description": "Protects the contents of the sent message from forwarding and saving",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        },
+        {
+          "name": "allow_paid_broadcast",
+          "description": "Pass *True* to allow up to 1000 messages per second, ignoring [broadcasting limits](https://core.telegram.org/bots/faq#how-can-i-message-all-of-my-bot-39s-subscribers-at-once) for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        },
+        {
+          "name": "message_effect_id",
+          "description": "Unique identifier of the message effect to be added to the message; for private chats only",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "suggested_post_parameters",
+          "description": "A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "SuggestedPostParameters"
+          }
+        },
+        {
+          "name": "reply_parameters",
+          "description": "Description of the message to reply to",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "ReplyParameters"
+          }
+        },
+        {
+          "name": "reply_markup",
+          "description": "Additional interface options. A JSON-serialized object for an [inline keyboard](https://core.telegram.org/bots/features#inline-keyboards), [custom reply keyboard](https://core.telegram.org/bots/features#keyboards), instructions to remove a reply keyboard or to force a reply from the user.",
+          "required": false,
+          "type_info": {
+            "type": "any_of",
+            "any_of": [
+              {
+                "type": "reference",
+                "reference": "InlineKeyboardMarkup"
+              },
+              {
+                "type": "reference",
+                "reference": "ReplyKeyboardMarkup"
+              },
+              {
+                "type": "reference",
+                "reference": "ReplyKeyboardRemove"
+              },
+              {
+                "type": "reference",
+                "reference": "ForceReply"
+              }
+            ]
+          }
+        }
+      ],
+      "maybe_multipart": true,
+      "return_type": {
+        "type": "reference",
+        "reference": "Message"
+      },
+      "documentation_link": "https://core.telegram.org/bots/api/#sendrichmessage"
+    },
+    {
+      "name": "sendRichMessageDraft",
+      "description": "Use this method to stream a partial rich message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you **must** call [sendRichMessage](https://core.telegram.org/bots/api/#sendrichmessage) with the complete message to persist it in the user's chat. Returns *True* on success.",
+      "arguments": [
+        {
+          "name": "chat_id",
+          "description": "Unique identifier for the target private chat",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "message_thread_id",
+          "description": "Unique identifier for the target message thread",
+          "required": false,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "draft_id",
+          "description": "Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "rich_message",
+          "description": "The partial message to be streamed",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "InputRichMessage"
+          }
+        }
+      ],
+      "maybe_multipart": true,
+      "return_type": {
+        "type": "bool",
+        "default": true
+      },
+      "documentation_link": "https://core.telegram.org/bots/api/#sendrichmessagedraft"
     },
     {
       "name": "answerInlineQuery",
@@ -11855,6 +12119,14 @@
           "type_info": {
             "type": "bool"
           }
+        },
+        {
+          "name": "supports_join_request_queries",
+          "description": "*Optional*. *True*, if the bot supports join request queries and can be assigned to process them. Returned only in [getMe](https://core.telegram.org/bots/api/#getme).",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
         }
       ],
       "documentation_link": "https://core.telegram.org/bots/api/#user"
@@ -12418,6 +12690,15 @@
             "type": "integer",
             "enumeration": []
           }
+        },
+        {
+          "name": "guard_bot",
+          "description": "*Optional*. The bot that processes join request queries in the chat. The field is only available to chat administrators.",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "User"
+          }
         }
       ],
       "documentation_link": "https://core.telegram.org/bots/api/#chatfullinfo"
@@ -12752,6 +13033,15 @@
           "type_info": {
             "type": "string",
             "enumeration": []
+          }
+        },
+        {
+          "name": "rich_message",
+          "description": "*Optional*. Message is a rich formatted message",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichMessage"
           }
         },
         {
@@ -15204,6 +15494,23 @@
       "documentation_link": "https://core.telegram.org/bots/api/#dice"
     },
     {
+      "name": "Link",
+      "description": "Represents an HTTP link.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "url",
+          "description": "URL of the link",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#link"
+    },
+    {
       "name": "PollMedia",
       "description": "At most **one** of the optional fields can be present in any given object.",
       "type": "properties",
@@ -15233,6 +15540,15 @@
           "type_info": {
             "type": "reference",
             "reference": "Document"
+          }
+        },
+        {
+          "name": "link",
+          "description": "*Optional*. The HTTP link attached to the poll option",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "Link"
           }
         },
         {
@@ -15337,12 +15653,16 @@
     },
     {
       "name": "InputPollOptionMedia",
-      "description": "This object represents the content of a poll option to be sent. It should be one of\n\n* [InputMediaAnimation](https://core.telegram.org/bots/api/#inputmediaanimation)\n* [InputMediaLivePhoto](https://core.telegram.org/bots/api/#inputmedialivephoto)\n* [InputMediaLocation](https://core.telegram.org/bots/api/#inputmedialocation)\n* [InputMediaPhoto](https://core.telegram.org/bots/api/#inputmediaphoto)\n* [InputMediaSticker](https://core.telegram.org/bots/api/#inputmediasticker)\n* [InputMediaVenue](https://core.telegram.org/bots/api/#inputmediavenue)\n* [InputMediaVideo](https://core.telegram.org/bots/api/#inputmediavideo)",
+      "description": "This object represents the content of a poll option to be sent. It should be one of\n\n* [InputMediaAnimation](https://core.telegram.org/bots/api/#inputmediaanimation)\n* [InputMediaLink](https://core.telegram.org/bots/api/#inputmedialink)\n* [InputMediaLivePhoto](https://core.telegram.org/bots/api/#inputmedialivephoto)\n* [InputMediaLocation](https://core.telegram.org/bots/api/#inputmedialocation)\n* [InputMediaPhoto](https://core.telegram.org/bots/api/#inputmediaphoto)\n* [InputMediaSticker](https://core.telegram.org/bots/api/#inputmediasticker)\n* [InputMediaVenue](https://core.telegram.org/bots/api/#inputmediavenue)\n* [InputMediaVideo](https://core.telegram.org/bots/api/#inputmediavideo)",
       "type": "any_of",
       "any_of": [
         {
           "type": "reference",
           "reference": "InputMediaAnimation"
+        },
+        {
+          "type": "reference",
+          "reference": "InputMediaLink"
         },
         {
           "type": "reference",
@@ -19393,7 +19713,7 @@
         },
         {
           "name": "can_send_messages",
-          "description": "*True*, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues",
+          "description": "*True*, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues",
           "required": true,
           "type_info": {
             "type": "bool"
@@ -19652,6 +19972,15 @@
             "type": "reference",
             "reference": "ChatInviteLink"
           }
+        },
+        {
+          "name": "query_id",
+          "description": "*Optional*. Identifier of the join request query. If present, then the bot must call [sendChatJoinRequestWebApp](https://core.telegram.org/bots/api/#sendchatjoinrequestwebapp) or directly call [answerChatJoinRequestQuery](https://core.telegram.org/bots/api/#answerchatjoinrequestquery) within 10 seconds.",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
         }
       ],
       "documentation_link": "https://core.telegram.org/bots/api/#chatjoinrequest"
@@ -19663,7 +19992,7 @@
       "properties": [
         {
           "name": "can_send_messages",
-          "description": "*Optional*. *True*, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues",
+          "description": "*Optional*. *True*, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues",
           "required": false,
           "type_info": {
             "type": "bool"
@@ -22892,7 +23221,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *animation*",
+          "description": "Type of the media, must be *animation*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23003,7 +23332,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *audio*",
+          "description": "Type of the media, must be *audio*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23098,7 +23427,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *document*",
+          "description": "Type of the media, must be *document*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23168,13 +23497,40 @@
       "documentation_link": "https://core.telegram.org/bots/api/#inputmediadocument"
     },
     {
+      "name": "InputMediaLink",
+      "description": "Represents an HTTP link to be sent.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the media, must be *link*",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "link",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "url",
+          "description": "HTTP URL of the link",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#inputmedialink"
+    },
+    {
       "name": "InputMediaLivePhoto",
       "description": "Represents a live photo to be sent.",
       "type": "properties",
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *live\\_photo*",
+          "description": "Type of the media, must be *live\\_photo*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23258,7 +23614,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *location*",
+          "description": "Type of the media, must be *location*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23300,7 +23656,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *photo*",
+          "description": "Type of the media, must be *photo*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23375,7 +23731,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *sticker*",
+          "description": "Type of the media, must be *sticker*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23411,7 +23767,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *venue*",
+          "description": "Type of the media, must be *venue*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -23499,7 +23855,7 @@
       "properties": [
         {
           "name": "type",
-          "description": "Type of the result, must be *video*",
+          "description": "Type of the media, must be *video*",
           "required": true,
           "type_info": {
             "type": "string",
@@ -24292,6 +24648,2042 @@
         }
       ],
       "documentation_link": "https://core.telegram.org/bots/api/#inputsticker"
+    },
+    {
+      "name": "RichMessage",
+      "description": "Rich formatted message.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "blocks",
+          "description": "Content of the message",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "RichBlock"
+            }
+          }
+        },
+        {
+          "name": "is_rtl",
+          "description": "*Optional*. *True*, if the rich message must be shown right-to-left",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richmessage"
+    },
+    {
+      "name": "InputRichMessage",
+      "description": "Describes a rich message to be sent. Exactly **one** of the fields *html* or *markdown* must be used.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "html",
+          "description": "*Optional*. Content of the rich message to send described using HTML formatting. See [rich message formatting options](https://core.telegram.org/bots/api/#rich-message-formatting-options) for more details.",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "markdown",
+          "description": "*Optional*. Content of the rich message to send described using Markdown formatting. See [rich message formatting options](https://core.telegram.org/bots/api/#rich-message-formatting-options) for more details.",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "is_rtl",
+          "description": "*Optional*. Pass *True* if the rich message must be shown right-to-left",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        },
+        {
+          "name": "skip_entity_detection",
+          "description": "*Optional*. Pass *True* to skip automatic detection of entities (e.g., URLs, email addresses, username mentions, hashtags, cashtags, bot commands, or phone numbers) in the text",
+          "required": false,
+          "type_info": {
+            "type": "bool"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#inputrichmessage"
+    },
+    {
+      "name": "RichText",
+      "description": "This object represents a rich formatted text. Currently, it can be either a String for plain text, an Array of [RichText](https://core.telegram.org/bots/api/#richtext), or any of the following types:\n\n* [RichTextBold](https://core.telegram.org/bots/api/#richtextbold)\n* [RichTextItalic](https://core.telegram.org/bots/api/#richtextitalic)\n* [RichTextUnderline](https://core.telegram.org/bots/api/#richtextunderline)\n* [RichTextStrikethrough](https://core.telegram.org/bots/api/#richtextstrikethrough)\n* [RichTextSpoiler](https://core.telegram.org/bots/api/#richtextspoiler)\n* [RichTextDateTime](https://core.telegram.org/bots/api/#richtextdatetime)\n* [RichTextTextMention](https://core.telegram.org/bots/api/#richtexttextmention)\n* [RichTextSubscript](https://core.telegram.org/bots/api/#richtextsubscript)\n* [RichTextSuperscript](https://core.telegram.org/bots/api/#richtextsuperscript)\n* [RichTextMarked](https://core.telegram.org/bots/api/#richtextmarked)\n* [RichTextCode](https://core.telegram.org/bots/api/#richtextcode)\n* [RichTextCustomEmoji](https://core.telegram.org/bots/api/#richtextcustomemoji)\n* [RichTextMathematicalExpression](https://core.telegram.org/bots/api/#richtextmathematicalexpression)\n* [RichTextUrl](https://core.telegram.org/bots/api/#richtexturl)\n* [RichTextEmailAddress](https://core.telegram.org/bots/api/#richtextemailaddress)\n* [RichTextPhoneNumber](https://core.telegram.org/bots/api/#richtextphonenumber)\n* [RichTextBankCardNumber](https://core.telegram.org/bots/api/#richtextbankcardnumber)\n* [RichTextMention](https://core.telegram.org/bots/api/#richtextmention)\n* [RichTextHashtag](https://core.telegram.org/bots/api/#richtexthashtag)\n* [RichTextCashtag](https://core.telegram.org/bots/api/#richtextcashtag)\n* [RichTextBotCommand](https://core.telegram.org/bots/api/#richtextbotcommand)\n* [RichTextAnchor](https://core.telegram.org/bots/api/#richtextanchor)\n* [RichTextAnchorLink](https://core.telegram.org/bots/api/#richtextanchorlink)\n* [RichTextReference](https://core.telegram.org/bots/api/#richtextreference)\n* [RichTextReferenceLink](https://core.telegram.org/bots/api/#richtextreferencelink)",
+      "type": "any_of",
+      "any_of": [
+        {
+          "type": "reference",
+          "reference": "RichTextBold"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextItalic"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextUnderline"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextStrikethrough"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextSpoiler"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextDateTime"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextTextMention"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextSubscript"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextSuperscript"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextMarked"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextCode"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextCustomEmoji"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextMathematicalExpression"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextUrl"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextEmailAddress"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextPhoneNumber"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextBankCardNumber"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextMention"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextHashtag"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextCashtag"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextBotCommand"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextAnchor"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextAnchorLink"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextReference"
+        },
+        {
+          "type": "reference",
+          "reference": "RichTextReferenceLink"
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtext"
+    },
+    {
+      "name": "RichTextBold",
+      "description": "A bold text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “bold”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "bold",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextbold"
+    },
+    {
+      "name": "RichTextItalic",
+      "description": "An italicized text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “italic”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "italic",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextitalic"
+    },
+    {
+      "name": "RichTextUnderline",
+      "description": "An underlined text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “underline”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "underline",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextunderline"
+    },
+    {
+      "name": "RichTextStrikethrough",
+      "description": "A strikethrough text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “strikethrough”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "strikethrough",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextstrikethrough"
+    },
+    {
+      "name": "RichTextSpoiler",
+      "description": "A text covered by a spoiler.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “spoiler”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "spoiler",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextspoiler"
+    },
+    {
+      "name": "RichTextDateTime",
+      "description": "Formatted date and time.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “date\\_time”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "date_time",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "unix_time",
+          "description": "The Unix time associated with the entity",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "date_time_format",
+          "description": "The string that defines the formatting of the date and time. See [date-time entity formatting](https://core.telegram.org/bots/api/#date-time-entity-formatting) for more details.",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextdatetime"
+    },
+    {
+      "name": "RichTextTextMention",
+      "description": "A mention of a Telegram user by their identifier.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “text\\_mention”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "text_mention",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "user",
+          "description": "The mentioned user",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "User"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtexttextmention"
+    },
+    {
+      "name": "RichTextSubscript",
+      "description": "A subscript text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “subscript”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "subscript",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextsubscript"
+    },
+    {
+      "name": "RichTextSuperscript",
+      "description": "A superscript text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “superscript”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "superscript",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextsuperscript"
+    },
+    {
+      "name": "RichTextMarked",
+      "description": "A marked text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “marked”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "marked",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextmarked"
+    },
+    {
+      "name": "RichTextCode",
+      "description": "A monowidth text.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “code”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "code",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextcode"
+    },
+    {
+      "name": "RichTextCustomEmoji",
+      "description": "A custom emoji.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “custom\\_emoji”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "custom_emoji",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "custom_emoji_id",
+          "description": "Unique identifier of the custom emoji. Use [getCustomEmojiStickers](https://core.telegram.org/bots/api/#getcustomemojistickers) to get full information about the sticker.",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "alternative_text",
+          "description": "Alternative emoji for the custom emoji",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextcustomemoji"
+    },
+    {
+      "name": "RichTextMathematicalExpression",
+      "description": "A mathematical expression.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “mathematical\\_expression”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "mathematical_expression",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "expression",
+          "description": "The expression in LaTeX format",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextmathematicalexpression"
+    },
+    {
+      "name": "RichTextUrl",
+      "description": "A text with a link.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “url”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "url",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "url",
+          "description": "URL of the link",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtexturl"
+    },
+    {
+      "name": "RichTextEmailAddress",
+      "description": "A text with an email address.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “email\\_address”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "email_address",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "email_address",
+          "description": "The email address",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextemailaddress"
+    },
+    {
+      "name": "RichTextPhoneNumber",
+      "description": "A text with a phone number.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “phone\\_number”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "phone_number",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "phone_number",
+          "description": "The phone number",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextphonenumber"
+    },
+    {
+      "name": "RichTextBankCardNumber",
+      "description": "A text with a bank card number.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “bank\\_card\\_number”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "bank_card_number",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "bank_card_number",
+          "description": "The bank card number",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextbankcardnumber"
+    },
+    {
+      "name": "RichTextMention",
+      "description": "A mention by a username.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “mention”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "mention",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "username",
+          "description": "The username",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextmention"
+    },
+    {
+      "name": "RichTextHashtag",
+      "description": "A hashtag.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “hashtag”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "hashtag",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "hashtag",
+          "description": "The hashtag",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtexthashtag"
+    },
+    {
+      "name": "RichTextCashtag",
+      "description": "A cashtag.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “cashtag”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "cashtag",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "cashtag",
+          "description": "The cashtag",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextcashtag"
+    },
+    {
+      "name": "RichTextBotCommand",
+      "description": "A bot command.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “bot\\_command”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "bot_command",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "bot_command",
+          "description": "The bot command",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextbotcommand"
+    },
+    {
+      "name": "RichTextAnchor",
+      "description": "An anchor.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “anchor”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "anchor",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "name",
+          "description": "The name of the anchor",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextanchor"
+    },
+    {
+      "name": "RichTextAnchorLink",
+      "description": "A link to an anchor.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “anchor\\_link”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "anchor_link",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The link text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "anchor_name",
+          "description": "The name of the anchor. If the name is empty, then the link brings back to the top of the message.",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextanchorlink"
+    },
+    {
+      "name": "RichTextReference",
+      "description": "A reference.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “reference”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "reference",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text of the reference",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "name",
+          "description": "The name of the reference",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextreference"
+    },
+    {
+      "name": "RichTextReferenceLink",
+      "description": "A link to a reference.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the rich text, always “reference\\_link”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "reference_link",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "The link text",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "reference_name",
+          "description": "The name of the reference",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richtextreferencelink"
+    },
+    {
+      "name": "RichBlockCaption",
+      "description": "Caption of a rich formatted block.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "text",
+          "description": "Block caption",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "credit",
+          "description": "*Optional*. Block credit which corresponds to the HTML tag \\<cite\\>",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockcaption"
+    },
+    {
+      "name": "RichBlockTableCell",
+      "description": "Cell in a table.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "text",
+          "description": "*Optional*. Text in the cell. If omitted, then the cell is invisible.",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "is_header",
+          "description": "*Optional*. *True*, if the cell is a header cell",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "colspan",
+          "description": "*Optional*. The number of columns the cell spans if it is bigger than 1",
+          "required": false,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "rowspan",
+          "description": "*Optional*. The number of rows the cell spans if it is bigger than 1",
+          "required": false,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "align",
+          "description": "Horizontal cell content alignment. Currently, must be one of “left”, “center”, or “right”.",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": [
+              "left",
+              "center",
+              "right"
+            ]
+          }
+        },
+        {
+          "name": "valign",
+          "description": "Vertical cell content alignment. Currently, must be one of “top”, “middle”, or “bottom”.",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": [
+              "top",
+              "middle",
+              "bottom"
+            ]
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblocktablecell"
+    },
+    {
+      "name": "RichBlockListItem",
+      "description": "An item of a list.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "label",
+          "description": "Label of the item",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "blocks",
+          "description": "The content of the item",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "RichBlock"
+            }
+          }
+        },
+        {
+          "name": "has_checkbox",
+          "description": "*Optional*. *True*, if the item has a checkbox",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "is_checked",
+          "description": "*Optional*. *True*, if the item has a checked checkbox",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "value",
+          "description": "*Optional*. For ordered lists, the numeric value of the item label",
+          "required": false,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "type",
+          "description": "*Optional*. For ordered lists, the type of the item label; must be one of “a” for lowercase letters, “A” for uppercase letters, “i” for lowercase Roman numerals, “I” for uppercase Roman numerals, or “1” for decimal numbers",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": [
+              "a",
+              "A",
+              "i",
+              "I",
+              "1"
+            ]
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblocklistitem"
+    },
+    {
+      "name": "RichBlock",
+      "description": "This object represents a block in a rich formatted message. Currently, it can be any of the following types:\n\n* [RichBlockParagraph](https://core.telegram.org/bots/api/#richblockparagraph)\n* [RichBlockSectionHeading](https://core.telegram.org/bots/api/#richblocksectionheading)\n* [RichBlockPreformatted](https://core.telegram.org/bots/api/#richblockpreformatted)\n* [RichBlockFooter](https://core.telegram.org/bots/api/#richblockfooter)\n* [RichBlockDivider](https://core.telegram.org/bots/api/#richblockdivider)\n* [RichBlockMathematicalExpression](https://core.telegram.org/bots/api/#richblockmathematicalexpression)\n* [RichBlockAnchor](https://core.telegram.org/bots/api/#richblockanchor)\n* [RichBlockList](https://core.telegram.org/bots/api/#richblocklist)\n* [RichBlockBlockQuotation](https://core.telegram.org/bots/api/#richblockblockquotation)\n* [RichBlockPullQuotation](https://core.telegram.org/bots/api/#richblockpullquotation)\n* [RichBlockCollage](https://core.telegram.org/bots/api/#richblockcollage)\n* [RichBlockSlideshow](https://core.telegram.org/bots/api/#richblockslideshow)\n* [RichBlockTable](https://core.telegram.org/bots/api/#richblocktable)\n* [RichBlockDetails](https://core.telegram.org/bots/api/#richblockdetails)\n* [RichBlockMap](https://core.telegram.org/bots/api/#richblockmap)\n* [RichBlockAnimation](https://core.telegram.org/bots/api/#richblockanimation)\n* [RichBlockAudio](https://core.telegram.org/bots/api/#richblockaudio)\n* [RichBlockPhoto](https://core.telegram.org/bots/api/#richblockphoto)\n* [RichBlockVideo](https://core.telegram.org/bots/api/#richblockvideo)\n* [RichBlockVoiceNote](https://core.telegram.org/bots/api/#richblockvoicenote)\n* [RichBlockThinking](https://core.telegram.org/bots/api/#richblockthinking)",
+      "type": "any_of",
+      "any_of": [
+        {
+          "type": "reference",
+          "reference": "RichBlockParagraph"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockSectionHeading"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockPreformatted"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockFooter"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockDivider"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockMathematicalExpression"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockAnchor"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockList"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockBlockQuotation"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockPullQuotation"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockCollage"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockSlideshow"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockTable"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockDetails"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockMap"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockAnimation"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockAudio"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockPhoto"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockVideo"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockVoiceNote"
+        },
+        {
+          "type": "reference",
+          "reference": "RichBlockThinking"
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblock"
+    },
+    {
+      "name": "RichBlockParagraph",
+      "description": "A text paragraph, corresponding to the HTML tag `<p>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “paragraph”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "paragraph",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text of the block",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockparagraph"
+    },
+    {
+      "name": "RichBlockSectionHeading",
+      "description": "A section heading, corresponding to the HTML tags `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, or `<h6>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “heading”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "heading",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text of the block",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "size",
+          "description": "Relative size of the text font; 1-6, 1 is the largest, 6 is the smallest",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblocksectionheading"
+    },
+    {
+      "name": "RichBlockPreformatted",
+      "description": "A preformatted text block, corresponding to the nested HTML tags `<pre>` and `<code>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “pre”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "pre",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text of the block",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "language",
+          "description": "*Optional*. The programming language of the text",
+          "required": false,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockpreformatted"
+    },
+    {
+      "name": "RichBlockFooter",
+      "description": "A footer, corresponding to the HTML tag `<footer>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “footer”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "footer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text of the block",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockfooter"
+    },
+    {
+      "name": "RichBlockDivider",
+      "description": "A divider, corresponding to the HTML tag `<hr/>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “divider”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "divider",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockdivider"
+    },
+    {
+      "name": "RichBlockMathematicalExpression",
+      "description": "A block with a mathematical expression in LaTeX format, corresponding to the custom HTML tag `<tg-math-block>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “mathematical\\_expression”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "mathematical_expression",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "expression",
+          "description": "The mathematical expression in LaTeX format",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockmathematicalexpression"
+    },
+    {
+      "name": "RichBlockAnchor",
+      "description": "A block with an anchor, corresponding to the HTML tag `<a>` with the attribute `name`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “anchor”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "anchor",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "name",
+          "description": "The name of the anchor",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "enumeration": []
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockanchor"
+    },
+    {
+      "name": "RichBlockList",
+      "description": "A list of blocks, corresponding to the HTML tag `<ul>` or `<ol>` with multiple nested tags `<li>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “list”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "list",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "items",
+          "description": "Items of the list",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "RichBlockListItem"
+            }
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblocklist"
+    },
+    {
+      "name": "RichBlockBlockQuotation",
+      "description": "A block quotation, corresponding to the HTML tag `<blockquote>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “blockquote”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "blockquote",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "blocks",
+          "description": "Content of the block",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "RichBlock"
+            }
+          }
+        },
+        {
+          "name": "credit",
+          "description": "*Optional*. Credit of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockblockquotation"
+    },
+    {
+      "name": "RichBlockPullQuotation",
+      "description": "A quotation with centered text, loosely corresponding to the HTML tag `<aside>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “pullquote”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "pullquote",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text of the block",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "credit",
+          "description": "*Optional*. Credit of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockpullquotation"
+    },
+    {
+      "name": "RichBlockCollage",
+      "description": "A collage, corresponding to the custom HTML tag `<tg-collage>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “collage”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "collage",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "blocks",
+          "description": "Elements of the collage",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "RichBlock"
+            }
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockcollage"
+    },
+    {
+      "name": "RichBlockSlideshow",
+      "description": "A slideshow, corresponding to the custom HTML tag `<tg-slideshow>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “slideshow”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "slideshow",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "blocks",
+          "description": "Elements of the slideshow",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "RichBlock"
+            }
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockslideshow"
+    },
+    {
+      "name": "RichBlockTable",
+      "description": "A table, corresponding to the HTML tag `<table>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “table”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "table",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "cells",
+          "description": "Cells of the table",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "array",
+              "array": {
+                "type": "reference",
+                "reference": "RichBlockTableCell"
+              }
+            }
+          }
+        },
+        {
+          "name": "is_bordered",
+          "description": "*Optional*. *True*, if the table has borders",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "is_striped",
+          "description": "*Optional*. *True*, if the table is striped",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the table",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblocktable"
+    },
+    {
+      "name": "RichBlockDetails",
+      "description": "An expandable block for details disclosure, corresponding to the HTML tag `<details>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “details”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "details",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "summary",
+          "description": "Always shown summary of the block",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        },
+        {
+          "name": "blocks",
+          "description": "Content of the block",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "RichBlock"
+            }
+          }
+        },
+        {
+          "name": "is_open",
+          "description": "*Optional*. *True*, if the content of the block is visible by default",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockdetails"
+    },
+    {
+      "name": "RichBlockMap",
+      "description": "A block with a map, corresponding to the custom HTML tag `<tg-map>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “map”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "map",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "location",
+          "description": "Location of the center of the map",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "Location"
+          }
+        },
+        {
+          "name": "zoom",
+          "description": "Map zoom level; 13-20",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "width",
+          "description": "Expected width of the map",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "height",
+          "description": "Expected height of the map",
+          "required": true,
+          "type_info": {
+            "type": "integer",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockmap"
+    },
+    {
+      "name": "RichBlockAnimation",
+      "description": "A block with an animation, corresponding to the HTML tag `<video>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “animation”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "animation",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "animation",
+          "description": "The animation",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "Animation"
+          }
+        },
+        {
+          "name": "has_spoiler",
+          "description": "*Optional*. *True*, if the media preview is covered by a spoiler animation",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockanimation"
+    },
+    {
+      "name": "RichBlockAudio",
+      "description": "A block with a music file, corresponding to the HTML tag `<audio>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “audio”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "audio",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "audio",
+          "description": "The audio",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "Audio"
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockaudio"
+    },
+    {
+      "name": "RichBlockPhoto",
+      "description": "A block with a photo, corresponding to the HTML tag `<photo>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “photo”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "photo",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "photo",
+          "description": "Available sizes of the photo",
+          "required": true,
+          "type_info": {
+            "type": "array",
+            "array": {
+              "type": "reference",
+              "reference": "PhotoSize"
+            }
+          }
+        },
+        {
+          "name": "has_spoiler",
+          "description": "*Optional*. *True*, if the media preview is covered by a spoiler animation",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockphoto"
+    },
+    {
+      "name": "RichBlockVideo",
+      "description": "A block with a video, corresponding to the HTML tag `<video>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “video”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "video",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "video",
+          "description": "The video",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "Video"
+          }
+        },
+        {
+          "name": "has_spoiler",
+          "description": "*Optional*. *True*, if the media preview is covered by a spoiler animation",
+          "required": false,
+          "type_info": {
+            "type": "bool",
+            "default": true
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockvideo"
+    },
+    {
+      "name": "RichBlockVoiceNote",
+      "description": "A block with a voice note, corresponding to the HTML tag `<audio>`.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “voice\\_note”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "voice_note",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "voice_note",
+          "description": "The voice note",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "Voice"
+          }
+        },
+        {
+          "name": "caption",
+          "description": "*Optional*. Caption of the block",
+          "required": false,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichBlockCaption"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockvoicenote"
+    },
+    {
+      "name": "RichBlockThinking",
+      "description": "A block with a “Thinking…” placeholder, corresponding to the custom HTML tag `<tg-thinking>`. The block may be used only in [sendRichMessageDraft](https://core.telegram.org/bots/api/#sendrichmessagedraft), therefore it can't be received in messages. See [https://t.me/addemoji/AIActions](https://t.me/addemoji/AIActions) for examples of custom emoji, which are recommended for usage in the block.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "type",
+          "description": "Type of the block, always “thinking”",
+          "required": true,
+          "type_info": {
+            "type": "string",
+            "default": "thinking",
+            "enumeration": []
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text of the block. See [https://t.me/addemoji/AIActions](https://t.me/addemoji/AIActions) for examples of custom emoji, which are recommended for usage in the block.",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "RichText"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#richblockthinking"
     },
     {
       "name": "InlineQuery",
@@ -26748,12 +29140,16 @@
     },
     {
       "name": "InputMessageContent",
-      "description": "This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 5 types:\n\n* [InputTextMessageContent](https://core.telegram.org/bots/api/#inputtextmessagecontent)\n* [InputLocationMessageContent](https://core.telegram.org/bots/api/#inputlocationmessagecontent)\n* [InputVenueMessageContent](https://core.telegram.org/bots/api/#inputvenuemessagecontent)\n* [InputContactMessageContent](https://core.telegram.org/bots/api/#inputcontactmessagecontent)\n* [InputInvoiceMessageContent](https://core.telegram.org/bots/api/#inputinvoicemessagecontent)",
+      "description": "This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following types:\n\n* [InputTextMessageContent](https://core.telegram.org/bots/api/#inputtextmessagecontent)\n* [InputRichMessageContent](https://core.telegram.org/bots/api/#inputrichmessagecontent)\n* [InputLocationMessageContent](https://core.telegram.org/bots/api/#inputlocationmessagecontent)\n* [InputVenueMessageContent](https://core.telegram.org/bots/api/#inputvenuemessagecontent)\n* [InputContactMessageContent](https://core.telegram.org/bots/api/#inputcontactmessagecontent)\n* [InputInvoiceMessageContent](https://core.telegram.org/bots/api/#inputinvoicemessagecontent)",
       "type": "any_of",
       "any_of": [
         {
           "type": "reference",
           "reference": "InputTextMessageContent"
+        },
+        {
+          "type": "reference",
+          "reference": "InputRichMessageContent"
         },
         {
           "type": "reference",
@@ -26822,6 +29218,23 @@
         }
       ],
       "documentation_link": "https://core.telegram.org/bots/api/#inputtextmessagecontent"
+    },
+    {
+      "name": "InputRichMessageContent",
+      "description": "Represents the [content](https://core.telegram.org/bots/api/#inputmessagecontent) of a rich message to be sent as the result of an inline query.",
+      "type": "properties",
+      "properties": [
+        {
+          "name": "rich_message",
+          "description": "The message to be sent",
+          "required": true,
+          "type_info": {
+            "type": "reference",
+            "reference": "InputRichMessage"
+          }
+        }
+      ],
+      "documentation_link": "https://core.telegram.org/bots/api/#inputrichmessagecontent"
     },
     {
       "name": "InputLocationMessageContent",

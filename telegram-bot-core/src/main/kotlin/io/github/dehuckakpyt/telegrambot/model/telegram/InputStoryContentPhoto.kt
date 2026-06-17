@@ -1,6 +1,7 @@
 package io.github.dehuckakpyt.telegrambot.model.telegram
 
 import com.fasterxml.jackson.`annotation`.JsonProperty
+import io.github.dehuckakpyt.telegrambot.model.telegram.input.ContentInput
 import kotlin.String
 
 /**
@@ -26,7 +27,7 @@ public data class InputStoryContentPhoto(
      */
     @get:JsonProperty("photo")
     @param:JsonProperty("photo")
-    public val photo: String,
+    public val photo: ContentInput,
 ) : InputStoryContent {
     @get:JsonProperty("type")
     override val type: String = "photo"
